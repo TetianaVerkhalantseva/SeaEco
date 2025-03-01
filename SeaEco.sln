@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeaEco.Client", "SeaEco.Client\SeaEco.Client.csproj", "{C211153B-3A6E-4589-AF39-83758CBD84A6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeaEco.Server", "SeaEco.Server\SeaEco.Server.csproj", "{5F6485FB-3587-4C5C-96A9-59CD496E8E2A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeaEco.Database", "SeaEco.Database\SeaEco.Database.csproj", "{D95138B7-3110-4D7D-99E4-58F99B30ABCF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeaEco.EntityFramework", "SeaEco.EntityFramework\SeaEco.EntityFramework.csproj", "{4A97ECBE-10CA-4ED1-86DD-35C155D1788D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeaEco.Services", "SeaEco.Services\SeaEco.Services.csproj", "{C51115BC-01D8-45FF-ADE1-D320E39E87B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeaEco.Abstractions", "SeaEco.Abstractions\SeaEco.Abstractions.csproj", "{33213730-A6AF-433C-A1F6-3A5F6A29424F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C211153B-3A6E-4589-AF39-83758CBD84A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C211153B-3A6E-4589-AF39-83758CBD84A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C211153B-3A6E-4589-AF39-83758CBD84A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C211153B-3A6E-4589-AF39-83758CBD84A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F6485FB-3587-4C5C-96A9-59CD496E8E2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F6485FB-3587-4C5C-96A9-59CD496E8E2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F6485FB-3587-4C5C-96A9-59CD496E8E2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F6485FB-3587-4C5C-96A9-59CD496E8E2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D95138B7-3110-4D7D-99E4-58F99B30ABCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D95138B7-3110-4D7D-99E4-58F99B30ABCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D95138B7-3110-4D7D-99E4-58F99B30ABCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D95138B7-3110-4D7D-99E4-58F99B30ABCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A97ECBE-10CA-4ED1-86DD-35C155D1788D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A97ECBE-10CA-4ED1-86DD-35C155D1788D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A97ECBE-10CA-4ED1-86DD-35C155D1788D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A97ECBE-10CA-4ED1-86DD-35C155D1788D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C51115BC-01D8-45FF-ADE1-D320E39E87B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C51115BC-01D8-45FF-ADE1-D320E39E87B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C51115BC-01D8-45FF-ADE1-D320E39E87B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C51115BC-01D8-45FF-ADE1-D320E39E87B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33213730-A6AF-433C-A1F6-3A5F6A29424F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33213730-A6AF-433C-A1F6-3A5F6A29424F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33213730-A6AF-433C-A1F6-3A5F6A29424F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33213730-A6AF-433C-A1F6-3A5F6A29424F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
