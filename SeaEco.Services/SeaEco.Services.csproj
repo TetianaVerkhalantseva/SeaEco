@@ -10,4 +10,8 @@
       <ProjectReference Include="..\SeaEco.EntityFramework\SeaEco.EntityFramework.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="AuthServices\Models\" />
+    </ItemGroup>
+
 </Project>
