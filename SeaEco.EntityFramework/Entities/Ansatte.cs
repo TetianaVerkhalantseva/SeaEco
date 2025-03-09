@@ -5,7 +5,7 @@ namespace SeaEco.EntityFramework.Entities;
 
 public partial class Ansatte
 {
-    public int Brukerid { get; set; }
+    public int Id { get; set; }
 
     public string Fornavn { get; set; } = null!;
 
@@ -13,13 +13,15 @@ public partial class Ansatte
 
     public string Epost { get; set; } = null!;
 
-    public string Passord { get; set; } = null!;
+    public string PassordHash { get; set; } = null!;
 
-    public bool ErAdmin { get; set; }
+    public bool IsAdmin { get; set; }
 
     public bool Aktiv { get; set; }
 
     public DateTime Datoregistrert { get; set; }
+
+    public string Salt { get; set; } = null!;
 
     public virtual ICollection<BProsjekt> BProsjektAnsvarligansatt2s { get; set; } = new List<BProsjekt>();
 
@@ -40,4 +42,6 @@ public partial class Ansatte
     public virtual ICollection<BRapport> BRapportGodkjentavs { get; set; } = new List<BRapport>();
 
     public virtual ICollection<Endringslogg> Endringsloggs { get; set; } = new List<Endringslogg>();
+
+    public virtual ICollection<Token> Tokens { get; set; } = new List<Token>();
 }

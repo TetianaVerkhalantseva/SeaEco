@@ -58,6 +58,8 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<SysTykkelsepaslam> SysTykkelsepaslams { get; set; }
 
+    public virtual DbSet<Token> Tokens { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseNpgsql("Server=10.239.120.212;Database=seaeco;Port=5432;username=admin;password=admin");
@@ -66,11 +68,13 @@ public partial class AppDbContext : DbContext
     {
         modelBuilder.Entity<Ansatte>(entity =>
         {
-            entity.HasKey(e => e.Brukerid).HasName("ansatte_pkey");
+            entity.HasKey(e => e.Id).HasName("ansatte_pkey");
 
             entity.ToTable("ansatte");
 
-            entity.Property(e => e.Brukerid).HasColumnName("brukerid");
+            entity.Property(e => e.Id)
+                .HasDefaultValueSql("nextval('ansatte_brukerid_seq'::regclass)")
+                .HasColumnName("id");
             entity.Property(e => e.Aktiv).HasColumnName("aktiv");
             entity.Property(e => e.Datoregistrert)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
@@ -79,16 +83,19 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Epost)
                 .HasMaxLength(45)
                 .HasColumnName("epost");
-            entity.Property(e => e.ErAdmin).HasColumnName("er_admin");
             entity.Property(e => e.Etternavn)
                 .HasMaxLength(45)
                 .HasColumnName("etternavn");
             entity.Property(e => e.Fornavn)
                 .HasMaxLength(45)
                 .HasColumnName("fornavn");
-            entity.Property(e => e.Passord)
-                .HasMaxLength(45)
-                .HasColumnName("passord");
+            entity.Property(e => e.IsAdmin).HasColumnName("is_admin");
+            entity.Property(e => e.PassordHash)
+                .HasColumnType("character varying")
+                .HasColumnName("passord_hash");
+            entity.Property(e => e.Salt)
+                .HasColumnType("character varying")
+                .HasColumnName("salt");
         });
 
         modelBuilder.Entity<BBilder>(entity =>
@@ -117,12 +124,12 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<BDyr>(entity =>
         {
-            entity.HasKey(e => new { e.Prosjektid, e.Stasjonsid }).HasName("b_dyr_pkey");
+            entity.HasKey(e => new { e.ProsjektId, e.StasjonsId }).HasName("b_dyr_pkey");
 
             entity.ToTable("b_dyr");
 
-            entity.Property(e => e.Prosjektid).HasColumnName("prosjektid");
-            entity.Property(e => e.Stasjonsid).HasColumnName("stasjonsid");
+            entity.Property(e => e.ProsjektId).HasColumnName("prosjekt_id");
+            entity.Property(e => e.StasjonsId).HasColumnName("stasjons_id");
             entity.Property(e => e.Antallborstemark).HasColumnName("antallborstemark");
             entity.Property(e => e.Antallkrepsdyr).HasColumnName("antallkrepsdyr");
             entity.Property(e => e.Antallpigghunder).HasColumnName("antallpigghunder");
@@ -132,7 +139,7 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Foor).HasColumnName("foor");
 
             entity.HasOne(d => d.BStasjon).WithOne(p => p.BDyr)
-                .HasForeignKey<BDyr>(d => new { d.Prosjektid, d.Stasjonsid })
+                .HasForeignKey<BDyr>(d => new { d.ProsjektId, d.StasjonsId })
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_b_dyr_b_stasjon");
         });
@@ -627,6 +634,35 @@ public partial class AppDbContext : DbContext
                 .HasMaxLength(45)
                 .HasColumnName("beskrivelse");
             entity.Property(e => e.Verdi).HasColumnName("verdi");
+        });
+
+        modelBuilder.Entity<Token>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("tokens_pkey");
+
+            entity.ToTable("tokens");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("created_at");
+            entity.Property(e => e.ExpiredAt)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("expired_at");
+            entity.Property(e => e.IsUsed).HasColumnName("is_used");
+            entity.Property(e => e.Token1)
+                .HasColumnType("character varying")
+                .HasColumnName("token");
+            entity.Property(e => e.UsedAt)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("used_at");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Tokens)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("fk_tokens_user");
         });
 
         OnModelCreatingPartial(modelBuilder);
