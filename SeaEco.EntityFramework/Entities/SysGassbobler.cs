@@ -9,7 +9,7 @@ public partial class SysGassbobler
 
     public string Beskrivelse { get; set; } = null!;
 
-    public bool Verdi { get; set; }
+    public int Verdi { get; set; }
 
     public virtual ICollection<BSensorisk> BSensorisks { get; set; } = new List<BSensorisk>();
 }

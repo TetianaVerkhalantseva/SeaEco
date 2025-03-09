@@ -72,9 +72,6 @@ public partial class AppDbContext : DbContext
 
             entity.Property(e => e.Brukerid).HasColumnName("brukerid");
             entity.Property(e => e.Aktiv).HasColumnName("aktiv");
-            entity.Property(e => e.Brukernavn)
-                .HasMaxLength(16)
-                .HasColumnName("brukernavn");
             entity.Property(e => e.Datoregistrert)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")
@@ -82,18 +79,16 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Epost)
                 .HasMaxLength(45)
                 .HasColumnName("epost");
+            entity.Property(e => e.ErAdmin).HasColumnName("er_admin");
             entity.Property(e => e.Etternavn)
                 .HasMaxLength(45)
                 .HasColumnName("etternavn");
             entity.Property(e => e.Fornavn)
                 .HasMaxLength(45)
                 .HasColumnName("fornavn");
-            entity.Property(e => e.Fulltilgang).HasColumnName("fulltilgang");
             entity.Property(e => e.Passord)
                 .HasMaxLength(45)
                 .HasColumnName("passord");
-            entity.Property(e => e.Roller).HasColumnName("roller");
-            entity.Property(e => e.Telefonnr).HasColumnName("telefonnr");
         });
 
         modelBuilder.Entity<BBilder>(entity =>
@@ -333,7 +328,6 @@ public partial class AppDbContext : DbContext
                 .HasConstraintName("fk_b_sensorisk_sys_farge");
 
             entity.HasOne(d => d.GassboblerNavigation).WithMany(p => p.BSensorisks)
-                .HasPrincipalKey(p => p.Verdi)
                 .HasForeignKey(d => d.Gassbobler)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_b_sensorisk_sys_gassbobler");
@@ -550,8 +544,6 @@ public partial class AppDbContext : DbContext
             entity.HasKey(e => e.Id).HasName("sys_gassbobler_pkey");
 
             entity.ToTable("sys_gassbobler");
-
-            entity.HasIndex(e => e.Verdi, "sys_gassbobler_verdi_key").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Beskrivelse)

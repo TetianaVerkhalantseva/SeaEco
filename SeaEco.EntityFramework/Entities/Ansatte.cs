@@ -7,21 +7,15 @@ public partial class Ansatte
 {
     public int Brukerid { get; set; }
 
-    public string Brukernavn { get; set; } = null!;
-
     public string Fornavn { get; set; } = null!;
 
     public string Etternavn { get; set; } = null!;
-
-    public int Telefonnr { get; set; }
-
-    public int Roller { get; set; }
 
     public string Epost { get; set; } = null!;
 
     public string Passord { get; set; } = null!;
 
-    public bool Fulltilgang { get; set; }
+    public bool ErAdmin { get; set; }
 
     public bool Aktiv { get; set; }
 

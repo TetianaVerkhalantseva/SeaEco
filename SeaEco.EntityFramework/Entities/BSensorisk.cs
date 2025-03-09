@@ -15,8 +15,6 @@ public partial class BSensorisk
 
     public int ProveTemperatur { get; set; }
 
-    public bool Gassbobler { get; set; }
-
     public bool Farge { get; set; }
 
     public int Lukt { get; set; }
@@ -26,6 +24,8 @@ public partial class BSensorisk
     public int Grabbvolum { get; set; }
 
     public int Tykkelseslamlag { get; set; }
+
+    public int Gassbobler { get; set; }
 
     public virtual BStasjon BStasjon { get; set; } = null!;
 
