@@ -7,9 +7,9 @@ public partial class BProvetakingsplan
 {
     public int Prosjektid { get; set; }
 
-    public int Planleggerid { get; set; }
+    public Guid Planleggerid { get; set; }
 
-    public int? Planlegger2id { get; set; }
+    public Guid? Planlegger2id { get; set; }
 
     public int Stasjonsid { get; set; }
 
@@ -25,9 +25,9 @@ public partial class BProvetakingsplan
 
     public DateTime Datoregistrert { get; set; }
 
-    public virtual Ansatte Planlegger { get; set; } = null!;
+    public virtual User Planlegger { get; set; } = null!;
 
-    public virtual Ansatte? Planlegger2 { get; set; }
+    public virtual User? Planlegger2 { get; set; }
 
     public virtual BProsjekt Prosjekt { get; set; } = null!;
 }

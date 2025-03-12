@@ -25,15 +25,15 @@ public partial class BProsjekt
 
     public int Biomasse { get; set; }
 
-    public int Ansvarligansattid { get; set; }
+    public Guid Ansvarligansattid { get; set; }
 
-    public int? Ansvarligansatt2id { get; set; }
+    public Guid? Ansvarligansatt2id { get; set; }
 
-    public int? Ansvarligansatt3id { get; set; }
+    public Guid? Ansvarligansatt3id { get; set; }
 
-    public int? Ansvarligansatt4id { get; set; }
+    public Guid? Ansvarligansatt4id { get; set; }
 
-    public int? Ansvarligansatt5id { get; set; }
+    public Guid? Ansvarligansatt5id { get; set; }
 
     public DateOnly Planlagtfeltdato { get; set; }
 
@@ -43,15 +43,15 @@ public partial class BProsjekt
 
     public DateTime? Datoregistrert { get; set; }
 
-    public virtual Ansatte Ansvarligansatt { get; set; } = null!;
+    public virtual User Ansvarligansatt { get; set; } = null!;
 
-    public virtual Ansatte? Ansvarligansatt2 { get; set; }
+    public virtual User? Ansvarligansatt2 { get; set; }
 
-    public virtual Ansatte? Ansvarligansatt3 { get; set; }
+    public virtual User? Ansvarligansatt3 { get; set; }
 
-    public virtual Ansatte? Ansvarligansatt4 { get; set; }
+    public virtual User? Ansvarligansatt4 { get; set; }
 
-    public virtual Ansatte? Ansvarligansatt5 { get; set; }
+    public virtual User? Ansvarligansatt5 { get; set; }
 
     public virtual BProsjektUtstyr? BProsjektUtstyr { get; set; }
 

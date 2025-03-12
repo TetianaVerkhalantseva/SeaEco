@@ -21,9 +21,9 @@ public partial class Endringslogg
 
     public string Verdiendrettil { get; set; } = null!;
 
-    public int Endretavid { get; set; }
+    public Guid Endretavid { get; set; }
 
     public DateTime Datoregistrert { get; set; }
 
-    public virtual Ansatte Endretav { get; set; } = null!;
+    public virtual User Endretav { get; set; } = null!;
 }

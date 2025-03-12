@@ -16,7 +16,7 @@ public partial class AppDbContext : DbContext
     {
     }
 
-    public virtual DbSet<Ansatte> Ansattes { get; set; }
+    public virtual DbSet<User> Users { get; set; }
 
     public virtual DbSet<BBilder> BBilders { get; set; }
 
@@ -66,14 +66,14 @@ public partial class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Ansatte>(entity =>
+        modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("ansatte_pkey");
+            entity.HasKey(e => e.Id).HasName("user_pkey");
 
-            entity.ToTable("ansatte");
+            entity.ToTable("user");
 
             entity.Property(e => e.Id)
-                .HasDefaultValueSql("nextval('ansatte_brukerid_seq'::regclass)")
+                .ValueGeneratedNever()
                 .HasColumnName("id");
             entity.Property(e => e.Aktiv).HasColumnName("aktiv");
             entity.Property(e => e.Datoregistrert)
@@ -187,24 +187,24 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.Ansvarligansatt2).WithMany(p => p.BProsjektAnsvarligansatt2s)
                 .HasForeignKey(d => d.Ansvarligansatt2id)
-                .HasConstraintName("fk_b_prosjekt_ansatte2");
+                .HasConstraintName("fk_b_prosjekt_user2");
 
             entity.HasOne(d => d.Ansvarligansatt3).WithMany(p => p.BProsjektAnsvarligansatt3s)
                 .HasForeignKey(d => d.Ansvarligansatt3id)
-                .HasConstraintName("fk_b_prosjekt_ansatte3");
+                .HasConstraintName("fk_b_prosjekt_user3");
 
             entity.HasOne(d => d.Ansvarligansatt4).WithMany(p => p.BProsjektAnsvarligansatt4s)
                 .HasForeignKey(d => d.Ansvarligansatt4id)
-                .HasConstraintName("fk_b_prosjekt_ansatte4");
+                .HasConstraintName("fk_b_prosjekt_user4");
 
             entity.HasOne(d => d.Ansvarligansatt5).WithMany(p => p.BProsjektAnsvarligansatt5s)
                 .HasForeignKey(d => d.Ansvarligansatt5id)
-                .HasConstraintName("fk_b_prosjekt_ansatte5");
+                .HasConstraintName("fk_b_prosjekt_user5");
 
             entity.HasOne(d => d.Ansvarligansatt).WithMany(p => p.BProsjektAnsvarligansatts)
                 .HasForeignKey(d => d.Ansvarligansattid)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_b_prosjekt_ansatte1");
+                .HasConstraintName("fk_b_prosjekt_user1");
 
             entity.HasOne(d => d.Kunde).WithMany(p => p.BProsjekts)
                 .HasForeignKey(d => d.Kundeid)
@@ -263,12 +263,12 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.Planlegger2).WithMany(p => p.BProvetakingsplanPlanlegger2s)
                 .HasForeignKey(d => d.Planlegger2id)
-                .HasConstraintName("fk_b_provetakingsplan_ansatte2");
+                .HasConstraintName("fk_b_provetakingsplan_user2");
 
             entity.HasOne(d => d.Planlegger).WithMany(p => p.BProvetakingsplanPlanleggers)
                 .HasForeignKey(d => d.Planleggerid)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_b_provetakingsplan_ansatte1");
+                .HasConstraintName("fk_b_provetakingsplan_user1");
 
             entity.HasOne(d => d.Prosjekt).WithOne(p => p.BProvetakingsplan)
                 .HasForeignKey<BProvetakingsplan>(d => d.Prosjektid)
@@ -453,7 +453,7 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Endretav).WithMany(p => p.Endringsloggs)
                 .HasForeignKey(d => d.Endretavid)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_endringslogg_ansatte");
+                .HasConstraintName("fk_endringslogg_user");
         });
 
         modelBuilder.Entity<Kunde>(entity =>
@@ -638,9 +638,9 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Token>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("tokens_pkey");
+            entity.HasKey(e => e.Id).HasName("token_pkey");
 
-            entity.ToTable("tokens");
+            entity.ToTable("token");
 
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
@@ -662,7 +662,7 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.Tokens)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("fk_tokens_user");
+                .HasConstraintName("fk_token_user");
         });
 
         OnModelCreatingPartial(modelBuilder);

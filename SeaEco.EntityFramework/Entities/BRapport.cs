@@ -13,13 +13,13 @@ public partial class BRapport
 
     public DateTime? Datoregistrert { get; set; }
 
-    public int Generertavid { get; set; }
+    public Guid Generertavid { get; set; }
 
-    public int Godkjentavid { get; set; }
+    public Guid Godkjentavid { get; set; }
 
-    public virtual Ansatte Generertav { get; set; } = null!;
+    public virtual User Generertav { get; set; } = null!;
 
-    public virtual Ansatte Godkjentav { get; set; } = null!;
+    public virtual User Godkjentav { get; set; } = null!;
 
     public virtual BProsjekt Prosjekt { get; set; } = null!;
 }
