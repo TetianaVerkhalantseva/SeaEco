@@ -17,7 +17,7 @@ public partial class Token
 
     public DateTime ExpiredAt { get; set; }
 
-    public Guid UserId { get; set; }
+    public Guid BrukerId { get; set; }
 
-    public virtual User User { get; set; } = null!;
+    public virtual Bruker Bruker { get; set; } = null!;
 }

@@ -17,9 +17,9 @@ public partial class BRapport
 
     public Guid Godkjentavid { get; set; }
 
-    public virtual User Generertav { get; set; } = null!;
+    public virtual Bruker Generertav { get; set; } = null!;
 
-    public virtual User Godkjentav { get; set; } = null!;
+    public virtual Bruker Godkjentav { get; set; } = null!;
 
     public virtual BProsjekt Prosjekt { get; set; } = null!;
 }

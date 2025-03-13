@@ -25,5 +25,5 @@ public partial class Endringslogg
 
     public DateTime Datoregistrert { get; set; }
 
-    public virtual User Endretav { get; set; } = null!;
+    public virtual Bruker Endretav { get; set; } = null!;
 }

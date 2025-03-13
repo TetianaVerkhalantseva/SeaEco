@@ -25,9 +25,9 @@ public partial class BProvetakingsplan
 
     public DateTime Datoregistrert { get; set; }
 
-    public virtual User Planlegger { get; set; } = null!;
+    public virtual Bruker Planlegger { get; set; } = null!;
 
-    public virtual User? Planlegger2 { get; set; }
+    public virtual Bruker? Planlegger2 { get; set; }
 
     public virtual BProsjekt Prosjekt { get; set; } = null!;
 }

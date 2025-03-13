@@ -43,15 +43,15 @@ public partial class BProsjekt
 
     public DateTime? Datoregistrert { get; set; }
 
-    public virtual User Ansvarligansatt { get; set; } = null!;
+    public virtual Bruker Ansvarligansatt { get; set; } = null!;
 
-    public virtual User? Ansvarligansatt2 { get; set; }
+    public virtual Bruker? Ansvarligansatt2 { get; set; }
 
-    public virtual User? Ansvarligansatt3 { get; set; }
+    public virtual Bruker? Ansvarligansatt3 { get; set; }
 
-    public virtual User? Ansvarligansatt4 { get; set; }
+    public virtual Bruker? Ansvarligansatt4 { get; set; }
 
-    public virtual User? Ansvarligansatt5 { get; set; }
+    public virtual Bruker? Ansvarligansatt5 { get; set; }
 
     public virtual BProsjektUtstyr? BProsjektUtstyr { get; set; }
 

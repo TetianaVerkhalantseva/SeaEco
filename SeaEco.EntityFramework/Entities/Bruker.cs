@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SeaEco.EntityFramework.Entities;
 
-public partial class User
+public partial class Bruker
 {
     public Guid Id { get; set; } = Guid.NewGuid();
 
