@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using SeaEco.EntityFramework.Contexts;
 using SeaEco.EntityFramework.GenericRepository;
-using SeaEco.Shared.Enums;
+using SeaEco.Services.AuthServices;
+using SeaEco.Services.JwtServices;
+using SeaEco.Services.UserServices;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -15,8 +17,15 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 
+services.Configure<JwtOptions>(configuration.GetSection("JwtOptions"));
+
 services.AddDbContext<AppDbContext>(options => options.UseNpgsql(configuration["ConnectionStrings:DefaultConnection"]));
 services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+services.AddHttpContextAccessor();
+services.AddScoped<ICurrentUserContext, CurrentUserContext>();
+services.AddTransient<IJwtService, JwtService>();
+services.AddTransient<IAuthService, AuthService>();
 
 var app = builder.Build();
 

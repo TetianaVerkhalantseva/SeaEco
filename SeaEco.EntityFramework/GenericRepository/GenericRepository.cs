@@ -1,17 +1,27 @@
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using SeaEco.Abstractions.ResponseService;
 using SeaEco.EntityFramework.Contexts;
 
 namespace SeaEco.EntityFramework.GenericRepository;
 
-public sealed class GenericRepository<T>(AppDbContext dbContext) : IGenericRepository<T> where T : class
+public sealed class GenericRepository<T> : IGenericRepository<T> where T : class
 {
+    private readonly AppDbContext _dbContext;
+    private readonly DbSet<T> _table;
+
+    public GenericRepository(AppDbContext dbContext)
+    {
+        _dbContext = dbContext;
+        _table = _dbContext.Set<T>();
+    }
+    
     public async Task<Response> Add(T entity)
     {
         try
         {
-            await dbContext.AddAsync(entity);
-            await dbContext.SaveChangesAsync();
+            await _table.AddAsync(entity);
+            await _dbContext.SaveChangesAsync();
             return Response.Ok();
         }
         catch (Exception ex)
@@ -24,8 +34,8 @@ public sealed class GenericRepository<T>(AppDbContext dbContext) : IGenericRepos
     {
         try
         {
-            dbContext.Update(entity);
-            await dbContext.SaveChangesAsync();
+            _table.Update(entity);
+            await _dbContext.SaveChangesAsync();
             return Response.Ok();
         }
         catch (Exception ex)
@@ -38,8 +48,8 @@ public sealed class GenericRepository<T>(AppDbContext dbContext) : IGenericRepos
     {
         try
         {
-            dbContext.Remove(entity);
-            await dbContext.SaveChangesAsync();
+            _table.Remove(entity);
+            await _dbContext.SaveChangesAsync();
             return Response.Ok();
         }
         catch (Exception ex)
@@ -48,5 +58,7 @@ public sealed class GenericRepository<T>(AppDbContext dbContext) : IGenericRepos
         }
     }
 
-    public IQueryable<T> GetAll() => dbContext.Set<T>().AsNoTracking();
+    public IQueryable<T> GetAll() => _table.AsNoTracking();
+    
+    public async Task<T?> GetBy(Expression<Func<T, bool>> predicate) => await _table.AsNoTracking().FirstOrDefaultAsync(predicate);
 }

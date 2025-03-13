@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SeaEco.Services\SeaEco.Services.csproj" />
+    <ProjectReference Include="..\SeaEco.EntityFramework\SeaEco.EntityFramework.csproj" />
   </ItemGroup>
-
+  
 </Project>
