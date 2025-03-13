@@ -94,7 +94,7 @@ public partial class AppDbContext : DbContext
                 .HasColumnType("character varying")
                 .HasColumnName("passord_hash");
             entity.Property(e => e.Salt)
-                .HasColumnType("character varying")
+                .HasColumnType("bytea")
                 .HasColumnName("salt");
         });
 

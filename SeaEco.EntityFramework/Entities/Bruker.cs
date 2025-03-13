@@ -21,7 +21,7 @@ public partial class Bruker
 
     public DateTime Datoregistrert { get; set; }
 
-    public string Salt { get; set; } = null!;
+    public byte[] Salt { get; set; } = [];
 
     public virtual ICollection<BProsjekt> BProsjektAnsvarligansatt2s { get; set; } = new List<BProsjekt>();
 

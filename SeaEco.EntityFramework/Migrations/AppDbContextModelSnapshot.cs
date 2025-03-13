@@ -565,7 +565,7 @@ namespace SeaEco.EntityFramework.Migrations
 
                     b.Property<string>("Salt")
                         .IsRequired()
-                        .HasColumnType("character varying")
+                        .HasColumnType("bytea")
                         .HasColumnName("salt");
 
                     b.HasKey("Id")
