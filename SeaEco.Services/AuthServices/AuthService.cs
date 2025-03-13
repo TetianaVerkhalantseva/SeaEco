@@ -1,7 +1,4 @@
 ﻿using System.Security.Claims;
-using System.Text;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using SeaEco.Abstractions.Models.Authentication;
 using SeaEco.Abstractions.ResponseService;
@@ -20,7 +17,7 @@ public sealed class AuthService(
     private const string InvalidCredentialsError = "Invalid credentials.";
     private const string WasCreatedError = "Was created.";
     private const string RegistrationError = "Error while registration user.";
-    private const string AuthenticationFailedError = "Authentication failed.";
+    private const string TokenCookieName = "auth_token";
     
     public async Task<Response<string>> RegisterUser(RegisterUserDto dto)
     {
@@ -35,7 +32,7 @@ public sealed class AuthService(
         Bruker user = new()
         {
             PassordHash = passwordResult.hashed,
-            Salt = Encoding.UTF8.GetString(passwordResult.salt),
+            Salt = passwordResult.salt,
             Aktiv = true,
             Id = Guid.NewGuid(),
             Datoregistrert = DateTime.Now,
@@ -51,37 +48,50 @@ public sealed class AuthService(
             return Response<string>.Error(RegistrationError);
         }
 
-        return await AuthenticationProcess(user);
+        return AuthenticationProcess(user, false);
     }
 
-    public async Task<Response<string>> SignIn(string login, string password)
+    public async Task<Response<string>> SignIn(LoginDto dto)
     {
-        Response<Bruker> userResult = await GetUser(login, password);
+        Response<Bruker> userResult = await GetUser(dto.Email, dto.Password);
         if (userResult.IsError)
         {
             return Response<string>.Error(userResult.ErrorMessage);
         }
 
-        return await AuthenticationProcess(userResult.Value);
+        return AuthenticationProcess(userResult.Value);
     }
 
-    public Task SignOut() => httpContextAccessor.HttpContext!.SignOutAsync(JwtBearerDefaults.AuthenticationScheme);
+    public void SignOut()
+    {
+        string? token = httpContextAccessor.HttpContext?.Request.Cookies[TokenCookieName];
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            return;
+        }
+        httpContextAccessor.HttpContext?.Response.Cookies.Delete(TokenCookieName);
+    }
 
-    private async Task<Response<string>> AuthenticationProcess(Bruker bruker)
+    private Response<string> AuthenticationProcess(Bruker bruker, bool appendToken = true)
     {
         IEnumerable<Claim> claims = GetClaims(bruker);
-        ClaimsPrincipal principle = GetPrincipal(claims);
-
-        try
+        
+        Response<string> tokenResult = jwtService.Encode(claims);
+        if (tokenResult.IsError)
         {
-            await httpContextAccessor.HttpContext!.SignInAsync(JwtBearerDefaults.AuthenticationScheme, principle);
+            return tokenResult;
         }
-        catch
+
+        if (appendToken)
         {
-            return Response<string>.Error(AuthenticationFailedError);
+            httpContextAccessor.HttpContext?.Response.Cookies.Append(TokenCookieName, tokenResult.Value, new CookieOptions()
+            {
+                HttpOnly = true,
+                Expires = DateTimeOffset.Now.AddSeconds(jwtService.Expiration)
+            });
         }
         
-        return jwtService.Encode(claims);
+        return tokenResult;
     }
     
     private async Task<Response<Bruker>> GetUser(string email)
@@ -102,7 +112,7 @@ public sealed class AuthService(
         
         Bruker dbRecord = userResult.Value;
 
-        if (Hasher.Verify(dbRecord.PassordHash, password, Encoding.UTF8.GetBytes(dbRecord.Salt)))
+        if (Hasher.Verify(dbRecord.PassordHash, password, dbRecord.Salt))
         {
             return Response<Bruker>.Ok(dbRecord);
         }

@@ -22,6 +22,8 @@ public sealed class JwtService : IJwtService
         _tokenHandler = new JwtSecurityTokenHandler();
     }
 
+    public int Expiration => _options.Expiration;
+    
     public Response<IEnumerable<Claim>> Decode(string token)
     {
         if (!_tokenHandler.CanReadToken(token))

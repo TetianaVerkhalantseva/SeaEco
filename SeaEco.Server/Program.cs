@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SeaEco.EntityFramework.Contexts;
 using SeaEco.EntityFramework.GenericRepository;
+using SeaEco.Server.Middlewares;
 using SeaEco.Services.AuthServices;
 using SeaEco.Services.JwtServices;
 using SeaEco.Services.UserServices;
@@ -59,6 +60,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<AuthMiddleware>();
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
