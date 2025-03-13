@@ -1,4 +1,7 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SeaEco.EntityFramework.Contexts;
 using SeaEco.EntityFramework.GenericRepository;
 using SeaEco.Services.AuthServices;
@@ -16,6 +19,28 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
+
+services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    string key = builder.Configuration.GetSection("JwtOptions:Key").Value ??
+                 throw new InvalidOperationException("Credentials not found.");
+
+    byte[] byteKey = Encoding.UTF8.GetBytes(key);
+    SecurityKey securityKey = new SymmetricSecurityKey(byteKey);
+
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateAudience = false,
+        ValidateIssuer = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = securityKey,
+    };
+});
 
 services.Configure<JwtOptions>(configuration.GetSection("JwtOptions"));
 

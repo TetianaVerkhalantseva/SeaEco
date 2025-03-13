@@ -3,6 +3,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
+using SeaEco.Abstractions.Models.Authentication;
 using SeaEco.Abstractions.ResponseService;
 using SeaEco.EntityFramework.Entities;
 using SeaEco.EntityFramework.GenericRepository;
@@ -20,6 +21,38 @@ public sealed class AuthService(
     private const string WasCreatedError = "Was created.";
     private const string RegistrationError = "Error while registration user.";
     private const string AuthenticationFailedError = "Authentication failed.";
+    
+    public async Task<Response<string>> RegisterUser(RegisterUserDto dto)
+    {
+        Response<Bruker> userResult = await GetUser(dto.Email);
+        if (!userResult.IsError)
+        {
+            return Response<string>.Error(WasCreatedError);
+        }
+        
+        var passwordResult = Hasher.Hash(dto.Password);
+
+        Bruker user = new()
+        {
+            PassordHash = passwordResult.hashed,
+            Salt = Encoding.UTF8.GetString(passwordResult.salt),
+            Aktiv = true,
+            Id = Guid.NewGuid(),
+            Datoregistrert = DateTime.Now,
+            Fornavn = dto.FirstName,
+            Etternavn = dto.LastName,
+            Epost = dto.Email,
+            IsAdmin = dto.IsAdmin
+        };
+        
+        Response createResult = await userRepository.Add(user);
+        if (createResult.IsError)
+        {
+            return Response<string>.Error(RegistrationError);
+        }
+
+        return await AuthenticationProcess(user);
+    }
 
     public async Task<Response<string>> SignIn(string login, string password)
     {
@@ -28,24 +61,46 @@ public sealed class AuthService(
         {
             return Response<string>.Error(userResult.ErrorMessage);
         }
-        
-        IEnumerable<Claim> claims = GetClaims(userResult.Value);
-        ClaimsPrincipal principle = GetPrincipal(claims);
-        
-        await httpContextAccessor.HttpContext!.SignInAsync(JwtBearerDefaults.AuthenticationScheme, principle);
-        
-        return jwtService.Encode(claims);
+
+        return await AuthenticationProcess(userResult.Value);
     }
 
     public Task SignOut() => httpContextAccessor.HttpContext!.SignOutAsync(JwtBearerDefaults.AuthenticationScheme);
 
-    private async Task<Response<Bruker>> GetUser(string email, string password)
+    private async Task<Response<string>> AuthenticationProcess(Bruker bruker)
+    {
+        IEnumerable<Claim> claims = GetClaims(bruker);
+        ClaimsPrincipal principle = GetPrincipal(claims);
+
+        try
+        {
+            await httpContextAccessor.HttpContext!.SignInAsync(JwtBearerDefaults.AuthenticationScheme, principle);
+        }
+        catch
+        {
+            return Response<string>.Error(AuthenticationFailedError);
+        }
+        
+        return jwtService.Encode(claims);
+    }
+    
+    private async Task<Response<Bruker>> GetUser(string email)
     {
         Bruker? dbRecord = await userRepository.GetBy(user => user.Epost == email);
-        if (dbRecord is null)
+        return dbRecord is null
+            ? Response<Bruker>.Error(InvalidCredentialsError)
+            : Response<Bruker>.Ok(dbRecord);
+    }
+    
+    private async Task<Response<Bruker>> GetUser(string email, string password)
+    {
+        Response<Bruker> userResult = await GetUser(email);
+        if (userResult.IsError)
         {
-            return Response<Bruker>.Error(InvalidCredentialsError);
+            return userResult;
         }
+        
+        Bruker dbRecord = userResult.Value;
 
         if (Hasher.Verify(dbRecord.PassordHash, password, Encoding.UTF8.GetBytes(dbRecord.Salt)))
         {
