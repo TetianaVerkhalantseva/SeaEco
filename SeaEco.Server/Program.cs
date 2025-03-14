@@ -6,6 +6,8 @@ using SeaEco.EntityFramework.Contexts;
 using SeaEco.EntityFramework.GenericRepository;
 using SeaEco.Server.Middlewares;
 using SeaEco.Services.AuthServices;
+using SeaEco.Services.EmailServices;
+using SeaEco.Services.EmailServices.Models;
 using SeaEco.Services.JwtServices;
 using SeaEco.Services.UserServices;
 
@@ -44,12 +46,14 @@ services.AddAuthentication(options =>
 });
 
 services.Configure<JwtOptions>(configuration.GetSection("JwtOptions"));
+services.Configure<SmtpOptions>(configuration.GetSection("SmtpOptions"));
 
 services.AddDbContext<AppDbContext>(options => options.UseNpgsql(configuration["ConnectionStrings:DefaultConnection"]));
 services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 services.AddHttpContextAccessor();
 services.AddScoped<ICurrentUserContext, CurrentUserContext>();
+services.AddScoped<IEmailService, SmtpEmailService>();
 services.AddTransient<IJwtService, JwtService>();
 services.AddTransient<IAuthService, AuthService>();
 
