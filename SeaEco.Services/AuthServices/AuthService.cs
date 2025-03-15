@@ -69,7 +69,7 @@ public sealed class AuthService(
         return AuthenticationProcess(userResult.Value);
     }
 
-    public async Task<Response> RestorePasswordRequest(RestorePasswordDto dto)
+    public async Task<Response> ResetPasswordRequest(ResetPasswordDto dto)
     {
         Response<Bruker> getUserResult = await GetUser(dto.Email);
         if (getUserResult.IsError)
@@ -84,18 +84,18 @@ public sealed class AuthService(
             return Response.Error(tokenResult.ErrorMessage);
         }
 
-        string url = UrlBuilder.RestorePasswordUrl(tokenResult.Value);
+        string url = UrlBuilder.ResetPasswordUrl(tokenResult.Value);
 
         return await emailService.SendMail(new EmailMessageModel()
         {
             Content = $"Follow the <a href='{url}'>link</a>",
             Recipients = [getUserResult.Value.Epost],
-            Subject = "Restore password",
+            Subject = "Reset password",
             BodyType = EmailBodyType.Html,
         });
     }
 
-    public async Task<Response> RestorePasswordConfirm(RestorePasswordConfirmDto dto)
+    public async Task<Response> ResetPasswordConfirm(ResetPasswordConfirmDto dto)
     {
         Response<Token> tokenResult = await tokenService.GetByPayload(dto.Token);
         if (tokenResult.IsError)

@@ -1,6 +1,6 @@
 namespace SeaEco.Abstractions.Models.Authentication;
 
-public class RestorePasswordConfirmDto
+public class ResetPasswordConfirmDto
 {
     public string Password { get; set; } = string.Empty;
     public string ConfirmPassword { get; set; } = string.Empty;

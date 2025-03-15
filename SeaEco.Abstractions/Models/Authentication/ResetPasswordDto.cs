@@ -1,6 +1,6 @@
 namespace SeaEco.Abstractions.Models.Authentication;
 
-public sealed class RestorePasswordDto
+public sealed class ResetPasswordDto
 {
     public string Email { get; set; } = string.Empty;
 }

@@ -9,8 +9,8 @@ public interface IAuthService
     Task<Response<string>> RegisterUser(RegisterUserDto dto);
     Task<Response<string>> SignIn(LoginDto dto);
 
-    Task<Response> RestorePasswordRequest(RestorePasswordDto dto);
-    Task<Response> RestorePasswordConfirm(RestorePasswordConfirmDto dto);
+    Task<Response> ResetPasswordRequest(ResetPasswordDto dto);
+    Task<Response> ResetPasswordConfirm(ResetPasswordConfirmDto dto);
     Task<Response> ChangePassword(ChangePasswordDto dto);
     
     void SignOut();

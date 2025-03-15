@@ -13,6 +13,11 @@ public class AuthController(IAuthService authService) : ApiControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterUserDto dto)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
         Response<string> response = await authService.RegisterUser(dto);
         return response.IsError
             ? AsBadRequest(response.ErrorMessage)
@@ -22,6 +27,11 @@ public class AuthController(IAuthService authService) : ApiControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDto dto)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
         Response<string> response = await authService.SignIn(dto);
         return response.IsError
             ? AsBadRequest(response.ErrorMessage)
@@ -35,19 +45,29 @@ public class AuthController(IAuthService authService) : ApiControllerBase
         return AsOk();
     }
 
-    [HttpPost("request-restore-password")]
-    public async Task<IActionResult> RequestRestorePassword([FromBody] RestorePasswordDto dto)
+    [HttpPost("request-reset-password")]
+    public async Task<IActionResult> RequestResetPassword([FromBody] ResetPasswordDto dto)
     {
-        Response response = await authService.RestorePasswordRequest(dto);
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        Response response = await authService.ResetPasswordRequest(dto);
         return response.IsError
             ? AsBadRequest(response.ErrorMessage)
             : AsOk();
     }
 
-    [HttpPost("restore-password")]
-    public async Task<IActionResult> RestorePassword([FromBody] RestorePasswordConfirmDto dto)
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordConfirmDto dto)
     {
-        Response response = await authService.RestorePasswordConfirm(dto);
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        Response response = await authService.ResetPasswordConfirm(dto);
         return response.IsError
             ? AsBadRequest(response.ErrorMessage)
             : AsOk();
@@ -57,6 +77,11 @@ public class AuthController(IAuthService authService) : ApiControllerBase
     [Authorize]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
         Response response = await authService.ChangePassword(dto);
         return response.IsError
             ? AsBadRequest(response.ErrorMessage)
