@@ -9,6 +9,7 @@ using SeaEco.Services.AuthServices;
 using SeaEco.Services.EmailServices;
 using SeaEco.Services.EmailServices.Models;
 using SeaEco.Services.JwtServices;
+using SeaEco.Services.TokenServices;
 using SeaEco.Services.UserServices;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -56,6 +57,7 @@ services.AddScoped<ICurrentUserContext, CurrentUserContext>();
 services.AddScoped<IEmailService, SmtpEmailService>();
 services.AddTransient<IJwtService, JwtService>();
 services.AddTransient<IAuthService, AuthService>();
+services.AddTransient<ITokenService, TokenService>();
 
 var app = builder.Build();
 

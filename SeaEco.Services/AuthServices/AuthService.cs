@@ -4,14 +4,21 @@ using SeaEco.Abstractions.Models.Authentication;
 using SeaEco.Abstractions.ResponseService;
 using SeaEco.EntityFramework.Entities;
 using SeaEco.EntityFramework.GenericRepository;
+using SeaEco.Services.EmailServices;
+using SeaEco.Services.EmailServices.Models;
 using SeaEco.Services.HashService;
 using SeaEco.Services.JwtServices;
+using SeaEco.Services.TokenServices;
+using SeaEco.Services.UserServices;
 
 namespace SeaEco.Services.AuthServices;
 public sealed class AuthService(
     IHttpContextAccessor httpContextAccessor,
     IGenericRepository<Bruker> userRepository,
-    IJwtService jwtService)
+    ITokenService tokenService,
+    IEmailService emailService,
+    IJwtService jwtService,
+    ICurrentUserContext currentUserContext)
     : IAuthService
 {
     private const string InvalidCredentialsError = "Invalid credentials.";
@@ -62,6 +69,71 @@ public sealed class AuthService(
         return AuthenticationProcess(userResult.Value);
     }
 
+    public async Task<Response> RestorePasswordRequest(RestorePasswordDto dto)
+    {
+        Response<Bruker> getUserResult = await GetUser(dto.Email);
+        if (getUserResult.IsError)
+        {
+            return Response.Error(getUserResult.ErrorMessage);
+        }
+        
+        IEnumerable<Claim> claims = GetClaims(getUserResult.Value);
+        Response<string> tokenResult = await tokenService.CreateToken(claims, getUserResult.Value.Id);
+        if (tokenResult.IsError)
+        {
+            return Response.Error(tokenResult.ErrorMessage);
+        }
+
+        string url = UrlBuilder.RestorePasswordUrl(tokenResult.Value);
+
+        return await emailService.SendMail(new EmailMessageModel()
+        {
+            Content = $"Follow the <a href='{url}'>link</a>",
+            Recipients = [getUserResult.Value.Epost],
+            Subject = "Restore password",
+            BodyType = EmailBodyType.Html,
+        });
+    }
+
+    public async Task<Response> RestorePasswordConfirm(RestorePasswordConfirmDto dto)
+    {
+        Response<Token> tokenResult = await tokenService.GetByPayload(dto.Token);
+        if (tokenResult.IsError)
+        {
+            return Response.Error(tokenResult.ErrorMessage);
+        }
+        
+        var password = Hasher.Hash(dto.Password);
+        
+        Bruker user = tokenResult.Value.Bruker;
+        user.PassordHash = password.hashed;
+        user.Salt = password.salt;
+        
+        return await userRepository.Update(user);
+    }
+
+    public async Task<Response> ChangePassword(ChangePasswordDto dto)
+    {
+        Response<Bruker> userResult = await GetUser(currentUserContext.Email);
+        if (userResult.IsError)
+        {
+            return Response.Error(userResult.ErrorMessage);
+        }
+        
+        Bruker user = userResult.Value;
+        if (!Hasher.Verify(user.PassordHash, dto.OldPassword, user.Salt))
+        {
+            return Response.Error(InvalidCredentialsError);
+        }
+
+        var password = Hasher.Hash(dto.NewPassword);
+        
+        user.PassordHash = password.hashed;
+        user.Salt = password.salt;
+
+        return await userRepository.Update(user);
+    }
+
     public void SignOut()
     {
         string? token = httpContextAccessor.HttpContext?.Request.Cookies[TokenCookieName];
@@ -71,6 +143,8 @@ public sealed class AuthService(
         }
         httpContextAccessor.HttpContext?.Response.Cookies.Delete(TokenCookieName);
     }
+
+    public Task<Response<Bruker>> GetCurrentUser() => GetUser(currentUserContext.Email);
 
     private Response<string> AuthenticationProcess(Bruker bruker, bool appendToken = true)
     {
@@ -128,5 +202,4 @@ public sealed class AuthService(
     ];
 
     private ClaimsPrincipal GetPrincipal(IEnumerable<Claim> claims) => new(new ClaimsIdentity(claims));
-
 }

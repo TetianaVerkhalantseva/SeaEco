@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SeaEco.Abstractions.Models.Authentication;
 using SeaEco.Abstractions.ResponseService;
+using SeaEco.EntityFramework.Entities;
 using SeaEco.Services.AuthServices;
 
 namespace SeaEco.Server.Controllers;
@@ -33,9 +34,43 @@ public class AuthController(IAuthService authService) : ApiControllerBase
         authService.SignOut();
         return AsOk();
     }
+
+    [HttpPost("request-restore-password")]
+    public async Task<IActionResult> RequestRestorePassword([FromBody] RestorePasswordDto dto)
+    {
+        Response response = await authService.RestorePasswordRequest(dto);
+        return response.IsError
+            ? AsBadRequest(response.ErrorMessage)
+            : AsOk();
+    }
+
+    [HttpPost("restore-password")]
+    public async Task<IActionResult> RestorePassword([FromBody] RestorePasswordConfirmDto dto)
+    {
+        Response response = await authService.RestorePasswordConfirm(dto);
+        return response.IsError
+            ? AsBadRequest(response.ErrorMessage)
+            : AsOk();
+    }
+
+    [HttpPost("change-password")]
+    [Authorize]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
+    {
+        Response response = await authService.ChangePassword(dto);
+        return response.IsError
+            ? AsBadRequest(response.ErrorMessage)
+            : AsOk();
+    }
     
     // The endpoint to test and demonstrate saving the JWT token in cookies.
     [HttpGet("test")]
     [Authorize]
-    public async Task<IActionResult> Test() => AsOk();
+    public async Task<IActionResult> Test()
+    {
+        Response<Bruker> userResult = await authService.GetCurrentUser();
+        return userResult.IsError
+            ? AsBadRequest(userResult.ErrorMessage)
+            : AsOk(userResult.Value);
+    }
 }

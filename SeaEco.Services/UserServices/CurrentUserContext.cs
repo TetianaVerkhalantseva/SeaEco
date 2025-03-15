@@ -31,7 +31,7 @@ public class CurrentUserContext(IHttpContextAccessor contextAccessor) : ICurrent
     {
         get
         {
-            string? value = contextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            string? value = contextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == JwtClaimTypes.NAME)?.Value;
             if (string.IsNullOrEmpty(value))
             {
                 throw new UnauthorizedAccessException(UnauthorizedError);

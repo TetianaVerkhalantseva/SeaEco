@@ -28,7 +28,7 @@ public sealed class SmtpEmailService : IEmailService
             await _client.AuthenticateAsync(_options.UserName, _options.Password);
             await _client.SendAsync(CreateMessage(
                 model.Subject, 
-                string.IsNullOrEmpty(model.SendFrom) ? _options.Email : model.SendFrom,
+                string.IsNullOrEmpty(model.SendFrom) ? _options.DisplayName : model.SendFrom,
                 model.Content,
                 model.BodyType,
                 model.Recipients,
