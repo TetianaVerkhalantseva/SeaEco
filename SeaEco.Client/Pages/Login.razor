@@ -61,15 +61,13 @@
 
         if (hasError) return;
 
-
         var user = new LoginDto()
         {
             Email = email,
             Password = password
         };
 
-        var response = await Http.PostAsync("/api/authentication/test-simple", new StringContent("", Encoding.UTF8, "application/json"));
-        //var response = await Http.PostAsJsonAsync("/api/authentication/login", user);
+        var response = await Http.PostAsJsonAsync("/api/authentication/login", user);
 
         if (response.IsSuccessStatusCode)
         {
@@ -94,7 +92,6 @@
 
         if (string.IsNullOrWhiteSpace(email))
         {
-
             errorMessageEmail = "Epost må fylles ut";
             hasError = true;
         }
