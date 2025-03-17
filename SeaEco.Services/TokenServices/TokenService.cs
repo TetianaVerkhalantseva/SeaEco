@@ -49,4 +49,27 @@ public class TokenService(IJwtService jwtService, IGenericRepository<Token> toke
             ? Response<Token>.Error(TokenNotFoundError)
             : Response<Token>.Ok(dbRecord);
     }
+
+    public async Task<Response> Deactivate(Token token)
+    {
+        token.IsUsed = true;
+        token.UsedAt = DateTime.Now;
+        
+        return await tokenRepository.Update(token);
+    }
+
+    public async Task<Response> DeactivateAll(Guid userId)
+    {
+        List<Token> tokens = await tokenRepository.GetAll()
+            .Where(token => token.BrukerId == userId &&
+                            token.IsUsed == false)
+            .ToListAsync();
+
+        foreach (Token token in tokens)
+        {
+            token.IsUsed = true;
+        }
+        
+        return await tokenRepository.UpdateRange(tokens);
+    }
 }
