@@ -25,6 +25,8 @@ public sealed class AuthService(
     private const string WasCreatedError = "Was created.";
     private const string RegistrationError = "Error while registration user.";
     private const string TokenCookieName = "auth_token";
+    private const string TokenWasUsedError = "Token was used.";
+    private const string TokenWasExpiredError = "Token was expired.";
     
     public async Task<Response<string>> RegisterUser(RegisterUserDto dto)
     {
@@ -66,6 +68,12 @@ public sealed class AuthService(
             return Response<string>.Error(userResult.ErrorMessage);
         }
 
+        Response deactivateResult = await tokenService.DeactivateAll(userResult.Value.Id);
+        if (deactivateResult.IsError)
+        {
+            // TODO logg error
+        }
+        
         return AuthenticationProcess(userResult.Value);
     }
 
@@ -75,6 +83,12 @@ public sealed class AuthService(
         if (getUserResult.IsError)
         {
             return Response.Error(getUserResult.ErrorMessage);
+        }
+
+        Response deactivateResult = await tokenService.DeactivateAll(getUserResult.Value.Id);
+        if (deactivateResult.IsError)
+        {
+            return deactivateResult;
         }
         
         IEnumerable<Claim> claims = GetClaims(getUserResult.Value);
@@ -103,13 +117,32 @@ public sealed class AuthService(
             return Response.Error(tokenResult.ErrorMessage);
         }
         
+        Token token = tokenResult.Value;
+        if (token.IsUsed || token.ExpiredAt < DateTime.Now)
+        {
+            if (token.IsUsed)
+            {
+                return Response.Error(TokenWasUsedError);
+            }
+            else
+            {
+                return Response.Error(TokenWasExpiredError);
+            }
+        }
+        
         var password = Hasher.Hash(dto.Password);
         
-        Bruker user = tokenResult.Value.Bruker;
+        Bruker user = token.Bruker;
         user.PassordHash = password.hashed;
         user.Salt = password.salt;
         
-        return await userRepository.Update(user);
+        Response updateResult = await userRepository.Update(user);
+        if (updateResult.IsError)
+        {
+            return updateResult;
+        }
+        
+        return await tokenService.Deactivate(token);
     }
 
     public async Task<Response> ChangePassword(ChangePasswordDto dto)
