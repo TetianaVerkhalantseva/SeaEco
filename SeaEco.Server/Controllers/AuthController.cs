@@ -4,11 +4,12 @@ using SeaEco.Abstractions.Models.Authentication;
 using SeaEco.Abstractions.ResponseService;
 using SeaEco.EntityFramework.Entities;
 using SeaEco.Services.AuthServices;
+using SeaEco.Services.TokenServices;
 
 namespace SeaEco.Server.Controllers;
 
 [Route("/api/authentication")]
-public class AuthController(IAuthService authService) : ApiControllerBase
+public class AuthController(IAuthService authService, ITokenService tokenService) : ApiControllerBase
 {
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterUserDto dto)
@@ -83,6 +84,15 @@ public class AuthController(IAuthService authService) : ApiControllerBase
         }
         
         Response response = await authService.ChangePassword(dto);
+        return response.IsError
+            ? AsBadRequest(response.ErrorMessage)
+            : AsOk();
+    }
+
+    [HttpGet("validate-token/{token}")]
+    public async Task<IActionResult> ValidateToken([FromRoute] string token)
+    {
+        Response response = await tokenService.Validate(token);
         return response.IsError
             ? AsBadRequest(response.ErrorMessage)
             : AsOk();
