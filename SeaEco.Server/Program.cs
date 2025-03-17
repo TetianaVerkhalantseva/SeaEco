@@ -9,6 +9,7 @@ using SeaEco.EntityFramework.Contexts;
 using SeaEco.EntityFramework.GenericRepository;
 using SeaEco.Server.Middlewares;
 using SeaEco.Services.AuthServices;
+using SeaEco.Services.CustomerServices;
 using SeaEco.Services.EmailServices;
 using SeaEco.Services.EmailServices.Models;
 using SeaEco.Services.JwtServices;
@@ -71,6 +72,9 @@ services.AddScoped<IEmailService, SmtpEmailService>();
 services.AddTransient<IJwtService, JwtService>();
 services.AddTransient<IAuthService, AuthService>();
 services.AddTransient<ITokenService, TokenService>();
+
+// Register CustomerService
+services.AddScoped<ICustomerService, CustomerService>();
 
 // Models validators
 services.AddScoped<IValidator<LoginDto>, LoginDtoValidator>();
