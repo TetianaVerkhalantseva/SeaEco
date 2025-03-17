@@ -27,6 +27,7 @@ public sealed class AuthService(
     private const string TokenCookieName = "auth_token";
     private const string TokenWasUsedError = "Token was used.";
     private const string TokenWasExpiredError = "Token was expired.";
+    private const string PasswordAreSameError = "Old and new passwords are same.";
     
     public async Task<Response<string>> RegisterUser(RegisterUserDto dto)
     {
@@ -159,6 +160,11 @@ public sealed class AuthService(
             return Response.Error(InvalidCredentialsError);
         }
 
+        if (Hasher.Verify(user.PassordHash, dto.NewPassword, user.Salt))
+        {
+            return Response.Error(PasswordAreSameError);
+        }
+        
         var password = Hasher.Hash(dto.NewPassword);
         
         user.PassordHash = password.hashed;
