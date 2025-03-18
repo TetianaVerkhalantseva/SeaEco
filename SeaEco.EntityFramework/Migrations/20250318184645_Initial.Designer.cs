@@ -12,8 +12,8 @@ using SeaEco.EntityFramework.Contexts;
 namespace SeaEco.EntityFramework.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250309213554_ChangedIdTypeForUser")]
-    partial class ChangedIdTypeForUser
+    [Migration("20250318184645_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -523,6 +523,60 @@ namespace SeaEco.EntityFramework.Migrations
                     b.ToTable("b_stasjon", (string)null);
                 });
 
+            modelBuilder.Entity("SeaEco.EntityFramework.Entities.Bruker", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("Aktiv")
+                        .HasColumnType("boolean")
+                        .HasColumnName("aktiv");
+
+                    b.Property<DateTime>("Datoregistrert")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("datoregistrert")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<string>("Epost")
+                        .IsRequired()
+                        .HasMaxLength(45)
+                        .HasColumnType("character varying(45)")
+                        .HasColumnName("epost");
+
+                    b.Property<string>("Etternavn")
+                        .IsRequired()
+                        .HasMaxLength(45)
+                        .HasColumnType("character varying(45)")
+                        .HasColumnName("etternavn");
+
+                    b.Property<string>("Fornavn")
+                        .IsRequired()
+                        .HasMaxLength(45)
+                        .HasColumnType("character varying(45)")
+                        .HasColumnName("fornavn");
+
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_admin");
+
+                    b.Property<string>("PassordHash")
+                        .IsRequired()
+                        .HasColumnType("character varying")
+                        .HasColumnName("passord_hash");
+
+                    b.Property<byte[]>("Salt")
+                        .IsRequired()
+                        .HasColumnType("bytea")
+                        .HasColumnName("salt");
+
+                    b.HasKey("Id")
+                        .HasName("bruker_pkey");
+
+                    b.ToTable("bruker", (string)null);
+                });
+
             modelBuilder.Entity("SeaEco.EntityFramework.Entities.Endringslogg", b =>
                 {
                     b.Property<int>("Loggid")
@@ -928,6 +982,10 @@ namespace SeaEco.EntityFramework.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<Guid>("BrukerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("bruker_id");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("created_at");
@@ -949,70 +1007,12 @@ namespace SeaEco.EntityFramework.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("used_at");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("user_id");
-
                     b.HasKey("Id")
                         .HasName("token_pkey");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("BrukerId");
 
                     b.ToTable("token", (string)null);
-                });
-
-            modelBuilder.Entity("SeaEco.EntityFramework.Entities.User", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<bool>("Aktiv")
-                        .HasColumnType("boolean")
-                        .HasColumnName("aktiv");
-
-                    b.Property<DateTime>("Datoregistrert")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("datoregistrert")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<string>("Epost")
-                        .IsRequired()
-                        .HasMaxLength(45)
-                        .HasColumnType("character varying(45)")
-                        .HasColumnName("epost");
-
-                    b.Property<string>("Etternavn")
-                        .IsRequired()
-                        .HasMaxLength(45)
-                        .HasColumnType("character varying(45)")
-                        .HasColumnName("etternavn");
-
-                    b.Property<string>("Fornavn")
-                        .IsRequired()
-                        .HasMaxLength(45)
-                        .HasColumnType("character varying(45)")
-                        .HasColumnName("fornavn");
-
-                    b.Property<bool>("IsAdmin")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_admin");
-
-                    b.Property<string>("PassordHash")
-                        .IsRequired()
-                        .HasColumnType("character varying")
-                        .HasColumnName("passord_hash");
-
-                    b.Property<string>("Salt")
-                        .IsRequired()
-                        .HasColumnType("character varying")
-                        .HasColumnName("salt");
-
-                    b.HasKey("Id")
-                        .HasName("user_pkey");
-
-                    b.ToTable("user", (string)null);
                 });
 
             modelBuilder.Entity("SeaEco.EntityFramework.Entities.BBilder", b =>
@@ -1039,31 +1039,31 @@ namespace SeaEco.EntityFramework.Migrations
 
             modelBuilder.Entity("SeaEco.EntityFramework.Entities.BProsjekt", b =>
                 {
-                    b.HasOne("SeaEco.EntityFramework.Entities.User", "Ansvarligansatt2")
+                    b.HasOne("SeaEco.EntityFramework.Entities.Bruker", "Ansvarligansatt2")
                         .WithMany("BProsjektAnsvarligansatt2s")
                         .HasForeignKey("Ansvarligansatt2id")
-                        .HasConstraintName("fk_b_prosjekt_user2");
+                        .HasConstraintName("fk_b_prosjekt_bruker2");
 
-                    b.HasOne("SeaEco.EntityFramework.Entities.User", "Ansvarligansatt3")
+                    b.HasOne("SeaEco.EntityFramework.Entities.Bruker", "Ansvarligansatt3")
                         .WithMany("BProsjektAnsvarligansatt3s")
                         .HasForeignKey("Ansvarligansatt3id")
-                        .HasConstraintName("fk_b_prosjekt_user3");
+                        .HasConstraintName("fk_b_prosjekt_bruker3");
 
-                    b.HasOne("SeaEco.EntityFramework.Entities.User", "Ansvarligansatt4")
+                    b.HasOne("SeaEco.EntityFramework.Entities.Bruker", "Ansvarligansatt4")
                         .WithMany("BProsjektAnsvarligansatt4s")
                         .HasForeignKey("Ansvarligansatt4id")
-                        .HasConstraintName("fk_b_prosjekt_user4");
+                        .HasConstraintName("fk_b_prosjekt_bruker4");
 
-                    b.HasOne("SeaEco.EntityFramework.Entities.User", "Ansvarligansatt5")
+                    b.HasOne("SeaEco.EntityFramework.Entities.Bruker", "Ansvarligansatt5")
                         .WithMany("BProsjektAnsvarligansatt5s")
                         .HasForeignKey("Ansvarligansatt5id")
-                        .HasConstraintName("fk_b_prosjekt_user5");
+                        .HasConstraintName("fk_b_prosjekt_bruker5");
 
-                    b.HasOne("SeaEco.EntityFramework.Entities.User", "Ansvarligansatt")
+                    b.HasOne("SeaEco.EntityFramework.Entities.Bruker", "Ansvarligansatt")
                         .WithMany("BProsjektAnsvarligansatts")
                         .HasForeignKey("Ansvarligansattid")
                         .IsRequired()
-                        .HasConstraintName("fk_b_prosjekt_user1");
+                        .HasConstraintName("fk_b_prosjekt_bruker1");
 
                     b.HasOne("SeaEco.EntityFramework.Entities.Kunde", "Kunde")
                         .WithMany("BProsjekts")
@@ -1097,16 +1097,16 @@ namespace SeaEco.EntityFramework.Migrations
 
             modelBuilder.Entity("SeaEco.EntityFramework.Entities.BProvetakingsplan", b =>
                 {
-                    b.HasOne("SeaEco.EntityFramework.Entities.User", "Planlegger2")
+                    b.HasOne("SeaEco.EntityFramework.Entities.Bruker", "Planlegger2")
                         .WithMany("BProvetakingsplanPlanlegger2s")
                         .HasForeignKey("Planlegger2id")
-                        .HasConstraintName("fk_b_provetakingsplan_user2");
+                        .HasConstraintName("fk_b_provetakingsplan_bruker2");
 
-                    b.HasOne("SeaEco.EntityFramework.Entities.User", "Planlegger")
+                    b.HasOne("SeaEco.EntityFramework.Entities.Bruker", "Planlegger")
                         .WithMany("BProvetakingsplanPlanleggers")
                         .HasForeignKey("Planleggerid")
                         .IsRequired()
-                        .HasConstraintName("fk_b_provetakingsplan_user1");
+                        .HasConstraintName("fk_b_provetakingsplan_bruker1");
 
                     b.HasOne("SeaEco.EntityFramework.Entities.BProsjekt", "Prosjekt")
                         .WithOne("BProvetakingsplan")
@@ -1123,13 +1123,13 @@ namespace SeaEco.EntityFramework.Migrations
 
             modelBuilder.Entity("SeaEco.EntityFramework.Entities.BRapport", b =>
                 {
-                    b.HasOne("SeaEco.EntityFramework.Entities.User", "Generertav")
+                    b.HasOne("SeaEco.EntityFramework.Entities.Bruker", "Generertav")
                         .WithMany("BRapportGenerertavs")
                         .HasForeignKey("Generertavid")
                         .IsRequired()
                         .HasConstraintName("fk_b_rapport_ansattgenerert");
 
-                    b.HasOne("SeaEco.EntityFramework.Entities.User", "Godkjentav")
+                    b.HasOne("SeaEco.EntityFramework.Entities.Bruker", "Godkjentav")
                         .WithMany("BRapportGodkjentavs")
                         .HasForeignKey("Godkjentavid")
                         .IsRequired()
@@ -1233,25 +1233,25 @@ namespace SeaEco.EntityFramework.Migrations
 
             modelBuilder.Entity("SeaEco.EntityFramework.Entities.Endringslogg", b =>
                 {
-                    b.HasOne("SeaEco.EntityFramework.Entities.User", "Endretav")
+                    b.HasOne("SeaEco.EntityFramework.Entities.Bruker", "Endretav")
                         .WithMany("Endringsloggs")
                         .HasForeignKey("Endretavid")
                         .IsRequired()
-                        .HasConstraintName("fk_endringslogg_user");
+                        .HasConstraintName("fk_endringslogg_bruker");
 
                     b.Navigation("Endretav");
                 });
 
             modelBuilder.Entity("SeaEco.EntityFramework.Entities.Token", b =>
                 {
-                    b.HasOne("SeaEco.EntityFramework.Entities.User", "User")
+                    b.HasOne("SeaEco.EntityFramework.Entities.Bruker", "Bruker")
                         .WithMany("Tokens")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("BrukerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_token_user");
+                        .HasConstraintName("fk_token_bruker");
 
-                    b.Navigation("User");
+                    b.Navigation("Bruker");
                 });
 
             modelBuilder.Entity("SeaEco.EntityFramework.Entities.BProsjekt", b =>
@@ -1272,6 +1272,31 @@ namespace SeaEco.EntityFramework.Migrations
                     b.Navigation("BDyr");
 
                     b.Navigation("BSensorisk");
+                });
+
+            modelBuilder.Entity("SeaEco.EntityFramework.Entities.Bruker", b =>
+                {
+                    b.Navigation("BProsjektAnsvarligansatt2s");
+
+                    b.Navigation("BProsjektAnsvarligansatt3s");
+
+                    b.Navigation("BProsjektAnsvarligansatt4s");
+
+                    b.Navigation("BProsjektAnsvarligansatt5s");
+
+                    b.Navigation("BProsjektAnsvarligansatts");
+
+                    b.Navigation("BProvetakingsplanPlanlegger2s");
+
+                    b.Navigation("BProvetakingsplanPlanleggers");
+
+                    b.Navigation("BRapportGenerertavs");
+
+                    b.Navigation("BRapportGodkjentavs");
+
+                    b.Navigation("Endringsloggs");
+
+                    b.Navigation("Tokens");
                 });
 
             modelBuilder.Entity("SeaEco.EntityFramework.Entities.Kunde", b =>
@@ -1312,31 +1337,6 @@ namespace SeaEco.EntityFramework.Migrations
             modelBuilder.Entity("SeaEco.EntityFramework.Entities.SysTykkelsepaslam", b =>
                 {
                     b.Navigation("BSensorisks");
-                });
-
-            modelBuilder.Entity("SeaEco.EntityFramework.Entities.User", b =>
-                {
-                    b.Navigation("BProsjektAnsvarligansatt2s");
-
-                    b.Navigation("BProsjektAnsvarligansatt3s");
-
-                    b.Navigation("BProsjektAnsvarligansatt4s");
-
-                    b.Navigation("BProsjektAnsvarligansatt5s");
-
-                    b.Navigation("BProsjektAnsvarligansatts");
-
-                    b.Navigation("BProvetakingsplanPlanlegger2s");
-
-                    b.Navigation("BProvetakingsplanPlanleggers");
-
-                    b.Navigation("BRapportGenerertavs");
-
-                    b.Navigation("BRapportGodkjentavs");
-
-                    b.Navigation("Endringsloggs");
-
-                    b.Navigation("Tokens");
                 });
 #pragma warning restore 612, 618
         }
