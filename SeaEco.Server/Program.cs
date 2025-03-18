@@ -76,6 +76,7 @@ services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
 services.AddScoped<IValidator<ChangePasswordDto>, ChangePasswordDtoValidator>();
 services.AddScoped<IValidator<ResetPasswordDto>, ResetPasswordDtoValidator>();
 services.AddScoped<IValidator<ResetPasswordConfirmDto>, ResetPasswordConfirmDtoValidator>();
+services.AddTransient<IUserService, UserService>();
 
 var app = builder.Build();
 
