@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace SeaEco.Abstractions.Models.Customer;
 
-namespace SeaEco.EntityFramework.Entities;
-
-public partial class Kunde
+public class AddCustomerDto
 {
-    public int Kundeid { get; set; }
-
     public string Oppdragsgiver { get; set; } = null!;
 
     public string Kontaktperson { get; set; } = null!;
@@ -20,6 +15,4 @@ public partial class Kunde
     public string Kommune { get; set; } = null!;
 
     public string Fylke { get; set; } = null!;
-
-    public virtual ICollection<BProsjekt> BProsjekts { get; set; } = new List<BProsjekt>();
 }
