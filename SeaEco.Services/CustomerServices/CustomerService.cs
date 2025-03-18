@@ -37,5 +37,39 @@ public class CustomerService: ICustomerService
         
         return customer;
     }
+
+    public async Task<AddCustomerResult> AddCustomer(AddCustomerDto customerDto)
+    {
+        var customer = new Kunde()
+        {
+            Oppdragsgiver = customerDto.Oppdragsgiver,
+            Kontaktperson = customerDto.Kontaktperson,
+            Telefonnummer = customerDto.Telefonnummer,
+            Orgnr = customerDto.Orgnr,
+            Postadresse = customerDto.Postadresse,
+            Kommune = customerDto.Kommune,
+            Fylke = customerDto.Fylke
+        };
+
+        try
+        {
+            await _db.Kundes.AddAsync(customer);
+            await _db.SaveChangesAsync();
+            return new AddCustomerResult
+            {
+                IsSuccess = true,
+                Message = $"Customer {customer.Kundeid}: {customer.Oppdragsgiver} was successfully added!"
+            };
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Error: {e.Message}");
+            return new AddCustomerResult
+            {
+                IsSuccess = false,
+                Message = "An error occured while adding customer."
+            };
+        }
+    }
 }
 

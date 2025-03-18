@@ -44,4 +44,22 @@ public class CustomerController: ControllerBase
       
       return Ok(customer);
    }
+
+   [HttpPost]
+   public async Task<IActionResult> AddCustomer([FromBody] AddCustomerDto dto)
+   {
+      if (!ModelState.IsValid)
+      {
+         return BadRequest(ModelState);
+      }
+      
+      var result = await _customerService.AddCustomer(dto);
+
+      if (result.IsSuccess)
+      {
+         return Ok();
+      }
+      
+      return BadRequest(result.Message);
+   }
 }
