@@ -237,7 +237,8 @@ public sealed class AuthService(
     [
         new(JwtClaimTypes.SUB, user.Id.ToString()),
         new(JwtClaimTypes.NAME, user.Epost),
-        new(JwtClaimTypes.IAT, DateTimeOffset.Now.Ticks.ToString())
+        new(JwtClaimTypes.IAT, DateTimeOffset.Now.Ticks.ToString()),
+        new(JwtClaimTypes.ADMIN, user.IsAdmin.ToString())
     ];
 
     private ClaimsPrincipal GetPrincipal(IEnumerable<Claim> claims) => new(new ClaimsIdentity(claims));

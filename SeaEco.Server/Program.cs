@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using SeaEco.Abstractions.Models.Authentication;
 using SeaEco.EntityFramework.Contexts;
 using SeaEco.EntityFramework.GenericRepository;
+using SeaEco.Server.Infrastructure;
 using SeaEco.Server.Middlewares;
 using SeaEco.Services.AuthServices;
 using SeaEco.Services.EmailServices;
@@ -20,7 +21,10 @@ var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 var configuration = builder.Configuration;
 
-builder.Services.AddControllers()
+builder.Services.AddControllers(options =>
+    {
+        options.Filters.Add<RoleAccessorActionFilter>();
+    })
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
