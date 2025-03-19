@@ -8,6 +8,7 @@ using SeaEco.Abstractions.Models.Authentication;
 using SeaEco.EntityFramework.Contexts;
 using SeaEco.EntityFramework.GenericRepository;
 using SeaEco.Server.Infrastructure;
+using SeaEco.Server.Middlewares;
 using SeaEco.Services.AuthServices;
 using SeaEco.Services.CustomerServices;
 using SeaEco.Services.EmailServices;
