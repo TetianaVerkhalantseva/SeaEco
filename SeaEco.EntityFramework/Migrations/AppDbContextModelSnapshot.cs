@@ -563,7 +563,7 @@ namespace SeaEco.EntityFramework.Migrations
                         .HasColumnType("character varying")
                         .HasColumnName("passord_hash");
 
-                    b.Property<string>("Salt")
+                    b.Property<byte[]>("Salt")
                         .IsRequired()
                         .HasColumnType("bytea")
                         .HasColumnName("salt");

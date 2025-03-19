@@ -11,6 +11,8 @@ public class TokenService(IJwtService jwtService, IGenericRepository<Token> toke
 {
     private const string CreateTokenError = "Error while generated token";
     private const string TokenNotFoundError = "Token not found";
+    private const string TokenWasUsedError = "Token was used.";
+    private const string TokenWasExpiredError = "Token was expired.";
     
     public async Task<Response<string>> CreateToken(IEnumerable<Claim> claims, Guid userId)
     {
@@ -48,5 +50,51 @@ public class TokenService(IJwtService jwtService, IGenericRepository<Token> toke
         return dbRecord is null
             ? Response<Token>.Error(TokenNotFoundError)
             : Response<Token>.Ok(dbRecord);
+    }
+
+    public async Task<Response> Deactivate(Token token)
+    {
+        token.IsUsed = true;
+        token.UsedAt = DateTime.Now;
+        
+        return await tokenRepository.Update(token);
+    }
+
+    public async Task<Response> DeactivateAll(Guid userId)
+    {
+        List<Token> tokens = await tokenRepository.GetAll()
+            .Where(token => token.BrukerId == userId &&
+                            token.IsUsed == false)
+            .ToListAsync();
+
+        foreach (Token token in tokens)
+        {
+            token.IsUsed = true;
+        }
+        
+        return await tokenRepository.UpdateRange(tokens);
+    }
+
+    public async Task<Response> Validate(string token)
+    {
+        Token? dbRecord = await tokenRepository.GetAll()
+            .FirstOrDefaultAsync(t => t.Token1 == token);
+
+        if (dbRecord is null)
+        {
+            return Response.Error(TokenNotFoundError);
+        }
+
+        if (dbRecord.IsUsed)
+        {
+            return Response.Error(TokenWasUsedError);
+        }
+
+        if (dbRecord.UsedAt < DateTime.Now)
+        {
+            return Response.Error(TokenWasExpiredError);
+        }
+        
+        return Response.Ok();
     }
 }
