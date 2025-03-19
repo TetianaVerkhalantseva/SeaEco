@@ -7,7 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using SeaEco.Abstractions.Models.Authentication;
 using SeaEco.EntityFramework.Contexts;
 using SeaEco.EntityFramework.GenericRepository;
-using SeaEco.Server.Middlewares;
+using SeaEco.Server.Infrastructure;
 using SeaEco.Services.AuthServices;
 using SeaEco.Services.CustomerServices;
 using SeaEco.Services.EmailServices;
@@ -27,7 +27,10 @@ builder.Services.AddCors(options =>
         policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 });
 
-builder.Services.AddControllers()
+builder.Services.AddControllers(options =>
+    {
+        options.Filters.Add<RoleAccessorActionFilter>();
+    })
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
@@ -62,7 +65,7 @@ services.AddAuthentication(options =>
 services.Configure<JwtOptions>(configuration.GetSection("JwtOptions"));
 services.Configure<SmtpOptions>(configuration.GetSection("SmtpOptions"));
 
-services.AddDbContext<AppDbContext>(options => options.UseNpgsql(configuration["ConnectionStrings:DefaultConnection"]));
+services.AddDbContext<AppDbContext>(options => options.UseNpgsql(configuration["ConnectionStrings:LocalConnection"]));
 services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 // Core services
@@ -82,6 +85,7 @@ services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
 services.AddScoped<IValidator<ChangePasswordDto>, ChangePasswordDtoValidator>();
 services.AddScoped<IValidator<ResetPasswordDto>, ResetPasswordDtoValidator>();
 services.AddScoped<IValidator<ResetPasswordConfirmDto>, ResetPasswordConfirmDtoValidator>();
+services.AddTransient<IUserService, UserService>();
 
 var app = builder.Build();
 

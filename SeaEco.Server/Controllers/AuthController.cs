@@ -3,14 +3,17 @@ using Microsoft.AspNetCore.Mvc;
 using SeaEco.Abstractions.Models.Authentication;
 using SeaEco.Abstractions.ResponseService;
 using SeaEco.EntityFramework.Entities;
+using SeaEco.Server.Infrastructure;
 using SeaEco.Services.AuthServices;
+using SeaEco.Services.TokenServices;
 
 namespace SeaEco.Server.Controllers;
 
 [Route("/api/authentication")]
-public class AuthController(IAuthService authService) : ApiControllerBase
+public class AuthController(IAuthService authService, ITokenService tokenService) : ApiControllerBase
 {
     [HttpPost("register")]
+    [RoleAccessor(true)]
     public async Task<IActionResult> Register([FromBody] RegisterUserDto dto)
     {
         if (!ModelState.IsValid)
@@ -87,10 +90,20 @@ public class AuthController(IAuthService authService) : ApiControllerBase
             ? AsBadRequest(response.ErrorMessage)
             : AsOk();
     }
+
+    [HttpGet("validate-token/{token}")]
+    public async Task<IActionResult> ValidateToken([FromRoute] string token)
+    {
+        Response response = await tokenService.Validate(token);
+        return response.IsError
+            ? AsBadRequest(response.ErrorMessage)
+            : AsOk();
+    }
     
     // The endpoint to test and demonstrate saving the JWT token in cookies.
     [HttpGet("test")]
     [Authorize]
+    [RoleAccessor(true)]
     public async Task<IActionResult> Test()
     {
         Response<Bruker> userResult = await authService.GetCurrentUser();

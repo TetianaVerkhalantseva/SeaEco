@@ -44,6 +44,21 @@ public sealed class GenericRepository<T> : IGenericRepository<T> where T : class
         }
     }
 
+    public async Task<Response> UpdateRange(IEnumerable<T> entities)
+    {
+        try
+        {
+            _table.UpdateRange(entities);
+            await _dbContext.SaveChangesAsync();
+        }
+        catch (Exception e)
+        {
+            return Response.Error(e.Message);
+        }
+
+        return Response.Ok();
+    }
+
     public async Task<Response> Delete(T entity)
     {
         try
