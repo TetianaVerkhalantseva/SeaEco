@@ -18,7 +18,7 @@ public class CustomerController: ControllerBase
       _customerService = customerService;
    }
 
-   [HttpGet]
+   [HttpGet("customer-names")]
    public async Task<IActionResult> GetCustomerNames()
    {
       var customerNames = await _customerService.GetCustomerNames();
