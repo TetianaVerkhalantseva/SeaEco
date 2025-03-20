@@ -30,7 +30,7 @@ public class CustomerService: ICustomerService
     {
         var customer = await _db.Kundes.FirstOrDefaultAsync(c => c.Kundeid == customerId);
 
-        if (customer == null || customer.Kundeid == 0)
+        if (customer == null || customerId == 0)
         {
             return null;
         }
@@ -38,7 +38,7 @@ public class CustomerService: ICustomerService
         return customer;
     }
 
-    public async Task<AddCustomerResult> AddCustomer(AddCustomerDto customerDto)
+    public async Task<EditCustomerResult> AddCustomer(EditCustomerDto customerDto)
     {
         var customer = new Kunde()
         {
@@ -55,7 +55,7 @@ public class CustomerService: ICustomerService
         {
             await _db.Kundes.AddAsync(customer);
             await _db.SaveChangesAsync();
-            return new AddCustomerResult
+            return new EditCustomerResult
             {
                 IsSuccess = true,
                 Message = $"Customer {customer.Kundeid}: {customer.Oppdragsgiver} was successfully added!"
@@ -64,12 +64,75 @@ public class CustomerService: ICustomerService
         catch (Exception e)
         {
             Console.WriteLine($"Error: {e.Message}");
-            return new AddCustomerResult
+            return new EditCustomerResult
             {
                 IsSuccess = false,
                 Message = "An error occured while adding customer."
             };
         }
+    }
+
+    public async Task<EditCustomerResult> UpdateCustomer(EditCustomerDto customerDto, int customerId)
+    {
+        var customer = await _db.Kundes.FirstOrDefaultAsync(c => c.Kundeid == customerId);
+
+        if (customer == null || customerId == 0)
+        {
+            return new EditCustomerResult
+            {
+                IsSuccess = false,
+                Message = $"Customer with ID {customerId} does not exist."
+            };
+        }
+        
+        customer.Oppdragsgiver = customerDto.Oppdragsgiver;
+        customer.Kontaktperson = customerDto.Kontaktperson;
+        customer.Telefonnummer = customerDto.Telefonnummer;
+        customer.Orgnr = customerDto.Orgnr;
+        customer.Postadresse = customerDto.Postadresse;
+        customer.Kommune = customerDto.Kommune;
+        customer.Fylke = customerDto.Fylke;
+
+        try
+        {
+            _db.Kundes.Update(customer);
+            await _db.SaveChangesAsync();
+            return new EditCustomerResult
+            {
+                IsSuccess = true,
+                Message = $"Customer with ID {customer.Kundeid} was successfully updated!"
+            };
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Error: {e.Message}");
+            return new EditCustomerResult
+            {
+                IsSuccess = false,
+                Message = "An error occured while updating customer."
+            };
+        }
+    }
+
+    public async Task<EditCustomerResult> DeleteCustomer(int customerId)
+    {
+        var customer = await _db.Kundes.FirstOrDefaultAsync(c => c.Kundeid == customerId);
+        if (customer == null || customerId == 0)
+        {
+            return new EditCustomerResult
+            {
+                IsSuccess = false,
+                Message = $"Customer with ID {customerId} does not exist."
+            };
+        }
+        
+        _db.Kundes.Remove(customer);
+        await _db.SaveChangesAsync();
+        return new EditCustomerResult
+        {
+            IsSuccess = true,
+            Message = $"Customer {customerId} was successfully deleted!"
+        };
     }
 }
 

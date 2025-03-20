@@ -7,5 +7,7 @@ public interface ICustomerService
 {
     Task<List<CustomerNamesDto>> GetCustomerNames();
     Task<Kunde?> GetCustomerById(int customerId);
-    Task<AddCustomerResult> AddCustomer(AddCustomerDto customerDto);
+    Task<EditCustomerResult> AddCustomer(EditCustomerDto customerDto);
+    Task<EditCustomerResult> UpdateCustomer(EditCustomerDto customerDto, int customerId);
+    Task<EditCustomerResult> DeleteCustomer(int customerId);
 }

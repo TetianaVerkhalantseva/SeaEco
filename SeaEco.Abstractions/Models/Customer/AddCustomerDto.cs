@@ -1,6 +1,6 @@
 ﻿namespace SeaEco.Abstractions.Models.Customer;
 
-public class AddCustomerDto
+public class EditCustomerDto
 {
     public string Oppdragsgiver { get; set; } = null!;
 

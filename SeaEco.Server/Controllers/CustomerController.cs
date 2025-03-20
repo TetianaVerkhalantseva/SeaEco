@@ -7,9 +7,10 @@ using SeaEco.Server.Infrastructure;
 
 namespace SeaEco.Server.Controllers;
 
+
+[Authorize]
 [ApiController]
 [Route("/api/[controller]")]
-
 public class CustomerController: ControllerBase
 {
    private readonly ICustomerService _customerService;
@@ -18,9 +19,8 @@ public class CustomerController: ControllerBase
    {
       _customerService = customerService;
    }
-
-   [Authorize]
-   [HttpGet("customer-names")]
+   
+   [HttpGet("Customer-names")]
    public async Task<IActionResult> GetCustomerNames()
    {
       var customerNames = await _customerService.GetCustomerNames();
@@ -33,7 +33,6 @@ public class CustomerController: ControllerBase
       return Ok(customerNames);
    }
    
-   [Authorize]
    [HttpGet("{id:int}")]
    public async Task<IActionResult> GetCustomerById(int id)
    {
@@ -46,11 +45,10 @@ public class CustomerController: ControllerBase
       
       return Ok(customer);
    }
-
-   [Authorize]
+   
    [RoleAccessor(true)]
    [HttpPost("Add-customer")]
-   public async Task<IActionResult> AddCustomer([FromBody] AddCustomerDto dto)
+   public async Task<IActionResult> AddCustomer([FromBody] EditCustomerDto dto)
    {
       if (!ModelState.IsValid)
       {
@@ -62,6 +60,37 @@ public class CustomerController: ControllerBase
       if (result.IsSuccess)
       {
          return Ok();
+      }
+      
+      return BadRequest(result.Message);
+   }
+
+   [RoleAccessor(true)]
+   [HttpPut("Update-customer-{id:int}")]
+   public async Task<IActionResult> UpdateCustomer([FromRoute] int id, [FromBody] EditCustomerDto dto)
+   {
+      if (!ModelState.IsValid)
+      {
+         return BadRequest(ModelState);
+      }
+      
+      var result = await _customerService.UpdateCustomer(dto, id);
+      if (result.IsSuccess)
+      {
+         return Ok($"{result.Message}");
+      }
+      
+      return BadRequest(result.Message);
+   }
+
+   [RoleAccessor(true)]
+   [HttpDelete("Delete-customer-{id:int}")]
+   public async Task<IActionResult> DeleteCustomer(int id)
+   {
+      var result = await _customerService.DeleteCustomer(id);
+      if (result.IsSuccess)
+      {
+         return Ok($"{result.Message}");
       }
       
       return BadRequest(result.Message);
