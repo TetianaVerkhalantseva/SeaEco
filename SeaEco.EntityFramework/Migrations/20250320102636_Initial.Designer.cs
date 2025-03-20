@@ -12,8 +12,8 @@ using SeaEco.EntityFramework.Contexts;
 namespace SeaEco.EntityFramework.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250319130649_databaseGeneratedOption")]
-    partial class databaseGeneratedOption
+    [Migration("20250320102636_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
