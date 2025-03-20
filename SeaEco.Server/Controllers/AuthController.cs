@@ -13,7 +13,7 @@ namespace SeaEco.Server.Controllers;
 public class AuthController(IAuthService authService, ITokenService tokenService) : ApiControllerBase
 {
     [HttpPost("register")]
-    [RoleAccessor(true)]
+    //[RoleAccessor(true)]
     public async Task<IActionResult> Register([FromBody] RegisterUserDto dto)
     {
         if (!ModelState.IsValid)
