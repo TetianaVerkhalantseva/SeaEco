@@ -66,7 +66,7 @@ public class CustomerController: ControllerBase
    }
 
    [RoleAccessor(true)]
-   [HttpPut("Update-customer-{id:int}")]
+   [HttpPut("Update-customer/{id:int}")]
    public async Task<IActionResult> UpdateCustomer([FromRoute] int id, [FromBody] EditCustomerDto dto)
    {
       if (!ModelState.IsValid)
@@ -84,7 +84,7 @@ public class CustomerController: ControllerBase
    }
 
    [RoleAccessor(true)]
-   [HttpDelete("Delete-customer-{id:int}")]
+   [HttpDelete("Delete-customer/{id:int}")]
    public async Task<IActionResult> DeleteCustomer(int id)
    {
       var result = await _customerService.DeleteCustomer(id);
