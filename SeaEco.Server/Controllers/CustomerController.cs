@@ -3,6 +3,7 @@ using SeaEco.Services.CustomerServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SeaEco.Abstractions.Models.Customer;
+using SeaEco.Server.Infrastructure;
 
 namespace SeaEco.Server.Controllers;
 
@@ -18,6 +19,7 @@ public class CustomerController: ControllerBase
       _customerService = customerService;
    }
 
+   [Authorize]
    [HttpGet("customer-names")]
    public async Task<IActionResult> GetCustomerNames()
    {
@@ -31,7 +33,7 @@ public class CustomerController: ControllerBase
       return Ok(customerNames);
    }
    
-   
+   [Authorize]
    [HttpGet("{id:int}")]
    public async Task<IActionResult> GetCustomerById(int id)
    {
@@ -45,7 +47,9 @@ public class CustomerController: ControllerBase
       return Ok(customer);
    }
 
-   [HttpPost]
+   [Authorize]
+   [RoleAccessor(true)]
+   [HttpPost("Add-customer")]
    public async Task<IActionResult> AddCustomer([FromBody] AddCustomerDto dto)
    {
       if (!ModelState.IsValid)
