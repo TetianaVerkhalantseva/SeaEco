@@ -2,12 +2,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SeaEco.Abstractions.Models.User;
 using SeaEco.Abstractions.ResponseService;
+using SeaEco.Server.Infrastructure;
 using SeaEco.Services.UserServices;
 
 namespace SeaEco.Server.Controllers;
 
 [Route("/api/users")]
 [Authorize]
+[RoleAccessor(true)]
+
 public class UserController(IUserService userService) : ApiControllerBase
 {
     [HttpGet]
