@@ -13,7 +13,8 @@ namespace SeaEco.Server.Controllers;
 public class AuthController(IAuthService authService, ITokenService tokenService) : ApiControllerBase
 {
     [HttpPost("register")]
-    //[RoleAccessor(true)]
+    [Authorize]
+    [RoleAccessor(true)]
     public async Task<IActionResult> Register([FromBody] RegisterUserDto dto)
     {
         if (!ModelState.IsValid)
@@ -28,6 +29,7 @@ public class AuthController(IAuthService authService, ITokenService tokenService
     }
 
     [HttpPost("login")]
+    [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginDto dto)
     {
         if (!ModelState.IsValid)
@@ -49,6 +51,7 @@ public class AuthController(IAuthService authService, ITokenService tokenService
     }
 
     [HttpPost("request-reset-password")]
+    [AllowAnonymous]
     public async Task<IActionResult> RequestResetPassword([FromBody] ResetPasswordDto dto)
     {
         if (!ModelState.IsValid)
@@ -63,6 +66,7 @@ public class AuthController(IAuthService authService, ITokenService tokenService
     }
 
     [HttpPost("reset-password")]
+    [AllowAnonymous]
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordConfirmDto dto)
     {
         if (!ModelState.IsValid)
@@ -92,6 +96,7 @@ public class AuthController(IAuthService authService, ITokenService tokenService
     }
 
     [HttpGet("validate-token/{token}")]
+    [AllowAnonymous]
     public async Task<IActionResult> ValidateToken([FromRoute] string token)
     {
         Response response = await tokenService.Validate(token);
