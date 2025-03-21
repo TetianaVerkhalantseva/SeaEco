@@ -13,7 +13,6 @@ namespace SeaEco.Server.Controllers;
 public class AuthController(IAuthService authService, ITokenService tokenService) : ApiControllerBase
 {
     [HttpPost("register")]
-    [Authorize]
     [RoleAccessor(true)]
     public async Task<IActionResult> Register([FromBody] RegisterUserDto dto)
     {
@@ -81,7 +80,6 @@ public class AuthController(IAuthService authService, ITokenService tokenService
     }
 
     [HttpPost("change-password")]
-    [Authorize]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
     {
         if (!ModelState.IsValid)
@@ -107,7 +105,6 @@ public class AuthController(IAuthService authService, ITokenService tokenService
     
     // The endpoint to test and demonstrate saving the JWT token in cookies.
     [HttpGet("test")]
-    [Authorize]
     [RoleAccessor(true)]
     public async Task<IActionResult> Test()
     {
