@@ -10,6 +10,7 @@ using SeaEco.EntityFramework.GenericRepository;
 using SeaEco.Server.Infrastructure;
 using SeaEco.Server.Middlewares;
 using SeaEco.Services.AuthServices;
+using SeaEco.Services.CustomerServices;
 using SeaEco.Services.EmailServices;
 using SeaEco.Services.EmailServices.Models;
 using SeaEco.Services.JwtServices;
@@ -20,6 +21,12 @@ using SeaEco.Services.Validators;
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 var configuration = builder.Configuration;
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy => 
+        policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+});
 
 builder.Services.AddControllers(options =>
     {
@@ -70,6 +77,9 @@ services.AddTransient<IJwtService, JwtService>();
 services.AddTransient<IAuthService, AuthService>();
 services.AddTransient<ITokenService, TokenService>();
 
+// Register CustomerService
+services.AddScoped<ICustomerService, CustomerService>();
+
 // Models validators
 services.AddScoped<IValidator<LoginDto>, LoginDtoValidator>();
 services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
@@ -91,6 +101,8 @@ app.UseMiddleware<AuthMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseCors("AllowAll");
 
 app.MapControllers();
 
