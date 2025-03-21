@@ -29,6 +29,11 @@ public class UserController(IUserService userService) : ApiControllerBase
     [HttpPut("{id:guid}/update")]
     public async Task<IActionResult> UpdateUser([FromRoute] Guid id, [FromBody] EditUserDto dto)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
         Response response = await userService.Update(id, dto);
         return response.IsError
             ? BadRequest(response.ErrorMessage)
