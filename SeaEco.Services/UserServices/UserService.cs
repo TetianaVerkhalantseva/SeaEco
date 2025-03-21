@@ -8,6 +8,8 @@ namespace SeaEco.Services.UserServices;
 
 public sealed class UserService(IGenericRepository<Bruker> userRepository) : IUserService
 {
+    private const string UserNotFoundError  = "User not found";
+    
     public async Task<IEnumerable<UserDto>> GetAllUsers(bool? isActive)
     {
         IQueryable<Bruker> query = userRepository.GetAll();
@@ -28,30 +30,54 @@ public sealed class UserService(IGenericRepository<Bruker> userRepository) : IUs
             users = await query.Where(record => !record.Aktiv).ToListAsync();
         }
 
-        return users.Select(user => new UserDto()
+        return users.Select(MapUser);
+    }
+
+    public async Task<Response<UserDto>> GetUserById(Guid userId)
+    {
+        Bruker? record = await userRepository.GetBy(record => record.Id == userId);
+        return record is null
+            ? Response<UserDto>.Error(UserNotFoundError)
+            : Response<UserDto>.Ok(MapUser(record));
+    }
+
+    public async Task<Response> Update(Guid id, EditUserDto dto)
+    {
+        Bruker? record = await userRepository.GetBy(record => record.Id == id);
+        if (record is null)
         {
-            Id = user.Id,
-            FirstName = user.Fornavn,
-            LastName = user.Etternavn,
-            Email = user.Epost,
-            IsAdmin = user.IsAdmin,
-            IsActive = user.Aktiv,
-            Datoregistrert = user.Datoregistrert
-        });
+            return Response.Error(UserNotFoundError);
+        }
+
+        record.Fornavn = dto.FirstName;
+        record.Etternavn = dto.LastName;
+        record.Epost = dto.Email;
+        record.IsAdmin = dto.IsAdmin;
+        
+        return await userRepository.Update(record);
     }
 
-    public Task<Response<UserDto>> GetUserById(Guid userId)
+    public async Task<Response> ToggleActive(Guid userId)
     {
-        throw new NotImplementedException();
+        Bruker? record = await userRepository.GetBy(record => record.Id == userId);
+        if (record is null)
+        {
+            return Response.Error(UserNotFoundError);
+        }
+        
+        record.Aktiv = !record.Aktiv;
+        
+        return await userRepository.Update(record);
     }
 
-    public Task<Response> Update(EditUserDto dto)
+    private UserDto MapUser(Bruker model) => new UserDto()
     {
-        throw new NotImplementedException();
-    }
-
-    public Task<Response> ToggleActive(Guid userId)
-    {
-        throw new NotImplementedException();
-    }
+        Id = model.Id,
+        FirstName = model.Fornavn,
+        LastName = model.Etternavn,
+        Email = model.Epost,
+        IsAdmin = model.IsAdmin,
+        IsActive = model.Aktiv,
+        Datoregistrert = model.Datoregistrert
+    };
 }
