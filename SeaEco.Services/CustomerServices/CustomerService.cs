@@ -2,7 +2,6 @@
 using SeaEco.Abstractions.Models.Customer;
 using SeaEco.EntityFramework.Entities;
 using SeaEco.EntityFramework.Contexts;
-using SeaEco.Services.UserServices;
 
 namespace SeaEco.Services.CustomerServices;
 

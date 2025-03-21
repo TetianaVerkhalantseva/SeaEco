@@ -1,5 +1,4 @@
-﻿using SeaEco.EntityFramework.Entities;
-using SeaEco.Services.CustomerServices;
+﻿using SeaEco.Services.CustomerServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SeaEco.Abstractions.Models.Customer;
