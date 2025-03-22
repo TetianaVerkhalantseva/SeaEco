@@ -33,10 +33,23 @@ public class CustomerController: ControllerBase
    }
    
    [HttpGet("{id:int}")]
-   public async Task<IActionResult> GetCustomerById(int id)
+   public async Task<IActionResult> GetCustomerInfoById(int id)
    {
-      var customer = await _customerService.GetCustomerById(id);
+      var customer = await _customerService.GetCustomerInfoById(id);
       
+      if (customer == null)
+      {
+         return NotFound($"Customer with ID {id} not found");
+      }
+      
+      return Ok(customer);
+   }
+
+   [HttpGet("Project-details-for-customer/{id:int}")]
+   public async Task<IActionResult> GetAllProjectDetailsById(int id)
+   {
+      var customer = await _customerService.GetAllProjectDetailsById(id);
+
       if (customer == null)
       {
          return NotFound($"Customer with ID {id} not found");

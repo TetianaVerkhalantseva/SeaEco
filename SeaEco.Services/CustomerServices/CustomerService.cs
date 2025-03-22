@@ -14,6 +14,7 @@ public class CustomerService: ICustomerService
         _db = db;
     }
 
+    // Get all the customer ids and names
     public async Task<List<CustomerNamesDto>> GetCustomerNames()
     {
         var customers = await _db.Kundes.ToListAsync();
@@ -25,13 +26,38 @@ public class CustomerService: ICustomerService
         }).ToList();
     }
     
-    public async Task<Kunde?> GetCustomerById(int customerId)
+    // Get information except projects for a customer
+    public async Task<Kunde?> GetCustomerInfoById(int customerId)
     {
-        var customer = await _db.Kundes.FirstOrDefaultAsync(c => c.Kundeid == customerId);
+        var customer = await _db.Kundes
+            .Where(c => c.Kundeid == customerId)
+            .FirstOrDefaultAsync();
 
         if (customer == null || customerId == 0)
         {
             return null;
+        }
+        
+        return customer;
+    }
+
+    // Get all the project ids, statuses and dates for a customer
+    public async Task<Kunde?> GetAllProjectDetailsById(int customerId)
+    {
+        var customer = await _db.Kundes
+            .Where(c=> c.Kundeid == customerId)
+            .Include(c => c.BProsjekts)
+            .FirstOrDefaultAsync();
+
+        if (customer != null)
+        {
+            customer.BProsjekts = customer.BProsjekts
+                .Select(p => new BProsjekt
+                {
+                    Prosjektid = p.Prosjektid,
+                    Status = p.Status,
+                    Datoregistrert = p.Datoregistrert
+                }).ToList();
         }
         
         return customer;

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace SeaEco.EntityFramework.Entities;
+﻿namespace SeaEco.EntityFramework.Entities;
 
 public partial class Kunde
 {
