@@ -61,6 +61,19 @@ services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = securityKey,
     };
+    
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var token = context.HttpContext.Request.Cookies["auth_token"];
+            if (!string.IsNullOrEmpty(token))
+            {
+                context.Token = token;
+            }
+            return Task.CompletedTask;
+        }
+    };
 });
 
 services.Configure<JwtOptions>(configuration.GetSection("JwtOptions"));

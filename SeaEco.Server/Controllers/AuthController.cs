@@ -111,4 +111,11 @@ public class AuthController(IAuthService authService, ITokenService tokenService
             ? AsBadRequest(userResult.ErrorMessage)
             : AsOk(userResult.Value);
     }
+   
+    [HttpGet("isAuthenticated")]
+    public async Task<IActionResult> GetAuthenticated()
+    {
+        bool isAuthenticated = User?.Identity != null && User.Identity.IsAuthenticated;
+        return Ok(new { isAuthenticated });
+    }
 }
