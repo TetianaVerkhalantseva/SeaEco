@@ -5,7 +5,7 @@ namespace SeaEco.EntityFramework.Entities;
 
 public partial class BSensorisk
 {
-    public int Prosjektid { get; set; }
+    public Guid Prosjektid { get; set; }
 
     public int Stasjonsid { get; set; }
 

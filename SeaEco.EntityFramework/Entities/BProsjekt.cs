@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-
+﻿
 namespace SeaEco.EntityFramework.Entities;
 
 public partial class BProsjekt
 {
-    public int Prosjektid { get; set; }
+    public Guid Prosjektid { get; set; }
+    public string PoId { get; set; } = null!;
 
     public int Kundeid { get; set; }
 

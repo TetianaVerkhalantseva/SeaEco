@@ -9,7 +9,7 @@ public partial class BBilder
 
     public string Posisjon { get; set; } = null!;
 
-    public int Prosjektid { get; set; }
+    public Guid Prosjektid { get; set; }
 
     public int Stasjonsid { get; set; }
 

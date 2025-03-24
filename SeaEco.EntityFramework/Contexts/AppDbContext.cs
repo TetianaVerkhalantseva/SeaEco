@@ -148,8 +148,9 @@ public partial class AppDbContext : DbContext
             entity.ToTable("b_prosjekt");
 
             entity.Property(e => e.Prosjektid)
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd()
                 .HasColumnName("prosjektid");
+            entity.Property(e => e.PoId).HasColumnName("po_id");
             entity.Property(e => e.Ansvarligansatt2id).HasColumnName("ansvarligansatt2id");
             entity.Property(e => e.Ansvarligansatt3id).HasColumnName("ansvarligansatt3id");
             entity.Property(e => e.Ansvarligansatt4id).HasColumnName("ansvarligansatt4id");

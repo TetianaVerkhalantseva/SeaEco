@@ -5,7 +5,7 @@ namespace SeaEco.EntityFramework.Entities;
 
 public partial class BDyr
 {
-    public int ProsjektId { get; set; }
+    public Guid ProsjektId { get; set; }
 
     public int StasjonsId { get; set; }
 
