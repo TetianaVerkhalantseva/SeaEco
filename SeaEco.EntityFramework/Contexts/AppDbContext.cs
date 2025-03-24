@@ -16,7 +16,11 @@ public partial class AppDbContext : DbContext
     {
         Database.Migrate();
     }
+    
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        => optionsBuilder.UseNpgsql("Server=10.239.120.212;Database=seaeco;Port=5432;username=admin;password=admin");
 
+    
     public virtual DbSet<Bruker> Brukers { get; set; }
 
     public virtual DbSet<BBilder> BBilders { get; set; }
@@ -460,22 +464,15 @@ public partial class AppDbContext : DbContext
             entity.ToTable("kunde");
 
             entity.Property(e => e.Kundeid).HasColumnName("kundeid");
-            entity.Property(e => e.Fylke)
-                .HasMaxLength(45)
-                .HasColumnName("fylke");
-            entity.Property(e => e.Kommune)
-                .HasMaxLength(45)
-                .HasColumnName("kommune");
-            entity.Property(e => e.Kontaktperson)
-                .HasMaxLength(45)
-                .HasColumnName("kontaktperson");
             entity.Property(e => e.Oppdragsgiver)
                 .HasMaxLength(45)
                 .HasColumnName("oppdragsgiver");
-            entity.Property(e => e.Orgnr).HasColumnName("orgnr");
-            entity.Property(e => e.Postadresse)
+            entity.Property(e => e.Kontaktperson)
                 .HasMaxLength(45)
-                .HasColumnName("postadresse");
+                .HasColumnName("kontaktperson");
+            entity.Property(e => e.Telefonnummer)
+                .HasMaxLength(45)
+                .HasColumnName("telefonnummer");
         });
 
         modelBuilder.Entity<Revisjonslogg>(entity =>

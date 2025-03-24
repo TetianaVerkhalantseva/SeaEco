@@ -70,10 +70,6 @@ public class CustomerService: ICustomerService
             Oppdragsgiver = customerDto.Oppdragsgiver,
             Kontaktperson = customerDto.Kontaktperson,
             Telefonnummer = customerDto.Telefonnummer,
-            Orgnr = customerDto.Orgnr,
-            Postadresse = customerDto.Postadresse,
-            Kommune = customerDto.Kommune,
-            Fylke = customerDto.Fylke
         };
 
         try
@@ -113,10 +109,6 @@ public class CustomerService: ICustomerService
         customer.Oppdragsgiver = customerDto.Oppdragsgiver;
         customer.Kontaktperson = customerDto.Kontaktperson;
         customer.Telefonnummer = customerDto.Telefonnummer;
-        customer.Orgnr = customerDto.Orgnr;
-        customer.Postadresse = customerDto.Postadresse;
-        customer.Kommune = customerDto.Kommune;
-        customer.Fylke = customerDto.Fylke;
 
         try
         {

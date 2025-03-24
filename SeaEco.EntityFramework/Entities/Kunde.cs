@@ -10,13 +10,5 @@ public partial class Kunde
     
     public string Telefonnummer { get; set; } = null!;
 
-    public int Orgnr { get; set; }
-
-    public string Postadresse { get; set; } = null!;
-
-    public string Kommune { get; set; } = null!;
-
-    public string Fylke { get; set; } = null!;
-
     public virtual ICollection<BProsjekt> BProsjekts { get; set; } = new List<BProsjekt>();
 }
