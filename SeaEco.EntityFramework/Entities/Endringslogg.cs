@@ -7,7 +7,7 @@ public partial class Endringslogg
 {
     public int Loggid { get; set; }
 
-    public int Prosjektid { get; set; }
+    public Guid Prosjektid { get; set; }
 
     public int? Stasjonsid { get; set; }
 

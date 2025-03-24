@@ -14,6 +14,7 @@ using SeaEco.Services.CustomerServices;
 using SeaEco.Services.EmailServices;
 using SeaEco.Services.EmailServices.Models;
 using SeaEco.Services.JwtServices;
+using SeaEco.Services.ProjectServices;
 using SeaEco.Services.TokenServices;
 using SeaEco.Services.UserServices;
 using SeaEco.Services.Validators;
@@ -66,7 +67,7 @@ services.AddAuthentication(options =>
 services.Configure<JwtOptions>(configuration.GetSection("JwtOptions"));
 services.Configure<SmtpOptions>(configuration.GetSection("SmtpOptions"));
 
-services.AddDbContext<AppDbContext>(options => options.UseNpgsql(configuration["ConnectionStrings:DefaultConnection"]));
+services.AddDbContext<AppDbContext>(options => options.UseNpgsql(configuration["ConnectionStrings:LocalConnection"]));
 services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 // Core services
@@ -79,6 +80,7 @@ services.AddTransient<ITokenService, TokenService>();
 
 // Register CustomerService
 services.AddScoped<ICustomerService, CustomerService>();
+services.AddScoped<IProjectService, ProjectService>();
 
 // Models validators
 services.AddScoped<IValidator<LoginDto>, LoginDtoValidator>();

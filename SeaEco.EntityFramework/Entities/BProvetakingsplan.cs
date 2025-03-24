@@ -5,7 +5,7 @@ namespace SeaEco.EntityFramework.Entities;
 
 public partial class BProvetakingsplan
 {
-    public int Prosjektid { get; set; }
+    public Guid Prosjektid { get; set; }
 
     public Guid Planleggerid { get; set; }
 
