@@ -85,6 +85,7 @@ services.AddTransient<IAuthService, AuthService>();
 services.AddTransient<ITokenService, TokenService>();
 services.AddTransient<IUserService, UserService>();
 services.AddScoped<ICustomerService, CustomerService>();
+services.AddScoped<EmailMessageManager>();
 
 // Models validators
 services.AddScoped<IValidator<LoginDto>, LoginDtoValidator>();
