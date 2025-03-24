@@ -1,4 +1,5 @@
-﻿using SeaEco.Abstractions.Models.Project;
+﻿using Microsoft.EntityFrameworkCore;
+using SeaEco.Abstractions.Models.Project;
 using SeaEco.EntityFramework.Contexts;
 using SeaEco.EntityFramework.Entities;
 
@@ -15,6 +16,11 @@ public class ProjectService : IProjectService
     
     public async Task<Guid> CreateProjectAsync(NewProjectDto dto)
     {
+        
+        var customer = await _context.Kundes.FindAsync(dto.KundeId);
+        if (customer == null)
+            throw new Exception("Kunde ikke funnet.");
+        
         var prosjekt = new BProsjekt
         {
             PoId = dto.PoId,
@@ -42,5 +48,56 @@ public class ProjectService : IProjectService
         await _context.SaveChangesAsync();
 
         return prosjekt.Prosjektid;
+    }
+    
+    public async Task<List<ProjectDto>> GetProjectsByCustomerAsync(int kundeId)
+    {
+        return await _context.BProsjekts
+            .Where(p => p.Kundeid == kundeId)
+            .Select(p => new ProjectDto
+            {
+                ProsjektId = p.Prosjektid,
+                PoId = p.PoId,
+                KundeId = p.Kundeid,
+                Kundekontaktpersons = p.Kundekontaktpersons,
+                Kundetlf = p.Kundetlf,
+                Kundeepost = p.Kundeepost,
+                Lokalitetid = p.Lokalitetid,
+                Lokalitet = p.Lokalitet,
+                Antallstasjoner = p.Antallstasjoner,
+                Mtbtillatelse = p.Mtbtillatelse,
+                Biomasse = p.Biomasse,
+                Planlagtfeltdato = p.Planlagtfeltdato,
+                Merknad = p.Merknad,
+                Status = p.Status,
+                Datoregistrert = p.Datoregistrert
+            })
+            .ToListAsync();
+    }
+
+    public async Task<ProjectDto?> GetProjectByIdAsync(Guid prosjektId)
+    {
+        var p = await _context.BProsjekts.FirstOrDefaultAsync(p => p.Prosjektid == prosjektId);
+        if (p == null)
+            return null;
+
+        return new ProjectDto
+        {
+            ProsjektId = p.Prosjektid,
+            PoId = p.PoId,
+            KundeId = p.Kundeid,
+            Kundekontaktpersons = p.Kundekontaktpersons,
+            Kundetlf = p.Kundetlf,
+            Kundeepost = p.Kundeepost,
+            Lokalitetid = p.Lokalitetid,
+            Lokalitet = p.Lokalitet,
+            Antallstasjoner = p.Antallstasjoner,
+            Mtbtillatelse = p.Mtbtillatelse,
+            Biomasse = p.Biomasse,
+            Planlagtfeltdato = p.Planlagtfeltdato,
+            Merknad = p.Merknad,
+            Status = p.Status,
+            Datoregistrert = p.Datoregistrert
+        };
     }
 }

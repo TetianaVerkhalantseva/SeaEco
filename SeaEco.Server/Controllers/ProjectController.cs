@@ -24,4 +24,20 @@ public class ProjectController : ControllerBase
         var id = await _projectService.CreateProjectAsync(dto);
         return Ok(new { prosjektId = id });
     }
+    
+    [HttpGet("{prosjektId:guid}")]
+    public async Task<IActionResult> GetProjectById(Guid prosjektId)
+    {
+        var project = await _projectService.GetProjectByIdAsync(prosjektId);
+        if (project == null)
+            return NotFound();
+        return Ok(project);
+    }
+    
+    [HttpGet("customer/{kundeId}")]
+    public async Task<IActionResult> GetProjectsByCustomer(int kundeId)
+    {
+        var projects = await _projectService.GetProjectsByCustomerAsync(kundeId);
+        return Ok(projects);
+    }
 }
