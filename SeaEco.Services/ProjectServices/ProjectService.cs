@@ -19,7 +19,7 @@ public class ProjectService : IProjectService
         
         var customer = await _context.Kundes.FindAsync(dto.KundeId);
         if (customer == null)
-            throw new Exception("Kunde ikke funnet.");
+            throw new KeyNotFoundException("Kunde ikke funnet.");
         
         var prosjekt = new BProsjekt
         {

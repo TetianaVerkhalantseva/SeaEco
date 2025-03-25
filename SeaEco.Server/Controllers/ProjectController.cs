@@ -21,8 +21,19 @@ public class ProjectController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var id = await _projectService.CreateProjectAsync(dto);
-        return Ok(new { prosjektId = id });
+        try
+        {
+            var id = await _projectService.CreateProjectAsync(dto);
+            return Ok(new { prosjektId = id });
+        }
+        catch (KeyNotFoundException knf)
+        {
+            return NotFound(knf.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
     
     [HttpGet("{prosjektId:guid}")]
