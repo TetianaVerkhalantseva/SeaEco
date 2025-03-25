@@ -55,6 +55,7 @@ public class CustomerService: ICustomerService
                 .Select(p => new BProsjekt
                 {
                     Prosjektid = p.Prosjektid,
+                    PoId = p.PoId,
                     Status = p.Status,
                     Datoregistrert = p.Datoregistrert
                 }).ToList();
