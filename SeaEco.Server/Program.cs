@@ -2,9 +2,11 @@ using System.Text;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SeaEco.Abstractions.Models.Authentication;
+using SeaEco.Abstractions.Models.User;
 using SeaEco.EntityFramework.Contexts;
 using SeaEco.EntityFramework.GenericRepository;
 using SeaEco.Server.Infrastructure;
@@ -38,6 +40,11 @@ builder.Services.AddControllers(options =>
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
     })
     .AddFluentValidation();
+
+services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
 
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
@@ -77,10 +84,10 @@ services.AddScoped<IEmailService, SmtpEmailService>();
 services.AddTransient<IJwtService, JwtService>();
 services.AddTransient<IAuthService, AuthService>();
 services.AddTransient<ITokenService, TokenService>();
-
-// Register CustomerService
+services.AddTransient<IUserService, UserService>();
 services.AddScoped<ICustomerService, CustomerService>();
 services.AddScoped<IProjectService, ProjectService>();
+services.AddScoped<EmailMessageManager>();
 
 // Models validators
 services.AddScoped<IValidator<LoginDto>, LoginDtoValidator>();
@@ -88,7 +95,7 @@ services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
 services.AddScoped<IValidator<ChangePasswordDto>, ChangePasswordDtoValidator>();
 services.AddScoped<IValidator<ResetPasswordDto>, ResetPasswordDtoValidator>();
 services.AddScoped<IValidator<ResetPasswordConfirmDto>, ResetPasswordConfirmDtoValidator>();
-services.AddTransient<IUserService, UserService>();
+services.AddScoped<IValidator<EditUserDto>, EditUserDtoValidator>();
 
 var app = builder.Build();
 

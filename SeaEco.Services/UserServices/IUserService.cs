@@ -7,7 +7,6 @@ public interface IUserService
 {
     Task<IEnumerable<UserDto>> GetAllUsers(bool? isActive);
     Task<Response<UserDto>> GetUserById(Guid userId);
-
-    Task<Response> Update(EditUserDto dto);
+    Task<Response> Update(Guid id, EditUserDto dto);
     Task<Response> ToggleActive(Guid userId);
 }
