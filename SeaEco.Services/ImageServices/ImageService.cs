@@ -47,9 +47,8 @@ public sealed class ImageService : IImageService
         Response addResult = await _imageRepository.Add(dbRecord);
         if (addResult.IsError)
         {
-            return RemoveImage(uploadResult.Value.Name);
+            RemoveImage(uploadResult.Value.Name);
         }
-
         return addResult;
     }
 
@@ -58,6 +57,7 @@ public sealed class ImageService : IImageService
         BBilder? dbRecord = await _imageRepository.GetBy(record => record.Id == id);
         if (dbRecord is null)
         {
+            RemoveImage(id.ToString());
             return Response.Error(IMAGE_NOT_FOUND_ERROR);
         }
 
@@ -65,91 +65,65 @@ public sealed class ImageService : IImageService
     }
     
     private Response<ImageModel> SaveImage(IFormFile image, string newName)
+    {
+        if (!Directory.Exists(_destinationPath))
         {
-            if (!Directory.Exists(_destinationPath))
-            {
-                Directory.CreateDirectory(_destinationPath);
-            }
-
-            string[] originalImageNameParts = image.FileName.Split('.');
-            string originalFileExtension = originalImageNameParts.Last();
-            string newFileName = $"{newName}.{originalFileExtension}";
-
-            try
-            {
-                using (FileStream fileStream = new FileStream(Path.Combine(_destinationPath, newFileName), FileMode.Create))
-                {
-                    image.CopyTo(fileStream);
-                }
-            }
-            catch (Exception ex)
-            {
-                return Response<ImageModel>.Error(CANT_SAVE_IMAGE_ERROR);
-            }
-
-            return Response<ImageModel>.Ok(new ImageModel()
-            {
-                Extension = originalFileExtension,
-                Name = newName,
-            });
+            Directory.CreateDirectory(_destinationPath);
         }
 
-        private Response RemoveImage(string name)
+        string[] originalImageNameParts = image.FileName.Split('.');
+        string originalFileExtension = originalImageNameParts.Last();
+        string newFileName = $"{newName}.{originalFileExtension}";
+
+        try
         {
-            if (!Directory.Exists(_destinationPath))
+            using (FileStream fileStream = new FileStream(Path.Combine(_destinationPath, newFileName), FileMode.Create))
             {
-                return Response.Ok();
+                image.CopyTo(fileStream);
             }
+        }
+        catch (Exception ex)
+        {
+            return Response<ImageModel>.Error(CANT_SAVE_IMAGE_ERROR);
+        }
 
-            string[] files = Directory.GetFiles(_destinationPath);
+        return Response<ImageModel>.Ok(new ImageModel()
+        {
+            Extension = originalFileExtension,
+            Name = newName,
+        });
+    }
 
-            foreach (string file in files)
-            {
-                string fileName = file.Split('.').First();
-                if (fileName == name)
-                {
-                    try
-                    {
-                        File.Delete(Path.Combine(_destinationPath, file));
-                    }
-                    catch (Exception ex)
-                    {
-                        return Response.Error(CANT_REMOVE_IMAGE_ERROR);
-                    }
-                    return Response.Ok();
-                }
-            }
+    private Response RemoveImage(string name)
+    {
+        if (!Directory.Exists(_destinationPath))
+        {
             return Response.Ok();
         }
 
-        private Response RemoveImage(string name, string extension)
+        string[] files = Directory.GetFiles(_destinationPath);
+
+        foreach (string file in files)
         {
-            if (!Directory.Exists(_destinationPath))
+            string fullFileName = Path.GetFileName(file);
+            string fileName = fullFileName.Split('.').First();
+            if (fileName == name)
             {
+                try
+                {
+                    string filePath = Path.Combine(_destinationPath, fullFileName);
+                    if (File.Exists(filePath))
+                    {
+                        File.Delete(filePath);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return Response.Error(CANT_REMOVE_IMAGE_ERROR);
+                }
                 return Response.Ok();
             }
-
-            string[] files = Directory.GetFiles(_destinationPath);
-
-            foreach (string file in files)
-            {
-                string[] fileNameParts = file.Split('.');
-                string fileName = fileNameParts.First();
-                string fileExtension = fileNameParts.Last();
-
-                if (fileName == name && fileExtension == extension)
-                {
-                    try
-                    {
-                        File.Delete(Path.Combine(_destinationPath, file));
-                    }
-                    catch (Exception ex)
-                    {
-                        return Response.Error(CANT_REMOVE_IMAGE_ERROR);
-                    }
-                    return Response.Ok();
-                }
-            }
-            return Response.Ok();
         }
+        return Response.Ok();
+    }
 }
