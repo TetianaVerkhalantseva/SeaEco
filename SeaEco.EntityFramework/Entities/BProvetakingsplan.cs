@@ -11,7 +11,7 @@ public partial class BProvetakingsplan
 
     public Guid? Planlegger2id { get; set; }
 
-    public int Stasjonsid { get; set; }
+    public Guid Stasjonsid { get; set; }
 
     public DateOnly Planlagtfeltdato { get; set; }
 

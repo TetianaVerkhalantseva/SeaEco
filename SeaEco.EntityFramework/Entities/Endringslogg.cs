@@ -9,7 +9,7 @@ public partial class Endringslogg
 
     public Guid Prosjektid { get; set; }
 
-    public int? Stasjonsid { get; set; }
+    public Guid? Stasjonsid { get; set; }
 
     public string Tabellendret { get; set; } = null!;
 

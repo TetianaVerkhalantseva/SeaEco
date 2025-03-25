@@ -5,15 +5,15 @@ namespace SeaEco.EntityFramework.Entities;
 
 public partial class BBilder
 {
-    public int Bildeid { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
 
     public string Posisjon { get; set; } = null!;
+    
+    public Guid Extension { get; set; }
 
     public Guid Prosjektid { get; set; }
 
-    public int Stasjonsid { get; set; }
-
-    public byte[] Bilde { get; set; } = null!;
+    public Guid Stasjonsid { get; set; }
 
     public DateTime Datoregistrert { get; set; }
 
