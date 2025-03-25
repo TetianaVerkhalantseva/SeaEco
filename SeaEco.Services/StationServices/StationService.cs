@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SeaEco.Abstractions.Models.Stations;
 using SeaEco.EntityFramework.Contexts;
+using SeaEco.EntityFramework.Entities;
 
 namespace SeaEco.Services.StationServices;
 
@@ -111,5 +112,45 @@ public class StationService : IStationService
 
         _context.BStasjons.Update(station);
         await _context.SaveChangesAsync();
+    }
+    
+    public async Task<int> AddExtraStationAsync(Guid prosjektId, NewStationDto dto)
+    {
+        var maxStationId = await _context.BStasjons
+            .Where(s => s.Prosjektid == prosjektId)
+            .MaxAsync(s => (int?)s.Stasjonsid) ?? 0;
+        int newStationId = maxStationId + 1;
+        
+        var newStation = new BStasjon
+        {
+            Prosjektid = prosjektId,
+            Stasjonsid = newStationId,
+            Dybde = dto.Dybde ?? 0,
+            Kordinatern = dto.Kordinatern ?? 0,
+            Kordinatero = dto.Kordinatero ?? 0,
+            SkjovannPh = dto.SkjovannPh ?? 0,
+            SkjovannEh = dto.SkjovannEh ?? 0,
+            SkjovannTemperatur = dto.SkjovannTemperatur ?? 0,
+            Bunntype = dto.Bunntype ?? false,
+            Dyr = dto.Dyr ?? false,
+            Antallgrabbskudd = dto.Antallgrabbskudd ?? 0,
+            Grabhastighetgodkjent = dto.Grabhastighetgodkjent ?? false,
+            Sensoriskutfort = dto.Sensoriskutfort,
+            Bunnsammensettningid = dto.Bunnsammensettningid ?? 0,
+            Arter = dto.Arter,
+            Merknad = dto.Merknad,
+            Korrigering = dto.Korrigering,
+            Grabbid = dto.Grabbid,
+            Phehmeter = dto.Phehmeter,
+            Datokalibrert = dto.Datokalibrert,
+            Silid = dto.Silid,
+            Status = dto.Status ?? "Ikke registrert",
+            Datoregistrert = DateTime.UtcNow
+        };
+
+        _context.BStasjons.Add(newStation);
+        await _context.SaveChangesAsync();
+
+        return newStationId;
     }
 }

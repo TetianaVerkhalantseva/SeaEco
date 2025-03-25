@@ -91,4 +91,21 @@ public class ProjectController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+    
+    [HttpPost("{prosjektId:guid}/stasjon")]
+    public async Task<IActionResult> AddExtraStation(Guid prosjektId, [FromBody] NewStationDto dto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+        
+        try
+        {
+            var newStationId = await _stationService.AddExtraStationAsync(prosjektId, dto);
+            return Ok(new { prosjektId, stasjonsid = newStationId });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
 }
