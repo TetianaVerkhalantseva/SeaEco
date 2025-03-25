@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SeaEco.EntityFramework.Contexts;
@@ -11,9 +12,11 @@ using SeaEco.EntityFramework.Contexts;
 namespace SeaEco.EntityFramework.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250324124146_ChangedProsjektIdToGuidAndAddedPoid")]
+    partial class ChangedProsjektIdToGuidAndAddedPoid
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -652,6 +655,18 @@ namespace SeaEco.EntityFramework.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Kundeid"));
 
+                    b.Property<string>("Fylke")
+                        .IsRequired()
+                        .HasMaxLength(45)
+                        .HasColumnType("character varying(45)")
+                        .HasColumnName("fylke");
+
+                    b.Property<string>("Kommune")
+                        .IsRequired()
+                        .HasMaxLength(45)
+                        .HasColumnType("character varying(45)")
+                        .HasColumnName("kommune");
+
                     b.Property<string>("Kontaktperson")
                         .IsRequired()
                         .HasMaxLength(45)
@@ -664,11 +679,19 @@ namespace SeaEco.EntityFramework.Migrations
                         .HasColumnType("character varying(45)")
                         .HasColumnName("oppdragsgiver");
 
-                    b.Property<string>("Telefonnummer")
+                    b.Property<int>("Orgnr")
+                        .HasColumnType("integer")
+                        .HasColumnName("orgnr");
+
+                    b.Property<string>("Postadresse")
                         .IsRequired()
                         .HasMaxLength(45)
                         .HasColumnType("character varying(45)")
-                        .HasColumnName("telefonnummer");
+                        .HasColumnName("postadresse");
+
+                    b.Property<string>("Telefonnummer")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Kundeid")
                         .HasName("kunde_pkey");

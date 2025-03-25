@@ -7,7 +7,7 @@ public partial class BRapport
 {
     public int Rapportid { get; set; }
 
-    public int Prosjektid { get; set; }
+    public Guid Prosjektid { get; set; }
 
     public int Rapporttype { get; set; }
 
