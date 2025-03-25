@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SeaEco.Abstractions.Models.Project;
+using SeaEco.Abstractions.Models.Stations;
 using SeaEco.EntityFramework.Contexts;
 using SeaEco.EntityFramework.Entities;
 
@@ -50,10 +51,9 @@ public class ProjectService : IProjectService
         return prosjekt.Prosjektid;
     }
     
-    public async Task<List<ProjectDto>> GetProjectsByCustomerAsync(int kundeId)
+    public async Task<List<ProjectDto>> GetAllProjectsAsync()
     {
         return await _context.BProsjekts
-            .Where(p => p.Kundeid == kundeId)
             .Select(p => new ProjectDto
             {
                 ProsjektId = p.Prosjektid,
