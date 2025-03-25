@@ -15,6 +15,7 @@ using SeaEco.Services.AuthServices;
 using SeaEco.Services.CustomerServices;
 using SeaEco.Services.EmailServices;
 using SeaEco.Services.EmailServices.Models;
+using SeaEco.Services.ImageServices;
 using SeaEco.Services.JwtServices;
 using SeaEco.Services.ProjectServices;
 using SeaEco.Services.TokenServices;
@@ -88,6 +89,7 @@ services.AddTransient<IUserService, UserService>();
 services.AddScoped<ICustomerService, CustomerService>();
 services.AddScoped<IProjectService, ProjectService>();
 services.AddScoped<EmailMessageManager>();
+services.AddTransient<IImageService, ImageService>();
 
 // Models validators
 services.AddScoped<IValidator<LoginDto>, LoginDtoValidator>();
@@ -104,6 +106,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseStaticFiles();
 
 app.UseMiddleware<AuthMiddleware>();
 

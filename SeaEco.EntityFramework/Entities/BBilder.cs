@@ -9,7 +9,9 @@ public partial class BBilder
 
     public string Posisjon { get; set; } = null!;
     
-    public Guid Extension { get; set; }
+    public bool Silt { get; set; }
+    
+    public string Extension { get; set; }
 
     public Guid Prosjektid { get; set; }
 

@@ -34,8 +34,9 @@ namespace SeaEco.EntityFramework.Migrations
                         .HasColumnName("datoregistrert")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<Guid>("Extension")
-                        .HasColumnType("uuid")
+                    b.Property<string>("Extension")
+                        .IsRequired()
+                        .HasColumnType("text")
                         .HasColumnName("extension");
 
                     b.Property<string>("Posisjon")
@@ -46,6 +47,10 @@ namespace SeaEco.EntityFramework.Migrations
 
                     b.Property<Guid>("Prosjektid")
                         .HasColumnType("uuid");
+
+                    b.Property<bool>("Silt")
+                        .HasColumnType("boolean")
+                        .HasColumnName("silt");
 
                     b.Property<Guid>("Stasjonsid")
                         .HasColumnType("uuid")

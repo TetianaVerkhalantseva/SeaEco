@@ -107,6 +107,7 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("id");
+            entity.Property(e => e.Silt).HasColumnName("silt");
             entity.Property(e => e.Extension).HasColumnName("extension");
             entity.Property(e => e.Datoregistrert)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
