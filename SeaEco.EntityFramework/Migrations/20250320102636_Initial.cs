@@ -39,6 +39,7 @@ namespace SeaEco.EntityFramework.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     oppdragsgiver = table.Column<string>(type: "character varying(45)", maxLength: 45, nullable: false),
                     kontaktperson = table.Column<string>(type: "character varying(45)", maxLength: 45, nullable: false),
+                    Telefonnummer = table.Column<string>(type: "text", nullable: false),
                     orgnr = table.Column<int>(type: "integer", nullable: false),
                     postadresse = table.Column<string>(type: "character varying(45)", maxLength: 45, nullable: false),
                     kommune = table.Column<string>(type: "character varying(45)", maxLength: 45, nullable: false),

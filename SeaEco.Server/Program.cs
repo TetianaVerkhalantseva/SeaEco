@@ -96,6 +96,9 @@ services.AddTransient<IJwtService, JwtService>();
 services.AddTransient<IAuthService, AuthService>();
 services.AddTransient<ITokenService, TokenService>();
 
+// Register CustomerService
+services.AddScoped<ICustomerService, CustomerService>();
+
 // Models validators
 services.AddScoped<IValidator<LoginDto>, LoginDtoValidator>();
 services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
