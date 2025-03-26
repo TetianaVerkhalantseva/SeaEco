@@ -1,17 +1,13 @@
 using System.Net.Http.Json;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Components.Authorization;
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+
 
 public class CustomAuthenticationStateProvider : AuthenticationStateProvider
 {
     private readonly HttpClient _httpClient;
     private readonly ILogger<CustomAuthenticationStateProvider> _logger;
     
-
     public CustomAuthenticationStateProvider(HttpClient httpClient, ILogger<CustomAuthenticationStateProvider> logger)
     {
         _httpClient = httpClient;
@@ -22,18 +18,20 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
     {
         try
         {
-            var test = await _httpClient.GetAsync("https://localhost:7096/" + "api/authentication/isAuthenticated");
-            _logger.LogInformation(await test.Content.ReadAsStringAsync());
-            var authStatus = await _httpClient.GetFromJsonAsync<AuthStatus>("https://localhost:7096/" + "api/authentication/isAuthenticated");
-            _logger.LogInformation($"User authentication status: {authStatus?.IsAuthenticated}");
+            var authStatus = await _httpClient.GetFromJsonAsync<AuthStatus>( "api/authentication/isAuthenticated");
 
             if (authStatus != null && authStatus.IsAuthenticated)
             {
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, "AuthenticatedUser")
+                    new Claim(ClaimTypes.Name, "AuthenticatedUser"),    
                 };
-
+                
+                foreach (var role in authStatus.Roles)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, role));
+                }
+                
                 var identity = new ClaimsIdentity(claims, "serverAuth");
                 var user = new ClaimsPrincipal(identity);
                 return new AuthenticationState(user);
@@ -50,5 +48,6 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
 
 public class AuthStatus
 {
-    public bool IsAuthenticated { get; set; }
+    public bool IsAuthenticated { get; set; } 
+    public List<string> Roles { get; set; }
 }

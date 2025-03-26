@@ -1,4 +1,8 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthStateProvider
+@inject Dictionary<string, string> Config
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">SeaEco.Client</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -9,6 +13,8 @@
 
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="flex-column">
+        <AuthorizeView>
+            <Authorized>
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
@@ -24,20 +30,28 @@
                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
             </NavLink>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="login">
-                <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Log inn
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="login">
-                <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Log ut
-            </NavLink>
-        </div>
+                <div class="nav-item px-3">
+                    <a class="nav-link" href="login" @onclick="OnLogoutClick" @onclick:preventDefault>
+                        <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Log ut
+                    </a>
+                </div>
+            </Authorized>
+            <NotAuthorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="login">
+                        <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Log in
+                    </NavLink>
+                </div>
+            </NotAuthorized>
+        </AuthorizeView>
+        
     </nav>
 </div>
 
 @code {
+    [Inject] NavigationManager NavigationManager { get; set; } = default!;
+    [Inject] HttpClient Http { get; set; } = default!;
+    
     private bool collapseNavMenu = true;
 
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
@@ -45,5 +59,18 @@
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+    
+    private async Task OnLogoutClick()
+    {
+        var response = await Http.GetAsync(@Config["ApiBaseUrl"] + "api/authentication/logout");
+        if (response.IsSuccessStatusCode)
+        {
+            NavigationManager.NavigateTo("login", forceLoad: true);
+        }
+        else
+        {
+            Console.Error.WriteLine("Logout feilet");
+        }
     }
 }

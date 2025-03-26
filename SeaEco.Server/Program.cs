@@ -24,8 +24,14 @@ var configuration = builder.Configuration;
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy => 
-        policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+    options.AddPolicy("AllowSpecificOrigin", policy =>
+    {
+        policy
+            .WithOrigins(configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()) 
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials(); 
+    });
 });
 
 builder.Services.AddControllers(options =>
@@ -90,9 +96,6 @@ services.AddTransient<IJwtService, JwtService>();
 services.AddTransient<IAuthService, AuthService>();
 services.AddTransient<ITokenService, TokenService>();
 
-// Register CustomerService
-services.AddScoped<ICustomerService, CustomerService>();
-
 // Models validators
 services.AddScoped<IValidator<LoginDto>, LoginDtoValidator>();
 services.AddScoped<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
@@ -115,7 +118,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseCors("AllowAll");
+app.UseCors("AllowSpecificOrigin");
 
 app.MapControllers();
 

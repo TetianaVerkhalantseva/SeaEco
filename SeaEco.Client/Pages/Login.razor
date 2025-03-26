@@ -1,12 +1,7 @@
 @page "/login"
-@inject ILogger<Login> Logger
 @using SeaEco.Abstractions.Models.Authentication
-@inject CustomAuthenticationStateProvider AuthStateProvider
-@inject Dictionary<string, string> Config
 @inject NavigationManager Navigation
 @inject HttpClient Http
-@using System.Text.Json;
-
 
 <div class="d-flex flex-column align-items-center">
     <div class="mb-3">
@@ -44,7 +39,6 @@
 
     private async Task ToMainPage()
     {
-        
         _errorMessage = string.Empty;
         var hasError = false;
         _errorPassword  = false;
@@ -78,28 +72,11 @@
             Password = _password
         };
         
-        var response = await Http.PostAsJsonAsync( @Config["ApiBaseUrl"] + "api/authentication/login", user);
-        Logger.LogInformation("Response: {Response}", response);
+        var response = await Http.PostAsJsonAsync("api/authentication/login", user);
+        
         if (response.IsSuccessStatusCode)
         {    
-            
-            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
-            
-            var authStateJson = JsonSerializer.Serialize(authState, new JsonSerializerOptions { WriteIndented = true });
-            Logger.LogInformation("AuthState: {authState}", authStateJson);
-            var userr = authState.User;
-            var userJson = JsonSerializer.Serialize(userr, new JsonSerializerOptions { WriteIndented = true });
-            Logger.LogInformation("UserInfo: {user}", userJson);
-            if (userr.Identity is null || !userr.Identity.IsAuthenticated)
-            {
-                Navigation.NavigateTo("/counter");
-            }
-            
-            
-            else
-            {
-                Navigation.NavigateTo("/");
-            }
+            Navigation.NavigateTo("/", forceLoad: true);
         }
         else
         {
@@ -131,7 +108,7 @@
 
         if (hasError) return;
 
-        Navigation.NavigateTo("/");
+        Navigation.NavigateTo("/login");
     }
 
     private void RemoveErrorMessageEmail(ChangeEventArgs e)
