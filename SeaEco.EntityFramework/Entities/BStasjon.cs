@@ -10,6 +10,8 @@ public partial class BStasjon
     public Guid Stasjonsid { get; set; }
 
     public DateTime? Datoregistrert { get; set; }
+    
+    public int Nummer { get; set; }
 
     public int Dybde { get; set; }
 

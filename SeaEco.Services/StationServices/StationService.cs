@@ -48,7 +48,7 @@ public class StationService : IStationService
             .ToListAsync();
     }
 
-    public async Task<StationDto?> GetStationByIdAsync(Guid prosjektId, int stasjonsid)
+    public async Task<StationDto?> GetStationByIdAsync(Guid prosjektId, Guid stasjonsid)
     {
         var s = await _context.BStasjons
             .FirstOrDefaultAsync(s => s.Prosjektid == prosjektId && s.Stasjonsid == stasjonsid);
@@ -82,7 +82,7 @@ public class StationService : IStationService
         };
     }
 
-    public async Task UpdateStationAsync(Guid prosjektId, int stasjonsid, UpdateStationDto dto)
+    public async Task UpdateStationAsync(Guid prosjektId, Guid stasjonsid, UpdateStationDto dto)
     {
         var station = await _context.BStasjons
             .FirstOrDefaultAsync(s => s.Prosjektid == prosjektId && s.Stasjonsid == stasjonsid);
@@ -116,15 +116,17 @@ public class StationService : IStationService
     
     public async Task<int> AddExtraStationAsync(Guid prosjektId, NewStationDto dto)
     {
-        var maxStationId = await _context.BStasjons
+        var maxNummer = await _context.BStasjons
             .Where(s => s.Prosjektid == prosjektId)
-            .MaxAsync(s => (int?)s.Stasjonsid) ?? 0;
-        int newStationId = maxStationId + 1;
-        
+            .MaxAsync(s => (int?)s.Nummer) ?? 0;
+
+        int newNummer = maxNummer + 1;
+
         var newStation = new BStasjon
         {
             Prosjektid = prosjektId,
-            Stasjonsid = newStationId,
+            Stasjonsid = Guid.NewGuid(),
+            Nummer = newNummer,
             Dybde = dto.Dybde ?? 0,
             Kordinatern = dto.Kordinatern ?? 0,
             Kordinatero = dto.Kordinatero ?? 0,
@@ -151,6 +153,6 @@ public class StationService : IStationService
         _context.BStasjons.Add(newStation);
         await _context.SaveChangesAsync();
 
-        return newStationId;
+        return newNummer;
     }
 }

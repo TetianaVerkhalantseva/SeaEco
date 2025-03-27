@@ -67,7 +67,7 @@ public class ProjectController : ControllerBase
     }
 
     [HttpGet("{prosjektId:guid}/stasjon/{stasjonsid:int}")]
-    public async Task<IActionResult> GetStation(Guid prosjektId, int stasjonsid)
+    public async Task<IActionResult> GetStation(Guid prosjektId, Guid stasjonsid)
     {
         var station = await _stationService.GetStationByIdAsync(prosjektId, stasjonsid);
         if (station == null)
@@ -75,8 +75,8 @@ public class ProjectController : ControllerBase
         return Ok(station);
     }
 
-    [HttpPut("{prosjektId:guid}/stasjon/{stasjonsid:int}")]
-    public async Task<IActionResult> UpdateStation(Guid prosjektId, int stasjonsid, [FromBody] UpdateStationDto dto)
+    [HttpPut("{prosjektId:guid}/stasjon/{stasjonsid:guid}")]
+    public async Task<IActionResult> UpdateStation(Guid prosjektId, Guid stasjonsid, [FromBody] UpdateStationDto dto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);

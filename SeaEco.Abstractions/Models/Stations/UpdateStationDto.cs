@@ -3,7 +3,8 @@
 public class UpdateStationDto
 {
     public Guid ProsjektId { get; set; }
-    public int Stasjonsid { get; set; }
+    public Guid Stasjonsid { get; set; }
+    public int Nummer { get; set; }
     
     public int Dybde { get; set; }
     public int Kordinatern { get; set; }

@@ -3,8 +3,10 @@
 public class StationDto
 {
     public Guid ProsjektId { get; set; }
-    public int Stasjonsid { get; set; }
+    public Guid Stasjonsid { get; set; }
     public DateTime? Datoregistrert { get; set; }
+    
+    public int Nummer { get; set; }
     public int Dybde { get; set; }
     public int Kordinatern { get; set; }
     public int Kordinatero { get; set; }
