@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SeaEco.EntityFramework.Contexts;
@@ -11,9 +12,11 @@ using SeaEco.EntityFramework.Contexts;
 namespace SeaEco.EntityFramework.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250324113136_RemoveUnnecessaryPropertiesAtKundeTable")]
+    partial class RemoveUnnecessaryPropertiesAtKundeTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,9 +27,17 @@ namespace SeaEco.EntityFramework.Migrations
 
             modelBuilder.Entity("SeaEco.EntityFramework.Entities.BBilder", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
+                    b.Property<int>("Bildeid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("bildeid");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Bildeid"));
+
+                    b.Property<byte[]>("Bilde")
+                        .IsRequired()
+                        .HasColumnType("bytea")
+                        .HasColumnName("bilde");
 
                     b.Property<DateTime>("Datoregistrert")
                         .ValueGeneratedOnAdd()
@@ -34,29 +45,21 @@ namespace SeaEco.EntityFramework.Migrations
                         .HasColumnName("datoregistrert")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<string>("Extension")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("extension");
-
                     b.Property<string>("Posisjon")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)")
                         .HasColumnName("posisjon");
 
-                    b.Property<Guid>("Prosjektid")
-                        .HasColumnType("uuid");
+                    b.Property<int>("Prosjektid")
+                        .HasColumnType("integer")
+                        .HasColumnName("prosjektid");
 
-                    b.Property<bool>("Silt")
-                        .HasColumnType("boolean")
-                        .HasColumnName("silt");
-
-                    b.Property<Guid>("Stasjonsid")
-                        .HasColumnType("uuid")
+                    b.Property<int>("Stasjonsid")
+                        .HasColumnType("integer")
                         .HasColumnName("stasjonsid");
 
-                    b.HasKey("Id")
+                    b.HasKey("Bildeid")
                         .HasName("b_bilder_pkey");
 
                     b.HasIndex("Prosjektid", "Stasjonsid");
@@ -66,12 +69,12 @@ namespace SeaEco.EntityFramework.Migrations
 
             modelBuilder.Entity("SeaEco.EntityFramework.Entities.BDyr", b =>
                 {
-                    b.Property<Guid>("ProsjektId")
-                        .HasColumnType("uuid")
+                    b.Property<int>("ProsjektId")
+                        .HasColumnType("integer")
                         .HasColumnName("prosjekt_id");
 
-                    b.Property<Guid>("StasjonsId")
-                        .HasColumnType("uuid")
+                    b.Property<int>("StasjonsId")
+                        .HasColumnType("integer")
                         .HasColumnName("stasjons_id");
 
                     b.Property<int?>("Antallborstemark")
@@ -110,9 +113,8 @@ namespace SeaEco.EntityFramework.Migrations
 
             modelBuilder.Entity("SeaEco.EntityFramework.Entities.BProsjekt", b =>
                 {
-                    b.Property<Guid>("Prosjektid")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
+                    b.Property<int>("Prosjektid")
+                        .HasColumnType("integer")
                         .HasColumnName("prosjektid");
 
                     b.Property<Guid?>("Ansvarligansatt2id")
@@ -192,11 +194,6 @@ namespace SeaEco.EntityFramework.Migrations
                         .HasColumnType("date")
                         .HasColumnName("planlagtfeltdato");
 
-                    b.Property<string>("PoId")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("po_id");
-
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(45)
@@ -223,8 +220,8 @@ namespace SeaEco.EntityFramework.Migrations
 
             modelBuilder.Entity("SeaEco.EntityFramework.Entities.BProsjektUtstyr", b =>
                 {
-                    b.Property<Guid>("Prosjektid")
-                        .HasColumnType("uuid")
+                    b.Property<int>("Prosjektid")
+                        .HasColumnType("integer")
                         .HasColumnName("prosjektid");
 
                     b.Property<DateOnly>("Datokalibrert")
@@ -257,8 +254,8 @@ namespace SeaEco.EntityFramework.Migrations
 
             modelBuilder.Entity("SeaEco.EntityFramework.Entities.BProvetakingsplan", b =>
                 {
-                    b.Property<Guid>("Prosjektid")
-                        .HasColumnType("uuid")
+                    b.Property<int>("Prosjektid")
+                        .HasColumnType("integer")
                         .HasColumnName("prosjektid");
 
                     b.Property<DateTime>("Datoregistrert")
@@ -299,8 +296,8 @@ namespace SeaEco.EntityFramework.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("planleggerid");
 
-                    b.Property<Guid>("Stasjonsid")
-                        .HasColumnType("uuid")
+                    b.Property<int>("Stasjonsid")
+                        .HasColumnType("integer")
                         .HasColumnName("stasjonsid");
 
                     b.HasKey("Prosjektid")
@@ -333,8 +330,8 @@ namespace SeaEco.EntityFramework.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("godkjentavid");
 
-                    b.Property<Guid>("Prosjektid")
-                        .HasColumnType("uuid")
+                    b.Property<int>("Prosjektid")
+                        .HasColumnType("integer")
                         .HasColumnName("prosjektid");
 
                     b.Property<int>("Rapporttype")
@@ -355,12 +352,12 @@ namespace SeaEco.EntityFramework.Migrations
 
             modelBuilder.Entity("SeaEco.EntityFramework.Entities.BSensorisk", b =>
                 {
-                    b.Property<Guid>("Prosjektid")
-                        .HasColumnType("uuid")
+                    b.Property<int>("Prosjektid")
+                        .HasColumnType("integer")
                         .HasColumnName("prosjektid");
 
-                    b.Property<Guid>("Stasjonsid")
-                        .HasColumnType("uuid")
+                    b.Property<int>("Stasjonsid")
+                        .HasColumnType("integer")
                         .HasColumnName("stasjonsid");
 
                     b.Property<bool>("Farge")
@@ -419,12 +416,12 @@ namespace SeaEco.EntityFramework.Migrations
 
             modelBuilder.Entity("SeaEco.EntityFramework.Entities.BStasjon", b =>
                 {
-                    b.Property<Guid>("Prosjektid")
-                        .HasColumnType("uuid")
+                    b.Property<int>("Prosjektid")
+                        .HasColumnType("integer")
                         .HasColumnName("prosjektid");
 
-                    b.Property<Guid>("Stasjonsid")
-                        .HasColumnType("uuid")
+                    b.Property<int>("Stasjonsid")
+                        .HasColumnType("integer")
                         .HasColumnName("stasjonsid");
 
                     b.Property<int>("Antallgrabbskudd")
@@ -597,12 +594,12 @@ namespace SeaEco.EntityFramework.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("endretavid");
 
-                    b.Property<Guid>("Prosjektid")
-                        .HasColumnType("uuid")
+                    b.Property<int>("Prosjektid")
+                        .HasColumnType("integer")
                         .HasColumnName("prosjektid");
 
-                    b.Property<Guid?>("Stasjonsid")
-                        .HasColumnType("uuid")
+                    b.Property<int?>("Stasjonsid")
+                        .HasColumnType("integer")
                         .HasColumnName("stasjonsid");
 
                     b.Property<string>("Tabellendret")
