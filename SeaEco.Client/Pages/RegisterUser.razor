@@ -1,0 +1,133 @@
+@page "/registerUser"
+@using Microsoft.AspNetCore.Authorization
+@using SeaEco.Abstractions.Models.Authentication
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+
+
+<div class="d-flex flex-column align-items-center">
+    <div class="mb-3">
+        <h3>Ny bruker</h3>
+    </div>
+
+
+    <div class="d-flex flex-column ">
+        <div class="d-flex flex-column gap-2">
+            <input type="text" id="firstName" class="form-control @(_errorFirstName ? "is-invalid" : "")" @bind="_firstName" @oninput="@(e => RemoveErrorMessage("Fornavn", e))"  placeholder="Fornavn"/>
+            <input type="text" id="lastName" class="form-control @(_errorLastName ? "is-invalid" : "")" @bind="_lastName" @oninput="@(e => RemoveErrorMessage("Etternavn", e))"  placeholder="Etternavn"/>
+            <input type="text" id="email" class="form-control @(_errorEmail ? "is-invalid" : "")" @bind="_email" @oninput="@(e => RemoveErrorMessage("Epost", e))"  placeholder="Epost-adresse"/>
+            <input type="password" id="password" class="form-control @(_errorPassword ? "is-invalid" : "")" @bind="_password" @oninput="@(e => RemoveErrorMessage("Passord", e))"  placeholder="Passord" />
+            <input type="password" id="repPassword" class="form-control @(_errorRepPassword ? "is-invalid" : "")" @bind="_repPassword" @oninput="@(e => RemoveErrorMessage("Gjenta passord", e))"  placeholder="Gjenta passord"/>
+
+        </div>
+
+        <div >
+            <input type="checkbox" id="admin" @bind="_isAdmin" /> Admin
+        </div>
+
+        <div style="height: 30px">
+            @if (!string.IsNullOrEmpty(_errorMessage))
+            {
+                <p class="small-text text-danger">@_errorMessage</p>
+            }
+        </div>
+
+        <div class="d-flex justify-content-center">
+            <NavLink class="btn btn-secondary me-2" href="/user">Avbryt</NavLink>
+            <button class="btn btn-secondary me-2" @onclick="RegUser"> Opprett bruker</button>
+        </div>
+    </div>
+</div>
+
+
+
+
+@code {
+
+    private string? _firstName;
+    private string? _lastName;
+    private string? _email;
+    private string? _password;
+    private string? _repPassword;
+    private string?  _errorMessage;
+    private static bool _errorFirstName;
+    private bool _errorLastName;
+    private static bool _errorEmail;
+    private static bool _errorPassword;
+    private bool _errorRepPassword;
+    private bool _isAdmin;
+    private List<(Func<string> GetInput, Action<string> SetInput, Action<bool> SetError, string FieldName)>
+        GetInputList()
+    {
+        return new List<(Func<string>, Action<string>, Action<bool>, string)>
+        {
+            (() => _firstName, input => _firstName = input, val => _errorFirstName = val, "Fornavn"),
+            (() => _lastName, input => _lastName = input,  val => _errorLastName = val, "Etternavn"),
+            (() => _email, input => _email = input,     val => _errorEmail = val, "Epost"),
+            (() => _password, input => _password = input,  val => _errorPassword = val, "Passord"),
+            (() => _repPassword, input => _repPassword = input, val => _errorRepPassword = val, "Gjenta passord")
+        };
+    }
+
+
+    private async Task RegUser()
+    {
+
+        var inputList = GetInputList();
+
+        foreach (var i in inputList){
+            if (string.IsNullOrWhiteSpace(i.GetInput()))
+            {
+                i.SetError(true);
+                _errorMessage = $"Påkrevde felt må fylles ut";
+            }
+            else
+            {
+                i.SetError(false);
+            }
+        }
+        
+        
+        
+        
+        var newUser = new RegisterUserDto()
+        {
+            FirstName= _firstName,
+            LastName= _lastName,
+            Email= _email,
+            Password= _password,
+            ConfirmPassword= _repPassword,
+            IsAdmin = _isAdmin
+        }; 
+        var response = await Http.PostAsJsonAsync("api/authentication/register", newUser);
+        if (response.IsSuccessStatusCode)
+        {    
+            Navigation.NavigateTo("/user", forceLoad: true);
+        }
+        else
+        {
+            Navigation.NavigateTo("/registerUser");  
+        }
+    }
+    
+    
+
+    private void RemoveErrorMessage(string fieldName, ChangeEventArgs e )
+    {
+        var inputList = GetInputList();
+
+        foreach (var i in inputList)
+        {
+            if (i.FieldName == fieldName)
+            {
+                i.SetError(false);
+            }
+        }
+
+        if (!_errorFirstName && !_errorLastName && !_errorEmail && !_errorPassword && !_errorRepPassword)
+        {
+            _errorMessage = string.Empty;
+        }
+    }
+}
