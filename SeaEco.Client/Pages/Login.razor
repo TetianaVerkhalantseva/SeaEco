@@ -1,0 +1,125 @@
+@page "/login"
+@using SeaEco.Abstractions.Models.Authentication
+@inject NavigationManager Navigation
+@inject HttpClient Http
+
+<div class="d-flex flex-column align-items-center">
+    <div class="mb-3">
+        <h3>Logg inn</h3>
+    </div>
+
+    <div class="d-flex flex-column">
+        <div class="d-flex flex-column gap-2">
+            <input type="text" id="email" class="form-control @(_errorEmail ? "is-invalid" : "")" @bind="_email" @oninput="RemoveErrorMessageEmail" placeholder="Skriv inn epost-adresse"/>
+            <input type="password" id="password" class="form-control @(_errorPassword ? "is-invalid" : "")" @bind="_password" @oninput="RemoveErrorMessagePassword" placeholder="Skriv inn passord" />
+        </div>
+        <div style="height: 20px">
+            @if (!string.IsNullOrEmpty(_errorMessage))
+            {
+                <p class="small-text text-danger">@_errorMessage</p>
+            }
+        </div>
+           
+        
+    <div class="d-flex justify-content-center">
+        <button class="btn btn-secondary me-2" @onclick="ToForgotPassword">Glemt passord?</button>
+        <button class="btn btn-primary" @onclick="ToMainPage">Log inn</button>
+    </div>
+    </div>
+</div>
+
+
+@code {
+    private string? _email;
+    private string? _password;
+    private string? _errorMessage;
+    private bool _errorPassword;
+    private bool _errorEmail;
+
+
+    private async Task ToMainPage()
+    {
+        _errorMessage = string.Empty;
+        var hasError = false;
+        _errorPassword  = false;
+        _errorEmail  = false;
+
+        if (string.IsNullOrWhiteSpace(_email) && string.IsNullOrWhiteSpace(_password))
+        {
+            _errorEmail = true;
+            _errorPassword = true;
+            _errorMessage = "Epost og passord må fylles ut";
+            hasError = true;
+        }
+        else if (string.IsNullOrWhiteSpace(_email))
+        {
+            _errorEmail = true;
+            _errorMessage = "Epost må fylles ut";
+            hasError = true;
+        }
+        else if (string.IsNullOrWhiteSpace(_password))
+        {
+            _errorPassword = true;
+            _errorMessage = "Passord må fylles ut";
+            hasError = true;
+        }
+
+        if (hasError) return;
+
+        var user = new LoginDto()
+        {
+            Email = _email,
+            Password = _password
+        };
+        
+        var response = await Http.PostAsJsonAsync("api/authentication/login", user);
+        
+        if (response.IsSuccessStatusCode)
+        {    
+            Navigation.NavigateTo("/", forceLoad: true);
+        }
+        else
+        {
+            if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                _errorEmail = true;
+                _errorPassword = true;
+                _errorMessage = "Email eller passord er feil.";
+            }
+            else
+            {
+                _errorMessage = "Uventet feil.";
+            }
+        }
+    }
+    
+    private void ToForgotPassword()
+    {
+        _errorMessage = string.Empty;
+        _errorEmail  = false;
+        bool hasError = false;
+
+        if (string.IsNullOrWhiteSpace(_email))
+        {
+            _errorEmail = true;
+            _errorMessage = "Epost må fylles ut";
+            hasError = true;
+        }
+
+        if (hasError) return;
+
+        Navigation.NavigateTo("/login");
+    }
+
+    private void RemoveErrorMessageEmail(ChangeEventArgs e)
+    {
+        _errorMessage = string.Empty;
+        _errorEmail = false;
+    }
+
+    private void RemoveErrorMessagePassword(ChangeEventArgs e)
+    {
+        _errorMessage = string.Empty;
+        _errorPassword = false;
+    }
+}

@@ -6,6 +6,8 @@ using SeaEco.EntityFramework.Entities;
 using SeaEco.Server.Infrastructure;
 using SeaEco.Services.AuthServices;
 using SeaEco.Services.TokenServices;
+using System.Security.Claims;
+using SeaEco.Services.TokenServices;
 
 namespace SeaEco.Server.Controllers;
 
@@ -112,5 +114,22 @@ public class AuthController(IAuthService authService, ITokenService tokenService
         return userResult.IsError
             ? AsBadRequest(userResult.ErrorMessage)
             : AsOk(userResult.Value);
+    }
+   
+    [HttpGet("isAuthenticated")]
+    public async Task<IActionResult> GetAuthenticated()
+    {
+        bool isAuthenticated = User?.Identity != null && User.Identity.IsAuthenticated;
+        List<string> roles = new List<string>();
+
+        if (isAuthenticated)
+        {
+            roles = User.Claims
+                .Where(c => c.Type == ClaimTypes.Role)
+                .Select(c => c.Value)
+                .ToList();
+        }
+        
+        return Ok(new { isAuthenticated,roles });
     }
 }
