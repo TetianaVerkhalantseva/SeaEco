@@ -5,7 +5,7 @@ namespace SeaEco.EntityFramework.Entities;
 
 public partial class BProsjektUtstyr
 {
-    public int Prosjektid { get; set; }
+    public Guid Prosjektid { get; set; }
 
     public int Grabbid { get; set; }
 

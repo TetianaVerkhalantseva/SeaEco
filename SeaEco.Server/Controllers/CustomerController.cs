@@ -1,14 +1,15 @@
-﻿using SeaEco.EntityFramework.Entities;
-using SeaEco.Services.CustomerServices;
+﻿using SeaEco.Services.CustomerServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SeaEco.Abstractions.Models.Customer;
+using SeaEco.Server.Infrastructure;
 
 namespace SeaEco.Server.Controllers;
 
+
+[Authorize]
 [ApiController]
 [Route("/api/[controller]")]
-
 public class CustomerController: ControllerBase
 {
    private readonly ICustomerService _customerService;
@@ -17,8 +18,8 @@ public class CustomerController: ControllerBase
    {
       _customerService = customerService;
    }
-
-   [HttpGet("customer-names")]
+   
+   [HttpGet("Customer-names")]
    public async Task<IActionResult> GetCustomerNames()
    {
       var customerNames = await _customerService.GetCustomerNames();
@@ -31,11 +32,10 @@ public class CustomerController: ControllerBase
       return Ok(customerNames);
    }
    
-   
    [HttpGet("{id:int}")]
-   public async Task<IActionResult> GetCustomerById(int id)
+   public async Task<IActionResult> GetCustomerInfoById(int id)
    {
-      var customer = await _customerService.GetCustomerById(id);
+      var customer = await _customerService.GetCustomerInfoById(id);
       
       if (customer == null)
       {
@@ -45,8 +45,22 @@ public class CustomerController: ControllerBase
       return Ok(customer);
    }
 
-   [HttpPost]
-   public async Task<IActionResult> AddCustomer([FromBody] AddCustomerDto dto)
+   [HttpGet("Project-details-for-customer/{id:int}")]
+   public async Task<IActionResult> GetAllProjectDetailsById(int id)
+   {
+      var customer = await _customerService.GetAllProjectDetailsById(id);
+
+      if (customer == null)
+      {
+         return NotFound($"Customer with ID {id} not found");
+      }
+      
+      return Ok(customer);
+   }
+   
+   [RoleAccessor(true)]
+   [HttpPost("Add-customer")]
+   public async Task<IActionResult> AddCustomer([FromBody] EditCustomerDto dto)
    {
       if (!ModelState.IsValid)
       {
@@ -58,6 +72,37 @@ public class CustomerController: ControllerBase
       if (result.IsSuccess)
       {
          return Ok();
+      }
+      
+      return BadRequest(result.Message);
+   }
+
+   [RoleAccessor(true)]
+   [HttpPut("Update-customer/{id:int}")]
+   public async Task<IActionResult> UpdateCustomer([FromRoute] int id, [FromBody] EditCustomerDto dto)
+   {
+      if (!ModelState.IsValid)
+      {
+         return BadRequest(ModelState);
+      }
+      
+      var result = await _customerService.UpdateCustomer(dto, id);
+      if (result.IsSuccess)
+      {
+         return Ok($"{result.Message}");
+      }
+      
+      return BadRequest(result.Message);
+   }
+
+   [RoleAccessor(true)]
+   [HttpDelete("Delete-customer/{id:int}")]
+   public async Task<IActionResult> DeleteCustomer(int id)
+   {
+      var result = await _customerService.DeleteCustomer(id);
+      if (result.IsSuccess)
+      {
+         return Ok($"{result.Message}");
       }
       
       return BadRequest(result.Message);

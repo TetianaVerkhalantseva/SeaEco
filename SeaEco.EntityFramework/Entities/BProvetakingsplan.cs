@@ -5,13 +5,13 @@ namespace SeaEco.EntityFramework.Entities;
 
 public partial class BProvetakingsplan
 {
-    public int Prosjektid { get; set; }
+    public Guid Prosjektid { get; set; }
 
     public Guid Planleggerid { get; set; }
 
     public Guid? Planlegger2id { get; set; }
 
-    public int Stasjonsid { get; set; }
+    public Guid Stasjonsid { get; set; }
 
     public DateOnly Planlagtfeltdato { get; set; }
 

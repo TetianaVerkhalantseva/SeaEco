@@ -8,9 +8,16 @@ public sealed class AuthMiddleware(RequestDelegate next)
     
     public async Task InvokeAsync(HttpContext context)
     {
-        var hasAuthorize = context.GetEndpoint()?.Metadata.GetMetadata<AuthorizeAttribute>() != null;
+        bool hasAuthorize = context.GetEndpoint()?.Metadata.GetMetadata<AuthorizeAttribute>() != null;
 
         if (!hasAuthorize)
+        {
+            await next(context);
+            return;
+        }
+        
+        bool hasAnonymousAccess = context.GetEndpoint()?.Metadata.GetMetadata<AllowAnonymousAttribute>() != null;
+        if (hasAnonymousAccess)
         {
             await next(context);
             return;

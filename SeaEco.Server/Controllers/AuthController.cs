@@ -15,7 +15,7 @@ namespace SeaEco.Server.Controllers;
 public class AuthController(IAuthService authService, ITokenService tokenService) : ApiControllerBase
 {
     [HttpPost("register")]
-    //[RoleAccessor(true)]
+    [RoleAccessor(true)]
     public async Task<IActionResult> Register([FromBody] RegisterUserDto dto)
     {
         if (!ModelState.IsValid)
@@ -30,6 +30,7 @@ public class AuthController(IAuthService authService, ITokenService tokenService
     }
 
     [HttpPost("login")]
+    [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginDto dto)
     {
         if (!ModelState.IsValid)
@@ -51,6 +52,7 @@ public class AuthController(IAuthService authService, ITokenService tokenService
     }
 
     [HttpPost("request-reset-password")]
+    [AllowAnonymous]
     public async Task<IActionResult> RequestResetPassword([FromBody] ResetPasswordDto dto)
     {
         if (!ModelState.IsValid)
@@ -65,6 +67,7 @@ public class AuthController(IAuthService authService, ITokenService tokenService
     }
 
     [HttpPost("reset-password")]
+    [AllowAnonymous]
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordConfirmDto dto)
     {
         if (!ModelState.IsValid)
@@ -79,7 +82,6 @@ public class AuthController(IAuthService authService, ITokenService tokenService
     }
 
     [HttpPost("change-password")]
-    [Authorize]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
     {
         if (!ModelState.IsValid)
@@ -94,6 +96,7 @@ public class AuthController(IAuthService authService, ITokenService tokenService
     }
 
     [HttpGet("validate-token/{token}")]
+    [AllowAnonymous]
     public async Task<IActionResult> ValidateToken([FromRoute] string token)
     {
         Response response = await tokenService.Validate(token);
@@ -104,7 +107,6 @@ public class AuthController(IAuthService authService, ITokenService tokenService
     
     // The endpoint to test and demonstrate saving the JWT token in cookies.
     [HttpGet("test")]
-    [Authorize]
     [RoleAccessor(true)]
     public async Task<IActionResult> Test()
     {

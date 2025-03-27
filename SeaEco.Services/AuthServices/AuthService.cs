@@ -18,7 +18,8 @@ public sealed class AuthService(
     ITokenService tokenService,
     IEmailService emailService,
     IJwtService jwtService,
-    ICurrentUserContext currentUserContext)
+    ICurrentUserContext currentUserContext,
+    EmailMessageManager emailMessageManager)
     : IAuthService
 {
     private const string InvalidCredentialsError = "Invalid credentials.";
@@ -103,9 +104,9 @@ public sealed class AuthService(
 
         return await emailService.SendMail(new EmailMessageModel()
         {
-            Content = $"Follow the <a href='{url}'>link</a>",
+            Content = await emailMessageManager.ResetPasswordTemplate(url),
             Recipients = [getUserResult.Value.Epost],
-            Subject = "Reset password",
+            Subject = "Tilbakestilling av passord",
             BodyType = EmailBodyType.Html,
         });
     }

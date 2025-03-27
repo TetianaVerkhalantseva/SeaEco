@@ -39,11 +39,7 @@ namespace SeaEco.EntityFramework.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     oppdragsgiver = table.Column<string>(type: "character varying(45)", maxLength: 45, nullable: false),
                     kontaktperson = table.Column<string>(type: "character varying(45)", maxLength: 45, nullable: false),
-                    Telefonnummer = table.Column<string>(type: "text", nullable: false),
-                    orgnr = table.Column<int>(type: "integer", nullable: false),
-                    postadresse = table.Column<string>(type: "character varying(45)", maxLength: 45, nullable: false),
-                    kommune = table.Column<string>(type: "character varying(45)", maxLength: 45, nullable: false),
-                    fylke = table.Column<string>(type: "character varying(45)", maxLength: 45, nullable: false)
+                    telefonnummer = table.Column<string>(type: "character varying(45)", maxLength: 45, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -205,8 +201,8 @@ namespace SeaEco.EntityFramework.Migrations
                 {
                     loggid = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    prosjektid = table.Column<int>(type: "integer", nullable: false),
-                    stasjonsid = table.Column<int>(type: "integer", nullable: true),
+                    prosjektid = table.Column<Guid>(type: "uuid", nullable: false),
+                    stasjonsid = table.Column<Guid>(type: "uuid", nullable: true),
                     tabellendret = table.Column<string>(type: "character varying(45)", maxLength: 45, nullable: false),
                     typeending = table.Column<string>(type: "character varying(45)", maxLength: 45, nullable: false),
                     verdiendret = table.Column<string>(type: "character varying(45)", maxLength: 45, nullable: false),
@@ -252,7 +248,8 @@ namespace SeaEco.EntityFramework.Migrations
                 name: "b_prosjekt",
                 columns: table => new
                 {
-                    prosjektid = table.Column<int>(type: "integer", nullable: false),
+                    prosjektid = table.Column<Guid>(type: "uuid", nullable: false),
+                    po_id = table.Column<string>(type: "text", nullable: false),
                     kundeid = table.Column<int>(type: "integer", nullable: false),
                     kundekontaktpersons = table.Column<string>(type: "character varying(45)", maxLength: 45, nullable: false),
                     kundetlf = table.Column<int>(type: "integer", nullable: false),
@@ -311,7 +308,7 @@ namespace SeaEco.EntityFramework.Migrations
                 name: "b_prosjekt_utstyr",
                 columns: table => new
                 {
-                    prosjektid = table.Column<int>(type: "integer", nullable: false),
+                    prosjektid = table.Column<Guid>(type: "uuid", nullable: false),
                     grabbid = table.Column<int>(type: "integer", nullable: false),
                     phehmeter = table.Column<int>(type: "integer", nullable: false),
                     datokalibrert = table.Column<DateOnly>(type: "date", nullable: false),
@@ -332,10 +329,10 @@ namespace SeaEco.EntityFramework.Migrations
                 name: "b_provetakingsplan",
                 columns: table => new
                 {
-                    prosjektid = table.Column<int>(type: "integer", nullable: false),
+                    prosjektid = table.Column<Guid>(type: "uuid", nullable: false),
                     planleggerid = table.Column<Guid>(type: "uuid", nullable: false),
                     planlegger2id = table.Column<Guid>(type: "uuid", nullable: true),
-                    stasjonsid = table.Column<int>(type: "integer", nullable: false),
+                    stasjonsid = table.Column<Guid>(type: "uuid", nullable: false),
                     planlagtfeltdato = table.Column<DateOnly>(type: "date", nullable: false),
                     planlagtdybde = table.Column<int>(type: "integer", nullable: false),
                     planlagtkordinatern = table.Column<int>(type: "integer", nullable: false),
@@ -368,7 +365,7 @@ namespace SeaEco.EntityFramework.Migrations
                 columns: table => new
                 {
                     rapportid = table.Column<int>(type: "integer", nullable: false),
-                    prosjektid = table.Column<int>(type: "integer", nullable: false),
+                    prosjektid = table.Column<Guid>(type: "uuid", nullable: false),
                     rapporttype = table.Column<int>(type: "integer", nullable: false),
                     datoregistrert = table.Column<DateTime>(type: "timestamp without time zone", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP"),
                     generertavid = table.Column<Guid>(type: "uuid", nullable: false),
@@ -398,9 +395,10 @@ namespace SeaEco.EntityFramework.Migrations
                 name: "b_stasjon",
                 columns: table => new
                 {
-                    prosjektid = table.Column<int>(type: "integer", nullable: false),
-                    stasjonsid = table.Column<int>(type: "integer", nullable: false),
+                    prosjektid = table.Column<Guid>(type: "uuid", nullable: false),
+                    stasjonsid = table.Column<Guid>(type: "uuid", nullable: false),
                     datoregistrert = table.Column<DateTime>(type: "timestamp without time zone", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    nummer = table.Column<int>(type: "integer", nullable: false),
                     dybde = table.Column<int>(type: "integer", nullable: false),
                     kordinatern = table.Column<int>(type: "integer", nullable: false),
                     kordinatero = table.Column<int>(type: "integer", nullable: false),
@@ -441,20 +439,20 @@ namespace SeaEco.EntityFramework.Migrations
                 name: "b_bilder",
                 columns: table => new
                 {
-                    bildeid = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
                     posisjon = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    prosjektid = table.Column<int>(type: "integer", nullable: false),
-                    stasjonsid = table.Column<int>(type: "integer", nullable: false),
-                    bilde = table.Column<byte[]>(type: "bytea", nullable: false),
+                    silt = table.Column<bool>(type: "boolean", nullable: false),
+                    extension = table.Column<string>(type: "text", nullable: false),
+                    Prosjektid = table.Column<Guid>(type: "uuid", nullable: false),
+                    stasjonsid = table.Column<Guid>(type: "uuid", nullable: false),
                     datoregistrert = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("b_bilder_pkey", x => x.bildeid);
+                    table.PrimaryKey("b_bilder_pkey", x => x.id);
                     table.ForeignKey(
                         name: "fk_b_bilder_b_stasjon",
-                        columns: x => new { x.prosjektid, x.stasjonsid },
+                        columns: x => new { x.Prosjektid, x.stasjonsid },
                         principalTable: "b_stasjon",
                         principalColumns: new[] { "prosjektid", "stasjonsid" });
                 });
@@ -463,8 +461,8 @@ namespace SeaEco.EntityFramework.Migrations
                 name: "b_dyr",
                 columns: table => new
                 {
-                    prosjekt_id = table.Column<int>(type: "integer", nullable: false),
-                    stasjons_id = table.Column<int>(type: "integer", nullable: false),
+                    prosjekt_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    stasjons_id = table.Column<Guid>(type: "uuid", nullable: false),
                     antallpigghunder = table.Column<int>(type: "integer", nullable: true),
                     antallkrepsdyr = table.Column<int>(type: "integer", nullable: true),
                     antallskjell = table.Column<int>(type: "integer", nullable: true),
@@ -487,8 +485,8 @@ namespace SeaEco.EntityFramework.Migrations
                 name: "b_sensorisk",
                 columns: table => new
                 {
-                    prosjektid = table.Column<int>(type: "integer", nullable: false),
-                    stasjonsid = table.Column<int>(type: "integer", nullable: false),
+                    prosjektid = table.Column<Guid>(type: "uuid", nullable: false),
+                    stasjonsid = table.Column<Guid>(type: "uuid", nullable: false),
                     prove_ph = table.Column<int>(type: "integer", nullable: false),
                     prove_eh = table.Column<int>(type: "integer", nullable: false),
                     prove_temperatur = table.Column<int>(type: "integer", nullable: false),
@@ -540,9 +538,9 @@ namespace SeaEco.EntityFramework.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_b_bilder_prosjektid_stasjonsid",
+                name: "IX_b_bilder_Prosjektid_stasjonsid",
                 table: "b_bilder",
-                columns: new[] { "prosjektid", "stasjonsid" });
+                columns: new[] { "Prosjektid", "stasjonsid" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_b_prosjekt_ansvarligansatt2id",

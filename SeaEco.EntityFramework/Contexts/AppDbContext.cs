@@ -16,7 +16,7 @@ public partial class AppDbContext : DbContext
     {
         Database.Migrate();
     }
-
+    
     public virtual DbSet<Bruker> Brukers { get; set; }
 
     public virtual DbSet<BBilder> BBilders { get; set; }
@@ -60,6 +60,9 @@ public partial class AppDbContext : DbContext
     public virtual DbSet<SysTykkelsepaslam> SysTykkelsepaslams { get; set; }
 
     public virtual DbSet<Token> Tokens { get; set; }
+    
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        => optionsBuilder.UseNpgsql("Server=127.0.0.1;Host=localhost;Database=seaeco;Port=5432;username=postgres");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -97,12 +100,15 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<BBilder>(entity =>
         {
-            entity.HasKey(e => e.Bildeid).HasName("b_bilder_pkey");
+            entity.HasKey(e => e.Id).HasName("b_bilder_pkey");
 
             entity.ToTable("b_bilder");
 
-            entity.Property(e => e.Bildeid).HasColumnName("bildeid");
-            entity.Property(e => e.Bilde).HasColumnName("bilde");
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.Silt).HasColumnName("silt");
+            entity.Property(e => e.Extension).HasColumnName("extension");
             entity.Property(e => e.Datoregistrert)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")
@@ -110,7 +116,6 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Posisjon)
                 .HasMaxLength(255)
                 .HasColumnName("posisjon");
-            entity.Property(e => e.Prosjektid).HasColumnName("prosjektid");
             entity.Property(e => e.Stasjonsid).HasColumnName("stasjonsid");
 
             entity.HasOne(d => d.BStasjon).WithMany(p => p.BBilders)
@@ -148,8 +153,9 @@ public partial class AppDbContext : DbContext
             entity.ToTable("b_prosjekt");
 
             entity.Property(e => e.Prosjektid)
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd()
                 .HasColumnName("prosjektid");
+            entity.Property(e => e.PoId).HasColumnName("po_id");
             entity.Property(e => e.Ansvarligansatt2id).HasColumnName("ansvarligansatt2id");
             entity.Property(e => e.Ansvarligansatt3id).HasColumnName("ansvarligansatt3id");
             entity.Property(e => e.Ansvarligansatt4id).HasColumnName("ansvarligansatt4id");
@@ -374,6 +380,7 @@ public partial class AppDbContext : DbContext
 
             entity.Property(e => e.Prosjektid).HasColumnName("prosjektid");
             entity.Property(e => e.Stasjonsid).HasColumnName("stasjonsid");
+            entity.Property(e => e.Nummer).HasColumnName("nummer");
             entity.Property(e => e.Antallgrabbskudd).HasColumnName("antallgrabbskudd");
             entity.Property(e => e.Arter)
                 .HasMaxLength(225)
@@ -460,22 +467,15 @@ public partial class AppDbContext : DbContext
             entity.ToTable("kunde");
 
             entity.Property(e => e.Kundeid).HasColumnName("kundeid");
-            entity.Property(e => e.Fylke)
-                .HasMaxLength(45)
-                .HasColumnName("fylke");
-            entity.Property(e => e.Kommune)
-                .HasMaxLength(45)
-                .HasColumnName("kommune");
-            entity.Property(e => e.Kontaktperson)
-                .HasMaxLength(45)
-                .HasColumnName("kontaktperson");
             entity.Property(e => e.Oppdragsgiver)
                 .HasMaxLength(45)
                 .HasColumnName("oppdragsgiver");
-            entity.Property(e => e.Orgnr).HasColumnName("orgnr");
-            entity.Property(e => e.Postadresse)
+            entity.Property(e => e.Kontaktperson)
                 .HasMaxLength(45)
-                .HasColumnName("postadresse");
+                .HasColumnName("kontaktperson");
+            entity.Property(e => e.Telefonnummer)
+                .HasMaxLength(45)
+                .HasColumnName("telefonnummer");
         });
 
         modelBuilder.Entity<Revisjonslogg>(entity =>
