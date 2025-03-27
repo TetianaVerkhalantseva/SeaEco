@@ -12,7 +12,7 @@ using SeaEco.EntityFramework.Contexts;
 namespace SeaEco.EntityFramework.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250325182000_Initial")]
+    [Migration("20250327111536_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -37,8 +37,9 @@ namespace SeaEco.EntityFramework.Migrations
                         .HasColumnName("datoregistrert")
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                    b.Property<Guid>("Extension")
-                        .HasColumnType("uuid")
+                    b.Property<string>("Extension")
+                        .IsRequired()
+                        .HasColumnType("text")
                         .HasColumnName("extension");
 
                     b.Property<string>("Posisjon")
@@ -49,6 +50,10 @@ namespace SeaEco.EntityFramework.Migrations
 
                     b.Property<Guid>("Prosjektid")
                         .HasColumnType("uuid");
+
+                    b.Property<bool>("Silt")
+                        .HasColumnType("boolean")
+                        .HasColumnName("silt");
 
                     b.Property<Guid>("Stasjonsid")
                         .HasColumnType("uuid")
@@ -486,6 +491,10 @@ namespace SeaEco.EntityFramework.Migrations
                         .HasColumnType("character varying(225)")
                         .HasColumnName("merknad");
 
+                    b.Property<int>("Nummer")
+                        .HasColumnType("integer")
+                        .HasColumnName("nummer");
+
                     b.Property<int?>("Phehmeter")
                         .HasColumnType("integer")
                         .HasColumnName("phehmeter");
@@ -650,18 +659,6 @@ namespace SeaEco.EntityFramework.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Kundeid"));
 
-                    b.Property<string>("Fylke")
-                        .IsRequired()
-                        .HasMaxLength(45)
-                        .HasColumnType("character varying(45)")
-                        .HasColumnName("fylke");
-
-                    b.Property<string>("Kommune")
-                        .IsRequired()
-                        .HasMaxLength(45)
-                        .HasColumnType("character varying(45)")
-                        .HasColumnName("kommune");
-
                     b.Property<string>("Kontaktperson")
                         .IsRequired()
                         .HasMaxLength(45)
@@ -674,19 +671,11 @@ namespace SeaEco.EntityFramework.Migrations
                         .HasColumnType("character varying(45)")
                         .HasColumnName("oppdragsgiver");
 
-                    b.Property<int>("Orgnr")
-                        .HasColumnType("integer")
-                        .HasColumnName("orgnr");
-
-                    b.Property<string>("Postadresse")
+                    b.Property<string>("Telefonnummer")
                         .IsRequired()
                         .HasMaxLength(45)
                         .HasColumnType("character varying(45)")
-                        .HasColumnName("postadresse");
-
-                    b.Property<string>("Telefonnummer")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnName("telefonnummer");
 
                     b.HasKey("Kundeid")
                         .HasName("kunde_pkey");

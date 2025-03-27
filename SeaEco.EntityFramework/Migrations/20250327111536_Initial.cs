@@ -39,11 +39,7 @@ namespace SeaEco.EntityFramework.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     oppdragsgiver = table.Column<string>(type: "character varying(45)", maxLength: 45, nullable: false),
                     kontaktperson = table.Column<string>(type: "character varying(45)", maxLength: 45, nullable: false),
-                    Telefonnummer = table.Column<string>(type: "text", nullable: false),
-                    orgnr = table.Column<int>(type: "integer", nullable: false),
-                    postadresse = table.Column<string>(type: "character varying(45)", maxLength: 45, nullable: false),
-                    kommune = table.Column<string>(type: "character varying(45)", maxLength: 45, nullable: false),
-                    fylke = table.Column<string>(type: "character varying(45)", maxLength: 45, nullable: false)
+                    telefonnummer = table.Column<string>(type: "character varying(45)", maxLength: 45, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -402,6 +398,7 @@ namespace SeaEco.EntityFramework.Migrations
                     prosjektid = table.Column<Guid>(type: "uuid", nullable: false),
                     stasjonsid = table.Column<Guid>(type: "uuid", nullable: false),
                     datoregistrert = table.Column<DateTime>(type: "timestamp without time zone", nullable: true, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    nummer = table.Column<int>(type: "integer", nullable: false),
                     dybde = table.Column<int>(type: "integer", nullable: false),
                     kordinatern = table.Column<int>(type: "integer", nullable: false),
                     kordinatero = table.Column<int>(type: "integer", nullable: false),
@@ -444,7 +441,8 @@ namespace SeaEco.EntityFramework.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     posisjon = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    extension = table.Column<Guid>(type: "uuid", nullable: false),
+                    silt = table.Column<bool>(type: "boolean", nullable: false),
+                    extension = table.Column<string>(type: "text", nullable: false),
                     Prosjektid = table.Column<Guid>(type: "uuid", nullable: false),
                     stasjonsid = table.Column<Guid>(type: "uuid", nullable: false),
                     datoregistrert = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")

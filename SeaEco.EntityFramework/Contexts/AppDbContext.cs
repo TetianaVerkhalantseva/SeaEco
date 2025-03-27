@@ -380,6 +380,7 @@ public partial class AppDbContext : DbContext
 
             entity.Property(e => e.Prosjektid).HasColumnName("prosjektid");
             entity.Property(e => e.Stasjonsid).HasColumnName("stasjonsid");
+            entity.Property(e => e.Nummer).HasColumnName("nummer");
             entity.Property(e => e.Antallgrabbskudd).HasColumnName("antallgrabbskudd");
             entity.Property(e => e.Arter)
                 .HasMaxLength(225)

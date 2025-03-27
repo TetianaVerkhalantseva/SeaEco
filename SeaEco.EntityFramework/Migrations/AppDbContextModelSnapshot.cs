@@ -488,6 +488,10 @@ namespace SeaEco.EntityFramework.Migrations
                         .HasColumnType("character varying(225)")
                         .HasColumnName("merknad");
 
+                    b.Property<int>("Nummer")
+                        .HasColumnType("integer")
+                        .HasColumnName("nummer");
+
                     b.Property<int?>("Phehmeter")
                         .HasColumnType("integer")
                         .HasColumnName("phehmeter");
