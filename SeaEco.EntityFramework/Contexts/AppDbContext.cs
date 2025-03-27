@@ -17,10 +17,6 @@ public partial class AppDbContext : DbContext
         Database.Migrate();
     }
     
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseNpgsql("Server=10.239.120.212;Database=seaeco;Port=5432;username=admin;password=admin");
-
-    
     public virtual DbSet<Bruker> Brukers { get; set; }
 
     public virtual DbSet<BBilder> BBilders { get; set; }
