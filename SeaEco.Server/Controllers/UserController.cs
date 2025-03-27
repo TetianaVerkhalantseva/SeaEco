@@ -11,7 +11,7 @@ namespace SeaEco.Server.Controllers;
 [Authorize]
 [RoleAccessor(true)]
 
-public class UserController(IUserService userService) : ApiControllerBase
+public class UserController(IUserService userService, ICurrentUserContext currentUserContext) : ApiControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> GetUsers([FromQuery] bool? isActive)
@@ -50,5 +50,14 @@ public class UserController(IUserService userService) : ApiControllerBase
         return response.IsError
             ? BadRequest(response.ErrorMessage)
             : AsOk();
+    }
+
+    [HttpGet("current")]
+    public async Task<IActionResult> GetCurrentUser()
+    {
+        Response<UserDto> response = await userService.GetUserById(currentUserContext.Id);
+        return response.IsError
+            ? AsBadRequest(response.ErrorMessage)
+            : AsOk(response.Value);
     }
 }

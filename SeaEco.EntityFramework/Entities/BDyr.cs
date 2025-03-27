@@ -7,7 +7,7 @@ public partial class BDyr
 {
     public Guid ProsjektId { get; set; }
 
-    public int StasjonsId { get; set; }
+    public Guid StasjonsId { get; set; }
 
     public int? Antallpigghunder { get; set; }
 

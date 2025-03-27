@@ -77,3 +77,7 @@ Desktop.ini
 .cachefile
 *.tmp
 *.pidb
+
+
+# Images
+SeaEco.Server/wwwroot/images/

@@ -7,7 +7,7 @@ public partial class BSensorisk
 {
     public Guid Prosjektid { get; set; }
 
-    public int Stasjonsid { get; set; }
+    public Guid Stasjonsid { get; set; }
 
     public int ProvePh { get; set; }
 
