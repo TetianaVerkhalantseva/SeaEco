@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Text;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -77,6 +78,7 @@ services.AddAuthentication(options =>
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = securityKey,
+        RoleClaimType = ClaimTypes.Role,
     };
     
     options.Events = new JwtBearerEvents

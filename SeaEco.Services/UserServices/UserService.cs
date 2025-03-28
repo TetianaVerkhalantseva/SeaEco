@@ -53,6 +53,7 @@ public sealed class UserService(IGenericRepository<Bruker> userRepository) : IUs
         record.Etternavn = dto.LastName;
         record.Epost = dto.Email;
         record.IsAdmin = dto.IsAdmin;
+        record.Aktiv = dto.IsActive;
         
         return await userRepository.Update(record);
     }

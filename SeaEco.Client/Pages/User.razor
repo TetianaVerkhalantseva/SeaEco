@@ -1,18 +1,76 @@
 @page "/user"
 @using Microsoft.AspNetCore.Authorization
-@attribute [Authorize]
+@inject HttpClient Http
+@attribute [Authorize(Roles = "admin")]
+@inject NavigationManager NavigationManager
 
 
-<div class="d-flex flex-column align-items-center">
+<div class="d-flex flex-column align-items-center" style="max-width: 600px; margin: auto;">
     <div class="mb-3">
         <h3>Alle brukere</h3>
     </div>
 
+    @if (users == null)
+    {
+    }
+    else if (!users.Any())
+    {
+        <p>No users found.</p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Navn</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Roller</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var user in users)
+            {
+                <tr>
+                    <td>@user.FirstName</td>
+                    <td>@user.Email</td>
+                    <td>@(user.IsActive ? "Aktiv" : "Deaktivert")</td>
+                    <td>@(user.IsAdmin ? "Admin" : "")</td>
+                    <td>
+                        <span class="bi bi-editUser" style="cursor: pointer;" @onclick="@(() => EditUser(user.Id))">
+                        </span>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+
     <NavLink href="/registerUser" >+ Ny bruker</NavLink>
 </div>
 
+
+
 @code {
+    private List<UserDto>? users;
 
+    protected override async Task OnInitializedAsync()
+    {
+        users = await Http.GetFromJsonAsync<List<UserDto>>("api/users");
+    }
+    private void EditUser(Guid userId)
+    {
+        NavigationManager.NavigateTo($"editUser/{userId:D}");
+    }
     
-
+    
+    public class UserDto
+    {
+        public Guid Id { get; set; } 
+        public string FirstName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public bool IsActive { get; set; }
+        public bool IsAdmin { get; set; }
+    }
 }

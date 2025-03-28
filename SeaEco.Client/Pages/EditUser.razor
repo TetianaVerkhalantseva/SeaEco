@@ -1,0 +1,173 @@
+@page "/editUser/{userId:guid}"
+@using Microsoft.AspNetCore.Authorization
+@inject HttpClient Http
+@attribute [Authorize(Roles = "admin")]
+@using SeaEco.Abstractions.Models.User
+@inject NavigationManager Navigation
+
+<div class="d-flex flex-column align-items-center">
+    <div class="mb-3">
+        <h3>Rediger bruker</h3>
+    </div>
+    
+    @if (isLoading)
+    {
+        
+    }
+    else if (user == null)
+    {
+        <p>Fant ikke bruker.</p>
+    }
+    else
+    {
+        <div class="d-flex flex-column ">
+            <div class="d-flex flex-column gap-2">
+                <div class="d-flex justify-content-center gap-2">
+                    <input type="text" id="firstName" class="form-control @(_errorFirstName ? "is-invalid" : "")" @bind="_firstName" @oninput="@(e => RemoveErrorMessage("Fornavn", e))" placeholder="Fornavn"/>
+                    <input type="text" id="lastName" class="form-control @(_errorLastName ? "is-invalid" : "")" @bind="_lastName" @oninput="@(e => RemoveErrorMessage("Etternavn", e))" placeholder="Etternavn"/>
+                </div>
+                <input type="text" id="email" class="form-control @(_errorEmail ? "is-invalid" : "")" @bind="_email" @oninput="@(e => RemoveErrorMessage("Epost", e))"  placeholder="Epost-adresse"/>
+            </div>
+
+            <div class="mt-2">
+                <input type="checkbox" id="admin" @bind="_isAdmin" />
+                <label class="ms-1" for="admin">Admin</label>
+            </div>
+            <div class="mt-1">
+                <input type="checkbox" id="activ" @bind="_isActive" />
+                <label class="ms-1" for="activ">Aktiv bruker</label>
+            </div>
+
+            <div style="height: 30px">
+                @if (!string.IsNullOrEmpty(_errorMessage))
+                {
+                    <p class="small-text text-danger">@_errorMessage</p>
+                }
+            </div>
+
+            <div class="d-flex justify-content-center">
+                <NavLink class="btn btn-secondary me-2" href="/user">Avbryt</NavLink>
+                <button class="btn btn-secondary me-2" @onclick="UserEdit"> Lagre</button>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public Guid userId { get; set; }
+    private UserDto user;
+    private bool isLoading = true;
+    private string? _firstName;
+    private string? _lastName;
+    private string? _email;
+    private string?  _errorMessage;
+    private bool _errorFirstName;
+    private bool _errorLastName;
+    private bool _errorEmail;
+    private bool _isAdmin;
+    private bool _isActive;
+    private List<(Func<string> GetInput, Action<string> SetInput, Action<bool> SetError, string FieldName)>
+        GetInputList()
+    {
+        return new List<(Func<string>, Action<string>, Action<bool>, string)>
+        {
+            (() => _firstName, input => _firstName = input, val => _errorFirstName = val, "Fornavn"),
+            (() => _lastName, input => _lastName = input,  val => _errorLastName = val, "Etternavn"),
+            (() => _email, input => _email = input,     val => _errorEmail = val, "Epost"),
+        };
+    }
+
+    
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            user = await Http.GetFromJsonAsync<UserDto>($"api/users/{userId}");
+            if (user != null)
+            {
+                _firstName = user.FirstName;
+                _lastName = user.LastName;
+                _email = user.Email;
+                _isAdmin = user.IsAdmin;
+                _isActive = user.IsActive;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Feil ved lasting av bruker: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+    
+    public class UserDto
+    {
+        public Guid Id { get; set; } 
+        public string FirstName { get; set; } = string.Empty;
+        public string LastName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public bool IsActive { get; set; }
+        public bool IsAdmin { get; set; }
+    }
+    
+    
+    private async Task UserEdit()
+    {
+
+        var inputList = GetInputList();
+
+        foreach (var i in inputList){
+            if (string.IsNullOrWhiteSpace(i.GetInput()))
+            {
+                i.SetError(true);
+                _errorMessage = $"Påkrevde felt må fylles ut";
+            }
+            else
+            {
+                i.SetError(false);
+            }
+        }
+        
+        var editUser = new EditUserDto()
+        {
+            FirstName= _firstName,
+            LastName= _lastName,
+            Email= _email,
+            IsAdmin = _isAdmin,
+            IsActive = _isActive
+        }; 
+        
+        var response = await Http.PutAsJsonAsync($"api/users/{user.Id:D}/update", editUser);
+        if (response.IsSuccessStatusCode)
+        {    
+            Navigation.NavigateTo("/user", forceLoad: true);
+        }
+        else
+        {
+            Navigation.NavigateTo("/user");  
+        }
+    }
+    
+    
+
+    private void RemoveErrorMessage(string fieldName, ChangeEventArgs e )
+    {
+        var inputList = GetInputList();
+
+        foreach (var i in inputList)
+        {
+            if (i.FieldName == fieldName)
+            {
+                i.SetError(false);
+            }
+        }
+
+        if (!_errorFirstName && !_errorLastName && !_errorEmail)
+        {
+            _errorMessage = string.Empty;
+        }
+    }
+}
