@@ -1,0 +1,48 @@
+@using Microsoft.AspNetCore.Components.Forms
+@inherits ComponentBase
+@inject EditContext EditContext
+
+@if (customMessages.Any())
+{
+    <ul>
+        @foreach (var message in customMessages)
+        {
+            <li>@message</li>
+        }
+    </ul>
+}
+
+@code {
+    [Parameter]
+    public string GenericRequiredMessage { get; set; } = "Alle påkrevde felter må fylles ut";
+
+    private IEnumerable<string> customMessages = Enumerable.Empty<string>();
+
+    protected override void OnInitialized()
+    {
+        if (EditContext == null)
+        {
+            throw new InvalidOperationException($"{nameof(CustomValidationSummary)} krever en EditContext.");
+        }
+
+        EditContext.OnValidationStateChanged += (sender, eventArgs) =>
+        {
+            var allMessages = EditContext.GetValidationMessages().ToList();
+
+            // Sjekk om det finnes noen feilmeldinger som angir at et felt er påkrevd
+            bool hasRequiredError = allMessages.Any(m => m.Contains("påkrevd"));
+
+            // Filtrer ut individuelle "påkrevd"-meldinger
+            var otherMessages = allMessages.Where(m => !m.Contains("påkrevd")).ToList();
+
+            // Sett inn én samlet melding hvis det finnes noen "påkrevd"-feil
+            if (hasRequiredError)
+            {
+                otherMessages.Insert(0, GenericRequiredMessage);
+            }
+
+            customMessages = otherMessages;
+            StateHasChanged();
+        };
+    }
+}
