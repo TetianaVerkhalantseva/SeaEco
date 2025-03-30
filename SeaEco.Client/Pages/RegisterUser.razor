@@ -10,28 +10,28 @@
     <DataAnnotationsValidator />
     <div class="d-flex flex-column align-items-center">
         <div class="mb-3">
-            <h3>Ny bruker</h3>
+            <h3>@Resources.PageRegisterUserNewUser</h3>
         </div>
 
         <div class="d-flex flex-column">
             <div class="d-flex flex-column gap-2">
                 <div class="d-flex justify-content-center gap-2">
-                    <InputText id="firstName" class="form-control" @bind-Value="newUser.FirstName" placeholder="Fornavn" />
-                    <InputText id="lastName" class="form-control" @bind-Value="newUser.LastName" placeholder="Etternavn" />
+                    <InputText id="firstName" class="form-control" @bind-Value="newUser.FirstName" placeholder="@Resources.FirstNameInputText" />
+                    <InputText id="lastName" class="form-control" @bind-Value="newUser.LastName" placeholder="@Resources.LastNameInputText" />
                 </div>
-                <InputText id="email" class="form-control" @bind-Value="newUser.Email" placeholder="Epost-adresse" />
-                <InputText id="password" type="password" class="form-control" @bind-Value="newUser.Password" placeholder="Passord" />
-                <InputText id="repPassword" type="password" class="form-control" @bind-Value="newUser.ConfirmPassword" placeholder="Gjenta passord" />
+                <InputText id="email" class="form-control" @bind-Value="newUser.Email" placeholder="@Resources.MailInputText" />
+                <InputText id="password" type="password" class="form-control" @bind-Value="newUser.Password" placeholder="@Resources.PasswordInputText" />
+                <InputText id="repPassword" type="password" class="form-control" @bind-Value="newUser.ConfirmPassword" placeholder="@Resources.RepPasswordInputText" />
             </div>
 
             <div class="mt-2 gap-2">
                 <InputCheckbox id="admin" class="form-check-input" @bind-Value="newUser.IsAdmin" />
-                <label class="ms-1" for="admin" title="@TextResources.AdminTooltip">Admin</label>
+                <label class="ms-1" for="admin" title="@Resources.AdminTooltip">@Resources.AdminCheckboks</label>
             </div>
 
             <div class="d-flex justify-content-center">
-                <NavLink class="btn btn-secondary me-2" href="/user">Avbryt</NavLink>
-                <button type="submit" class="btn btn-secondary me-2">Opprett bruker</button>
+                <NavLink class="btn btn-secondary me-2" href="/user">@Resources.ButtonCancel</NavLink>
+                <button type="submit" class="btn btn-secondary me-2">@Resources.ButtonSave</button>
             </div>
             
             <div class="mt-3 text-center" style="height: 30px">
@@ -62,7 +62,7 @@
         }
         else
         {
-            _errorMessage = @TextResources.UnexpectedErrorMessage;
+            _errorMessage = @Resources.UnexpectedErrorMessage;
         }
     }
 }

@@ -18,25 +18,25 @@
     else if (!users.Any())
     {
         <div class="mb-3">         
-            <h3>Alle brukere</h3>  
+            <h3>@Resources.PageUserAllUsers</h3>  
         </div>                                           
-        <p>No users found.</p>    
+        <p>@Resources.PageUserNoUserFoun</p>    
         <div style="width: 100%; display: flex; justify-content: flex-start; margin-top: 1rem;">   
-            <NavLink class="btn btn-secondary" href="/registerUser">+ Ny bruker</NavLink>              
+            <NavLink class="btn btn-secondary" href="/registerUser">@Resources.ButtonAddNewUser</NavLink>              
         </div>                                                                              
     }
     else
     {
         <div class="mb-3">         
-            <h3>Alle brukere</h3>  
+            <h3>@Resources.PageUserAllUsers</h3>  
         </div>                                            
         <table class="table">
                 <thead>
                 <tr>
-                    <th>Navn</th>
-                    <th>Email</th>
-                    <th>Status</th>
-                    <th>Roller</th>
+                    <th>@Resources.TableHeadingName</th>
+                    <th>@Resources.TableHeadingMail</th>
+                    <th>@Resources.TableHeadingStatus</th>
+                    <th>@Resources.TableHeadingRole</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -46,10 +46,10 @@
                     <tr>
                         <td>@user.FullName</td>
                         <td>@user.Email</td>
-                        <td>@(user.IsActive ? "Aktiv" : "Deaktivert")</td>
-                        <td>@(user.IsAdmin ? "Admin" : "")</td>
+                        <td>@(user.IsActive ? @Resources.TableInputIsActive : @Resources.TableInputIsNotActive)</td>
+                        <td>@(user.IsAdmin ? @Resources.TableInputIsAdmin : @Resources.TableInputIsNotAdmin)</td>
                         <td>
-                            <span title="@TextResources.RegisterUserTooltip">
+                            <span title="@Resources.RegisterUserTooltip">
                                 <span class="bi bi-editUser" style="cursor: pointer;" @onclick="@(() => EditUser(user.Id))">
                                 </span>
                             </span>
@@ -59,7 +59,7 @@
                 </tbody>
             </table>
     <div style="width: 100%; display: flex; justify-content: flex-start; margin-top: 1rem;">
-    <NavLink class="btn btn-secondary" href="/registerUser">+ Ny bruker</NavLink>
+    <NavLink class="btn btn-secondary" href="/registerUser">@Resources.ButtonAddNewUser</NavLink>
     </div>} 
 </div>
 
