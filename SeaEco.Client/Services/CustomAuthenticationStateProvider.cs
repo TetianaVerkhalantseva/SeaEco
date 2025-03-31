@@ -19,7 +19,11 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
         try
         {
             var authStatus = await _httpClient.GetFromJsonAsync<AuthStatus>( "api/authentication/isAuthenticated");
-
+            
+            Console.WriteLine($"Role from authStatus: {authStatus.Roles}");
+            // Eller med logger:
+            _logger.LogInformation("Role from authStatus: {Roles}", string.Join(", ", authStatus.Roles));
+            
             if (authStatus != null && authStatus.IsAuthenticated)
             {
                 var claims = new List<Claim>
@@ -30,6 +34,7 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
                 foreach (var role in authStatus.Roles)
                 {
                     claims.Add(new Claim(ClaimTypes.Role, role));
+                    
                 }
                 
                 var identity = new ClaimsIdentity(claims, "serverAuth");

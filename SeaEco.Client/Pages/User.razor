@@ -1,0 +1,93 @@
+@page "/user"
+@using Microsoft.AspNetCore.Authorization
+@using SeaEco.Abstractions.Models.User
+@using SeaEco.Client.Resources
+@inject HttpClient Http
+@attribute [Authorize(Roles = "admin")]
+@inject NavigationManager NavigationManager
+
+
+<div class="d-flex flex-column align-items-center" >
+    
+    @if (isLoading)
+    {
+    }
+    else if (users == null)
+    {
+    }
+    else if (!users.Any())
+    {
+        <div class="mb-3">         
+            <h3>@Resources.PageUserAllUsers</h3>  
+        </div>                                           
+        <p>@Resources.PageUserNoUserFoun</p>    
+        <div style="width: 100%; display: flex; justify-content: flex-start; margin-top: 1rem;">   
+            <NavLink class="btn btn-secondary" href="/registerUser">@Resources.ButtonAddNewUser</NavLink>              
+        </div>                                                                              
+    }
+    else
+    {
+        <div class="mb-3">         
+            <h3>@Resources.PageUserAllUsers</h3>  
+        </div>                                            
+        <table class="table">
+                <thead>
+                <tr>
+                    <th>@Resources.TableHeadingName</th>
+                    <th>@Resources.TableHeadingMail</th>
+                    <th>@Resources.TableHeadingStatus</th>
+                    <th>@Resources.TableHeadingRole</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var user in users)
+                {
+                    <tr>
+                        <td>@user.FullName</td>
+                        <td>@user.Email</td>
+                        <td>@(user.IsActive ? @Resources.TableInputIsActive : @Resources.TableInputIsNotActive)</td>
+                        <td>@(user.IsAdmin ? @Resources.TableInputIsAdmin : @Resources.TableInputIsNotAdmin)</td>
+                        <td>
+                            <span title="@Resources.RegisterUserTooltip">
+                                <span class="bi bi-editUser" style="cursor: pointer;" @onclick="@(() => EditUser(user.Id))">
+                                </span>
+                            </span>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+    <div style="width: 100%; display: flex; justify-content: flex-start; margin-top: 1rem;">
+    <NavLink class="btn btn-secondary" href="/registerUser">@Resources.ButtonAddNewUser</NavLink>
+    </div>} 
+</div>
+
+
+
+@code {
+    private List<UserDto>? users;
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            users = await Http.GetFromJsonAsync<List<UserDto>>("api/users");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Feil ved lasting av brukere: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void EditUser(Guid userId)
+    {
+        NavigationManager.NavigateTo($"editUser/{userId:D}");
+    }
+    
+}
