@@ -1,28 +1,29 @@
 using System.ComponentModel.DataAnnotations;
+using SeaEco.Abstractions.Resources;
 
 namespace SeaEco.Abstractions.Models.Authentication;
 
 public sealed class RegisterUserDto
 {
-    [Required(ErrorMessage = "Fornavn er påkrevd")]
-    [MinLength(3, ErrorMessage = "Fornavn må være minst 3 tegn langt")]
+    [Required(ErrorMessageResourceName = "ErrorMessageFirstNameRequired", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    [MinLength(3, ErrorMessageResourceName = "ErrorMessageFirstNameMinLength", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
     public string FirstName { get; set; } = string.Empty;
     
-    [Required(ErrorMessage = "Etternavn er påkrevd")]
-    [MinLength(3, ErrorMessage = "Etternavn må være minst 3 tegn langt")]
+    [Required(ErrorMessageResourceName = "ErrorMessageLastNameRequired", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    [MinLength(3, ErrorMessageResourceName = "ErrorMessageLastNameMinLength", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
     public string LastName { get; set; } = string.Empty;
     
-    [Required(ErrorMessage = "Email er påkrevd")]
-    [EmailAddress(ErrorMessage = "Ugyldig epostadresse")]
+    [Required(ErrorMessageResourceName = "ErrorMessageMailRequired", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    [EmailAddress(ErrorMessageResourceName = "ErrorMessageMailError", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
     public string Email { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "Passord er påkrevd")]
-    [MinLength(8, ErrorMessage = "Passordet må være minst 8 tegn langt")]
-    [RegularExpression(@"^(?=.*[A-Z])(?=.*[\W_]).+$", ErrorMessage = "Passordet må inneholde minst en stor bokstav og ett spesialtegn")]
+    [Required(ErrorMessageResourceName = "ErrorMessagePasswordRequired", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    [MinLength(8, ErrorMessageResourceName = "ErrorMessagePasswordMinLength", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    [RegularExpression(@"^(?=.*[A-Z])(?=.*[\W_]).+$", ErrorMessageResourceName = "ErrorMessagePasswordContain", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
     public string Password { get; set; } = string.Empty;
     
-    [Required(ErrorMessage = "Gjenta passord er påkrevd")]
-    [Compare("Password", ErrorMessage = "Passordene stemmer ikke overens")]
+    [Required(ErrorMessageResourceName = "ErrorMessageRepPasswordRequired", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    [Compare("Password", ErrorMessageResourceName = "ErrorMessageRepPasswordCompare", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
     public string ConfirmPassword { get; set; } = string.Empty;
     public bool IsAdmin { get; set; }
 }

@@ -6,7 +6,7 @@
 @inject NavigationManager Navigation
 @attribute [Authorize(Roles = "admin")]
 
-<EditForm Model="newUser" OnValidSubmit="HandleValidSubmit" >
+<EditForm Model="newUser" OnValidSubmit="UserRegistration">
     <DataAnnotationsValidator />
     <div class="d-flex flex-column align-items-center">
         <div class="mb-3">
@@ -20,13 +20,13 @@
                     <InputText id="lastName" class="form-control" @bind-Value="newUser.LastName" placeholder="@Resources.LastNameInputText" />
                 </div>
                 <InputText id="email" class="form-control" @bind-Value="newUser.Email" placeholder="@Resources.MailInputText" />
-                <InputText id="password" type="password" class="form-control" @bind-Value="newUser.Password" placeholder="@Resources.PasswordInputText" />
+                <InputText id="password" type="password" class="form-control"  @bind-Value="newUser.Password" placeholder="@Resources.PasswordInputText" />
                 <InputText id="repPassword" type="password" class="form-control" @bind-Value="newUser.ConfirmPassword" placeholder="@Resources.RepPasswordInputText" />
             </div>
 
             <div class="mt-2 gap-2">
                 <InputCheckbox id="admin" class="form-check-input" @bind-Value="newUser.IsAdmin" />
-                <label class="ms-1" for="admin" title="@Resources.AdminTooltip">@Resources.AdminCheckboks</label>
+                <label class="ms-1" for="admin" title="@(Resources.TooltipAdmin + "/n" + Resources.TooltipAdminOne + "/n" + Resources.TooltipAdminTwo  + "/n" +Resources.TooltipAdminThree)">@Resources.AdminCheckboks</label>
             </div>
 
             <div class="d-flex justify-content-center">
@@ -53,7 +53,7 @@
     private RegisterUserDto newUser = new RegisterUserDto();
     private string? _errorMessage;
 
-    private async Task HandleValidSubmit()
+    private async Task UserRegistration()
     {
         var response = await Http.PostAsJsonAsync("api/authentication/register", newUser);
         if (response.IsSuccessStatusCode)

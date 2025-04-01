@@ -7,6 +7,8 @@
 @inject NavigationManager NavigationManager
 
 
+
+
 <div class="d-flex flex-column align-items-center" >
     
     @if (isLoading)
@@ -33,10 +35,10 @@
         <table class="table">
                 <thead>
                 <tr>
-                    <th>@Resources.TableHeadingName</th>
+                    <th >@Resources.TableHeadingName</th>
                     <th>@Resources.TableHeadingMail</th>
-                    <th>@Resources.TableHeadingStatus</th>
                     <th>@Resources.TableHeadingRole</th>
+                    <th></th>
                     <th></th>
                 </tr>
                 </thead>
@@ -46,10 +48,22 @@
                     <tr>
                         <td>@user.FullName</td>
                         <td>@user.Email</td>
-                        <td>@(user.IsActive ? @Resources.TableInputIsActive : @Resources.TableInputIsNotActive)</td>
                         <td>@(user.IsAdmin ? @Resources.TableInputIsAdmin : @Resources.TableInputIsNotAdmin)</td>
                         <td>
-                            <span title="@Resources.RegisterUserTooltip">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox"  role="switch" id="activ" checked="@user.IsActive"  @onchange="@(e => EditUserIsActive(user, e))"/>
+                                @if(user.IsActive)
+                                {
+                                    <label class="form-check-label"  for="activ">@Resources.TableInputIsActive</label> 
+                                }
+                                 else                                                  
+                                 {                                                                   
+                                     <label class="form-check-label"  for="activ">@Resources.TableInputIsNotActive</label>     
+                                 }                                                                   
+                            </div>
+                            </td>
+                        <td>
+                            <span title="@Resources.TooltipRegisterUser">
                                 <span class="bi bi-editUser" style="cursor: pointer;" @onclick="@(() => EditUser(user.Id))">
                                 </span>
                             </span>
@@ -68,12 +82,14 @@
 @code {
     private List<UserDto>? users;
     private bool isLoading = true;
+    private EditUserDto userEdit = new EditUserDto();
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            users = await Http.GetFromJsonAsync<List<UserDto>>("api/users");
+            var usersList = await Http.GetFromJsonAsync<List<UserDto>>("api/users");
+            users = usersList?.OrderBy(user => user.FullName).ToList();
         }
         catch (Exception ex)
         {
@@ -84,6 +100,35 @@
             isLoading = false;
         }
     }
+
+
+
+    private async Task EditUserIsActive(UserDto user, ChangeEventArgs e)
+    {
+        if (bool.TryParse(e.Value?.ToString(), out bool isActive))
+        {
+            user.IsActive = isActive;
+            
+            userEdit = new EditUserDto
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                IsAdmin = user.IsAdmin,
+                IsActive = isActive
+            };
+        }
+        
+            try
+            { 
+                 await Http.PutAsJsonAsync($"api/users/{user.Id:D}/update", userEdit);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Feil ved lasting av brukere: {ex.Message}");
+            }
+    }
+
 
     private void EditUser(Guid userId)
     {
