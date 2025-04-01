@@ -1,6 +1,58 @@
 @page "/Customer"
-<h3>Customer</h3>
+@inject HttpClient Http
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+@using SeaEco.Abstractions.Models.Customer
+@inject NavigationManager Navigation
+@using SeaEco.Client.Resources
+
+
+<div class="container position-relative">
+    <button class="btn custom-btn position-absolute top-0 end-0 m-3" @onclick="() => AddCustomerPage()">
+        Ny kunde
+    </button>
+
+    <h2 class="text-center mt-4 page-title">Kundeliste</h2>
+
+    <div class="row justify-content-center">
+        @if (_customerNames == null)
+        {
+            <div class="col-12 text-center">
+                <h3 class="text-muted">@Resources.PageCustomerNoCustomersFound</h3>
+            </div>
+        }
+        else
+        {
+            @foreach (var customerName in _customerNames)
+            {
+                <div class="col-md-5 col-lg-4 mb-4">
+                    <div class="card shadow-sm p-4 rounded-3 hover-effect d-flex align-items-center justify-content-center">
+                        <a href="CustomerInfo/@customerName.CustomerId"><h5 class="customer-name">@customerName.CustomerName</h5></a>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
 
 @code {
-    
+    private List<CustomerNamesDto>? _customerNames = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _customerNames = await Http.GetFromJsonAsync<List<CustomerNamesDto>>("api/Customer/Customer-names");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+    private void AddCustomerPage()
+    {
+        Navigation.NavigateTo("AddCustomer");
+    }
 }

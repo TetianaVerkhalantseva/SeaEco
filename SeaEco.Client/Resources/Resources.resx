@@ -127,4 +127,17 @@
         <value>Ny bruker</value>
     </data>
     
+    <!-- PageCustomer -->
+    <data name="PageCustomerNoCustomersFound" xml:space="preserve">
+        <value>Ingen kunde er opprettet ennå</value>
+    </data>
+
+    <!-- PageEditCustomer -->
+    <data name="PageEditCustomerSuccess" xml:space="preserve">
+        <value>Kunderedigering vellykket!</value>
+    </data>
+
+    <data name="PageEditCustomerFailed" xml:space="preserve">
+        <value>Kunderedigering mislykkes.</value>
+    </data>
 </root>

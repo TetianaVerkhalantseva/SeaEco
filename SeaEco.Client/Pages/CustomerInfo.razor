@@ -1,0 +1,68 @@
+﻿@page "/CustomerInfo/{CustomerId:int}"
+@inject HttpClient Http
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+@inject NavigationManager Navigation
+@using SeaEco.EntityFramework.Entities
+
+
+<div class="container mt-5">
+    <h2 class="text-center page-title">Kundeopplysninger</h2>
+
+    <div class="row justify-content-center">
+        @if (_customer != null)
+        {
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow-sm p-4 rounded-3 customer-card">
+                    <div class="card-body text-center">
+                        <h4 class="customer-title">Oppdragsgiver</h4>
+                        <p class="customer-info">@_customer.Oppdragsgiver</p>
+
+                        <h4 class="customer-title">Kontaktperson</h4>
+                        <p class="customer-info">@_customer.Kontaktperson</p>
+
+                        <h4 class="customer-title">Telefonnummer</h4>
+                        <p class="customer-info">@_customer.Telefonnummer</p>
+                    </div>
+
+                    <div class="position-absolute bottom-0 start-0 mb-3 ms-3">
+                        <button class="btn btn-outline-secondary me-2" @onclick="() => BackToCustomerPage()">Tilbake</button>
+                    </div>
+
+                    <div class="position-absolute bottom-0 end-0 mb-3 me-3">
+                        <button class="btn btn-primary" @onclick="() => EditCustomerPage()">Rediger</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public int CustomerId { get; set; }
+    private Kunde? _customer = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _customer = await Http.GetFromJsonAsync<Kunde>($"api/Customer/{CustomerId}");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+    private void BackToCustomerPage()
+    {
+        Navigation.NavigateTo("Customer");
+    }
+    
+    private void EditCustomerPage()
+    {
+        Navigation.NavigateTo($"EditCustomer/{CustomerId}");
+    }
+}
