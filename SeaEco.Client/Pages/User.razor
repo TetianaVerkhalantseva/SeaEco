@@ -51,7 +51,7 @@
                         <td>@(user.IsAdmin ? @Resources.TableInputIsAdmin : @Resources.TableInputIsNotAdmin)</td>
                         <td>
                             <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox"  role="switch" id="activ" checked="@user.IsActive"  @onchange="@(e => EditUserIsActive(user, e))"/>
+                                <input class="form-check-input  " type="checkbox"  role="switch" id="activ" checked="@user.IsActive"  @onchange="@(e => EditUserIsActive(user, e))"/>
                                 @if(user.IsActive)
                                 {
                                     <label class="form-check-label"  for="activ">@Resources.TableInputIsActive</label> 
