@@ -45,13 +45,23 @@
     <data name="UnexpectedErrorMessage" xml:space="preserve">
         <value>Noe gikk galt</value>
       </data>
+    
 
     <!-- Tooltip -->
 
-    <data name="AdminTooltip" xml:space="preserve">
-        <value>Admin gir rettigheter til å: \n1. Godkjenne rapporter\n2. Opprette prosjekter\n3. Administrere brukere</value>
+    <data name="TooltipAdmin" xml:space="preserve">
+        <value>Admin gir rettigheter til å:</value>
     </data>
-    <data name="RegisterUserTooltip" xml:space="preserve">
+    <data name="TooltipAdminOne" xml:space="preserve">
+        <value>1. Godkjenne rapporter</value>
+    </data>
+    <data name="TooltipAdminTwo" xml:space="preserve">
+        <value>2. Opprette prosjekter</value>
+    </data>
+    <data name="TooltipAdminThree" xml:space="preserve">
+        <value>3. Administrere brukere</value>
+    </data>
+    <data name="TooltipRegisterUser" xml:space="preserve">
         <value>Rediger bruker</value>
       </data>
 
@@ -61,7 +71,10 @@
         <value>Admin</value>
     </data>
     <data name="ActiveUserCheckboks" xml:space="preserve">
-        <value>Aktiv bruker</value>
+        <value>Deaktiver bruker</value>
+    </data>
+    <data name="DeactiveUserCheckboks" xml:space="preserve">
+        <value>Aktiver bruker</value>
     </data>
 
     <!-- Button -->
@@ -94,7 +107,7 @@
         <value>Aktiv</value>
     </data>
     <data name="TableInputIsNotActive" xml:space="preserve">
-        <value>Daktivert</value>
+        <value>Deaktivert</value>
     </data>
     <data name="TableInputIsAdmin" xml:space="preserve">
         <value>Admin</value>
@@ -115,7 +128,7 @@
     <!-- PageEditUser -->
     
     <data name="PageEditUserEditUser" xml:space="preserve">
-        <value>Rediger brukeren</value>
+        <value>Rediger bruker</value>
     </data>
     <data name="PageEditUserNoUserFound" xml:space="preserve">
         <value>Fant ikke bruker.</value>

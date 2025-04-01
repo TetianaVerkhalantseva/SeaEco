@@ -87,15 +87,33 @@ namespace SeaEco.Client.Resources {
             }
         }
         
-        internal static string AdminTooltip {
+        internal static string TooltipAdmin {
             get {
-                return ResourceManager.GetString("AdminTooltip", resourceCulture);
+                return ResourceManager.GetString("TooltipAdmin", resourceCulture);
             }
         }
         
-        internal static string RegisterUserTooltip {
+        internal static string TooltipAdminOne {
             get {
-                return ResourceManager.GetString("RegisterUserTooltip", resourceCulture);
+                return ResourceManager.GetString("TooltipAdminOne", resourceCulture);
+            }
+        }
+        
+        internal static string TooltipAdminTwo {
+            get {
+                return ResourceManager.GetString("TooltipAdminTwo", resourceCulture);
+            }
+        }
+        
+        internal static string TooltipAdminThree {
+            get {
+                return ResourceManager.GetString("TooltipAdminThree", resourceCulture);
+            }
+        }
+        
+        internal static string TooltipRegisterUser {
+            get {
+                return ResourceManager.GetString("TooltipRegisterUser", resourceCulture);
             }
         }
         
@@ -108,6 +126,12 @@ namespace SeaEco.Client.Resources {
         internal static string ActiveUserCheckboks {
             get {
                 return ResourceManager.GetString("ActiveUserCheckboks", resourceCulture);
+            }
+        }
+        
+        internal static string DeactiveUserCheckboks {
+            get {
+                return ResourceManager.GetString("DeactiveUserCheckboks", resourceCulture);
             }
         }
         
