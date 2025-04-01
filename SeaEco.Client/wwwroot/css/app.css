@@ -106,3 +106,21 @@ code {
     font-size: 0.7rem;
 }
 
+.is-valid {
+    border-color: #ced4da !important;
+    box-shadow: none !important;
+    background-color: transparent !important;
+}
+
+.custom-validation-summary {
+    color: rgb(165 40 52);
+}
+
+.custom-validation-summary ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.custom-validation-summary li {
+    margin-left: 0;
+}

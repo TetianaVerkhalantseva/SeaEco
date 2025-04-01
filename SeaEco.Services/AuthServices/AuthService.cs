@@ -93,7 +93,8 @@ public sealed class AuthService(
             return deactivateResult;
         }
         
-        IEnumerable<Claim> claims = GetClaims(getUserResult.Value);
+        IEnumerable<Claim> claims = 
+            GetClaims(getUserResult.Value);
         Response<string> tokenResult = await tokenService.CreateToken(claims, getUserResult.Value.Id);
         if (tokenResult.IsError)
         {
@@ -234,13 +235,27 @@ public sealed class AuthService(
         return Response<Bruker>.Error(InvalidCredentialsError);
     }
 
-    private IEnumerable<Claim> GetClaims(Bruker user) =>
-    [
-        new(JwtClaimTypes.SUB, user.Id.ToString()),
-        new(JwtClaimTypes.NAME, user.Epost),
-        new(JwtClaimTypes.IAT, DateTimeOffset.Now.Ticks.ToString()),
-        new(JwtClaimTypes.ADMIN, user.IsAdmin.ToString())
-    ];
+    private IEnumerable<Claim> GetClaims(Bruker user)
+    {
+        var claims = new List<Claim>
+        {
+            new(JwtClaimTypes.SUB, user.Id.ToString()),
+            new(JwtClaimTypes.NAME, user.Epost),
+            new(JwtClaimTypes.IAT, DateTimeOffset.Now.ToUnixTimeSeconds().ToString()),
+            new(JwtClaimTypes.ADMIN, user.IsAdmin.ToString())
+        };
+        
+        if (user.IsAdmin)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, "admin"));
+        }
+        else
+        {
+            claims.Add(new Claim(ClaimTypes.Role, "user"));
+        }
+
+        return claims;
+    }
 
     private ClaimsPrincipal GetPrincipal(IEnumerable<Claim> claims) => new(new ClaimsIdentity(claims));
 }

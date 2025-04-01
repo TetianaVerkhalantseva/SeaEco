@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+
+    <data name="ErrorMessageFirstNameRequired" xml:space="preserve">
+        <value>Fornavn er påkrevd</value>
+      </data>
+    <data name="ErrorMessageFirstNameMinLength" xml:space="preserve">
+        <value>Fornavn må være minst 3 tegn langt</value>
+    </data>
+    <data name="ErrorMessageLastNameRequired" xml:space="preserve">
+        <value>Etternavn er påkrevd</value>
+      </data>
+    <data name="ErrorMessageMailError" xml:space="preserve">
+        <value>Ugyldig epost-adresse</value>
+    </data>
+    <data name="ErrorMessageMailRequired" xml:space="preserve">
+        <value>Epost-adresse påkrevd</value>
+    </data>
+    <data name="ErrorMessageLastNameMinLength" xml:space="preserve">
+        <value>Etternavn må være minst 3 tegn langt</value>
+    </data>
+    <data name="ErrorMessageRepPasswordCompare" xml:space="preserve">
+        <value>Passordene stemmer ikke overens</value>
+    </data>
+    <data name="ErrorMessagePasswordRequired" xml:space="preserve">
+        <value>Passord er påkrevd</value>
+    </data>
+    <data name="ErrorMessageRepPasswordRequired" xml:space="preserve">
+        <value>Gjenta passord påkrevd</value>
+    </data>
+    <data name="ErrorMessagePasswordMinLength" xml:space="preserve">
+        <value>Passordet må være minst 8 tegn langt</value>
+    </data>
+    <data name="ErrorMessagePasswordContain" xml:space="preserve">
+        <value>Passordet må inneholde minst en stor bokstav og ett spesialtegn</value>
+    </data>
+</root>

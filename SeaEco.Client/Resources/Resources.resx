@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+
+    <!-- InputText -->
+    
+    <data name="MailInputText" xml:space="preserve">
+    <value>Epost-adresse</value>
+  </data>
+    <data name="PasswordInputText" xml:space="preserve">
+    <value>Passord</value>
+  </data>
+    <data name="RepPasswordInputText" xml:space="preserve">
+    <value>Gjenta passord</value>
+  </data>
+    <data name="FirstNameInputText" xml:space="preserve">
+    <value>Fornavn</value>
+  </data>
+    <data name="LastNameInputText" xml:space="preserve">
+    <value>Etternavn</value>
+  </data>
+
+    <!-- ErrorMessage -->
+    
+    <data name="RequireElementErrorMessage" xml:space="preserve">
+        <value>Påkrevde felt må fylles ut</value>
+      </data>
+    <data name="UnexpectedErrorMessage" xml:space="preserve">
+        <value>Noe gikk galt</value>
+      </data>
+    
+
+    <!-- Tooltip -->
+
+    <data name="TooltipAdmin" xml:space="preserve">
+        <value>Admin gir rettigheter til å:</value>
+    </data>
+    <data name="TooltipAdminOne" xml:space="preserve">
+        <value>1. Godkjenne rapporter</value>
+    </data>
+    <data name="TooltipAdminTwo" xml:space="preserve">
+        <value>2. Opprette prosjekter</value>
+    </data>
+    <data name="TooltipAdminThree" xml:space="preserve">
+        <value>3. Administrere brukere</value>
+    </data>
+    <data name="TooltipRegisterUser" xml:space="preserve">
+        <value>Rediger bruker</value>
+      </data>
+
+    <!-- Checkboks -->
+    
+    <data name="AdminCheckboks" xml:space="preserve">
+        <value>Admin</value>
+    </data>
+    <data name="ActiveUserCheckboks" xml:space="preserve">
+        <value>Deaktiver bruker</value>
+    </data>
+    <data name="DeactiveUserCheckboks" xml:space="preserve">
+        <value>Aktiver bruker</value>
+    </data>
+
+    <!-- Button -->
+    
+    <data name="ButtonCancel" xml:space="preserve">
+        <value>Avbryt</value>
+    </data>
+    <data name="ButtonSave" xml:space="preserve">
+        <value>Lagre</value>
+    </data>
+    <data name="ButtonAddNewUser" xml:space="preserve">
+        <value>+ Ny bruker</value>
+    </data>
+
+    <!-- Table -->
+
+    <data name="TableHeadingName" xml:space="preserve">
+        <value>Navn</value>
+    </data>
+    <data name="TableHeadingRole" xml:space="preserve">
+        <value>Rolle</value>
+    </data>
+    <data name="TableHeadingMail" xml:space="preserve">
+        <value>Epost-adresse</value>
+    </data>
+    <data name="TableHeadingStatus" xml:space="preserve">
+        <value>Status</value>
+    </data>
+    <data name="TableInputIsActive" xml:space="preserve">
+        <value>Aktiv</value>
+    </data>
+    <data name="TableInputIsNotActive" xml:space="preserve">
+        <value>Deaktivert</value>
+    </data>
+    <data name="TableInputIsAdmin" xml:space="preserve">
+        <value>Admin</value>
+    </data>
+    <data name="TableInputIsNotAdmin" xml:space="preserve">
+        <value> </value>
+    </data>
+
+    <!-- PageUser -->
+
+    <data name="PageUserAllUsers" xml:space="preserve">
+        <value>Alle brukere</value>
+    </data>
+    <data name="PageUserNoUserFoun" xml:space="preserve">
+        <value>Ingen brukere funnet.</value>
+    </data>
+    
+    <!-- PageEditUser -->
+    
+    <data name="PageEditUserEditUser" xml:space="preserve">
+        <value>Rediger bruker</value>
+    </data>
+    <data name="PageEditUserNoUserFound" xml:space="preserve">
+        <value>Fant ikke bruker.</value>
+    </data>
+
+    <!-- PageRegisterUser -->
+
+    <data name="PageRegisterUserNewUser" xml:space="preserve">
+        <value>Ny bruker</value>
+    </data>
+    
+</root>
