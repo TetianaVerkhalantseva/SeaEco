@@ -230,5 +230,11 @@ namespace SeaEco.Client.Resources {
                 return ResourceManager.GetString("PageRegisterUserNewUser", resourceCulture);
             }
         }
+        
+        internal static string PageProjectsOverviewAllProjects {
+            get {
+                return ResourceManager.GetString("PageProjectsOverviewAllProjects", resourceCulture);
+            }
+        }
     }
 }

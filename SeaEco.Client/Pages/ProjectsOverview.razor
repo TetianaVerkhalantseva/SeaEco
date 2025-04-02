@@ -1,0 +1,102 @@
+@page "/projectsOverview"
+@using Microsoft.AspNetCore.Authorization
+@using SeaEco.Client.Resources
+@attribute [Authorize]
+
+
+<div class="d-flex flex-column align-items-center">
+    <div class="mb-3">
+        <h3>@Resources.PageProjectsOverviewAllProjects</h3>
+    </div>
+
+    <div class="table-responsive d-none d-xxl-block">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Kunde</th>
+                <th>Lokalite</th>
+                <th>lok. ID</th>
+                <th>PO-ID</th>
+                <th>ProsjektID</th>
+                <th>Dato</th>
+                <th>Produksjnsstatus</th>
+                <th>Tilstand</th>
+                <th>Prosjektstatus</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var project in projectsList)
+            {
+                <tr>
+                    <td>@project.KundeNavn</td>
+                    <td>@project.Lokalitet</td>
+                    <td>@project.Lokalitetid</td>
+                    <td>@project.PoId</td>
+                    <td>@project.prosjektId</td>
+                    <td>@project.Dato</td>
+                    <td>@project.Produksjonsstatus</td>
+                    <td><span class="border border-success">@project.Tilstand </span></td>
+                    <td>@project.Status</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+
+
+    <div class="container d-block d-xxl-none">
+        <div class="row">
+            @foreach (var project in projectsList)
+            {
+                <div class="col-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">@project.prosjektId</h5>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">@project.Lokalitet</li>
+                            <li class="list-group-item">@project.Status</li>
+                        </ul>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+
+
+@code {
+    private List<ProjectDto>? projectsList;
+   
+    //midlertidig classe til databasen er klar
+    public class ProjectDto
+    {
+        public int ProsjektId { get; set; }
+        public string KundeNavn { get; set; }
+        public string Lokalitet { get; set; }
+        public int Lokalitetid { get; set; }
+        public int PoId { get; set; }
+        public string prosjektId { get; set; }
+        public string Dato { get; set; }
+        public string? Produksjonsstatus { get; set; }
+        public int? Tilstand { get; set; }
+        public string Status { get; set; }
+    }
+
+
+    //midlertidig data til databasen er klar
+    protected override async Task OnInitializedAsync()
+    {
+        projectsList = new List<ProjectDto>
+        {
+            new ProjectDto { ProsjektId = 1, KundeNavn = "Mortenlaks AS" , Lokalitet ="Lille Djupfest" , Lokalitetid = 36479, PoId = 450, prosjektId = "SE25-BU-1", Dato = "14/01/2025" , Produksjonsstatus = "",Tilstand = 2, Status = "Ferdig" },
+            new ProjectDto { ProsjektId = 1, KundeNavn = "Salaks Produksjon AS" , Lokalitet = "Mohamen", Lokalitetid = 34057 , PoId = 452,  prosjektId = "SE25-BU-2", Dato = "12/02/2025", Produksjonsstatus = "",Tilstand = null, Status = "Nytt"},
+            new ProjectDto { ProsjektId = 1, KundeNavn = "Salaks Produksjon AS" , Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 456 , prosjektId = "SE25-BU-3", Dato = "", Produksjonsstatus = "",Tilstand = null, Status = ""}
+        };
+        
+    }
+
+}
+

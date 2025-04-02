@@ -139,5 +139,10 @@
     <data name="PageRegisterUserNewUser" xml:space="preserve">
         <value>Ny bruker</value>
     </data>
+
+    <!-- PageProjectsOverview -->
     
+    <data name="PageProjectsOverviewAllProjects" xml:space="preserve">
+        <value>Alle prosjekter</value>
+    </data>
 </root>
