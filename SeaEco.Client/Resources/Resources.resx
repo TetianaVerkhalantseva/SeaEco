@@ -85,8 +85,14 @@
     <data name="ButtonSave" xml:space="preserve">
         <value>Lagre</value>
     </data>
+    <data name="ButtonEdit" xml:space="preserve">
+        <value>Rediger</value>
+    </data>
     <data name="ButtonAddNewUser" xml:space="preserve">
         <value>+ Ny bruker</value>
+    </data>
+    <data name="ButtonAddNewCustomer" xml:space="preserve">
+        <value>+ Ny kunde</value>
     </data>
 
     <!-- Table -->
@@ -141,15 +147,34 @@
     </data>
     
     <!-- PageCustomer -->
+    <data name="PageCustomerCustomerList">
+        <value>Kundeliste</value>
+    </data>
     <data name="PageCustomerNoCustomersFound" xml:space="preserve">
         <value>Ingen kunde er opprettet ennå</value>
     </data>
 
+    <!-- PageCustomerInfo -->
+    <data name="PageCustomerInfoCustomerInfo" xml:space="preserve">
+        <value>Kundeopplysninger</value>
+    </data>
+    <data name="PageCustomerInfoCustomerName" xml:space="preserve">
+        <value>Oppdragsgiver</value>
+    </data>
+    <data name="PageCustomerInfoContactPerson" xml:space="preserve">
+        <value>Kontaktperson</value>
+    </data>
+    <data name="PageCustomerInfoCustomerNumber" xml:space="preserve">
+        <value>Telefonnummer</value>
+    </data>
+    
     <!-- PageEditCustomer -->
+    <data name="PageEditCustomerEditCustomer" xml:space="preserve">
+        <value>Rediger kunde</value>
+    </data>
     <data name="PageEditCustomerSuccess" xml:space="preserve">
         <value>Kunderedigering vellykket!</value>
     </data>
-
     <data name="PageEditCustomerFailed" xml:space="preserve">
         <value>Kunderedigering mislykkes.</value>
     </data>

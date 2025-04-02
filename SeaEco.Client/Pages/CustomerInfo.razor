@@ -1,13 +1,14 @@
 ﻿@page "/CustomerInfo/{CustomerId:int}"
 @inject HttpClient Http
 @using Microsoft.AspNetCore.Authorization
+@using SeaEco.Client.Resources
 @attribute [Authorize]
 @inject NavigationManager Navigation
 @using SeaEco.EntityFramework.Entities
 
 
 <div class="container mt-5">
-    <h2 class="text-center page-title">Kundeopplysninger</h2>
+    <h2 class="text-center page-title">@Resources.PageCustomerInfoCustomerInfo</h2>
 
     <div class="row justify-content-center">
         @if (_customer != null)
@@ -15,22 +16,22 @@
             <div class="col-md-8 col-lg-6">
                 <div class="card shadow-sm p-4 rounded-3 customer-card">
                     <div class="card-body text-center">
-                        <h4 class="customer-title">Oppdragsgiver</h4>
+                        <h4 class="customer-title">@Resources.PageCustomerInfoCustomerName</h4>
                         <p class="customer-info">@_customer.Oppdragsgiver</p>
 
-                        <h4 class="customer-title">Kontaktperson</h4>
+                        <h4 class="customer-title">@Resources.PageCustomerInfoContactPerson</h4>
                         <p class="customer-info">@_customer.Kontaktperson</p>
 
-                        <h4 class="customer-title">Telefonnummer</h4>
+                        <h4 class="customer-title">@Resources.PageCustomerInfoCustomerNumber</h4>
                         <p class="customer-info">@_customer.Telefonnummer</p>
                     </div>
 
                     <div class="position-absolute bottom-0 start-0 mb-3 ms-3">
-                        <button class="btn btn-outline-secondary me-2" @onclick="() => BackToCustomerPage()">Tilbake</button>
+                        <button class="btn btn-outline-secondary me-2" @onclick="() => BackToCustomerPage()">@Resources.ButtonCancel</button>
                     </div>
 
                     <div class="position-absolute bottom-0 end-0 mb-3 me-3">
-                        <button class="btn btn-primary" @onclick="() => EditCustomerPage()">Rediger</button>
+                        <button class="btn btn-primary" @onclick="() => EditCustomerPage()">@Resources.ButtonEdit</button>
                     </div>
                 </div>
             </div>

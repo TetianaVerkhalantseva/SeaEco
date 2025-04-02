@@ -9,10 +9,10 @@
 
 <div class="container position-relative">
     <button class="btn custom-btn position-absolute top-0 end-0 m-3" @onclick="() => AddCustomerPage()">
-        Ny kunde
+        @Resources.ButtonAddNewCustomer
     </button>
 
-    <h2 class="text-center mt-4 page-title">Kundeliste</h2>
+    <h2 class="text-center mt-4 page-title">@Resources.PageCustomerCustomerList</h2>
 
     <div class="row justify-content-center">
         @if (_customerNames == null)

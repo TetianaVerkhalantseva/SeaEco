@@ -147,9 +147,21 @@ namespace SeaEco.Client.Resources {
             }
         }
         
+        internal static string ButtonEdit {
+            get {
+                return ResourceManager.GetString("ButtonEdit", resourceCulture);
+            }
+        }
+        
         internal static string ButtonAddNewUser {
             get {
                 return ResourceManager.GetString("ButtonAddNewUser", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonAddNewCustomer {
+            get {
+                return ResourceManager.GetString("ButtonAddNewCustomer", resourceCulture);
             }
         }
         
@@ -231,9 +243,45 @@ namespace SeaEco.Client.Resources {
             }
         }
         
+        internal static string PageCustomerCustomerList {
+            get {
+                return ResourceManager.GetString("PageCustomerCustomerList", resourceCulture);
+            }
+        }
+        
         internal static string PageCustomerNoCustomersFound {
             get {
                 return ResourceManager.GetString("PageCustomerNoCustomersFound", resourceCulture);
+            }
+        }
+        
+        internal static string PageCustomerInfoCustomerInfo {
+            get {
+                return ResourceManager.GetString("PageCustomerInfoCustomerInfo", resourceCulture);
+            }
+        }
+        
+        internal static string PageCustomerInfoCustomerName {
+            get {
+                return ResourceManager.GetString("PageCustomerInfoCustomerName", resourceCulture);
+            }
+        }
+        
+        internal static string PageCustomerInfoContactPerson {
+            get {
+                return ResourceManager.GetString("PageCustomerInfoContactPerson", resourceCulture);
+            }
+        }
+        
+        internal static string PageCustomerInfoCustomerNumber {
+            get {
+                return ResourceManager.GetString("PageCustomerInfoCustomerNumber", resourceCulture);
+            }
+        }
+        
+        internal static string PageEditCustomerEditCustomer {
+            get {
+                return ResourceManager.GetString("PageEditCustomerEditCustomer", resourceCulture);
             }
         }
         
