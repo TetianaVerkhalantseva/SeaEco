@@ -178,4 +178,9 @@
     <data name="PageEditCustomerFailed" xml:space="preserve">
         <value>Kunderedigering mislykkes.</value>
     </data>
+    
+    <!-- PageAddCustomer -->
+    <data name="PageAddCustomerAddCustomer" xml:space="preserve">
+        <value>Legg til kunde</value>
+    </data>
 </root>

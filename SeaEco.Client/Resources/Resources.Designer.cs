@@ -296,5 +296,11 @@ namespace SeaEco.Client.Resources {
                 return ResourceManager.GetString("PageEditCustomerFailed", resourceCulture);
             }
         }
+        
+        internal static string PageAddCustomerAddCustomer {
+            get {
+                return ResourceManager.GetString("PageAddCustomerAddCustomer", resourceCulture);
+            }
+        }
     }
 }
