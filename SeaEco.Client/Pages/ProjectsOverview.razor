@@ -1,6 +1,7 @@
 @page "/projectsOverview"
 @using Microsoft.AspNetCore.Authorization
 @using SeaEco.Client.Resources
+@inject NavigationManager Navigation
 @attribute [Authorize]
 
 
@@ -8,9 +9,10 @@
     <div class="mb-3">
         <h3>@Resources.PageProjectsOverviewAllProjects</h3>
     </div>
-
-    <div class="table-responsive d-none d-xxl-block">
-        <table class="table">
+    
+    
+        <div class="table-responsive d-none d-xxl-block">
+        <table class="table table-hover">
             <thead>
             <tr>
                 <th>@Resources.TableHeaderCostumer</th>
@@ -25,9 +27,9 @@
             </tr>
             </thead>
             <tbody>
-            @foreach (var project in projectsList)
+            @foreach (var project in projects)
             {
-                <tr>
+                <tr @onclick="() => OnRowClick(project)" style="cursor: pointer">
                     <td>@project.KundeNavn</td>
                     <td>@project.Lokalitet</td>
                     <td>@project.Lokalitetid</td>
@@ -35,7 +37,7 @@
                     <td>@project.prosjektId</td>
                     <td>@project.Dato</td>
                     <td>@project.Produksjonsstatus</td>
-                    <td><span class="border border-success">@project.Tilstand </span></td>
+                    <td>@project.Tilstand</td>
                     <td>@project.Status</td>
                 </tr>
             }
@@ -46,16 +48,17 @@
 
     <div class="container d-block d-xxl-none">
         <div class="row">
-            @foreach (var project in projectsList)
+            @foreach (var project in projects)
             {
                 <div class="col-6 mb-3">
-                    <div class="card">
+                    <div class="card" style="cursor: pointer;" @onclick="() => OnRowClick(project)">
                         <div class="card-body">
+                            
                             <h5 class="card-title">@project.prosjektId</h5>
                         </div>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item">@project.Lokalitet</li>
-                            <li class="list-group-item">@project.Status</li>
+                            <li class="list-group-item">@Resources.TableHeaderLocality: @project.Lokalitet</li>
+                            <li class="list-group-item">@Resources.TableHeaderProjectStatus: @project.Status</li>
                         </ul>
                     </div>
                 </div>
@@ -68,7 +71,8 @@
 
 
 @code {
-    private List<ProjectDto>? projectsList;
+    private List<ProjectDto>? projects;
+
    
     //midlertidig classe til databasen er klar
     public class ProjectDto
@@ -79,7 +83,7 @@
         public int Lokalitetid { get; set; }
         public int PoId { get; set; }
         public string prosjektId { get; set; }
-        public string Dato { get; set; }
+        public DateOnly? Dato { get; set; }
         public string? Produksjonsstatus { get; set; }
         public int? Tilstand { get; set; }
         public string Status { get; set; }
@@ -89,13 +93,22 @@
     //midlertidig data til databasen er klar
     protected override async Task OnInitializedAsync()
     {
-        projectsList = new List<ProjectDto>
+        var projectsList = new List<ProjectDto>
         {
-            new ProjectDto { ProsjektId = 1, KundeNavn = "Mortenlaks AS" , Lokalitet ="Lille Djupfest" , Lokalitetid = 36479, PoId = 450, prosjektId = "SE25-BU-1", Dato = "14/01/2025" , Produksjonsstatus = "",Tilstand = 2, Status = "Ferdig" },
-            new ProjectDto { ProsjektId = 1, KundeNavn = "Salaks Produksjon AS" , Lokalitet = "Mohamen", Lokalitetid = 34057 , PoId = 452,  prosjektId = "SE25-BU-2", Dato = "12/02/2025", Produksjonsstatus = "",Tilstand = null, Status = "Nytt"},
-            new ProjectDto { ProsjektId = 1, KundeNavn = "Salaks Produksjon AS" , Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 456 , prosjektId = "SE25-BU-3", Dato = "", Produksjonsstatus = "",Tilstand = null, Status = ""}
+            new ProjectDto { ProsjektId = 1, KundeNavn = "Mortenlaks AS" , Lokalitet ="Lille Djupfest" , Lokalitetid = 36479, PoId = 450, prosjektId = "SE25-BU-1", Dato = new DateOnly(2025, 1, 14) , Produksjonsstatus = "",Tilstand = 2, Status = "Ferdig" },
+            new ProjectDto { ProsjektId = 2, KundeNavn = "Mortenlaks AS" , Lokalitet ="Lille Djupfest" , Lokalitetid = 36479, PoId = 451, prosjektId = "SE25-BU-3", Dato = new DateOnly(2025, 2, 18) , Produksjonsstatus = "",Tilstand = null, Status = "Nytt" },
+            new ProjectDto { ProsjektId = 3, KundeNavn = "Salaks Produksjon AS" , Lokalitet = "Mohamen", Lokalitetid = 34057 , PoId = 452,  prosjektId = "SE25-BU-4", Dato =new DateOnly(2025, 3, 2), Produksjonsstatus = "",Tilstand = null, Status = "Nytt"},
+            new ProjectDto { ProsjektId = 4, KundeNavn = "Salaks Produksjon AS" , Lokalitet = "Mohamen", Lokalitetid = 34057 , PoId = 453,  prosjektId = "SE25-BU-5", Dato = null, Produksjonsstatus = "",Tilstand = null, Status = "Nytt"},
+            new ProjectDto { ProsjektId = 5, KundeNavn = "Salaks Produksjon AS" , Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 456 , prosjektId = "SE25-BU-2", Dato = new DateOnly(2025, 2, 14), Produksjonsstatus = "",Tilstand = null, Status = "Nytt"}
         };
         
+        projects = projectsList?.OrderBy(projects => projects.Status).ThenByDescending(projects => projects.Dato).ToList();
+        
+    }
+
+    private async Task OnRowClick(ProjectDto projectDto)
+    {
+        //Navigation.NavigateTo("/projectsOverview");
     }
 
 }
