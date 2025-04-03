@@ -127,5 +127,34 @@ code {
 
 
 
+.card-status-new {
+    background: linear-gradient(to bottom, #6497B1, #8CBFD9);
+    color: white;
+}
 
+.card-status-started {
+    background: linear-gradient(to bottom, #B16497, #D98CBF);
+    color: white;
+}
 
+.card-status-deactivated {
+    background: linear-gradient(to bottom,#7a8288, #b4b8bb);
+    color: white;
+}
+
+.card-status-done {
+    background: linear-gradient(to bottom, #97B164, #BFD98C);
+    color: white;
+}
+
+.card-body {
+    position: relative;
+}
+
+.corner-text {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 8px;
+    font-size: 0.7rem;
+}

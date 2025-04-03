@@ -52,15 +52,14 @@
             {
                 <div class="col-6 mb-3">
                     <div class="card" style="cursor: pointer;" @onclick="() => OnRowClick(project)">
-                        <div class="card-body">
-                            
+                        <div class="card-body text-center @GetStatus(project.Status)">
                             <h5 class="card-title">@project.prosjektId</h5>
+                            <span class="corner-text">@project.Status </span>
                         </div>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">@Resources.TableHeaderLocality: @project.Lokalitet</li>
-                            <li class="list-group-item">@Resources.TableHeaderProjectStatus: @project.Status</li>
-                        </ul>
-                    </div>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">@Resources.TableHeaderLocality: @project.Lokalitet</li>
+                                </ul>
+                            </div>
                 </div>
             }
         </div>
@@ -99,10 +98,13 @@
             new ProjectDto { ProsjektId = 2, KundeNavn = "Mortenlaks AS" , Lokalitet ="Lille Djupfest" , Lokalitetid = 36479, PoId = 451, prosjektId = "SE25-BU-3", Dato = new DateOnly(2025, 2, 18) , Produksjonsstatus = "",Tilstand = null, Status = "Nytt" },
             new ProjectDto { ProsjektId = 3, KundeNavn = "Salaks Produksjon AS" , Lokalitet = "Mohamen", Lokalitetid = 34057 , PoId = 452,  prosjektId = "SE25-BU-4", Dato =new DateOnly(2025, 3, 2), Produksjonsstatus = "",Tilstand = null, Status = "Nytt"},
             new ProjectDto { ProsjektId = 4, KundeNavn = "Salaks Produksjon AS" , Lokalitet = "Mohamen", Lokalitetid = 34057 , PoId = 453,  prosjektId = "SE25-BU-5", Dato = null, Produksjonsstatus = "",Tilstand = null, Status = "Nytt"},
-            new ProjectDto { ProsjektId = 5, KundeNavn = "Salaks Produksjon AS" , Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 456 , prosjektId = "SE25-BU-2", Dato = new DateOnly(2025, 2, 14), Produksjonsstatus = "",Tilstand = null, Status = "Nytt"}
+            new ProjectDto { ProsjektId = 5, KundeNavn = "Salaks Produksjon AS" , Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 456 , prosjektId = "SE25-BU-2", Dato = new DateOnly(2025, 2, 14), Produksjonsstatus = "",Tilstand = null, Status = "Nytt"},
+            new ProjectDto { ProsjektId = 5, KundeNavn = "Salaks Produksjon AS" , Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 457 , prosjektId = "SE25-BU-6", Dato = new DateOnly(2025, 1, 1), Produksjonsstatus = "",Tilstand = null, Status = "Deaktivert"},
+            new ProjectDto { ProsjektId = 5, KundeNavn = "Salaks Produksjon AS" , Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 458 , prosjektId = "SE25-BU-7", Dato = new DateOnly(2025, 1, 2), Produksjonsstatus = "",Tilstand = null, Status = "Påbegynt"}
         };
         
-        projects = projectsList?.OrderBy(projects => projects.Status).ThenByDescending(projects => projects.Dato).ToList();
+        //mulige tilstander; Nytt, Påbegynt, Deaktivert, Ferdig
+        projects = projectsList?.OrderByDescending(projects => projects.Status).ThenByDescending(projects => projects.Dato).ToList();
         
     }
 
@@ -110,6 +112,18 @@
     {
         //Navigation.NavigateTo("/projectsOverview");
     }
-
+    
+    private string GetStatus(string? status)
+    {
+        return status switch
+        {
+            "Nytt" => "card-status-new",
+            "Ferdig" => "card-status-done",
+            "Påbegynt" => "card-status-started",
+            "Deaktivert" => "card-status-deactivated"
+        };
+    }
 }
+
+
 
