@@ -14,7 +14,6 @@ public class EditCustomerDto
     
     
     [Required(ErrorMessage = "Telefonnummer er påkrevd")]
-    [MinLength(8, ErrorMessage = "Telefonnummeret må være minst 8 sifre")]
-    [RegularExpression(@"^\d{8}$", ErrorMessage = "Telefonnummeret må kun inneholde tall")]
+    [RegularExpression(@"^\d{8}$", ErrorMessage = "Telefonnummeret må være 8 sifre")]
     public string Telefonnummer { get; set; } = null!;
 }

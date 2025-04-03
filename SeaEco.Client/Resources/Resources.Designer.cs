@@ -153,6 +153,12 @@ namespace SeaEco.Client.Resources {
             }
         }
         
+        internal static string ButtonDelete {
+            get {
+                return ResourceManager.GetString("ButtonDelete", resourceCulture);
+            }
+        }
+        
         internal static string ButtonAddNewUser {
             get {
                 return ResourceManager.GetString("ButtonAddNewUser", resourceCulture);
@@ -279,6 +285,18 @@ namespace SeaEco.Client.Resources {
             }
         }
         
+        internal static string PageCustomerInfoDeleteCustomerSuccess {
+            get {
+                return ResourceManager.GetString("PageCustomerInfoDeleteCustomerSuccess", resourceCulture);
+            }
+        }
+        
+        internal static string PageCustomerInfoDeleteCustomerFailed {
+            get {
+                return ResourceManager.GetString("PageCustomerInfoDeleteCustomerFailed", resourceCulture);
+            }
+        }
+        
         internal static string PageEditCustomerEditCustomer {
             get {
                 return ResourceManager.GetString("PageEditCustomerEditCustomer", resourceCulture);
@@ -300,6 +318,18 @@ namespace SeaEco.Client.Resources {
         internal static string PageAddCustomerAddCustomer {
             get {
                 return ResourceManager.GetString("PageAddCustomerAddCustomer", resourceCulture);
+            }
+        }
+        
+        internal static string PageAddCustomerSuccess {
+            get {
+                return ResourceManager.GetString("PageAddCustomerSuccess", resourceCulture);
+            }
+        }
+        
+        internal static string PageAddCustomerFailed {
+            get {
+                return ResourceManager.GetString("PageAddCustomerFailed", resourceCulture);
             }
         }
     }

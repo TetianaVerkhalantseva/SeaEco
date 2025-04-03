@@ -5,6 +5,7 @@
 @attribute [Authorize]
 @inject NavigationManager Navigation
 @using SeaEco.EntityFramework.Entities
+@using Microsoft.AspNetCore.Components.Authorization
 
 
 <div class="container mt-5">
@@ -31,8 +32,26 @@
                     </div>
 
                     <div class="position-absolute bottom-0 end-0 mb-3 me-3">
+                        <AuthorizeView Roles="admin">
+                            <button class="btn btn-danger" @onclick="() => DeleteCustomer()">@Resources.ButtonDelete</button>
+                        </AuthorizeView>
+                        
                         <button class="btn btn-primary" @onclick="() => EditCustomerPage()">@Resources.ButtonEdit</button>
                     </div>
+                </div>
+
+                <div class="mt-3 text-center">
+                    @if (_result.HasValue)
+                    {
+                        @if (_result.Value)
+                        {
+                            <div class="alert alert-success">@Resources.PageCustomerInfoDeleteCustomerSuccess</div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-danger">@Resources.PageCustomerInfoDeleteCustomerFailed</div>
+                        }
+                    }
                 </div>
             </div>
         }
@@ -44,6 +63,7 @@
     [Parameter]
     public int CustomerId { get; set; }
     private Kunde? _customer = new();
+    private bool? _result;
 
     protected override async Task OnInitializedAsync()
     {
@@ -65,5 +85,21 @@
     private void EditCustomerPage()
     {
         Navigation.NavigateTo($"EditCustomer/{CustomerId}");
+    }
+
+    private async Task DeleteCustomer()
+    {
+        var response = await Http.DeleteAsync($"api/Customer/Delete-customer/{CustomerId}");
+        if (response.IsSuccessStatusCode)
+        {
+            _result = true;
+            StateHasChanged();
+            await Task.Delay(2000);
+            Navigation.NavigateTo("Customer");
+        }
+        else
+        {
+            _result = false;
+        }
     }
 }

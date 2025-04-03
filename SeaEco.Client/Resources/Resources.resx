@@ -88,6 +88,9 @@
     <data name="ButtonEdit" xml:space="preserve">
         <value>Rediger</value>
     </data>
+    <data name="ButtonDelete" xml:space="preserve">
+        <value>Slett</value>
+    </data>
     <data name="ButtonAddNewUser" xml:space="preserve">
         <value>+ Ny bruker</value>
     </data>
@@ -167,6 +170,12 @@
     <data name="PageCustomerInfoCustomerNumber" xml:space="preserve">
         <value>Telefonnummer</value>
     </data>
+    <data name="PageCustomerInfoDeleteCustomerSuccess" xml:space="preserve">
+        <value>Kundesletting vellykket!</value>
+    </data>
+    <data name="PageCustomerInfoDeleteCustomerFailed" xml:space="preserve">
+        <value>Kundesletting misllykkets.</value>
+    </data>
     
     <!-- PageEditCustomer -->
     <data name="PageEditCustomerEditCustomer" xml:space="preserve">
@@ -182,5 +191,11 @@
     <!-- PageAddCustomer -->
     <data name="PageAddCustomerAddCustomer" xml:space="preserve">
         <value>Legg til kunde</value>
+    </data>
+    <data name="PageAddCustomerSuccess" xml:space="preserve">
+        <value>Kunderegistrering vellykket!</value>
+    </data>
+    <data name="PageAddCustomerFailed" xml:space="preserve">
+        <value>Kunderegistrering mislykkes.</value>
     </data>
 </root>

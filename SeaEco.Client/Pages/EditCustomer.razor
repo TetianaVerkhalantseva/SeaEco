@@ -92,7 +92,7 @@
             _result = true;
             StateHasChanged();
             await Task.Delay(2000);
-            Navigation.NavigateTo($"/CustomerInfo/{CustomerId}");
+            Navigation.NavigateTo($"CustomerInfo/{CustomerId}");
         }
         else
         {
@@ -102,6 +102,6 @@
     
     private void CustomerInfoPage()
     {
-        Navigation.NavigateTo($"/CustomerInfo/{CustomerId}");
+        Navigation.NavigateTo($"CustomerInfo/{CustomerId}");
     }
 }

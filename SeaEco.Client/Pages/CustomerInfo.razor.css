@@ -18,6 +18,7 @@ a {
     border: 1px solid #ddd;
     border-radius: 12px;
     transition: box-shadow 0.3s ease-in-out;
+    position: relative;
 }
 
 .customer-card:hover {
@@ -51,8 +52,4 @@ button {
 .btn-primary:hover {
     background-color: #0056b3;
     border-color: #0056b3;
-}
-
-.customer-card {
-    position: relative;
 }
