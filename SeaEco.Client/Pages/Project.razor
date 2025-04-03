@@ -1,0 +1,16 @@
+@page "/project/{prosjektId}"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+<div class="d-flex flex-column align-items-center">
+<div class="mb-3">
+    <h3>Prosjektside for @prosjektId</h3>
+    <p>Siden er enda ikke utviklet</p>
+</div>
+</div>
+
+@code {
+    [Parameter]
+    public string prosjektId { get; set; }
+    
+}

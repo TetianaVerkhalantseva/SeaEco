@@ -4,7 +4,7 @@
 @using SeaEco.Client.Resources
 @inject HttpClient Http
 @attribute [Authorize(Roles = "admin")]
-@inject NavigationManager NavigationManager
+@inject NavigationManager Navigation
 
 
 
@@ -138,7 +138,7 @@
 
     private void EditUser(Guid userId)
     {
-        NavigationManager.NavigateTo($"editUser/{userId:D}");
+        Navigation.NavigateTo($"editUser/{userId:D}");
     }
     
 }
