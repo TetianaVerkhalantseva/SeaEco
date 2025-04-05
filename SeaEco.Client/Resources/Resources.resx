@@ -112,9 +112,6 @@
     <data name="TableHeaderCostumer" xml:space="preserve">
         <value>Kunde</value>
     </data>
-    <data name="TableHeaderCostumer" xml:space="preserve">
-        <value>Kunde</value>
-    </data>
     <data name="TableHeaderLocality" xml:space="preserve">
         <value>Lokalitet</value>
     </data>

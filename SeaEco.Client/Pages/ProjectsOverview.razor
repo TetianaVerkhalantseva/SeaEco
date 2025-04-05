@@ -10,47 +10,139 @@
         <h3>@Resources.PageProjectsOverviewAllProjects</h3>
     </div>
 
-    
-    <div class="table-responsive d-none d-xxl-block">
-                <table class="table table-hover">
-                    <thead>
-                    <tr>
-                        <th>@Resources.TableHeaderCostumer</th>
-                        <th>@Resources.TableHeaderLocality</th>
-                        <th>@Resources.TableHeaderLocalityId</th>
-                        <th>@Resources.TableHeaderPoId</th>
-                        <th>@Resources.TableHeaderProjectId</th>
-                        <th>@Resources.TableHeaderDate</th>
-                        <th>@Resources.TableHeaderProductionStatus</th>
-                        <th>@Resources.TableHeaderStatus</th>
-                        <th>@Resources.TableHeaderProjectStatus</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach (var project in projects)
-                    {
-                        <tr @onclick="() => OnRowClick(project.prosjektId)" style="cursor: pointer">
-                            <td>@project.KundeNavn</td>
-                            <td>@project.Lokalitet</td>
-                            <td>@project.Lokalitetid</td>
-                            <td>@project.PoId</td>
-                            <td>@project.prosjektId</td>
-                            <td>@project.Dato</td>
-                            <td>@project.Produksjonsstatus</td>
-                            <td>@project.Tilstand</td>
-                            <td>@project.Status</td>
-                        </tr>
-                    }
-                    </tbody>
-                </table>
+   
+    <button class="btn btn-secondary" type="button"
+            data-bs-toggle="collapse" data-bs-target="#collapseFilter"
+            aria-expanded="false" aria-controls="collapseFelt">
+        Filter
+    </button>
+
+    <div class="collapse" id="collapseFilter">
+        <div class="card card-body">
+            <div class="d-flex justify-content-center gap-3">
+                <div class="d-flex flex-column gap-2">
+                    <p>Status</p>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" @bind="checkStatusStarted" >
+                        <label class="form-check-label">
+                            Påbegynt
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" @bind="checkStatusDone" >
+                        <label class="form-check-label" >
+                            Ferdig
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" @bind="checkStatusNew">
+                        <label class="form-check-label" >
+                            Nytt
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" @bind="checkStatusDeactivated">
+                        <label class="form-check-label">
+                            Deaktivert
+                        </label>
+                    </div>
+                </div>
+                <div class="d-flex flex-column gap-2">
+                    <div class="form-group">
+                        <label for="locationSelected">Lokalitet</label>
+                        <select id="locationSelected" class="form-control" @bind="selectedLocation">
+                            <option value="">Alle</option>
+                            @foreach (var location in allLocations)
+                            {
+                                <option value="@location">@location</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="d-flex flex-column gap-2">
+                    <div class="form-group">
+                        <label for="customerSelected">Kunde</label>
+                        <select id="customerSelected" class="form-control" @bind="selectedCustomer">
+                            <option value="">Alle</option>
+                            @foreach (var customers  in allCustomers)
+                            {
+                                <option value="@customers">@customers</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="d-flex flex-column gap-2">
+                    <div class="form-group">
+                        <label for="yearSelect">År</label>
+                        <select id="yearSelect" class="form-control" @bind="selectedYear">
+                            <option value="">Alle</option>
+                            <option value="2025">2025</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="d-flex flex-column gap-2">
+                    <div class="form-group">
+                        <label for="mndSelect">Måned</label>
+                        <select id="mndSelect" class="form-control" @bind="selectedMnd">
+                            <option value="">Alle</option>
+                            @for (int i = 1; i <= 12; i++)
+                            {
+                                <option value="@i">@i</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                
+                
             </div>
         </div>
-   
+    </div>
+    
+
+    
+    <div class="table-responsive  d-none d-xxl-block">
+
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>@Resources.TableHeaderCostumer</th>
+                <th>@Resources.TableHeaderLocality</th>
+                <th>@Resources.TableHeaderLocalityId</th>
+                <th>@Resources.TableHeaderPoId</th>
+                <th>@Resources.TableHeaderProjectId</th>
+                <th>@Resources.TableHeaderDate</th>
+                <th>@Resources.TableHeaderProductionStatus</th>
+                <th>@Resources.TableHeaderStatus</th>
+                <th>@Resources.TableHeaderProjectStatus</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var project in FilterProjects)
+            {
+                <tr @onclick="() => OnRowClick(project.prosjektId)" style="cursor: pointer">
+                    <td>@project.KundeNavn</td>
+                    <td>@project.Lokalitet</td>
+                    <td>@project.Lokalitetid</td>
+                    <td>@project.PoId</td>
+                    <td>@project.prosjektId</td>
+                    <td>@project.Dato</td>
+                    <td>@project.Produksjonsstatus</td>
+                    <td>@project.Tilstand</td>
+                    <td>@project.Status</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+        </div>
 
 
-    <div class="container d-block d-xxl-none">
+
+<div class="container d-block d-xxl-none">
         <div class="row">
-            @foreach (var project in projects)
+            @foreach (var project in FilterProjects)
             {
                 <div class="col-6 mb-3">
                     <div class="card" style="cursor: pointer;" @onclick="() => OnRowClick(project.prosjektId)">
@@ -73,7 +165,18 @@
 
 @code {
     private List<ProjectDto>? projects;
+    private List<string>? allLocations;
+    private List<string>? allCustomers;
 
+    
+    private bool checkStatusNew { get; set; } = true;
+    private bool checkStatusStarted { get; set; } = true;
+    private bool checkStatusDone { get; set; } = true;
+    private bool checkStatusDeactivated { get; set; } = false;
+    private int? selectedYear { get; set; } = null;
+    private int? selectedMnd { get; set; } = null;
+    private string? selectedCustomer { get; set; } = null;
+    private string? selectedLocation { get; set; } = null;
 
     //midlertidig classe til databasen er klar
     public class ProjectDto
@@ -100,14 +203,38 @@
             new ProjectDto { ProsjektId = 2, KundeNavn = "Mortenlaks AS", Lokalitet = "Lille Djupfest", Lokalitetid = 36479, PoId = 451, prosjektId = "SE25-BU-3", Dato = new DateOnly(2025, 2, 18), Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
             new ProjectDto { ProsjektId = 3, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 452, prosjektId = "SE25-BU-4", Dato = new DateOnly(2025, 3, 2), Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
             new ProjectDto { ProsjektId = 4, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 453, prosjektId = "SE25-BU-5", Dato = null, Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
-            new ProjectDto { ProsjektId = 5, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 456, prosjektId = "SE25-BU-2", Dato = new DateOnly(2025, 2, 14), Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
+            new ProjectDto { ProsjektId = 5, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 456, prosjektId = "SE25-BU-2", Dato = new DateOnly(2023, 2, 14), Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
             new ProjectDto { ProsjektId = 6, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 457, prosjektId = "SE25-BU-6", Dato = new DateOnly(2025, 1, 1), Produksjonsstatus = "", Tilstand = null, Status = "Deaktivert" },
-            new ProjectDto { ProsjektId = 7, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 458, prosjektId = "SE25-BU-7", Dato = new DateOnly(2025, 1, 2), Produksjonsstatus = "", Tilstand = null, Status = "Påbegynt" }
+            new ProjectDto { ProsjektId = 7, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 458, prosjektId = "SE25-BU-7", Dato = new DateOnly(2025, 1, 2), Produksjonsstatus = "", Tilstand = null, Status = "Påbegynt" },
+            new ProjectDto { ProsjektId = 1, KundeNavn = "Mortenlaks AS", Lokalitet = "Lille Djupfest", Lokalitetid = 36479, PoId = 450, prosjektId = "SE25-BU-1", Dato = new DateOnly(2023, 1, 14), Produksjonsstatus = "", Tilstand = 2, Status = "Ferdig" },
+        new ProjectDto { ProsjektId = 2, KundeNavn = "Mortenlaks AS", Lokalitet = "Lille Djupfest", Lokalitetid = 36479, PoId = 451, prosjektId = "SE25-BU-3", Dato = new DateOnly(2025, 2, 18), Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
+        new ProjectDto { ProsjektId = 3, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 452, prosjektId = "SE25-BU-4", Dato = new DateOnly(2025, 3, 2), Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
+        new ProjectDto { ProsjektId = 4, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 453, prosjektId = "SE25-BU-5", Dato = null, Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
+        new ProjectDto { ProsjektId = 5, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 456, prosjektId = "SE25-BU-2", Dato = new DateOnly(2024, 2, 14), Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
+        new ProjectDto { ProsjektId = 6, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 457, prosjektId = "SE25-BU-6", Dato = new DateOnly(2024, 1, 1), Produksjonsstatus = "", Tilstand = null, Status = "Deaktivert" },
+        new ProjectDto { ProsjektId = 7, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 458, prosjektId = "SE25-BU-7", Dato = new DateOnly(2025, 1, 2), Produksjonsstatus = "", Tilstand = null, Status = "Påbegynt" },
+        new ProjectDto { ProsjektId = 1, KundeNavn = "Mortenlaks AS", Lokalitet = "Lille Djupfest", Lokalitetid = 36479, PoId = 450, prosjektId = "SE25-BU-1", Dato = new DateOnly(2025, 1, 14), Produksjonsstatus = "", Tilstand = 2, Status = "Ferdig" },
+        new ProjectDto { ProsjektId = 2, KundeNavn = "Mortenlaks AS", Lokalitet = "Lille Djupfest", Lokalitetid = 36479, PoId = 451, prosjektId = "SE25-BU-3", Dato = new DateOnly(2025, 2, 18), Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
+        new ProjectDto { ProsjektId = 3, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 452, prosjektId = "SE25-BU-4", Dato = new DateOnly(2025, 3, 2), Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
+        new ProjectDto { ProsjektId = 4, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 453, prosjektId = "SE25-BU-5", Dato = null, Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
+        new ProjectDto { ProsjektId = 5, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 456, prosjektId = "SE25-BU-2", Dato = new DateOnly(2025, 2, 14), Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
+        new ProjectDto { ProsjektId = 6, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 457, prosjektId = "SE25-BU-6", Dato = new DateOnly(2025, 1, 1), Produksjonsstatus = "", Tilstand = null, Status = "Deaktivert" },
+        new ProjectDto { ProsjektId = 7, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 458, prosjektId = "SE25-BU-7", Dato = new DateOnly(2025, 1, 2), Produksjonsstatus = "", Tilstand = null, Status = "Påbegynt" }
         };
-
-        //mulige tilstander; Nytt, Påbegynt, Deaktivert, Ferdig
+        
+        allLocations = projectsList
+            .Select(p => p.Lokalitet)
+            .Distinct()
+            .ToList();
+        
+        allCustomers = projectsList
+            .Select(p => p.KundeNavn)
+            .Distinct()
+            .ToList();
+        
+        //Default-sorting by Customers order. 
         projects = projectsList?.OrderByDescending(projects => projects.Status).ThenByDescending(projects => projects.Dato).ToList();
-
+        
     }
 
     //Må endres til Guid når vi får påplass databasen
@@ -126,6 +253,25 @@
             "Deaktivert" => "card-status-deactivated"
         };
     }
+    
+    private IEnumerable<ProjectDto> FilterProjects =>
+        projects.Where(p =>
+           ((checkStatusNew && p.Status == "Nytt") ||
+            (checkStatusStarted && p.Status == "Påbegynt") ||
+            (checkStatusDone && p.Status == "Ferdig") ||
+            (checkStatusDeactivated && p.Status == "Deaktivert")) &&
+            
+            (!selectedYear.HasValue || (p.Dato.HasValue && p.Dato.Value.Year == selectedYear.Value)) &&
+            
+            (!selectedMnd.HasValue || (p.Dato.HasValue && p.Dato.Value.Month == selectedMnd.Value)) &&
+            
+            (String.IsNullOrEmpty(selectedLocation)|| p.Lokalitet == selectedLocation) &&
+            
+            (String.IsNullOrEmpty(selectedCustomer) || p.KundeNavn == selectedCustomer)
+            
+        );
+
+
 }
 
 
