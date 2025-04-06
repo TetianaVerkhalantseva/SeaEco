@@ -278,5 +278,17 @@ namespace SeaEco.Client.Resources {
                 return ResourceManager.GetString("PageProjectsOverviewAllProjects", resourceCulture);
             }
         }
+        
+        internal static string ButtonFilter {
+            get {
+                return ResourceManager.GetString("ButtonFilter", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonReset {
+            get {
+                return ResourceManager.GetString("ButtonReset", resourceCulture);
+            }
+        }
     }
 }

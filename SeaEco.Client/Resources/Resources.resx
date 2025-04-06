@@ -166,4 +166,10 @@
     <data name="PageProjectsOverviewAllProjects" xml:space="preserve">
         <value>Alle prosjekter</value>
     </data>
+    <data name="ButtonFilter" xml:space="preserve">
+        <value>Filter</value>
+    </data>
+    <data name="ButtonReset" xml:space="preserve">
+        <value>Nullstill</value>
+    </data>
 </root>

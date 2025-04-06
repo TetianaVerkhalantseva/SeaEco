@@ -160,3 +160,16 @@ code {
 }
 
 
+
+
+.fixed-dropdown {
+    width: 229px;
+    overflow-x: auto;
+    padding: 5px;
+}
+
+.sort-icon {
+    display: inline-block;
+    width: 1.5em;  /* Adjust width as needed */
+    text-align: center;
+}
