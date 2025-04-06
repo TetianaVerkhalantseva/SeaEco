@@ -90,15 +90,15 @@
         <div class="table-responsive  d-none d-xxl-block">
             <table class="table table-hover fixed-width-table">
                 <colgroup>
-                    <col style="width: 150px;">
-                    <col style="width: 100px;">
+                    <col style="width: 190px;">
+                    <col style="width: 140px;">
                     <col style="width: 80px;">
                     <col style="width: 80px;">
+                    <col style="width: 110px;">
                     <col style="width: 100px;">
-                    <col style="width: 100px;">
-                    <col style="width: 150px;">
-                    <col style="width: 70px;">
-                    <col style="width: 120px;">
+                    <col style="width: 160px;">
+                    <col style="width: 90px;">
+                    <col style="width: 140px;">
                 </colgroup>
                 <thead>
                 <tr>
@@ -106,12 +106,12 @@
                     {
                         <th style="cursor: pointer" @onclick="() => SortBy(tableHeader)">
                             @tableHeader
-                            <span class="sort-icon">
+                            
                                 @if (_currentSortColumn == @tableHeader)
                                 {
                                     <i class="bi @(_sortAscending ? "bi-arrow-up" : "bi-arrow-down")"></i>
                                 }
-                            </span>
+                            
                         </th>
                     }
                 </tr>
@@ -229,7 +229,7 @@
             new ProjectDto { ProsjektId = 4, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 453, prosjektId = "SE25-BU-5", Dato = null, Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
             new ProjectDto { ProsjektId = 5, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 456, prosjektId = "SE25-BU-2", Dato = new DateOnly(2025, 2, 14), Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
             new ProjectDto { ProsjektId = 6, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 457, prosjektId = "SE25-BU-6", Dato = new DateOnly(2025, 1, 1), Produksjonsstatus = "", Tilstand = null, Status = "Deaktivert" },
-            new ProjectDto { ProsjektId = 7, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Veldig lang lokalitetsnavn............", Lokalitetid = 34057, PoId = 458, prosjektId = "SE25-BU-7", Dato = new DateOnly(2025, 1, 2), Produksjonsstatus = "", Tilstand = null, Status = "Påbegynt" }
+            new ProjectDto { ProsjektId = 7, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Veldig lang lokalitetsnavn........", Lokalitetid = 34057, PoId = 458, prosjektId = "SE25-BU-7", Dato = new DateOnly(2025, 1, 2), Produksjonsstatus = "", Tilstand = null, Status = "Påbegynt" }
         ];
         
         _allLocations = _projects?
@@ -341,7 +341,6 @@
             {
                 _sortAscending = !_sortAscending;
             }
-            
         }
         else
         {
