@@ -5,22 +5,22 @@
 @attribute [Authorize]
 @using SeaEco.Client.Components
 
-<div class="d-flex flex-column align-items-center">
+<div class="d-flex justify-content-center">
+<div class="d-flex flex-column align-items-center projects-container">
     <div class="mb-3">
         <h3>@Resources.PageProjectsOverviewAllProjects</h3>
     </div>
     
-    
-<div class="d-flex flex-column gap-3">
+<div class="d-flex flex-column card-container w-100 gap-3">
     
     <button class="btn btn-outline-secondary align-self-end filter-button" type="button"
             data-bs-toggle="collapse" data-bs-target="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter">
         @Resources.ButtonFilter <i class="bi bi-filter"></i>
     </button>
 
-    <div class="collapse" id="collapseFilter">
+    <div class="collapse card-container w-100" id="collapseFilter">
         <div class="card card-body">
-            <div class="d-flex flex-column flex-xxl-row justify-content-center gap-3">
+            <div class="d-flex flex-column flex-xxl-row gap-3">
                 <div class="d-flex flex-column gap-2">
                     <div class="form-group">
                         <label>@Resources.TableHeaderProjectStatus</label>
@@ -153,6 +153,7 @@
             }
         </div>
     </div>
+</div>
 </div>
 </div>
 
