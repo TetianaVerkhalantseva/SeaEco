@@ -290,5 +290,23 @@ namespace SeaEco.Client.Resources {
                 return ResourceManager.GetString("ButtonReset", resourceCulture);
             }
         }
+        
+        internal static string TableHeaderMonth {
+            get {
+                return ResourceManager.GetString("TableHeaderMonth", resourceCulture);
+            }
+        }
+        
+        internal static string TableHeaderYear {
+            get {
+                return ResourceManager.GetString("TableHeaderYear", resourceCulture);
+            }
+        }
+        
+        internal static string OptionAll {
+            get {
+                return ResourceManager.GetString("OptionAll", resourceCulture);
+            }
+        }
     }
 }

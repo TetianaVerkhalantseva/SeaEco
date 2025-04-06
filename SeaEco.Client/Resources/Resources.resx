@@ -172,4 +172,13 @@
     <data name="ButtonReset" xml:space="preserve">
         <value>Nullstill</value>
     </data>
+    <data name="TableHeaderMonth" xml:space="preserve">
+        <value>Måned</value>
+    </data>
+    <data name="TableHeaderYear" xml:space="preserve">
+        <value>År</value>
+    </data>
+    <data name="OptionAll" xml:space="preserve">
+        <value>Alle</value>
+    </data>
 </root>

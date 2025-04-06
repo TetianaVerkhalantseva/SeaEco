@@ -1,3 +1,4 @@
+@using SeaEco.Client.Resources
 
 <div class="dropdown">
     <div class="form-control d-flex flex-wrap align-items-center fixed-dropdown" @onclick="ToggleDropdown">
@@ -15,7 +16,7 @@
         }
         else
         {
-            <span class="placeholder-text">Alle</span>
+            <span class="placeholder-text">@Resources.OptionAll</span>
         }
     </div>
     
