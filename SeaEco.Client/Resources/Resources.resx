@@ -97,6 +97,9 @@
     <data name="ButtonAddNewCustomer" xml:space="preserve">
         <value>+ Ny kunde</value>
     </data>
+    <data name="ButtonAddNewProject" xml:space="preserve">
+        <value>+ Nytt prosjekt</value>
+    </data>
 
     <!-- Table -->
 
@@ -175,6 +178,10 @@
     </data>
     <data name="PageCustomerInfoDeleteCustomerFailed" xml:space="preserve">
         <value>Kundesletting misllykkets.</value>
+    </data>
+    
+    <data name="PageCustomerInfoNoProject" xml:space="preserve">
+        <value>Ingen prosjekt er opprettet ennå</value>
     </data>
     
     <!-- PageEditCustomer -->

@@ -6,13 +6,6 @@ a {
     text-decoration: none;
 }
 
-.page-title {
-    color: #333;
-    font-weight: 600;
-    letter-spacing: 1px;
-    margin-bottom: 1.2em;
-}
-
 .customer-card {
     background: #f8f9fa;
     border: 1px solid #ddd;
@@ -22,7 +15,7 @@ a {
 }
 
 .customer-card:hover {
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
 
 .customer-title {
@@ -52,4 +45,55 @@ button {
 .btn-primary:hover {
     background-color: #0056b3;
     border-color: #0056b3;
+}
+
+.custom-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.custom-btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.custom-btn:active {
+    transform: scale(0.98);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card {
+    border: none;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+}
+
+.hover-effect:hover {
+    background-color: #e9ecef;
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.project-info {
+    font-weight: 600;
+    color: #333;
+}
+
+p {
+    font-weight: 400;
+    color: #333;
+}
+
+@media (max-width: 768px) {
+    .col-md-5 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
 }

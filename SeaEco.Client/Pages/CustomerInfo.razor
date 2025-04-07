@@ -9,13 +9,11 @@
 
 
 <div class="container mt-5">
-    <h2 class="text-center page-title">@Resources.PageCustomerInfoCustomerInfo</h2>
-
     <div class="row justify-content-center">
         @if (_customer != null)
         {
             <div class="col-md-8 col-lg-6">
-                <div class="card shadow-sm p-4 rounded-3 customer-card">
+                <div class="customer-card shadow-sm p-4 rounded-3">
                     <div class="card-body text-center">
                         <h4 class="customer-title">@Resources.PageCustomerInfoCustomerName</h4>
                         <p class="customer-info">@_customer.Oppdragsgiver</p>
@@ -28,15 +26,15 @@
                     </div>
 
                     <div class="position-absolute bottom-0 start-0 mb-3 ms-3">
-                        <button class="btn btn-outline-secondary me-2" @onclick="() => BackToCustomerPage()">@Resources.ButtonCancel</button>
+                        <button class="btn btn-outline-secondary me-2" @onclick="BackToCustomerPage">@Resources.ButtonCancel</button>
                     </div>
 
                     <div class="position-absolute bottom-0 end-0 mb-3 me-3">
                         <AuthorizeView Roles="admin">
-                            <button class="btn btn-danger" @onclick="() => DeleteCustomer()">@Resources.ButtonDelete</button>
+                            <button class="btn btn-danger" @onclick="DeleteCustomer">@Resources.ButtonDelete</button>
                         </AuthorizeView>
                         
-                        <button class="btn btn-primary" @onclick="() => EditCustomerPage()">@Resources.ButtonEdit</button>
+                        <button class="btn btn-primary" @onclick="EditCustomerPage">@Resources.ButtonEdit</button>
                     </div>
                 </div>
 
@@ -56,6 +54,52 @@
             </div>
         }
     </div>
+
+    <div class="container mt-3">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="w-50">
+                <select class="form-select" @onchange="OnSortChanged">
+                    <option value="all">Alle</option>
+                    <option value="status-started">Påbegynt</option>
+                    <option value="status-new">Nytt</option>
+                    <option value="status-done">Ferdig</option>
+                    <option value="name-asc">Sorter etter navn: A-Z</option>
+                    <option value="name-desc">Sorter etter navn: Z-A</option>
+                    <option value="date-asc">Sorter etter dato: eldst først</option>
+                    <option value="date-desc">Sorter etter dato: nyest først</option>
+                </select>
+            </div>
+
+            <!-- onclick to create new project page -->
+            <button class="btn custom-btn ms-3">
+                @Resources.ButtonAddNewProject
+            </button>
+        </div>
+    </div>
+    
+    <div class="row justify-content-center">
+        @if (_customer?.BProsjekts != null)
+        {
+            @foreach (var project in _customer.BProsjekts)
+            {
+                <div class="col-md-5 col-lg-4 mb-4">
+                    <div class="card shadow-sm p-4 rounded-3 hover-effect d-flex align-items-center justify-content-center">
+                        
+                        <!-- href to project detail page -->
+                        <a href=""><h5 class="project-info">@project.PoId</h5></a>
+                        <a href="">
+                            <p>@project.Status</p></a>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-md-5 col-lg-4 mb-4">
+                <p>@Resources.PageCustomerInfoNoProject</p>
+            </div>
+        }
+    </div>
 </div>
 
 
@@ -64,17 +108,126 @@
     public int CustomerId { get; set; }
     private Kunde? _customer = new();
     private bool? _result;
+    private string _currentSort = "all";
+    private List<BProsjekt> _allProjects = new();
 
     protected override async Task OnInitializedAsync()
     {
+        await LoadCustomerInfoData();
+    }
+
+    private async Task LoadCustomerInfoData()
+    {
         try
         {
-            _customer = await Http.GetFromJsonAsync<Kunde>($"api/Customer/{CustomerId}");
+            _customer = await Http.GetFromJsonAsync<Kunde>($"api/Customer/Project-details-for-customer/{CustomerId}");
+            _customer.BProsjekts = new List<BProsjekt>
+            {
+                new BProsjekt
+                {
+                    Prosjektid = new Guid(),
+                    PoId = "1001",
+                    Status = "Ferdig",
+                    Datoregistrert = DateTime.Now
+                },
+                new BProsjekt
+                {
+                    Prosjektid = new Guid(),
+                    PoId = "1002",
+                    Status = "Påbegynt",
+                    Datoregistrert = DateTime.Now
+                },
+                new BProsjekt
+                {
+                    Prosjektid = new Guid(),
+                    PoId = "1003",
+                    Status = "Påbegynt",
+                    Datoregistrert = DateTime.Now
+                },
+                new BProsjekt
+                {
+                    Prosjektid = new Guid(),
+                    PoId = "1004",
+                    Status = "Nytt",
+                    Datoregistrert = DateTime.Now
+                },
+                new BProsjekt
+                {
+                    Prosjektid = new Guid(),
+                    PoId = "1005",
+                    Status = "Påbegynt",
+                    Datoregistrert = DateTime.Now
+                },
+                new BProsjekt
+                {
+                    Prosjektid = new Guid(),
+                    PoId = "1006",
+                    Status = "Nytt",
+                    Datoregistrert = DateTime.Now
+                }
+            };
+            _allProjects = _customer.BProsjekts.ToList();
+            SortProjectList(_currentSort);
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
         }
+    }
+
+    private void OnSortChanged(ChangeEventArgs e)
+    {
+        _currentSort = e.Value?.ToString() ?? "all";
+        SortProjectList(_currentSort);
+    }
+
+    private void SortProjectList(string sortOption)
+    {
+        if (_customer?.BProsjekts == null) return;
+
+        _customer.BProsjekts = _allProjects.ToList();
+
+        switch (sortOption)
+        {
+            case "all":
+                break;
+            case "status-started":
+                _customer.BProsjekts = _customer.BProsjekts
+                    .Where(p => p.Status.Trim().Equals("Påbegynt", StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+                break;
+            case "status-new":
+                _customer.BProsjekts = _customer.BProsjekts
+                    .Where(p => p.Status.Trim().Equals("Nytt", StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+                break;
+            case "status-done":
+                _customer.BProsjekts = _customer.BProsjekts
+                    .Where(p => p.Status.Trim().Equals("Ferdig", StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+                break;
+            case "name-asc":
+                _customer.BProsjekts = _customer.BProsjekts
+                    .OrderBy(p => p.PoId)
+                    .ToList();
+                break;
+            case "name-desc":
+                _customer.BProsjekts = _customer.BProsjekts
+                    .OrderByDescending(p => p.PoId)
+                    .ToList();
+                break;
+            case "date-asc":
+                _customer.BProsjekts = _customer.BProsjekts
+                    .OrderBy(p => p.Datoregistrert)
+                    .ToList();
+                break;
+            case "date-desc":
+                _customer.BProsjekts = _customer.BProsjekts
+                    .OrderByDescending(p => p.Datoregistrert)
+                    .ToList();
+                break;
+        }
+        StateHasChanged();
     }
 
     private void BackToCustomerPage()

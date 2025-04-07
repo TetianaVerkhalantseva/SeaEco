@@ -171,6 +171,12 @@ namespace SeaEco.Client.Resources {
             }
         }
         
+        internal static string ButtonAddNewProject {
+            get {
+                return ResourceManager.GetString("ButtonAddNewProject", resourceCulture);
+            }
+        }
+        
         internal static string TableHeadingName {
             get {
                 return ResourceManager.GetString("TableHeadingName", resourceCulture);
@@ -294,6 +300,12 @@ namespace SeaEco.Client.Resources {
         internal static string PageCustomerInfoDeleteCustomerFailed {
             get {
                 return ResourceManager.GetString("PageCustomerInfoDeleteCustomerFailed", resourceCulture);
+            }
+        }
+        
+        internal static string PageCustomerInfoNoProject {
+            get {
+                return ResourceManager.GetString("PageCustomerInfoNoProject", resourceCulture);
             }
         }
         
