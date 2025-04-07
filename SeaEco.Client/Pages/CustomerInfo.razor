@@ -13,7 +13,7 @@
         @if (_customer != null)
         {
             <div class="col-md-8 col-lg-6">
-                <div class="customer-card shadow-sm p-4 rounded-3">
+                <div class="customer-card shadow-lg p-4 rounded-3">
                     <div class="card-body text-center">
                         <h4 class="customer-title">@Resources.PageCustomerInfoCustomerName</h4>
                         <p class="customer-info">@_customer.Oppdragsgiver</p>
@@ -56,6 +56,8 @@
     </div>
 
     <div class="container mt-3">
+        <h2 class="text-center mt-4 page-title">@Resources.PageCustomerInfoProjects</h2>
+        
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div class="w-50">
                 <select class="form-select" @onchange="OnSortChanged">

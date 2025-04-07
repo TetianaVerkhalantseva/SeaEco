@@ -267,6 +267,12 @@ namespace SeaEco.Client.Resources {
             }
         }
         
+        internal static string PageCustomerInfoProjects {
+            get {
+                return ResourceManager.GetString("PageCustomerInfoProjects", resourceCulture);
+            }
+        }
+        
         internal static string PageCustomerInfoCustomerInfo {
             get {
                 return ResourceManager.GetString("PageCustomerInfoCustomerInfo", resourceCulture);

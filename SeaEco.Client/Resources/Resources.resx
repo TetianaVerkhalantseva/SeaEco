@@ -161,6 +161,9 @@
     </data>
 
     <!-- PageCustomerInfo -->
+    <data name="PageCustomerInfoProjects" xml:space="preserve">
+        <value>Prosjekter</value>
+    </data>
     <data name="PageCustomerInfoCustomerInfo" xml:space="preserve">
         <value>Kundeopplysninger</value>
     </data>
