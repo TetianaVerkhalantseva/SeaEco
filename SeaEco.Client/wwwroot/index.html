@@ -29,6 +29,23 @@
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
+
+    <script>
+        window.clickOutsideHelper = {
+            addClickOutsideListener: function (element, dotNetHelper) {
+                function onClick(event) {
+                    if (!element.contains(event.target)) {
+                        dotNetHelper.invokeMethodAsync('CloseDropdown');
+                    }
+                }
+                document.addEventListener('click', onClick);
+                return onClick;
+            },
+            removeClickOutsideListener: function (handler) {
+                document.removeEventListener('click', handler);
+            }
+        };
+    </script>
     
     <script src="_framework/blazor.webassembly.js"></script>
     <script src="_content/Microsoft.AspNetCore.Components.WebAssembly.Authentication/AuthenticationService.js"></script>

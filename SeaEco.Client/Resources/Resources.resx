@@ -109,7 +109,7 @@
     <data name="TableInputIsNotAdmin" xml:space="preserve">
         <value> </value>
     </data>
-    <data name="TableHeaderCostumer" xml:space="preserve">
+    <data name="TableHeaderCustomer" xml:space="preserve">
         <value>Kunde</value>
     </data>
     <data name="TableHeaderLocality" xml:space="preserve">

@@ -189,9 +189,9 @@ namespace SeaEco.Client.Resources {
             }
         }
         
-        internal static string TableHeaderCostumer {
+        internal static string TableHeaderCustomer {
             get {
-                return ResourceManager.GetString("TableHeaderCostumer", resourceCulture);
+                return ResourceManager.GetString("TableHeaderCustomer", resourceCulture);
             }
         }
         

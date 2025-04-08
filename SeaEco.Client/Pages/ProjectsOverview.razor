@@ -42,8 +42,8 @@
                     </div>
                 </div>
                 <div class="d-flex flex-column gap-2">
-                    <div class="form-group">
-                        <label for="customerSelected">@Resources.TableHeaderCostumer</label>
+                    <div class="form-group ">
+                        <label for="customerSelected">@Resources.TableHeaderCustomer</label>
                         <select id="customerSelected" class="form-control" @bind="SelectedCustomer">
                             <option value="">@Resources.OptionAll</option>
                             @foreach (var customers  in _allCustomers!)
@@ -105,7 +105,7 @@
                 <tr>
                     @foreach (var tableHeader in _listTableHeader)
                     {
-                        <th style="cursor: pointer" @onclick="() => SortBy(tableHeader)">
+                        <th class = "cursor" @onclick="() => SortBy(tableHeader)">
                             @tableHeader
                             
                                 @if (_currentSortColumn == @tableHeader)
@@ -120,7 +120,7 @@
                 <tbody>
                 @foreach (var project in SortedProjects!)
                 {
-                    <tr @onclick="() => OnRowClick(project.prosjektId)" style="cursor: pointer">
+                    <tr class="cursor" @onclick="() => OnRowClick(project.prosjektId)">
                         <td>@project.KundeNavn</td>
                         <td>@project.Lokalitet</td>
                         <td>@project.Lokalitetid</td>
@@ -141,7 +141,7 @@
             @foreach (var project in SortedProjects)
             {
                 <div class="col mb-3 card-col">
-                    <div class="card" style="cursor: pointer;" @onclick="() => OnRowClick(project.prosjektId)">
+                    <div class="card cursor" @onclick="() => OnRowClick(project.prosjektId)">
                         <div class="card-body text-center @GetStatus(project.Status)">
                             <h5 class="card-title">@project.prosjektId</h5>
                             <span class="corner-text">@project.Status</span>
@@ -167,7 +167,7 @@
     private readonly List<string> _allStatuses = ["Nytt", "Påbegynt", "Deaktivert", "Ferdig"];
     private readonly List<string> _listTableHeader =
     [
-        Resources.TableHeaderCostumer,
+        Resources.TableHeaderCustomer,
         Resources.TableHeaderLocality,
         Resources.TableHeaderLocalityId,
         Resources.TableHeaderPoId,
@@ -295,7 +295,7 @@
             
             var sorted = _currentSortColumn switch
             {
-                var col when col == Resources.TableHeaderCostumer => _sortAscending
+                var col when col == Resources.TableHeaderCustomer => _sortAscending
                     ? FilterProjects.OrderBy(p => p.KundeNavn)
                     : FilterProjects.OrderByDescending(p => p.KundeNavn),
                 var col when col == Resources.TableHeaderLocality => _sortAscending

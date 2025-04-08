@@ -125,78 +125,22 @@ code {
     margin-left: 0;
 }
 
-
-
-.card-status-new {
-    background: linear-gradient(to bottom, #8CBFD9, #6497B1);
-    color: white;
-}
-
-.card-status-started {
-    background: linear-gradient(to bottom, #D98CBF, #B16497);
-    color: white;
-}
-
-.card-status-deactivated {
-    background: linear-gradient(to bottom, #b4b8bb, #7a8288);
-    color: white;
-}
-
-.card-status-done {
-    background: linear-gradient(to bottom, #BFD98C, #97B164);
-    color: white;
-}
-
-.card-body {
-    position: relative;
-}
-
-.corner-text {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    padding: 8px;
-    font-size: 0.7rem;
-}
-
-.card-col {
-    flex: 0 0 300px; 
-    max-width: 300px;
-    min-width: 300px;
-}
-
-@media (max-width: 1399.98px) {
-    .card-container {
-        max-width: 600px;
-        margin: auto;
-    }
-}
-
-
-.projects-container {
-    max-width: 1200px;
-    flex-grow: 1;
-}
-
-
-
 .fixed-dropdown {
     width: 229px;
     overflow-x: auto;
     padding: 5px;
 }
 
-.sort-icon {
-    display: inline-block;
-    width: 1em;
-    text-align: center;
+.cursor {
+    cursor: pointer;
 }
 
-.fixed-width-table {
-    min-width: 1200px;
-    max-width: 1200px;
-    table-layout: fixed;
-}
+
+
+
+
+
+
 
 
 

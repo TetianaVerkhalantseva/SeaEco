@@ -1,16 +1,171 @@
 @page "/project/{prosjektId}"
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize]
+@using SeaEco.Client.Resources
+@using SeaEco.Abstractions.Models.Project
 
-<div class="d-flex flex-column align-items-center">
-<div class="mb-3">
-    <h3>Prosjektside for @prosjektId</h3>
-    <p>Siden er enda ikke utviklet</p>
-</div>
-</div>
+<div class="d-flex flex-column align-items-center gap-3">
+    <div class="mb-3">
+        <h3>Prosjektside for @prosjektId</h3>
+    </div>
+
+
+    
+    <button class="btn btn-outline-secondary align-self-end" type="button">
+    Prosjektlogg 
+    </button>
+        <button class="btn btn-outline-secondary align-self-start filter-button" type="button"
+                data-bs-toggle="collapse" data-bs-target="#collapseProjectInfo" aria-expanded="false" aria-controls="collapseProjectInfo">
+            Vis prosjektinformasjon
+        </button>
+
+
+    <div class="collapse card-container w-100" id="collapseProjectInfo">
+        <div class="card card-body">
+            <div class="d-flex gap-3">
+                <div class="d-flex flex-column gap-4">
+                        
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="lokalitet" @bind="project.Lokalitet">
+                        <label for="lokalitet" style="color:#808080;">Lokalitet</label>
+                    </div>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="lokalitetId" @bind="project.Lokalitetid">
+                        <label for="lokalitetId" style="color:#808080;">Lokalitet-ID</label>
+                    </div>
+                    <div class="d-flex form-floating">
+                        <input type="text" class="form-control" id="feltdato" @bind="project.Planlagtfeltdato">
+                        <label for="feltdato" style="color:#808080;">Feltdato</label>
+                    </div>
+                       
+                </div>
+                <div class="d-flex flex-column gap-4">
+                    <div class="d-flex form-floating">
+                        <input type="text" class="form-control" id="antallStasjoner" @bind="project.Antallstasjoner">
+                        <label for="antallStasjoner" style="color:#808080;">Antall stasjoner</label>
+                    </div>
+                    <div class="d-flex form-floating">
+                        <input type="text" class="form-control" id="mtb" @bind="project.Mtbtillatelse">
+                        <label for="mtb" style="color:#808080;">MTB-tilatelse (tonn)</label>
+                    </div>
+                    <div class="d-flex form-floating">
+                        <input type="text" class="form-control" id="comment" @bind="project.Merknad">
+                        <label for="comment" style="color:#808080;">Merknad</label>
+                    </div>
+                </div>
+                <div class="flex-grow-1"></div>
+                <div class="d-flex flex-xxl-column flex-row align-self-end">
+                    <button class="btn btn-outline-secondary filter-button" type="button">
+                        Rediger
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+       
+
+
+        <div class="d-flex flex-row w-100">
+            <button class="btn btn-outline-secondary" type="button" style="flex: 1 1 0; min-width: 0;">
+                Prøvetakingsplan
+            </button>
+            <button class="btn btn-outline-secondary" type="button" style="flex: 1 1 0; min-width: 0;">
+                B_undersøkelse
+            </button>
+            <button class="btn btn-outline-secondary" type="button" style="flex: 1 1 0; min-width: 0;">
+                Rapport
+            </button>
+        </div>
+
+
+    
+
+
+
+
+    <ul class="nav nav-tabs d-flex w-100" id="myTab" role="tablist">
+        <li class="nav-item flex-fill" role="presentation">
+            <a class="nav-link active text-center" id="tab-active" data-bs-toggle="tab" href="#tabActive" role="tab" aria-controls="tabActive" aria-selected="true">
+                Prøvetakingsplan
+            </a>
+        </li>
+        <li class="nav-item flex-fill" role="presentation">
+            <a class="nav-link text-center" id="tab-link1" data-bs-toggle="tab" href="#tabLink1" role="tab" aria-controls="tabLink1" aria-selected="false">
+                B_undersøkelse
+            </a>
+        </li>
+        <li class="nav-item flex-fill" role="presentation">
+            <a class="nav-link text-center" id="tab-link2" data-bs-toggle="tab" href="#tabLink2" role="tab" aria-controls="tabLink2" aria-selected="false">
+                Rapport
+            </a>
+        </li>
+    </ul>
+
+    
+    @for (int station = 1; station <= project.Antallstasjoner; station++)
+        {
+            <div class="d-flex flex-column gap-3">
+                <span>Stasjon @station</span>
+                <div class="d-flex flex-row gap-3">
+                    
+                    <div class="d-flex form-floating">
+                        <input type="text" class="form-control" id="positionN_@station" placeholder="Kordinater Nord">
+                        <label for="positionN_@station" style="color:#808080;">Kordinater Nord</label>
+                    </div>
+                    <div class="d-flex form-floating">
+                        <input type="text" class="form-control" id="positionS_@station" placeholder="Kordinater Sør">
+                        <label for="positionS_@station" style="color:#808080;">Kordinater Sør</label>
+                    </div>
+                </div>
+                <div class="d-flex form-floating">
+                    <input type="text" class="form-control" id="depth_@station" placeholder="Dybde">
+                    <label for="depth_@station" style="color:#808080;">Dybde</label>
+                </div>
+                <div class="d-flex form-floating">
+                    <input type="text" class="form-control" id="method_@station" placeholder="Analyse">
+                    <label for="method_@station" style="color:#808080;">Analyse</label>
+                </div>
+            </div>
+        }
+    <div class="d-flex flex-xxl-column flex-row align-self-end">
+        <button class="btn btn-outline-secondary filter-button" type="button">
+            Endre
+        </button>
+    </div>
+    </div>
+
+
+
+
 
 @code {
     [Parameter]
     public string prosjektId { get; set; }
     
+    private ProjectDto project;
+    
+
+    protected override async Task OnInitializedAsync()
+    {
+        
+        project = new ProjectDto
+        {
+            PoId = "450",
+            KundeId = 1,
+            Kundekontaktpersons = "Ola Nordmann",
+            Kundetlf = 12345678,
+            Kundeepost = "ola.nordmann@example.com",
+            Lokalitet = "Lille Djupfest",
+            Lokalitetid = 36479,
+            Mtbtillatelse = 1,
+            Biomasse = 500,
+            Planlagtfeltdato = new DateOnly(2025, 2, 15),
+            Antallstasjoner = 3,
+            Merknad = "Fiktiv testdata",
+            Status = "Nytt"
+        };
+    }
+    
+    
+
 }
