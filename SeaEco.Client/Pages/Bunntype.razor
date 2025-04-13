@@ -1,0 +1,81 @@
+@page "/testPage"
+
+<h3>Test page for checkbox</h3>
+
+<div class="radio-box-container">
+    <h5>Bunntype: </h5>
+    
+    <div class="cntr">
+        <input type="radio" name="bunntype" id="cbx1" class="hidden-xs-up">
+        <label for="cbx1" class="cbx"></label>
+        <label for="cbx1" class="lbl">Bløt</label>
+    </div>
+
+    <div class="cntr">
+        <input type="radio" name="bunntype" id="cbx2" class="hidden-xs-up">
+        <label for="cbx2" class="cbx"></label>
+        <label for="cbx2" class="lbl">Hard</label>
+    </div>
+</div>
+
+<div id="sensoryRadio" class="sensoryRadio-container">
+    <h5>Er sensorisk utført?</h5>
+
+    <div class="cntr">
+        <input type="radio" name="sensorisk" id="cbx3" class="hidden-xs-up">
+        <label for="cbx3" class="cbx"></label>
+        <label for="cbx3" class="lbl">Ja</label>
+    </div>
+
+    <div class="cntr">
+        <input type="radio" name="sensorisk" id="cbx4" class="hidden-xs-up">
+        <label for="cbx4" class="cbx"></label>
+        <label for="cbx4" class="lbl">Nei</label>
+    </div>
+</div>
+
+<div id="sensoryInfo" class="sensoryInfo-container">
+    <p>These are questions for sensory test</p>
+</div>
+
+<script>
+    const radioSoft = document.getElementById("cbx1")
+    const radioHard = document.getElementById("cbx2");
+    const sensoryQuestion = document.getElementById("sensoryRadio");
+    
+    const radioYes = document.getElementById("cbx3")
+    const radioNo = document.getElementById("cbx4")
+    const sensoryInfo = document.getElementById("sensoryInfo")
+    
+    function updateDisplay() {
+        if (radioHard.checked) {
+            sensoryQuestion.style.display = "flex";
+            
+            if (radioYes.checked) {
+                sensoryInfo.style.display = "flex";
+            }
+            else {
+                sensoryInfo.style.display = "none";
+            }
+        }
+        else if (radioSoft.checked) {
+            sensoryQuestion.style.display = "none";
+            sensoryInfo.style.display = "flex";
+        }
+        else {
+            sensoryQuestion.style.display = "none";
+            sensoryInfo.style.display = "none";
+        }
+    }
+    
+    radioSoft.addEventListener("change", updateDisplay);
+    radioHard.addEventListener("change", updateDisplay);
+    radioYes.addEventListener("change", updateDisplay);
+    radioNo.addEventListener("change", updateDisplay);
+    
+    updateDisplay();
+</script>
+
+@code {
+    
+}
