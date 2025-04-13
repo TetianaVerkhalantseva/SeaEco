@@ -120,7 +120,7 @@
                 <tbody>
                 @foreach (var project in SortedProjects!)
                 {
-                    <tr class="cursor" @onclick="() => OnRowClick(project.prosjektId)">
+                    <tr class="cursor" @onclick="() => OnRowClick(project.ProsjektId)">
                         <td>@project.KundeNavn</td>
                         <td>@project.Lokalitet</td>
                         <td>@project.Lokalitetid</td>
@@ -141,7 +141,7 @@
             @foreach (var project in SortedProjects)
             {
                 <div class="col mb-3 card-col">
-                    <div class="card cursor" @onclick="() => OnRowClick(project.prosjektId)">
+                    <div class="card cursor" @onclick="() => OnRowClick(project.ProsjektId)">
                         <div class="card-body text-center @GetStatus(project.Status)">
                             <h5 class="card-title">@project.prosjektId</h5>
                             <span class="corner-text">@project.Status</span>
@@ -193,7 +193,7 @@
     //midlertidig classe til databasen er klar
     public class ProjectDto
     {
-        public int ProsjektId { get; set; }
+        public Guid ProsjektId { get; set; }
         public string KundeNavn { get; set; }
         public string Lokalitet { get; set; }
         public int Lokalitetid { get; set; }
@@ -211,27 +211,7 @@
     {
         _projects =
         [
-            new ProjectDto { ProsjektId = 1, KundeNavn = "Mortenlaks AS", Lokalitet = "Lille Djupfest", Lokalitetid = 36479, PoId = 450, prosjektId = "SE25-BU-1", Dato = new DateOnly(2025, 1, 14), Produksjonsstatus = "", Tilstand = 2, Status = "Ferdig" },
-            new ProjectDto { ProsjektId = 2, KundeNavn = "Mortenlaks AS", Lokalitet = "Lille Djupfest", Lokalitetid = 36479, PoId = 451, prosjektId = "SE25-BU-3", Dato = new DateOnly(2025, 2, 18), Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
-            new ProjectDto { ProsjektId = 3, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 452, prosjektId = "SE25-BU-4", Dato = new DateOnly(2025, 3, 2), Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
-            new ProjectDto { ProsjektId = 4, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 453, prosjektId = "SE25-BU-5", Dato = null, Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
-            new ProjectDto { ProsjektId = 5, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 456, prosjektId = "SE25-BU-2", Dato = new DateOnly(2023, 2, 14), Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
-            new ProjectDto { ProsjektId = 6, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 457, prosjektId = "SE25-BU-6", Dato = new DateOnly(2025, 1, 1), Produksjonsstatus = "", Tilstand = null, Status = "Deaktivert" },
-            new ProjectDto { ProsjektId = 7, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 458, prosjektId = "SE25-BU-7", Dato = new DateOnly(2025, 1, 2), Produksjonsstatus = "", Tilstand = null, Status = "Påbegynt" },
-            new ProjectDto { ProsjektId = 1, KundeNavn = "Mortenlaks AS", Lokalitet = "Lille Djupfest", Lokalitetid = 36479, PoId = 450, prosjektId = "SE25-BU-1", Dato = new DateOnly(2023, 1, 14), Produksjonsstatus = "", Tilstand = 2, Status = "Ferdig" },
-            new ProjectDto { ProsjektId = 2, KundeNavn = "Mortenlaks AS", Lokalitet = "Lille Djupfest", Lokalitetid = 36479, PoId = 451, prosjektId = "SE25-BU-3", Dato = new DateOnly(2025, 2, 18), Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
-            new ProjectDto { ProsjektId = 3, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 452, prosjektId = "SE25-BU-4", Dato = new DateOnly(2025, 3, 2), Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
-            new ProjectDto { ProsjektId = 4, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 453, prosjektId = "SE25-BU-5", Dato = null, Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
-            new ProjectDto { ProsjektId = 5, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 456, prosjektId = "SE25-BU-2", Dato = new DateOnly(2024, 2, 14), Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
-            new ProjectDto { ProsjektId = 6, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 457, prosjektId = "SE25-BU-6", Dato = new DateOnly(2024, 1, 1), Produksjonsstatus = "", Tilstand = null, Status = "Deaktivert" },
-            new ProjectDto { ProsjektId = 7, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 458, prosjektId = "SE25-BU-7", Dato = new DateOnly(2025, 1, 2), Produksjonsstatus = "", Tilstand = null, Status = "Påbegynt" },
-            new ProjectDto { ProsjektId = 1, KundeNavn = "Mortenlaks AS", Lokalitet = "Lille Djupfest", Lokalitetid = 36479, PoId = 450, prosjektId = "SE25-BU-1", Dato = new DateOnly(2025, 1, 14), Produksjonsstatus = "", Tilstand = 2, Status = "Ferdig" },
-            new ProjectDto { ProsjektId = 2, KundeNavn = "Mortenlaks AS", Lokalitet = "Lille Djupfest", Lokalitetid = 36479, PoId = 451, prosjektId = "SE25-BU-3", Dato = new DateOnly(2025, 2, 18), Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
-            new ProjectDto { ProsjektId = 3, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 452, prosjektId = "SE25-BU-4", Dato = new DateOnly(2025, 3, 2), Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
-            new ProjectDto { ProsjektId = 4, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 453, prosjektId = "SE25-BU-5", Dato = null, Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
-            new ProjectDto { ProsjektId = 5, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 456, prosjektId = "SE25-BU-2", Dato = new DateOnly(2025, 2, 14), Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
-            new ProjectDto { ProsjektId = 6, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 457, prosjektId = "SE25-BU-6", Dato = new DateOnly(2025, 1, 1), Produksjonsstatus = "", Tilstand = null, Status = "Deaktivert" },
-            new ProjectDto { ProsjektId = 7, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Veldig lang lokalitetsnavn........", Lokalitetid = 34057, PoId = 458, prosjektId = "SE25-BU-7", Dato = new DateOnly(2025, 1, 2), Produksjonsstatus = "", Tilstand = null, Status = "Påbegynt" }
+            new ProjectDto { ProsjektId = new Guid("f6e8e2f1-718b-4b95-85ee-5d2c3c8b3e8a"), KundeNavn = "Mortenlaks AS", Lokalitet = "Lille Djupfest", Lokalitetid = 36479, PoId = 450, prosjektId = "SE25-BU-1", Dato = new DateOnly(2025, 1, 14), Produksjonsstatus = "", Tilstand = 2, Status = "Ferdig" },
         ];
         
         _allLocations = _projects?
@@ -247,9 +227,9 @@
     }
 
     //Må endres til Guid når vi får påplass databasen
-    private void OnRowClick(string prosjektId)
+    private void OnRowClick(Guid prosjektId)
     {
-        Navigation.NavigateTo($"project/{prosjektId}");
+        Navigation.NavigateTo($"project/{prosjektId:D}");
     }
     
     private string GetStatus(string? status)

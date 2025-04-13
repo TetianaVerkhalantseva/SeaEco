@@ -21,6 +21,7 @@ using SeaEco.Services.HashService;
 using SeaEco.Services.ImageServices;
 using SeaEco.Services.JwtServices;
 using SeaEco.Services.ProjectServices;
+using SeaEco.Services.StationServices;
 using SeaEco.Services.TokenServices;
 using SeaEco.Services.UserServices;
 using SeaEco.Services.Validators;
@@ -111,6 +112,7 @@ services.AddTransient<ITokenService, TokenService>();
 services.AddTransient<IUserService, UserService>();
 services.AddScoped<ICustomerService, CustomerService>();
 services.AddScoped<IProjectService, ProjectService>();
+services.AddScoped<IStationService, StationService>();
 services.AddScoped<EmailMessageManager>();
 services.AddTransient<IImageService, ImageService>();
 

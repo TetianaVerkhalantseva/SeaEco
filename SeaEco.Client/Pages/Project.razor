@@ -1,149 +1,143 @@
-@page "/project/{prosjektId}"
+@page "/project/{prosjektId:guid}"
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize]
 @using SeaEco.Client.Resources
 @using SeaEco.Abstractions.Models.Project
 @using SeaEco.Client.Components
+@inject HttpClient Http
+
+@if (project == null)
+{
+    
+}
+else
+{
+    <div class="d-flex flex-column align-items-center gap-3">
+        <div class="mb-3">
+            <h3>Prosjekt @prosjektId</h3>
+            <p>- @project.Status</p>
+        </div>
 
 
-<div class="d-flex flex-column align-items-center gap-3">
-    <div class="mb-3">
-        <h3>Prosjekt @prosjektId</h3>
-        <p>- @project.Status</p>
-    </div>
+        <div class="d-flex w-100">
 
-
-    <div class="d-flex w-100">
-
-        <button class="btn btn-outline-secondary align-self-start filter-button" type="button"
-                data-bs-toggle="collapse" data-bs-target="#collapseProjectInfo" aria-expanded="false" aria-controls="collapseProjectInfo">
-            Vis prosjektinformasjon
-        </button>
-        <div class="flex-grow-1"></div>
-        <button class="btn btn-outline-secondary align-self-end" type="button">
-            Prosjektlogg 
+            <button class="btn btn-outline-secondary align-self-start filter-button" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#collapseProjectInfo" aria-expanded="false" aria-controls="collapseProjectInfo">
+                Vis prosjektinformasjon
             </button>
-    </div>
+            <div class="flex-grow-1"></div>
+            <button class="btn btn-outline-secondary align-self-end" type="button">
+                Prosjektlogg
+            </button>
+        </div>
 
 
-    <div class="collapse card-container w-100" id="collapseProjectInfo">
-        <div class="card card-body">
-            <div class="d-flex flex-xxl-row flex-column gap-3">
-                <div class="d-flex flex-column gap-4">
-                       
-                    
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="lokalitet" @bind="project.Lokalitet" disabled="@(!_editProjectInfo)">
-                        <label for="lokalitet" style="color:#808080;">Lokalitet</label>
-                    </div>
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="lokalitetId" @bind="project.Lokalitetid" disabled="@(!_editProjectInfo)">
-                        <label for="lokalitetId" style="color:#808080;">Lokalitet-ID</label>
-                    </div>
-                    <div class="d-flex form-floating">
-                        <input type="text" class="form-control" id="feltdato" @bind="project.Planlagtfeltdato" disabled="@(!_editProjectInfo)">
-                        <label for="feltdato" style="color:#808080;">Feltdato</label>
-                    </div>
-                       
-                </div>
-                <div class="d-flex flex-column gap-4">
-                    <div class="d-flex form-floating">
-                        <input type="text" class="form-control" id="antallStasjoner" @bind="project.Antallstasjoner"  disabled="@(!_editProjectInfo)">
-                        <label for="antallStasjoner" style="color:#808080;">Antall stasjoner</label>
-                    </div>
-                    <div class="d-flex form-floating">
-                        <input type="text" class="form-control" id="mtb" @bind="project.Mtbtillatelse" disabled="@(!_editProjectInfo)">
-                        <label for="mtb" style="color:#808080;">MTB-tilatelse (tonn)</label>
-                    </div>
-                    <div class="d-flex form-floating">
-                        <input type="text" class="form-control" id="comment" @bind="project.Merknad" disabled="@(!_editProjectInfo)">
-                        <label for="comment" style="color:#808080;">Merknad</label>
-                    </div>
-                </div>
-                <div class="flex-grow-1"></div>
-                <div class="d-flex flex-xxl-column flex-row align-self-end">
-                    @if(!_editProjectInfo)
-                    {
-                        <button class="btn btn-outline-secondary filter-button" type="button" @onclick="OnCklickProjectInformation">
-                            Rediger
-                        </button>
-                    }
-                    else
-                    {
-                        <div class="d-flex gap-2">
-                            <button class="btn btn-outline-secondary filter-button" type="button" @onclick="CancleEditProjectInformation">
-                                @Resources.ButtonCancel
-                            </button>
-                            <button class="btn btn-outline-secondary filter-button" type="button" @onclick="EditProjectInformation">
-                                @Resources.ButtonSave
-                            </button>
+        <div class="collapse card-container w-100" id="collapseProjectInfo">
+            <div class="card card-body">
+                <div class="d-flex flex-xxl-row flex-column gap-3">
+                    <div class="d-flex flex-column gap-4">
+
+
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="lokalitet" @bind="project.Lokalitet" disabled="@(!_editProjectInfo)">
+                            <label for="lokalitet" style="color:#808080;">Lokalitet</label>
                         </div>
-                    }
-                    
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="lokalitetId" @bind="project.Lokalitetid" disabled="@(!_editProjectInfo)">
+                            <label for="lokalitetId" style="color:#808080;">Lokalitet-ID</label>
+                        </div>
+                        <div class="d-flex form-floating">
+                            <input type="text" class="form-control" id="feltdato" @bind="project.Planlagtfeltdato" disabled="@(!_editProjectInfo)">
+                            <label for="feltdato" style="color:#808080;">Feltdato</label>
+                        </div>
+
+                    </div>
+                    <div class="d-flex flex-column gap-4">
+                        <div class="d-flex form-floating">
+                            <input type="text" class="form-control" id="antallStasjoner" @bind="project.Antallstasjoner" disabled="@(!_editProjectInfo)">
+                            <label for="antallStasjoner" style="color:#808080;">Antall stasjoner</label>
+                        </div>
+                        <div class="d-flex form-floating">
+                            <input type="text" class="form-control" id="mtb" @bind="project.Mtbtillatelse" disabled="@(!_editProjectInfo)">
+                            <label for="mtb" style="color:#808080;">MTB-tilatelse (tonn)</label>
+                        </div>
+                        <div class="d-flex form-floating">
+                            <input type="text" class="form-control" id="comment" @bind="project.Merknad" disabled="@(!_editProjectInfo)">
+                            <label for="comment" style="color:#808080;">Merknad</label>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1"></div>
+                    <div class="d-flex flex-xxl-column flex-row align-self-end">
+                        @if (!_editProjectInfo)
+                        {
+                            <button class="btn btn-outline-secondary filter-button" type="button" @onclick="OnCklickProjectInformation">
+                                Rediger
+                            </button>
+                        }
+                        else
+                        {
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-outline-secondary filter-button" type="button" @onclick="CancleEditProjectInformation">
+                                    @Resources.ButtonCancel
+                                </button>
+                                <button class="btn btn-outline-secondary filter-button" type="button" @onclick="EditProjectInformation">
+                                    @Resources.ButtonSave
+                                </button>
+                            </div>
+                        }
+
+                    </div>
                 </div>
             </div>
         </div>
+
+        @if (_editProjectInfo)
+        {
+            <div class="background-overlay"></div>
+        }
+
+
+        <ul class="nav nav-tabs d-flex w-100 mt-3" id="myTab" role="tablist">
+            <li class="nav-item flex-fill" role="presentation">
+                <a class="nav-link text-center" id="tab-active" data-bs-toggle="tab" href="#tabActive" role="tab" aria-controls="tabActive" aria-selected="true">
+                    Prøvetakingsplan
+                </a>
+            </li>
+            <li class="nav-item flex-fill" role="presentation">
+                <a class="nav-link text-center" id="tab-link1" data-bs-toggle="tab" href="#tabLink1" role="tab" aria-controls="tabLink1" aria-selected="false">
+                    B_undersøkelse
+                </a>
+            </li>
+            <li class="nav-item flex-fill" role="presentation">
+                <a class="nav-link text-center" id="tab-link2" data-bs-toggle="tab" href="#tabLink2" role="tab" aria-controls="tabLink2" aria-selected="false">
+                    Rapport
+                </a>
+            </li>
+        </ul>
+
+        <ProjectPlan Project="project"></ProjectPlan>
+
     </div>
 
-    @if(_editProjectInfo)
-    {
-        <div class="background-overlay"></div>
-    }
-
-
-    <ul class="nav nav-tabs d-flex w-100 mt-3" id="myTab" role="tablist">
-        <li class="nav-item flex-fill" role="presentation">
-            <a class="nav-link text-center" id="tab-active" data-bs-toggle="tab" href="#tabActive" role="tab" aria-controls="tabActive" aria-selected="true">
-                Prøvetakingsplan
-            </a>
-        </li>
-        <li class="nav-item flex-fill" role="presentation">
-            <a class="nav-link text-center" id="tab-link1" data-bs-toggle="tab" href="#tabLink1" role="tab" aria-controls="tabLink1" aria-selected="false">
-                B_undersøkelse
-            </a>
-        </li>
-        <li class="nav-item flex-fill" role="presentation">
-            <a class="nav-link text-center" id="tab-link2" data-bs-toggle="tab" href="#tabLink2" role="tab" aria-controls="tabLink2" aria-selected="false">
-                Rapport
-            </a>
-        </li>
-    </ul>
-    
-    <ProjectPlan Project="project"></ProjectPlan>
-    
-</div>
-   
-
+}
 
 
 @code {
     [Parameter]
-    public string prosjektId { get; set; }
+    public Guid prosjektId { get; set; }
     
     private ProjectDto project;
     private bool _editProjectInfo;
+
+    
+    private ProjectDto projectCopy; 
     
 
     protected override async Task OnInitializedAsync()
     {
+        project = await Http.GetFromJsonAsync<ProjectDto>($"api/Project/{prosjektId:D}");
         
-        project = new ProjectDto
-        {
-            PoId = "450",
-            KundeId = 1,
-            Kundekontaktpersons = "Ola Nordmann",
-            Kundetlf = 12345678,
-            Kundeepost = "ola.nordmann@example.com",
-            Lokalitet = "Lille Djupfest",
-            Lokalitetid = 36479,
-            Mtbtillatelse = 1,
-            Biomasse = 500,
-            Planlagtfeltdato = new DateOnly(2025, 2, 15),
-            Antallstasjoner = 3,
-            Merknad = "Fiktiv testdata",
-            Status = "Nytt"
-        };
-        
+        projectCopy = await Http.GetFromJsonAsync<ProjectDto>($"api/Project/{prosjektId:D}");
     }
     
     private void OnCklickProjectInformation()
@@ -154,11 +148,12 @@
     private void EditProjectInformation()
     {
         _editProjectInfo = false;
-
+        
     }
     private void CancleEditProjectInformation()
     {
         _editProjectInfo = false;
+        project = projectCopy;
     }
     
 

@@ -57,35 +57,34 @@
 
 
 @code {
-    [Parameter]
-    public ProjectDto Project { get; set; }
-    
+    [Parameter] public ProjectDto Project { get; set; }
+
     private bool _editProjectPlan;
     private int _addedStations = 0;
-    
+
     private void OnCklickProjectPlan()
     {
         _editProjectPlan = true;
     }
+
     private void EditProjectPlan()
     {
         _editProjectPlan = false;
     }
+
     private void CancleEditProjectPlan()
     {
         _editProjectPlan = false;
     }
-    
+
     private async Task AddStation()
     {
         _addedStations = 1 + _addedStations;
     }
-    
+
     private async Task RemoveStation()
     {
-        _addedStations = - 1 + _addedStations;
+        _addedStations = -1 + _addedStations;
     }
-
-
-
+    
 }
