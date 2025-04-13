@@ -2,7 +2,7 @@
 
 <h3>Test page for checkbox</h3>
 
-<div class="radio-box-container">
+<div class="typeRadio-container">
     <h5>Bunntype: </h5>
     
     <div class="cntr">
@@ -35,8 +35,13 @@
 </div>
 
 <div id="sensoryInfo" class="sensoryInfo-container">
-    <p>These are questions for sensory test</p>
+    <div class="sensoryData" id="data-1">
+        <input type="number" placeholder="pH">
+        <input type="number" placeholder="Eh">
+        <input type="number" placeholder="Temp">
+    </div>
 </div>
+
 
 <script>
     const radioSoft = document.getElementById("cbx1")
