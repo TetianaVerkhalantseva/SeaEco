@@ -1,10 +1,168 @@
+@using SeaEco.Client.Resources
 @using SeaEco.Abstractions.Models.Project
+@using SeaEco.Abstractions.Models.User
+@inject HttpClient Http
 
-<h3>Prøvetakingsplan-side er enda ikke utviklet</h3>
+
+    <div class="d-flex flex-column gap-3 mt-3">
+        <span>@Resources.InputTextUserProjectPlan</span>
+        <div class="d-flex flex-column gap-3">
+
+
+            <div class="d-flex form-floating">
+                <InputSelect @bind-Value="_selectedUser1" id="user1" class="form-control" disabled="@(!_editProjectPlan)">
+                    <option value=""></option>
+                    @foreach (var user in _users)
+                    {
+                        <option value="@user.FullName">@user.FullName</option>
+                    }
+                </InputSelect>
+                <label for="user1">@Resources.InputTextUser1ProjectPlan</label>
+            </div>
+            <div class="d-flex form-floating">
+                <InputSelect @bind-Value="_selectedUser2" id="user2" class="form-control" disabled="@(!_editProjectPlan)">
+                    <option value=""></option>
+                    @foreach (var user in _users)
+                    {
+                        <option value="@user.FullName">@user.FullName</option>
+                    }
+                </InputSelect>
+                <label for="user2">@Resources.InputTextUser2ProjectPlan</label>
+            </div>
+            <div class="d-flex form-floating">
+                <InputSelect @bind-Value="_selectedUser3" id="user3" class="form-control" disabled="@(!_editProjectPlan)">
+                    <option value=""></option>
+                    @foreach (var user in _users)
+                    {
+                        <option value="@user.FullName">@user.FullName</option>
+                    }
+                </InputSelect>
+                <label for="user3">@Resources.InputTextUser3ProjectPlan</label>
+            </div>
+
+        </div>
+
+
+        @for (int station = 1; station <= Project.Antallstasjoner + _addedStations; station++)
+        {
+            <div class="d-flex flex-column gap-3 mt-3">
+                <span>@Resources.InputTextStation @station</span>
+                <div class="d-flex flex-row gap-3">
+
+                    <div class="d-flex form-floating">
+                        <InputText class="form-control" id=@($"positionN_{station}")  @bind-Value="_stationData[station - 1].PositionN" disabled="@(!_editProjectPlan)"/>
+                        <label for="positionN_@station">@Resources.InputTextPositionN</label>
+                    </div>
+                    <div class="d-flex form-floating">
+                        <InputText class="form-control" id=@($"positionS_{station}") @bind-Value="_stationData[station - 1].PositionS" disabled="@(!_editProjectPlan)"/>
+                        <label for="positionS_@station">@Resources.InputTextPositionS</label>
+                    </div>
+                </div>
+                <div class="d-flex form-floating">
+                    <InputText class="form-control" id=@($"depth_{station}") @bind-Value="_stationData[station - 1].Depth" disabled="@(!_editProjectPlan)"/>
+                    <label for="depth_@station">@Resources.InputTextDepth</label>
+                </div>
+                <div class="d-flex form-floating">
+                    <InputText class="form-control" id=@($"method_{station}") @bind-Value="_stationData[station - 1].Method" disabled="@(!_editProjectPlan)"/>
+                    <label for="method_@station">@Resources.InputTextMethod</label>
+                </div>
+            </div>
+        }
+        <div class="d-flex flex-row align-self-end justify-content-end w-100 mb-3">
+
+            @if (!_editProjectPlan)
+            {
+                <button class="btn btn-outline-secondary filter-button" type="button" @onclick="OnCklickProjectPlan">
+                    @Resources.ButtonEdit
+                </button>
+            }
+            else
+            {
+                <div class="d-flex gap-2 flex-column flex-xxl-row w-100">
+                    <button class="btn btn-outline-secondary filter-button" type="button" @onclick="AddStation">
+                        @Resources.ButtonAddStation
+                    </button>
+                    <div class="d-flex flex-grow-1"></div>
+                    <div class="d-flex gap-2 justify-content-center">
+                        <button class="btn btn-outline-secondary filter-button" type="button" @onclick="CancelEditProjectPlan">
+                            @Resources.ButtonCancel
+                        </button>
+                        <button class="btn btn-outline-secondary filter-button" type="button" @onclick="EditProjectPlan">
+                            @Resources.ButtonSave
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+
+
 
 @code {
     [Parameter] public ProjectDto? Project { get; set; }
 
-}
+    private bool _editProjectPlan;
+    private int _addedStations = 0;
+    private int _addedUser = 1;
+    private List<UserDto> _users = new List<UserDto>();
+    private string? _selectedUser1;
+    private string? _selectedUser2;
+    private string? _selectedUser3;
+    private List<StationData> _stationData = new List<StationData>
+    {
+        new StationData()
+    };
 
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        int count = (Project?.Antallstasjoner ?? 0);
+        for (int i = 0; i < count; i++)
+        {
+            _stationData.Add(new StationData());
+        }
+
+        var usersList = await Http.GetFromJsonAsync<List<UserDto>>("api/users");
+        _users = usersList?.OrderBy(user => user.FullName).ToList();
+    }
+
+    private void OnCklickProjectPlan()
+    {
+        _editProjectPlan = true;
+    }
+
+    private void EditProjectPlan()
+    {
+        //_editProjectPlan = false;
+    }
+
+    private void CancelEditProjectPlan()
+    {
+        _editProjectPlan = false;
+        _addedStations = 0;
+    }
+
+    private void AddStation()
+    {
+        _stationData.Add(new StationData());
+        _addedStations = 1 + _addedStations;
+    }
+
+    private void RemoveStation()
+    {
+        _addedStations = -1 + _addedStations;
+    }
+
+    public class StationData
+    {
+        public string? PositionN { get; set; }
+        public string? PositionS { get; set; }
+        public string? Depth { get; set; }
+        public string? Method { get; set; }
+
+    }
+
+}
 
