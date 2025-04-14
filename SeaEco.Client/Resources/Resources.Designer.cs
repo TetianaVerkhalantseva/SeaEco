@@ -45,45 +45,45 @@ namespace SeaEco.Client.Resources {
             }
         }
         
-        internal static string MailInputText {
+        internal static string InputTextMail {
             get {
-                return ResourceManager.GetString("MailInputText", resourceCulture);
+                return ResourceManager.GetString("InputTextMail", resourceCulture);
             }
         }
         
-        internal static string PasswordInputText {
+        internal static string InputTextPassword {
             get {
-                return ResourceManager.GetString("PasswordInputText", resourceCulture);
+                return ResourceManager.GetString("InputTextPassword", resourceCulture);
             }
         }
         
-        internal static string RepPasswordInputText {
+        internal static string InputTextRepPassword {
             get {
-                return ResourceManager.GetString("RepPasswordInputText", resourceCulture);
+                return ResourceManager.GetString("InputTextRepPassword", resourceCulture);
             }
         }
         
-        internal static string FirstNameInputText {
+        internal static string InputTextFirstName {
             get {
-                return ResourceManager.GetString("FirstNameInputText", resourceCulture);
+                return ResourceManager.GetString("InputTextFirstName", resourceCulture);
             }
         }
         
-        internal static string LastNameInputText {
+        internal static string InputTextLastName {
             get {
-                return ResourceManager.GetString("LastNameInputText", resourceCulture);
+                return ResourceManager.GetString("InputTextLastName", resourceCulture);
             }
         }
         
-        internal static string RequireElementErrorMessage {
+        internal static string ErrorMessageRequireElement {
             get {
-                return ResourceManager.GetString("RequireElementErrorMessage", resourceCulture);
+                return ResourceManager.GetString("ErrorMessageRequireElement", resourceCulture);
             }
         }
         
-        internal static string UnexpectedErrorMessage {
+        internal static string ErrorMessageUnexpected {
             get {
-                return ResourceManager.GetString("UnexpectedErrorMessage", resourceCulture);
+                return ResourceManager.GetString("ErrorMessageUnexpected", resourceCulture);
             }
         }
         
@@ -117,21 +117,9 @@ namespace SeaEco.Client.Resources {
             }
         }
         
-        internal static string AdminCheckboks {
+        internal static string CheckboksAdmin {
             get {
-                return ResourceManager.GetString("AdminCheckboks", resourceCulture);
-            }
-        }
-        
-        internal static string ActiveUserCheckboks {
-            get {
-                return ResourceManager.GetString("ActiveUserCheckboks", resourceCulture);
-            }
-        }
-        
-        internal static string DeactiveUserCheckboks {
-            get {
-                return ResourceManager.GetString("DeactiveUserCheckboks", resourceCulture);
+                return ResourceManager.GetString("CheckboksAdmin", resourceCulture);
             }
         }
         
@@ -201,6 +189,60 @@ namespace SeaEco.Client.Resources {
             }
         }
         
+        internal static string TableHeaderCustomer {
+            get {
+                return ResourceManager.GetString("TableHeaderCustomer", resourceCulture);
+            }
+        }
+        
+        internal static string TableHeaderLocality {
+            get {
+                return ResourceManager.GetString("TableHeaderLocality", resourceCulture);
+            }
+        }
+        
+        internal static string TableHeaderLocalityId {
+            get {
+                return ResourceManager.GetString("TableHeaderLocalityId", resourceCulture);
+            }
+        }
+        
+        internal static string TableHeaderPoId {
+            get {
+                return ResourceManager.GetString("TableHeaderPoId", resourceCulture);
+            }
+        }
+        
+        internal static string TableHeaderProjectId {
+            get {
+                return ResourceManager.GetString("TableHeaderProjectId", resourceCulture);
+            }
+        }
+        
+        internal static string TableHeaderDate {
+            get {
+                return ResourceManager.GetString("TableHeaderDate", resourceCulture);
+            }
+        }
+        
+        internal static string TableHeaderProjectStatus {
+            get {
+                return ResourceManager.GetString("TableHeaderProjectStatus", resourceCulture);
+            }
+        }
+        
+        internal static string TableHeaderStatus {
+            get {
+                return ResourceManager.GetString("TableHeaderStatus", resourceCulture);
+            }
+        }
+        
+        internal static string TableHeaderProductionStatus {
+            get {
+                return ResourceManager.GetString("TableHeaderProductionStatus", resourceCulture);
+            }
+        }
+        
         internal static string PageUserAllUsers {
             get {
                 return ResourceManager.GetString("PageUserAllUsers", resourceCulture);
@@ -228,6 +270,42 @@ namespace SeaEco.Client.Resources {
         internal static string PageRegisterUserNewUser {
             get {
                 return ResourceManager.GetString("PageRegisterUserNewUser", resourceCulture);
+            }
+        }
+        
+        internal static string PageProjectsOverviewAllProjects {
+            get {
+                return ResourceManager.GetString("PageProjectsOverviewAllProjects", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonFilter {
+            get {
+                return ResourceManager.GetString("ButtonFilter", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonReset {
+            get {
+                return ResourceManager.GetString("ButtonReset", resourceCulture);
+            }
+        }
+        
+        internal static string TableHeaderMonth {
+            get {
+                return ResourceManager.GetString("TableHeaderMonth", resourceCulture);
+            }
+        }
+        
+        internal static string TableHeaderYear {
+            get {
+                return ResourceManager.GetString("TableHeaderYear", resourceCulture);
+            }
+        }
+        
+        internal static string OptionAll {
+            get {
+                return ResourceManager.GetString("OptionAll", resourceCulture);
             }
         }
     }

@@ -4,7 +4,7 @@
 @using SeaEco.Client.Resources
 @inject HttpClient Http
 @attribute [Authorize(Roles = "admin")]
-@inject NavigationManager NavigationManager
+@inject NavigationManager Navigation
 
 
 
@@ -32,12 +32,14 @@
         <div class="mb-3">         
             <h3>@Resources.PageUserAllUsers</h3>  
         </div>                                            
-        <table class="table">
+        <div class="table-responsive">
+            <table class="table">
                 <thead>
                 <tr>
-                    <th >@Resources.TableHeadingName</th>
+                    <th>@Resources.TableHeadingName</th>
                     <th>@Resources.TableHeadingMail</th>
                     <th>@Resources.TableHeadingRole</th>
+                    <th style="width:60px;"></th>
                     <th></th>
                     <th></th>
                 </tr>
@@ -49,6 +51,7 @@
                         <td>@user.FullName</td>
                         <td>@user.Email</td>
                         <td>@(user.IsAdmin ? @Resources.TableInputIsAdmin : @Resources.TableInputIsNotAdmin)</td>
+                        <td></td>
                         <td>
                             <div class="form-check form-switch">
                                 <input class="form-check-input  " type="checkbox"  role="switch" id="activ" checked="@user.IsActive"  @onchange="@(e => EditUserIsActive(user, e))"/>
@@ -56,12 +59,12 @@
                                 {
                                     <label class="form-check-label"  for="activ">@Resources.TableInputIsActive</label> 
                                 }
-                                 else                                                  
-                                 {                                                                   
-                                     <label class="form-check-label"  for="activ">@Resources.TableInputIsNotActive</label>     
-                                 }                                                                   
+                                else                                                  
+                                {                                                                   
+                                    <label class="form-check-label"  for="activ">@Resources.TableInputIsNotActive</label>     
+                                }                                                                   
                             </div>
-                            </td>
+                        </td>
                         <td>
                             <span title="@Resources.TooltipRegisterUser">
                                 <span class="bi bi-editUser" style="cursor: pointer;" @onclick="@(() => EditUser(user.Id))">
@@ -72,10 +75,13 @@
                 }
                 </tbody>
             </table>
-    <div style="width: 100%; display: flex; justify-content: flex-start; margin-top: 1rem;">
-    <NavLink class="btn btn-secondary" href="/registerUser">@Resources.ButtonAddNewUser</NavLink>
-    </div>} 
-</div>
+        
+            <div style="width: 100%; display: flex; justify-content: flex-start; margin-top: 1rem;">
+                <NavLink class="btn btn-secondary" href="/registerUser">@Resources.ButtonAddNewUser</NavLink>
+            </div>
+        </div>} 
+        </div>
+        
 
 
 
@@ -132,7 +138,7 @@
 
     private void EditUser(Guid userId)
     {
-        NavigationManager.NavigateTo($"editUser/{userId:D}");
+        Navigation.NavigateTo($"editUser/{userId:D}");
     }
     
 }
