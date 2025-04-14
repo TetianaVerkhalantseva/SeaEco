@@ -214,4 +214,40 @@
     <data name="InputTextStation" xml:space="preserve">
         <value>Stasjon</value>
     </data>
+    <data name="ButtonProjectInfoView" xml:space="preserve">
+        <value>Vis prosjektinformasjon</value>
+    </data>
+    <data name="ButtonProjectLog" xml:space="preserve">
+        <value>Prosjektlogg</value>
+    </data>
+    <data name="InputTextLocation" xml:space="preserve">
+        <value>Lokalitet</value>
+    </data>
+    <data name="InputTextLocationId" xml:space="preserve">
+        <value>Lokalitet-ID</value>
+    </data>
+    <data name="InputTextComment" xml:space="preserve">
+        <value>Merknad</value>
+    </data>
+    <data name="InputTextMtb" xml:space="preserve">
+        <value>MTB-tilatelse (tonn)</value>
+    </data>
+    <data name="TabProjectPlan" xml:space="preserve">
+        <value>Prøvetakingsplan</value>
+    </data>
+    <data name="TabProjectReport" xml:space="preserve">
+        <value>Rapport</value>
+    </data>
+    <data name="TabBStation" xml:space="preserve">
+        <value>B_undersøkelse</value>
+    </data>
+    <data name="InputTextNumberOfStations" xml:space="preserve">
+        <value>Antall stasjoner</value>
+    </data>
+    <data name="InputTextPlanedDate" xml:space="preserve">
+        <value>Feltdato</value>
+    </data>
+    <data name="PageProjectProject" xml:space="preserve">
+        <value>Prosjekt</value>
+    </data>
 </root>

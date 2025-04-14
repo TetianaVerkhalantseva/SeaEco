@@ -13,7 +13,7 @@ else
 {
     <div class="d-flex flex-column align-items-center gap-3">
         <div class="mb-3">
-            <h3>Prosjekt @prosjektId</h3>
+            <h3>@Resources.PageProjectProject @prosjektId</h3>
             <p>- @project.Status</p>
         </div>
 
@@ -22,11 +22,11 @@ else
 
             <button class="btn btn-outline-secondary align-self-start filter-button" type="button"
                     data-bs-toggle="collapse" data-bs-target="#collapseProjectInfo" aria-expanded="false" aria-controls="collapseProjectInfo">
-                Vis prosjektinformasjon
+                @Resources.ButtonProjectInfoView
             </button>
             <div class="flex-grow-1"></div>
             <button class="btn btn-outline-secondary align-self-end" type="button">
-                Prosjektlogg
+                @Resources.ButtonProjectLog
             </button>
         </div>
 
@@ -36,33 +36,33 @@ else
                 <div class="d-flex flex-xxl-row flex-column gap-3 ">
                     <div class="d-flex flex-column gap-4">
                         <div class="form-floating">
-                            <InputText class="form-control" id="lokalitet" @bind-Value="project.Lokalitet" @key="numberInputKey"  disabled="@(!_editProjectInfo)"/>
-                            <label for="lokalitet">Lokalitet</label>
+                            <InputText class="form-control" id="location" @bind-Value="project.Lokalitet" @key="numberInputKey"  disabled="@(!_editProjectInfo)"/>
+                            <label for="location">@Resources.InputTextLocation</label>
                         </div>
                         <div class="form-floating">
-                            <InputNumber class="form-control" id="lokalitetId" @bind-Value="project.Lokalitetid" @key="numberInputKey"  disabled="@(!_editProjectInfo)"/>
-                            <label for="lokalitetId">Lokalitet-ID</label>
+                            <InputNumber class="form-control" id="locationId" @bind-Value="project.Lokalitetid" @key="numberInputKey"  disabled="@(!_editProjectInfo)"/>
+                            <label for="locationId">@Resources.InputTextLocationId</label>
                         </div>
                         <div class="d-flex form-floating">
-                            <InputDate class="form-control" id="feltdato" @bind-Value="project.Planlagtfeltdato" @key="numberInputKey"  disabled="@(!_editProjectInfo)"/>
-                            <label for="feltdato">Feltdato</label>
+                            <InputDate class="form-control" id="planedDate" @bind-Value="project.Planlagtfeltdato" @key="numberInputKey"  disabled="@(!_editProjectInfo)"/>
+                            <label for="planedDate">@Resources.InputTextPlanedDate</label>
                         </div>
 
                     </div>
                     <div class="d-flex flex-column gap-4">
                         <div class="d-flex form-floating">
-                            <InputNumber class="form-control" id="antallStasjoner" @bind-Value="project.Antallstasjoner" @key="numberInputKey"  disabled="@(!_editProjectInfo)"/>
-                            <label for="antallStasjoner">Antall stasjoner</label>
+                            <InputNumber class="form-control" id="numberOfStations" @bind-Value="project.Antallstasjoner" @key="numberInputKey"  disabled="@(!_editProjectInfo)"/>
+                            <label for="numberOfStations">@Resources.InputTextNumberOfStations</label>
                         </div>
                         <div class="d-flex form-floating">
                             <InputNumber class="form-control" id="mtb" @bind-Value="project.Mtbtillatelse" @key="numberInputKey"  disabled="@(!_editProjectInfo)"/>
-                            <label for="mtb">MTB-tilatelse (tonn)</label>
+                            <label for="mtb">@Resources.InputTextMtb</label>
                         </div>
                     </div>
                     <div class="d-flex flex-column gap-4">
                         <div class="d-flex form-floating">
                             <InputTextArea class="form-control" id="comment" @bind-Value="project.Merknad" @key="numberInputKey" style="height: 140px" disabled="@(!_editProjectInfo)"></InputTextArea>
-                            <label for="comment">Merknad</label>
+                            <label for="comment">@Resources.InputTextComment</label>
                         </div>
 
                     </div>
@@ -71,7 +71,7 @@ else
                         @if (!_editProjectInfo)
                         {
                             <button class="btn btn-outline-secondary filter-button" type="button" @onclick="OnClickProjectInformation">
-                                Rediger
+                                @Resources.ButtonEdit
                             </button>
                         }
                         else
@@ -100,17 +100,17 @@ else
         <ul class="nav nav-tabs d-flex w-100 mt-3" id="myTab" role="tablist">
             <li class="nav-item flex-fill" role="presentation">
                 <a class="nav-link text-center @(_activeTab == "projectPlan" ? "active" : "")"  @onclick=@(() => SelectedTab("projectPlan"))>
-                Prøvetakingsplan
+                @Resources.TabProjectPlan
                 </a>
             </li>
             <li class="nav-item flex-fill" role="presentation">
                 <a class="nav-link text-center @(_activeTab == "b_stations" ? "active" : "")" @onclick=@(() => SelectedTab("b_stations"))>
-                    B_undersøkelse
+                    @Resources.TabBStation
                 </a>
             </li>
             <li class="nav-item flex-fill" role="presentation">
                 <a class="nav-link text-center @(_activeTab == "projectReport" ? "active" : "")" @onclick=@(() => SelectedTab("projectReport"))>
-                    Rapport
+                    @Resources.TabProjectReport
                 </a>
             </li>
         </ul>

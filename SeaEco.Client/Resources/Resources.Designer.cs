@@ -374,5 +374,77 @@ namespace SeaEco.Client.Resources {
                 return ResourceManager.GetString("InputTextStation", resourceCulture);
             }
         }
+        
+        internal static string ButtonProjectInfoView {
+            get {
+                return ResourceManager.GetString("ButtonProjectInfoView", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonProjectLog {
+            get {
+                return ResourceManager.GetString("ButtonProjectLog", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextLocation {
+            get {
+                return ResourceManager.GetString("InputTextLocation", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextLocationId {
+            get {
+                return ResourceManager.GetString("InputTextLocationId", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextComment {
+            get {
+                return ResourceManager.GetString("InputTextComment", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextMtb {
+            get {
+                return ResourceManager.GetString("InputTextMtb", resourceCulture);
+            }
+        }
+        
+        internal static string TabProjectPlan {
+            get {
+                return ResourceManager.GetString("TabProjectPlan", resourceCulture);
+            }
+        }
+        
+        internal static string TabProjectReport {
+            get {
+                return ResourceManager.GetString("TabProjectReport", resourceCulture);
+            }
+        }
+        
+        internal static string TabBStation {
+            get {
+                return ResourceManager.GetString("TabBStation", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextNumberOfStations {
+            get {
+                return ResourceManager.GetString("InputTextNumberOfStations", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextPlanedDate {
+            get {
+                return ResourceManager.GetString("InputTextPlanedDate", resourceCulture);
+            }
+        }
+        
+        internal static string PageProjectProject {
+            get {
+                return ResourceManager.GetString("PageProjectProject", resourceCulture);
+            }
+        }
     }
 }
