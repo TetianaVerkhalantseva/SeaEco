@@ -34,50 +34,51 @@ else
 
         <div class="collapse card-container w-100" id="collapseProjectInfo">
             <div class="card card-body">
-                <div class="d-flex flex-xxl-row flex-column gap-3">
+                <div class="d-flex flex-xxl-row flex-column gap-3 ">
                     <div class="d-flex flex-column gap-4">
-
-
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="lokalitet" @bind="project.Lokalitet" disabled="@(!_editProjectInfo)">
-                            <label for="lokalitet" style="color:#808080;">Lokalitet</label>
+                            <InputText class="form-control" id="lokalitet" @bind-Value="project.Lokalitet" @key="numberInputKey"  disabled="@(!_editProjectInfo)"/>
+                            <label for="lokalitet">Lokalitet</label>
                         </div>
                         <div class="form-floating">
-                            <input type="text" class="form-control" id="lokalitetId" @bind="project.Lokalitetid" disabled="@(!_editProjectInfo)">
-                            <label for="lokalitetId" style="color:#808080;">Lokalitet-ID</label>
+                            <InputNumber class="form-control" id="lokalitetId" @bind-Value="project.Lokalitetid" @key="numberInputKey"  disabled="@(!_editProjectInfo)"/>
+                            <label for="lokalitetId">Lokalitet-ID</label>
                         </div>
                         <div class="d-flex form-floating">
-                            <input type="text" class="form-control" id="feltdato" @bind="project.Planlagtfeltdato" disabled="@(!_editProjectInfo)">
-                            <label for="feltdato" style="color:#808080;">Feltdato</label>
+                            <InputDate class="form-control" id="feltdato" @bind-Value="project.Planlagtfeltdato" @key="numberInputKey"  disabled="@(!_editProjectInfo)"/>
+                            <label for="feltdato">Feltdato</label>
                         </div>
 
                     </div>
                     <div class="d-flex flex-column gap-4">
                         <div class="d-flex form-floating">
-                            <input type="text" class="form-control" id="antallStasjoner" @bind="project.Antallstasjoner" disabled="@(!_editProjectInfo)">
-                            <label for="antallStasjoner" style="color:#808080;">Antall stasjoner</label>
+                            <InputNumber class="form-control" id="antallStasjoner" @bind-Value="project.Antallstasjoner" @key="numberInputKey"  disabled="@(!_editProjectInfo)"/>
+                            <label for="antallStasjoner">Antall stasjoner</label>
                         </div>
                         <div class="d-flex form-floating">
-                            <input type="text" class="form-control" id="mtb" @bind="project.Mtbtillatelse" disabled="@(!_editProjectInfo)">
-                            <label for="mtb" style="color:#808080;">MTB-tilatelse (tonn)</label>
+                            <InputNumber class="form-control" id="mtb" @bind-Value="project.Mtbtillatelse" @key="numberInputKey"  disabled="@(!_editProjectInfo)"/>
+                            <label for="mtb">MTB-tilatelse (tonn)</label>
                         </div>
+                    </div>
+                    <div class="d-flex flex-column gap-4">
                         <div class="d-flex form-floating">
-                            <input type="text" class="form-control" id="comment" @bind="project.Merknad" disabled="@(!_editProjectInfo)">
-                            <label for="comment" style="color:#808080;">Merknad</label>
+                            <InputTextArea class="form-control" id="comment" @bind-Value="project.Merknad" @key="numberInputKey" style="height: 140px" disabled="@(!_editProjectInfo)"></InputTextArea>
+                            <label for="comment">Merknad</label>
                         </div>
+                        
                     </div>
                     <div class="flex-grow-1"></div>
                     <div class="d-flex flex-xxl-column flex-row align-self-end">
                         @if (!_editProjectInfo)
                         {
-                            <button class="btn btn-outline-secondary filter-button" type="button" @onclick="OnCklickProjectInformation">
+                            <button class="btn btn-outline-secondary filter-button" type="button" @onclick="OnClickProjectInformation">
                                 Rediger
                             </button>
                         }
                         else
                         {
                             <div class="d-flex gap-2">
-                                <button class="btn btn-outline-secondary filter-button" type="button" @onclick="CancleEditProjectInformation">
+                                <button class="btn btn-outline-secondary filter-button" type="button" @onclick="CancelEditProjectInformation">
                                     @Resources.ButtonCancel
                                 </button>
                                 <button class="btn btn-outline-secondary filter-button" type="button" @onclick="EditProjectInformation">
@@ -115,7 +116,7 @@ else
             </li>
         </ul>
 
-        <ProjectPlan Project="project"></ProjectPlan>
+        <ProjectPlan Project="projectCopy"></ProjectPlan>
 
     </div>
 
@@ -123,38 +124,53 @@ else
 
 
 @code {
-    [Parameter]
-    public Guid prosjektId { get; set; }
-    
-    private ProjectDto project;
-    private bool _editProjectInfo;
+    [Parameter] public Guid prosjektId { get; set; }
 
-    
-    private ProjectDto projectCopy; 
+    private ProjectDto project;
+    private ProjectDto projectCopy;
+    private bool _editProjectInfo;
+    private int numberInputKey = 0;
     
 
     protected override async Task OnInitializedAsync()
     {
         project = await Http.GetFromJsonAsync<ProjectDto>($"api/Project/{prosjektId:D}");
-        
-        projectCopy = await Http.GetFromJsonAsync<ProjectDto>($"api/Project/{prosjektId:D}");
+
+        projectCopy = BackupProject(project);
     }
-    
-    private void OnCklickProjectInformation()
+
+    private void OnClickProjectInformation()
     {
         _editProjectInfo = true;
 
     }
+
     private void EditProjectInformation()
     {
-        _editProjectInfo = false;
-        
+       //_editProjectInfo = false;
+
     }
-    private void CancleEditProjectInformation()
+
+    private void CancelEditProjectInformation()
     {
+        project = BackupProject(projectCopy);
+        numberInputKey++;
         _editProjectInfo = false;
-        project = projectCopy;
     }
-    
+
+
+    private ProjectDto BackupProject(ProjectDto source)
+    {
+        return new ProjectDto
+        {
+            ProsjektId = source.ProsjektId,
+            Lokalitet = source.Lokalitet,
+            Lokalitetid = source.Lokalitetid,
+            Planlagtfeltdato = source.Planlagtfeltdato,
+            Antallstasjoner = source.Antallstasjoner,
+            Mtbtillatelse = source.Mtbtillatelse,
+            Merknad = source.Merknad
+        };
+    }
 
 }
