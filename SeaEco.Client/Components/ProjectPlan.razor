@@ -10,9 +10,9 @@
 
 
             <div class="d-flex form-floating">
-                <InputSelect @bind-Value="selectedUser1" id="user1" class="form-control" disabled="@(!_editProjectPlan)">
+                <InputSelect @bind-Value="_selectedUser1" id="user1" class="form-control" disabled="@(!_editProjectPlan)">
                     <option value=""></option>
-                    @foreach (var user in users)
+                    @foreach (var user in _users)
                     {
                         <option value="@user.FullName">@user.FullName</option>
                     }
@@ -20,9 +20,9 @@
                 <label for="user1">Planlegger 1</label>
             </div>
             <div class="d-flex form-floating">
-                <InputSelect @bind-Value="selectedUser2" id="user2" class="form-control" disabled="@(!_editProjectPlan)">
+                <InputSelect @bind-Value="_selectedUser2" id="user2" class="form-control" disabled="@(!_editProjectPlan)">
                     <option value=""></option>
-                    @foreach (var user in users)
+                    @foreach (var user in _users)
                     {
                         <option value="@user.FullName">@user.FullName</option>
                     }
@@ -30,9 +30,9 @@
                 <label for="user2">Planlegger 2</label>
             </div>
             <div class="d-flex form-floating">
-                <InputSelect @bind-Value="selectedUser3" id="user3" class="form-control" disabled="@(!_editProjectPlan)">
+                <InputSelect @bind-Value="_selectedUser3" id="user3" class="form-control" disabled="@(!_editProjectPlan)">
                     <option value=""></option>
-                    @foreach (var user in users)
+                    @foreach (var user in _users)
                     {
                         <option value="@user.FullName">@user.FullName</option>
                     }
@@ -50,20 +50,20 @@
                 <div class="d-flex flex-row gap-3">
 
                     <div class="d-flex form-floating">
-                        <InputText class="form-control" id=@($"positionN_{station}")  @bind-Value="stationData[station - 1].PositionN" disabled="@(!_editProjectPlan)"/>
+                        <InputText class="form-control" id=@($"positionN_{station}")  @bind-Value="_stationData[station - 1].PositionN" disabled="@(!_editProjectPlan)"/>
                         <label for="positionN_@station">Kordinater Nord</label>
                     </div>
                     <div class="d-flex form-floating">
-                        <InputText class="form-control" id=@($"positionS_{station}") @bind-Value="stationData[station - 1].PositionS" disabled="@(!_editProjectPlan)"/>
+                        <InputText class="form-control" id=@($"positionS_{station}") @bind-Value="_stationData[station - 1].PositionS" disabled="@(!_editProjectPlan)"/>
                         <label for="positionS_@station">Kordinater Sør</label>
                     </div>
                 </div>
                 <div class="d-flex form-floating">
-                    <InputText class="form-control" id=@($"depth_{station}") @bind-Value="stationData[station - 1].Depth" disabled="@(!_editProjectPlan)"/>
+                    <InputText class="form-control" id=@($"depth_{station}") @bind-Value="_stationData[station - 1].Depth" disabled="@(!_editProjectPlan)"/>
                     <label for="depth_@station">Dybde</label>
                 </div>
                 <div class="d-flex form-floating">
-                    <InputText class="form-control" id=@($"method_{station}") @bind-Value="stationData[station - 1].Method" disabled="@(!_editProjectPlan)"/>
+                    <InputText class="form-control" id=@($"method_{station}") @bind-Value="_stationData[station - 1].Method" disabled="@(!_editProjectPlan)"/>
                     <label for="method_@station">Analyse</label>
                 </div>
             </div>
@@ -100,22 +100,16 @@
 
 
 @code {
-    [Parameter] public ProjectDto Project { get; set; }
+    [Parameter] public ProjectDto? Project { get; set; }
 
     private bool _editProjectPlan;
     private int _addedStations = 0;
     private int _addedUser = 1;
-    private List<UserDto>? users = new List<UserDto>();
-    private string selectedUser1;
-    private string selectedUser2;
-    private string selectedUser3;
-
-    private List<StationData> stationData = new List<StationData>
-    {
-        new StationData(),
-        new StationData(),
-        new StationData()
-    };
+    private List<UserDto> _users = new List<UserDto>();
+    private string? _selectedUser1;
+    private string? _selectedUser2;
+    private string? _selectedUser3;
+    private List<StationData> _stationData = new List<StationData>();
 
 
 
@@ -124,11 +118,11 @@
         int count = (Project?.Antallstasjoner ?? 0);
         for (int i = 0; i < count; i++)
         {
-            stationData.Add(new StationData());
+            _stationData.Add(new StationData());
         }
 
         var usersList = await Http.GetFromJsonAsync<List<UserDto>>("api/users");
-        users = usersList?.OrderBy(user => user.FullName).ToList();
+        _users = usersList?.OrderBy(user => user.FullName).ToList();
     }
 
     private void OnCklickProjectPlan()
@@ -138,7 +132,7 @@
 
     private void EditProjectPlan()
     {
-        _editProjectPlan = false;
+        //_editProjectPlan = false;
     }
 
     private void CancelEditProjectPlan()
@@ -147,22 +141,23 @@
         _addedStations = 0;
     }
 
-    private async Task AddStation()
+    private void AddStation()
     {
+        _stationData.Add(new StationData());
         _addedStations = 1 + _addedStations;
     }
 
-    private async Task RemoveStation()
+    private void RemoveStation()
     {
         _addedStations = -1 + _addedStations;
     }
 
     public class StationData
     {
-        public string PositionN { get; set; }
-        public string PositionS { get; set; }
-        public string Depth { get; set; }
-        public string Method { get; set; }
+        public string? PositionN { get; set; }
+        public string? PositionS { get; set; }
+        public string? Depth { get; set; }
+        public string? Method { get; set; }
 
     }
 
