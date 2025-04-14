@@ -22,7 +22,7 @@ public sealed class AuthService(
     EmailMessageManager emailMessageManager)
     : IAuthService
 {
-    private const string InvalidCredentialsError = "Invalid credentials.";
+    private const string InvalidCredentialsError = "Email eller passord er feil.";
     private const string WasCreatedError = "Was created.";
     private const string RegistrationError = "Error while registration user.";
     private const string TokenCookieName = "auth_token";
@@ -70,6 +70,11 @@ public sealed class AuthService(
             return Response<string>.Error(userResult.ErrorMessage);
         }
 
+        if (!userResult.Value.Aktiv)
+        {
+            return Response<string>.Error(InvalidCredentialsError);
+        }
+        
         Response deactivateResult = await tokenService.DeactivateAll(userResult.Value.Id);
         if (deactivateResult.IsError)
         {
