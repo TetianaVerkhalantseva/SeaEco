@@ -1,4 +1,5 @@
 @page "/testPage"
+@using SeaEco.Abstractions.Models.Project
 
 <h3>Test page for checkbox</h3>
 
@@ -35,12 +36,79 @@
 </div>
 
 <div id="sensoryInfo" class="sensoryInfo-container">
-    <div class="sensoryData" id="data-1">
-        <input type="number" placeholder="pH">
-        <input type="number" placeholder="Eh">
-        <input type="number" placeholder="Temp">
-    </div>
+    <EditForm Model="_sensoryDto">
+        <DataAnnotationsValidator />
+        <div class="sensoryData">
+            <div class="form-group">
+                <label for="ProvePh">pH:</label>
+                <InputNumber id="ProvePh" class="form-control" @bind-Value="_sensoryDto.ProvePh" />
+            </div>
+
+            <div class="form-group">
+                <label for="ProveEh">EH:</label>
+                <InputNumber id="ProveEh" class="form-control" @bind-Value="_sensoryDto.ProveEh" />
+            </div>
+
+            <div class="form-group">
+                <label for="ProveTemp">Temp:</label>
+                <InputNumber id="ProveTemp" class="form-control" @bind-Value="_sensoryDto.ProveTemp" />
+            </div>
+
+            <div class="form-group">
+                <label for="Farge">Farge:</label>
+                <InputSelect id="Farge" class="form-select" @bind-Value="_sensoryDto.Farge">
+                    <option value="false">Lys grå</option>
+                    <option value="true">Brunn/svart</option>
+                </InputSelect>
+            </div>
+
+            <div class="form-group">
+                <label for="Lukt">Lukt:</label>
+                <InputSelect id="Lukt" class="form-select" @bind-Value="_sensoryDto.Lukt">
+                    <option value="0">Ingen</option>
+                    <option value="2">Noe</option>
+                    <option value="4">Sterk</option>
+                </InputSelect>
+            </div>
+
+            <div class="form-group">
+                <label for="Konsistens">Konsistens:</label>
+                <InputSelect id="Konsistens" class="form-select" @bind-Value="_sensoryDto.Konsistens">
+                    <option value="0">Fast</option>
+                    <option value="2">Myk</option>
+                    <option value="4">Løs</option>
+                </InputSelect>
+            </div>
+
+            <div class="form-group">
+                <label for="GrabbVolum">GrabbVolum:</label>
+                <InputSelect id="GrabbVolum" class="form-select" @bind-Value="_sensoryDto.Grabbvolum">
+                    <option value="0">0 - 1/4</option>
+                    <option value="1">1/4 - 3/4</option>
+                    <option value="2">Mer enn 3/4</option>
+                </InputSelect>
+            </div>
+
+            <div class="form-group">
+                <label for="Tykkelse">Tykkelse:</label>
+                <InputSelect id="Tykkelse" class="form-select" @bind-Value="_sensoryDto.Tykkelseslamlag">
+                    <option value="0">0 - 2cm</option>
+                    <option value="1">2 - 8cm</option>
+                    <option value="2">Mer enn 8cm</option>
+                </InputSelect>
+            </div>
+
+            <div class="form-group">
+                <label for="Gassbobler">Gassbobler:</label>
+                <InputSelect id="Gassbobler" class="form-select" @bind-Value="_sensoryDto.Gassbobler">
+                    <option value="4">Ja</option>
+                    <option value="0">Nei</option>
+                </InputSelect>
+            </div>
+        </div>
+    </EditForm>
 </div>
+
 
 
 <script>
@@ -82,5 +150,5 @@
 </script>
 
 @code {
-    
+    private BSensoryDto _sensoryDto = new();
 }
