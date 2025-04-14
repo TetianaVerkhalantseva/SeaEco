@@ -181,4 +181,37 @@
     <data name="OptionAll" xml:space="preserve">
         <value>Alle</value>
     </data>
+    <data name="InputTextUser1ProjectPlan" xml:space="preserve">
+        <value>Planlegger 1</value>
+    </data>
+    <data name="InputTextUser2ProjectPlan" xml:space="preserve">
+        <value>Planlegger 2</value>
+    </data>
+    <data name="InputTextUser3ProjectPlan" xml:space="preserve">
+        <value>Planlegger 3</value>
+    </data>
+    <data name="InputTextPositionN" xml:space="preserve">
+        <value>Koordinater Nord</value>
+    </data>
+    <data name="InputTextPositionS" xml:space="preserve">
+        <value>Koordinater Sør</value>
+    </data>
+    <data name="InputTextDepth" xml:space="preserve">
+        <value>Dybde</value>
+    </data>
+    <data name="InputTextMethod" xml:space="preserve">
+        <value>Analyse</value>
+    </data>
+    <data name="ButtonAddStation" xml:space="preserve">
+        <value>+ Legg til en stasjon</value>
+    </data>
+    <data name="ButtonEdit" xml:space="preserve">
+        <value>Rediger</value>
+    </data>
+    <data name="InputTextUserProjectPlan" xml:space="preserve">
+        <value>Planlegger</value>
+    </data>
+    <data name="InputTextStation" xml:space="preserve">
+        <value>Stasjon</value>
+    </data>
 </root>

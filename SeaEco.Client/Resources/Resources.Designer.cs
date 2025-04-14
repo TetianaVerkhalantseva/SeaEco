@@ -308,5 +308,71 @@ namespace SeaEco.Client.Resources {
                 return ResourceManager.GetString("OptionAll", resourceCulture);
             }
         }
+        
+        internal static string InputTextUser1ProjectPlan {
+            get {
+                return ResourceManager.GetString("InputTextUser1ProjectPlan", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextUser2ProjectPlan {
+            get {
+                return ResourceManager.GetString("InputTextUser2ProjectPlan", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextUser3ProjectPlan {
+            get {
+                return ResourceManager.GetString("InputTextUser3ProjectPlan", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextPositionN {
+            get {
+                return ResourceManager.GetString("InputTextPositionN", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextPositionS {
+            get {
+                return ResourceManager.GetString("InputTextPositionS", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextDepth {
+            get {
+                return ResourceManager.GetString("InputTextDepth", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextMethod {
+            get {
+                return ResourceManager.GetString("InputTextMethod", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonAddStation {
+            get {
+                return ResourceManager.GetString("ButtonAddStation", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonEdit {
+            get {
+                return ResourceManager.GetString("ButtonEdit", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextUserProjectPlan {
+            get {
+                return ResourceManager.GetString("InputTextUserProjectPlan", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextStation {
+            get {
+                return ResourceManager.GetString("InputTextStation", resourceCulture);
+            }
+        }
     }
 }

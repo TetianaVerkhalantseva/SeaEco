@@ -5,7 +5,7 @@
 
 
     <div class="d-flex flex-column gap-3 mt-3">
-        <span>Planleggere</span>
+        <span>@Resources.InputTextUserProjectPlan</span>
         <div class="d-flex flex-column gap-3">
 
 
@@ -17,7 +17,7 @@
                         <option value="@user.FullName">@user.FullName</option>
                     }
                 </InputSelect>
-                <label for="user1">Planlegger 1</label>
+                <label for="user1">@Resources.InputTextUser1ProjectPlan</label>
             </div>
             <div class="d-flex form-floating">
                 <InputSelect @bind-Value="_selectedUser2" id="user2" class="form-control" disabled="@(!_editProjectPlan)">
@@ -27,7 +27,7 @@
                         <option value="@user.FullName">@user.FullName</option>
                     }
                 </InputSelect>
-                <label for="user2">Planlegger 2</label>
+                <label for="user2">@Resources.InputTextUser2ProjectPlan</label>
             </div>
             <div class="d-flex form-floating">
                 <InputSelect @bind-Value="_selectedUser3" id="user3" class="form-control" disabled="@(!_editProjectPlan)">
@@ -37,7 +37,7 @@
                         <option value="@user.FullName">@user.FullName</option>
                     }
                 </InputSelect>
-                <label for="user3">Planlegger 3</label>
+                <label for="user3">@Resources.InputTextUser3ProjectPlan</label>
             </div>
 
         </div>
@@ -46,25 +46,25 @@
         @for (int station = 1; station <= Project.Antallstasjoner + _addedStations; station++)
         {
             <div class="d-flex flex-column gap-3 mt-3">
-                <span>Stasjon @station</span>
+                <span>@Resources.InputTextStation @station</span>
                 <div class="d-flex flex-row gap-3">
 
                     <div class="d-flex form-floating">
                         <InputText class="form-control" id=@($"positionN_{station}")  @bind-Value="_stationData[station - 1].PositionN" disabled="@(!_editProjectPlan)"/>
-                        <label for="positionN_@station">Kordinater Nord</label>
+                        <label for="positionN_@station">@Resources.InputTextPositionN</label>
                     </div>
                     <div class="d-flex form-floating">
                         <InputText class="form-control" id=@($"positionS_{station}") @bind-Value="_stationData[station - 1].PositionS" disabled="@(!_editProjectPlan)"/>
-                        <label for="positionS_@station">Kordinater Sør</label>
+                        <label for="positionS_@station">@Resources.InputTextPositionS</label>
                     </div>
                 </div>
                 <div class="d-flex form-floating">
                     <InputText class="form-control" id=@($"depth_{station}") @bind-Value="_stationData[station - 1].Depth" disabled="@(!_editProjectPlan)"/>
-                    <label for="depth_@station">Dybde</label>
+                    <label for="depth_@station">@Resources.InputTextDepth</label>
                 </div>
                 <div class="d-flex form-floating">
                     <InputText class="form-control" id=@($"method_{station}") @bind-Value="_stationData[station - 1].Method" disabled="@(!_editProjectPlan)"/>
-                    <label for="method_@station">Analyse</label>
+                    <label for="method_@station">@Resources.InputTextMethod</label>
                 </div>
             </div>
         }
@@ -73,14 +73,14 @@
             @if (!_editProjectPlan)
             {
                 <button class="btn btn-outline-secondary filter-button" type="button" @onclick="OnCklickProjectPlan">
-                    Rediger
+                    @Resources.ButtonEdit
                 </button>
             }
             else
             {
                 <div class="d-flex gap-2 flex-column flex-xxl-row w-100">
                     <button class="btn btn-outline-secondary filter-button" type="button" @onclick="AddStation">
-                        + Legg til en stasjon
+                        @Resources.ButtonAddStation
                     </button>
                     <div class="d-flex flex-grow-1"></div>
                     <div class="d-flex gap-2 justify-content-center">
@@ -109,7 +109,10 @@
     private string? _selectedUser1;
     private string? _selectedUser2;
     private string? _selectedUser3;
-    private List<StationData> _stationData = new List<StationData>();
+    private List<StationData> _stationData = new List<StationData>
+    {
+        new StationData()
+    };
 
 
 
