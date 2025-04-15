@@ -46,7 +46,16 @@
         @for (int station = 1; station <= Project.Antallstasjoner + _addedStations; station++)
         {
             <div class="d-flex flex-column gap-3 mt-3">
-                <span>@Resources.InputTextStation @station</span>
+                <div class="d-flex">
+                    <span>@Resources.InputTextStation @station</span>
+                    <div class="flex-grow-1"></div>
+                    @if (_editProjectPlan)
+                    {
+                        <span class="bi bi-x-circle show " style="cursor: pointer;" @onclick="@(() => RemoveStation())" >
+                        </span> 
+                    }
+                </div>
+               
                 <div class="d-flex flex-row gap-3">
 
                     <div class="d-flex form-floating">
