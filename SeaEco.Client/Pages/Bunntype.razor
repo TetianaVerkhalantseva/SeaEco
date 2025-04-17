@@ -116,13 +116,16 @@
     </div>
 
     <div class="sedimentType-container" id="sedimentType">
+        <h5>Sedimenttype:</h5>
+        
         <div class="hardSediment-container" id="hardSediment">
-            <p>Hard sediment</p>
+            <div class="checkbox-container">
+                <label><input type="checkbox" @bind="_sediment.Steinbunn" /> Steinbunn</label>
+                <label><input type="checkbox" @bind="_sediment.Fjellbunn" /> Fjellbunn</label>
+            </div>
         </div>
 
         <div class="softSediment-container" id="softSediment">
-            <h5>Sedimenttype:</h5>
-
             <div class="checkbox-container">
                 <label><input type="checkbox" @bind="_sediment.Sand" /> Sand</label>
                 <label><input type="checkbox" @bind="_sediment.Leire" /> Leire</label>
