@@ -11,10 +11,13 @@ else
 {
     if (_stationData==null)
     {
-        <div class="d-flex mt-3">
-        <button class="btn btn-outline-secondary filter-button" type="button" @onclick="OnClickProjectPlan">
-            @Resources.ButtonAddNewProjectPlan
-        </button>
+        <div class="d-flex flex-column gap-3 mt-3">
+            <div class="d-flex justify-content-center">
+                @Resources.PageProjectPlanNoPlan
+            </div>
+            <button class="btn btn-outline-secondary filter-button" type="button" @onclick="OnClickProjectPlan">
+                @Resources.ButtonAddNewProjectPlan
+            </button>
         </div>
     }
     else

@@ -253,4 +253,7 @@
     <data name="ButtonAddNewProjectPlan" xml:space="preserve">
         <value>+ Ny prøvetakingsplan</value>
     </data>
+    <data name="PageProjectPlanNoPlan" xml:space="preserve">
+        <value>Ingen plan er registrert</value>
+    </data>
 </root>
