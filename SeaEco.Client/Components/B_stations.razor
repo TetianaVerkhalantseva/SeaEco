@@ -1,5 +1,98 @@
-<h3>B_undesøkelse er enda ikke utviklet</h3>
+@using SeaEco.Abstractions.Models.Project
+@inject HttpClient Http
+@using SeaEco.Client.Resources
+
+@if (_isLoading)
+{
+}
+else
+{<div class="d-flex flex-column">
+    <div class="card-container">
+        <div class="row" style="justify-content: center;">
+            @foreach (var station in _stationData)
+            {
+                <div class="col mb-3 card-col">
+                    <div class="card cursor" @onclick="() => OnStationClick()">
+                        <div class="card-body text-center @GetStatus(station.Status)">
+                            <h5 class="card-title">Stasjon @_stationData.IndexOf(station)</h5>
+                            <span class="corner-text">@station.Status</span>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">@Resources.InputTextPositionN: @station.PositionN </li>
+                            <li class="list-group-item">@Resources.InputTextPositionS: @station.PositionS </li>
+                        </ul>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-outline-secondary" type="button" @onclick="AddStation">
+            + Ny stasjon
+        </button>
+    </div>
+    </div>
+}
 
 @code {
+    [Parameter] public ProjectDto? Project { get; set; }
+    private List<StationData>? _stationData;
+    private bool _isLoading = true;
     
+    
+    protected override async Task OnInitializedAsync()
+    {
+        _stationData = new List<StationData>
+        {
+            new StationData
+            {
+                Method = "Parameter I, II og III",
+                Status = "Ferdig"
+            }
+        };
+        
+        int count = (Project?.Antallstasjoner ?? 0);
+        for (int i = 1; i < count; i++)
+        {
+            _stationData.Add(new StationData
+            {
+                Method = "Parameter I, II og III",
+                Status = "Nytt"
+            });
+        }
+        
+        _isLoading = false;
+        
+    }
+    
+    private void OnStationClick()
+    {
+    }
+    
+    private void AddStation()
+    {
+        _stationData.Add(new StationData
+        {
+            Status = "Nytt"
+        });
+    }
+    
+    private string GetStatus(string? status)
+    {
+        return status switch
+        {
+            "Nytt" => "card-status-new",
+            "Ferdig" => "card-status-done",
+            _ => throw new ArgumentOutOfRangeException(nameof(status), status, null)
+        };
+    }
+    
+    public class StationData
+    {
+        public string? PositionN { get; set; }
+        public string? PositionS { get; set; }
+        public string? Depth { get; set; }
+        public string? Method { get; set; }
+        public string? Status {get; set; }
+    }
 }
