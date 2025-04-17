@@ -1,128 +1,213 @@
 @page "/testPage"
 @using SeaEco.Abstractions.Models.Project
+@using SeaEco.EntityFramework.Entities
 
-<h3>Test page for checkbox</h3>
+<h4>Stasjonsregisrering</h4>
 
-<div class="typeRadio-container">
-    <h5>Bunntype: </h5>
-    
-    <div class="cntr">
-        <input type="radio" name="bunntype" id="cbx1" class="hidden-xs-up">
-        <label for="cbx1" class="cbx"></label>
-        <label for="cbx1" class="lbl">Bløt</label>
-    </div>
-
-    <div class="cntr">
-        <input type="radio" name="bunntype" id="cbx2" class="hidden-xs-up">
-        <label for="cbx2" class="cbx"></label>
-        <label for="cbx2" class="lbl">Hard</label>
-    </div>
+<div id="div1" class="content-div active">
+    <h5>1</h5>
 </div>
 
-<div id="sensoryRadio" class="sensoryRadio-container">
-    <h5>Er sensorisk utført?</h5>
+<div id="div2" class="content-div">
+    <div class="typeRadio-container">
+        <h5>Bunntype: </h5>
 
-    <div class="cntr">
-        <input type="radio" name="sensorisk" id="cbx3" class="hidden-xs-up">
-        <label for="cbx3" class="cbx"></label>
-        <label for="cbx3" class="lbl">Ja</label>
+        <div class="cntr">
+            <input type="radio" name="bunntype" id="cbx1" class="hidden-xs-up">
+            <label for="cbx1" class="cbx"></label>
+            <label for="cbx1" class="lbl">Bløt</label>
+        </div>
+
+        <div class="cntr">
+            <input type="radio" name="bunntype" id="cbx2" class="hidden-xs-up">
+            <label for="cbx2" class="cbx"></label>
+            <label for="cbx2" class="lbl">Hard</label>
+        </div>
     </div>
 
-    <div class="cntr">
-        <input type="radio" name="sensorisk" id="cbx4" class="hidden-xs-up">
-        <label for="cbx4" class="cbx"></label>
-        <label for="cbx4" class="lbl">Nei</label>
+    <div id="sensoryRadio" class="sensoryRadio-container">
+        <h5>Er sensorisk utført?</h5>
+
+        <div class="cntr">
+            <input type="radio" name="sensorisk" id="cbx3" class="hidden-xs-up">
+            <label for="cbx3" class="cbx"></label>
+            <label for="cbx3" class="lbl">Ja</label>
+        </div>
+
+        <div class="cntr">
+            <input type="radio" name="sensorisk" id="cbx4" class="hidden-xs-up">
+            <label for="cbx4" class="cbx"></label>
+            <label for="cbx4" class="lbl">Nei</label>
+        </div>
     </div>
-</div>
 
-<div id="sensoryInfo" class="sensoryInfo-container">
-    <EditForm Model="_sensoryDto">
-        <DataAnnotationsValidator />
-        <div class="sensoryData">
-            <div class="form-group">
-                <label for="ProvePh">pH:</label>
-                <InputNumber id="ProvePh" class="form-control" @bind-Value="_sensoryDto.ProvePh" />
+    <div id="sensoryInfo" class="sensoryInfo-container">
+        <EditForm Model="_sensoryDto">
+            <DataAnnotationsValidator />
+            <div class="sensoryData">
+                <div class="form-group">
+                    <label for="ProvePh">pH:</label>
+                    <InputNumber id="ProvePh" class="form-control" @bind-Value="_sensoryDto.ProvePh" />
+                </div>
+
+                <div class="form-group">
+                    <label for="ProveEh">EH:</label>
+                    <InputNumber id="ProveEh" class="form-control" @bind-Value="_sensoryDto.ProveEh" />
+                </div>
+
+                <div class="form-group">
+                    <label for="ProveTemp">Temp:</label>
+                    <InputNumber id="ProveTemp" class="form-control" @bind-Value="_sensoryDto.ProveTemp" />
+                </div>
+
+                <div class="form-group">
+                    <label for="Farge">Farge:</label>
+                    <InputSelect id="Farge" class="form-select" @bind-Value="_sensoryDto.Farge">
+                        <option value="0">Lys grå</option>
+                        <option value="2">Brunn/svart</option>
+                    </InputSelect>
+                </div>
+
+                <div class="form-group">
+                    <label for="Lukt">Lukt:</label>
+                    <InputSelect id="Lukt" class="form-select" @bind-Value="_sensoryDto.Lukt">
+                        <option value="0">Ingen</option>
+                        <option value="2">Noe</option>
+                        <option value="4">Sterk</option>
+                    </InputSelect>
+                </div>
+
+                <div class="form-group">
+                    <label for="Konsistens">Konsistens:</label>
+                    <InputSelect id="Konsistens" class="form-select" @bind-Value="_sensoryDto.Konsistens">
+                        <option value="0">Fast</option>
+                        <option value="2">Myk</option>
+                        <option value="4">Løs</option>
+                    </InputSelect>
+                </div>
+
+                <div class="form-group">
+                    <label for="GrabbVolum">GrabbVolum:</label>
+                    <InputSelect id="GrabbVolum" class="form-select" @bind-Value="_sensoryDto.Grabbvolum">
+                        <option value="0">0 - 1/4</option>
+                        <option value="1">1/4 - 3/4</option>
+                        <option value="2">Mer enn 3/4</option>
+                    </InputSelect>
+                </div>
+
+                <div class="form-group">
+                    <label for="Tykkelse">Tykkelse:</label>
+                    <InputSelect id="Tykkelse" class="form-select" @bind-Value="_sensoryDto.Tykkelseslamlag">
+                        <option value="0">0 - 2cm</option>
+                        <option value="1">2 - 8cm</option>
+                        <option value="2">Mer enn 8cm</option>
+                    </InputSelect>
+                </div>
+
+                <div class="form-group">
+                    <label for="Gassbobler">Gassbobler:</label>
+                    <InputSelect id="Gassbobler" class="form-select" @bind-Value="_sensoryDto.Gassbobler">
+                        <option value="4">Ja</option>
+                        <option value="0">Nei</option>
+                    </InputSelect>
+                </div>
             </div>
+        </EditForm>
+    </div>
 
-            <div class="form-group">
-                <label for="ProveEh">EH:</label>
-                <InputNumber id="ProveEh" class="form-control" @bind-Value="_sensoryDto.ProveEh" />
-            </div>
+    <div class="sedimentType-container" id="sedimentType">
+        <div class="hardSediment-container" id="hardSediment">
+            <p>Hard sediment</p>
+        </div>
 
-            <div class="form-group">
-                <label for="ProveTemp">Temp:</label>
-                <InputNumber id="ProveTemp" class="form-control" @bind-Value="_sensoryDto.ProveTemp" />
-            </div>
+        <div class="softSediment-container" id="softSediment">
+            <h5>Sedimenttype:</h5>
 
-            <div class="form-group">
-                <label for="Farge">Farge:</label>
-                <InputSelect id="Farge" class="form-select" @bind-Value="_sensoryDto.Farge">
-                    <option value="false">Lys grå</option>
-                    <option value="true">Brunn/svart</option>
-                </InputSelect>
-            </div>
-
-            <div class="form-group">
-                <label for="Lukt">Lukt:</label>
-                <InputSelect id="Lukt" class="form-select" @bind-Value="_sensoryDto.Lukt">
-                    <option value="0">Ingen</option>
-                    <option value="2">Noe</option>
-                    <option value="4">Sterk</option>
-                </InputSelect>
-            </div>
-
-            <div class="form-group">
-                <label for="Konsistens">Konsistens:</label>
-                <InputSelect id="Konsistens" class="form-select" @bind-Value="_sensoryDto.Konsistens">
-                    <option value="0">Fast</option>
-                    <option value="2">Myk</option>
-                    <option value="4">Løs</option>
-                </InputSelect>
-            </div>
-
-            <div class="form-group">
-                <label for="GrabbVolum">GrabbVolum:</label>
-                <InputSelect id="GrabbVolum" class="form-select" @bind-Value="_sensoryDto.Grabbvolum">
-                    <option value="0">0 - 1/4</option>
-                    <option value="1">1/4 - 3/4</option>
-                    <option value="2">Mer enn 3/4</option>
-                </InputSelect>
-            </div>
-
-            <div class="form-group">
-                <label for="Tykkelse">Tykkelse:</label>
-                <InputSelect id="Tykkelse" class="form-select" @bind-Value="_sensoryDto.Tykkelseslamlag">
-                    <option value="0">0 - 2cm</option>
-                    <option value="1">2 - 8cm</option>
-                    <option value="2">Mer enn 8cm</option>
-                </InputSelect>
-            </div>
-
-            <div class="form-group">
-                <label for="Gassbobler">Gassbobler:</label>
-                <InputSelect id="Gassbobler" class="form-select" @bind-Value="_sensoryDto.Gassbobler">
-                    <option value="4">Ja</option>
-                    <option value="0">Nei</option>
-                </InputSelect>
+            <div class="checkbox-container">
+                <label><input type="checkbox" @bind="_sediment.Sand" /> Sand</label>
+                <label><input type="checkbox" @bind="_sediment.Leire" /> Leire</label>
+                <label><input type="checkbox" @bind="_sediment.Silt" /> Silt</label>
+                <label><input type="checkbox" @bind="_sediment.Grus" /> Grus</label>
+                <label><input type="checkbox" @bind="_sediment.Skjellsand" /> Skjellsand</label>
             </div>
         </div>
-    </EditForm>
+    </div>
 </div>
 
+<div id="div3" class="content-div">
+    <h5>3</h5>
+</div>
 
+<div id="div4" class="content-div">
+    <h5>4</h5>
+</div>
+
+<div class="button-container">
+    <button id="lastBtn" onclick="showLast()" class="custom-btn">Forrige</button>
+    <button id="nextBtn" onclick="showNext()" class="custom-btn">Neste</button>
+    <button id="submitBtn" class="custom-btn" style="display: none;">Lagre</button>
+</div>
 
 <script>
-    const radioSoft = document.getElementById("cbx1")
+    let currentIndex = 1;
+    const totalDivs = 4;
+
+    function showDiv(index) {
+        for (let i = 1; i <= totalDivs; i++) {
+            document.getElementById('div' + i).classList.remove('active');
+        }
+        document.getElementById('div' + index).classList.add('active');
+        updateButtons();
+    }
+
+    function showLast() {
+        if (currentIndex > 1) {
+            currentIndex--;
+            showDiv(currentIndex);
+        }
+    }
+
+    function showNext() {
+        if (currentIndex < totalDivs) {
+            currentIndex++;
+            showDiv(currentIndex);
+        }
+    }
+
+    function updateButtons() {
+        const lastBtn = document.getElementById('lastBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+
+        lastBtn.style.display = currentIndex === 1 ? 'none' : 'inline-block';
+        nextBtn.style.display = currentIndex === totalDivs ? 'none' : 'inline-block';
+        submitBtn.style.display = currentIndex === totalDivs ? 'inline-block' : 'none';
+    }
+
+    updateButtons();
+
+</script>
+
+<script>
+    const radioSoft = document.getElementById("cbx1");
     const radioHard = document.getElementById("cbx2");
     const sensoryQuestion = document.getElementById("sensoryRadio");
     
-    const radioYes = document.getElementById("cbx3")
-    const radioNo = document.getElementById("cbx4")
-    const sensoryInfo = document.getElementById("sensoryInfo")
+    const radioYes = document.getElementById("cbx3");
+    const radioNo = document.getElementById("cbx4");
+    const sensoryInfo = document.getElementById("sensoryInfo");
+    
+    const sedimentType = document.getElementById("sedimentType");
+    const hardSediment = document.getElementById("hardSediment");
+    const softSediment = document.getElementById("softSediment");
     
     function updateDisplay() {
         if (radioHard.checked) {
             sensoryQuestion.style.display = "flex";
+
+            sedimentType.style.display = "flex";
+            hardSediment.style.display = "flex";
+            softSediment.style.display = "none";
             
             if (radioYes.checked) {
                 sensoryInfo.style.display = "flex";
@@ -134,6 +219,10 @@
         else if (radioSoft.checked) {
             sensoryQuestion.style.display = "none";
             sensoryInfo.style.display = "flex";
+
+            sedimentType.style.display = "flex";
+            softSediment.style.display = "flex";
+            hardSediment.style.display = "none";
         }
         else {
             sensoryQuestion.style.display = "none";
@@ -151,4 +240,6 @@
 
 @code {
     private BSensoryDto _sensoryDto = new();
+    
+    private BSedimentTypeDto _sediment = new();
 }
