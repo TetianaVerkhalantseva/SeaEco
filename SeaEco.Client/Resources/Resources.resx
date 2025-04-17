@@ -250,4 +250,7 @@
     <data name="PageProjectProject" xml:space="preserve">
         <value>Prosjekt</value>
     </data>
+    <data name="ButtonAddNewProjectPlan" xml:space="preserve">
+        <value>+ Ny prøvetakingsplan</value>
+    </data>
 </root>

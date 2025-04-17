@@ -446,5 +446,11 @@ namespace SeaEco.Client.Resources {
                 return ResourceManager.GetString("PageProjectProject", resourceCulture);
             }
         }
+        
+        internal static string ButtonAddNewProjectPlan {
+            get {
+                return ResourceManager.GetString("ButtonAddNewProjectPlan", resourceCulture);
+            }
+        }
     }
 }
