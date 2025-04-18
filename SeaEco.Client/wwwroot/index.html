@@ -34,9 +34,9 @@
 
     <script>
         window.showModal = selector => {
-            const el = document.querySelector(selector);
-            if (!el) return;
-            const modal = new bootstrap.Modal(el);
+            const element = document.querySelector(selector);
+            if (!element) return;
+            const modal = new bootstrap.Modal(element);
             modal.show();
         };
     </script>

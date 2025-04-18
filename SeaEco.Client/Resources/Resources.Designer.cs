@@ -452,5 +452,17 @@ namespace SeaEco.Client.Resources {
                 return ResourceManager.GetString("ButtonAddNewStation", resourceCulture);
             }
         }
+        
+        internal static string ButtonComplete {
+            get {
+                return ResourceManager.GetString("ButtonComplete", resourceCulture);
+            }
+        }
+        
+        internal static string ModalTextCompleteProject {
+            get {
+                return ResourceManager.GetString("ModalTextCompleteProject", resourceCulture);
+            }
+        }
     }
 }
