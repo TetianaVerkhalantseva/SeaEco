@@ -116,35 +116,79 @@
     </div>
 
     <div class="sedimentType-container" id="sedimentType">
-        <h5>Sedimenttype:</h5>
-        
         <div class="hardSediment-container" id="hardSediment">
+            <h5>Bunntype:</h5>
+            
             <div class="checkbox-container">
-                <label><input type="checkbox" @bind="_sediment.Steinbunn" /> Steinbunn</label>
-                <label><input type="checkbox" @bind="_sediment.Fjellbunn" /> Fjellbunn</label>
+                <label><input type="checkbox" @bind="_sediment.Steinbunn"/> Steinbunn</label>
+                <label><input type="checkbox" @bind="_sediment.Fjellbunn"/> Fjellbunn</label>
             </div>
         </div>
 
         <div class="softSediment-container" id="softSediment">
+            <h5>Sedimenttype:</h5>
+            
             <div class="checkbox-container">
-                <label><input type="checkbox" @bind="_sediment.Sand" /> Sand</label>
-                <label><input type="checkbox" @bind="_sediment.Leire" /> Leire</label>
-                <label><input type="checkbox" @bind="_sediment.Silt" /> Silt</label>
-                <label><input type="checkbox" @bind="_sediment.Grus" /> Grus</label>
-                <label><input type="checkbox" @bind="_sediment.Skjellsand" /> Skjellsand</label>
+                <label><input type="checkbox" @bind="_sediment.Sand"/> Sand</label>
+                <label><input type="checkbox" @bind="_sediment.Leire"/> Leire</label>
+                <label><input type="checkbox" @bind="_sediment.Silt"/> Silt</label>
+                <label><input type="checkbox" @bind="_sediment.Grus"/> Grus</label>
+                <label><input type="checkbox" @bind="_sediment.Skjellsand"/> Skjellsand</label>
             </div>
+        </div>
+    </div>
+    
+    <div class="picture-container">
+        <button class="picture-button" style="vertical-align:middle"><span>+ Usilt</span></button>
+
+        <div class="tom-grabb-container" id="tomGrabb_1">
+            <label class="custom-checkbox" for="tom-grabb-1">
+                <span class="custom-label">Tom grabb</span>
+                <input id="tom-grabb-1" type="checkbox">
+                <span class="custom-checkmark"></span>
+            </label>
         </div>
     </div>
 </div>
 
 <div id="div3" class="content-div">
-    <h5>3</h5>
+    <div class="picture-container">
+        <button class="picture-button" style="vertical-align:middle"><span>+ Silt</span></button>
+
+        <div class="tom-grabb-container" id="tomGrabb_2">
+            <label class="custom-checkbox" for="tom-grabb-2">
+                <span class="custom-label">Tom grabb</span>
+                <input id="tom-grabb-2" type="checkbox">
+                <span class="custom-checkmark"></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="Dyr-1-container">
+        <label class="custom-checkbox" for="beggiota">
+            <span class="custom-label">Beggiota</span>
+            <input type="checkbox" id="beggiota" @bind="_dyr.Beggiota" />
+            <span class="custom-checkmark"></span>
+        </label>
+
+        <label class="custom-checkbox" for="forrester">
+            <span class="custom-label">Forrester</span>
+            <input type="checkbox" id="forrester" @bind="_dyr.Foor" />
+            <span class="custom-checkmark"></span>
+        </label>
+
+        <label class="custom-checkbox" for="fekalier">
+            <span class="custom-label">Fekalier</span>
+            <input type="checkbox" id="fekalier" @bind="_dyr.Fekalier" />
+            <span class="custom-checkmark"></span>
+        </label>
+    </div>
 </div>
 
 <div class="button-container">
     <button id="lastBtn" onclick="showLast()" class="custom-btn">Forrige</button>
     <button id="nextBtn" onclick="showNext()" class="custom-btn">Neste</button>
-    <button id="submitBtn" class="custom-btn" style="display: none;">Lagre</button>
+    <button id="submitBtn" class="custom-btn" style="display: none;" @onclick="HandleSubmit">Lagre</button>
 </div>
 
 <script>
@@ -200,6 +244,9 @@
     const hardSediment = document.getElementById("hardSediment");
     const softSediment = document.getElementById("softSediment");
     
+    const tomGrabb_1 = document.getElementById("tomGrabb_1");
+    const tomGrabb_2 = document.getElementById("tomGrabb_2");
+    
     function updateDisplay() {
         if (radioHard.checked) {
             sensoryQuestion.style.display = "flex";
@@ -207,6 +254,9 @@
             sedimentType.style.display = "flex";
             hardSediment.style.display = "flex";
             softSediment.style.display = "none";
+            
+            tomGrabb_1.style.display = "flex";
+            tomGrabb_2.style.display = "flex";
             
             if (radioYes.checked) {
                 sensoryInfo.style.display = "flex";
@@ -222,6 +272,9 @@
             sedimentType.style.display = "flex";
             softSediment.style.display = "flex";
             hardSediment.style.display = "none";
+
+            tomGrabb_1.style.display = "none";
+            tomGrabb_2.style.display = "none";
         }
         else {
             sensoryQuestion.style.display = "none";
@@ -241,4 +294,11 @@
     private BSensoryDto _sensoryDto = new();
     
     private BSedimentTypeDto _sediment = new();
+
+    private BDyr _dyr = new();
+
+    private void HandleSubmit()
+    {
+        Console.WriteLine("");
+    }
 }

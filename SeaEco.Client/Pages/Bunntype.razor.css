@@ -176,7 +176,7 @@
     margin-top: 1rem;
 }
 
-.h5, h5 {
+.sedimentType-container .h5, h5 {
     margin-right: 50px;
 }
 
@@ -241,4 +241,124 @@
         flex-flow: wrap;
         row-gap: 1rem;
     }
+}
+
+.picture-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1rem;
+    gap: 2rem;
+}
+
+/* Take picture buttons */
+.picture-button {
+    display: inline-block;
+    border-radius: 7px;
+    border: none;
+    background: dodgerblue;
+    color: white;
+    font-family: inherit;
+    text-align: center;
+    font-size: 13px;
+    box-shadow: 0px 14px 56px -11px #1875FF;
+    width: 10em;
+    padding: 1em;
+    transition: all 0.4s;
+    cursor: pointer;
+}
+
+.picture-button span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.4s;
+}
+
+.picture-button span:after {
+    content: 'bilde';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.7s;
+}
+
+.picture-button:hover span {
+    padding-right: 3.55em;
+}
+
+.picture-button:hover span:after {
+    opacity: 4;
+    right: 0;
+}
+
+.tom-grabb-container {
+    display: none;
+}
+
+.custom-checkbox {
+    display: flex;
+    align-items: center;
+    margin: 10px;
+    color: black;
+}
+
+.custom-checkbox input {
+    display: none;
+}
+
+.custom-checkbox .custom-checkmark {
+    width: 28px;
+    height: 28px;
+    border-radius: 10px;
+    background-color: #ffffff2b;
+    box-shadow: 
+        rgba(0, 0, 0, 0.62) 0px 0px 5px inset,
+        rgba(0, 0, 0, 0.21) 0px 0px 0px 24px inset,
+        dodgerblue 0px 0px 0px 0px inset,
+        rgba(224, 224, 224, 0.45) 0px 1px 0px 0px;
+    cursor: pointer;
+    position: relative;
+}
+
+.custom-checkbox .custom-checkmark::after {
+    content: "";
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    background-color: #e3e3e3;
+    box-shadow: transparent 0px 0px 0px 2px, rgba(0, 0, 0, 0.3) 0px 6px 6px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: background-color 0.3s ease-in-out;
+}
+
+.custom-checkbox input:checked + .custom-checkmark {
+    background-color: dodgerblue;
+    box-shadow: 
+        rgba(0, 0, 0, 0.62) 0px 0px 5px inset,
+        dodgerblue 0px 0px 0px 2px inset,
+        dodgerblue 0px 0px 0px 24px inset,
+        rgba(224, 224, 224, 0.45) 0px 1px 0px 0px;
+}
+
+.custom-checkbox input:checked + .custom-checkmark::after {
+    background-color: white;
+}
+
+.custom-checkbox .custom-label {
+    margin-right: 10px;
+    user-select: none;
+    cursor: pointer;
+}
+
+.Dyr-1-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
 }
