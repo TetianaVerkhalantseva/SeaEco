@@ -1,36 +1,62 @@
 @using SeaEco.Abstractions.Models.Project
 @inject HttpClient Http
 @using SeaEco.Client.Resources
+@inject IJSRuntime Js
 
 @if (_isLoading)
 {
 }
 else
-{<div class="d-flex flex-column mt-3">
-    <div class="card-container">
-        <div class="row" style="justify-content: center;">
-            @foreach (var station in _stationData)
-            {
-                <div class="col mb-3 card-col">
-                    <div class="card cursor" @onclick="() => OnStationClick()">
-                        <div class="card-body text-center @GetStatus(station.Status)">
-                            <h5 class="card-title">Stasjon @_stationData.IndexOf(station)</h5>
-                            <span class="corner-text">@station.Status</span>
+{<div class="d-flex flex-column mt-3 gap-3">
+        <div class="card-container">
+            <div class="row" style="justify-content: center;">
+                @foreach (var station in _stationData)
+                {
+                    <div class="col mb-3 card-col">
+                        <div class="card cursor" @onclick="() => OnStationClick()">
+                            <div class="card-body text-center @GetStatus(station.Status)">
+                                <h5 class="card-title">Stasjon @_stationData.IndexOf(station)</h5>
+                                <span class="corner-text">@station.Status</span>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">@Resources.InputTextPositionN: @station.PositionN </li>
+                                <li class="list-group-item">@Resources.InputTextPositionS: @station.PositionS </li>
+                            </ul>
                         </div>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">@Resources.InputTextPositionN: @station.PositionN </li>
-                            <li class="list-group-item">@Resources.InputTextPositionS: @station.PositionS </li>
-                        </ul>
                     </div>
-                </div>
-            }
+                }
+            </div>
+        </div>
+        <div class="d-flex gap-2 flex-column flex-xxl-row w-100 mb-3">
+            <button class="btn btn-outline-secondary" type="button" @onclick="AddStation">
+                @Resources.ButtonAddNewStation
+            </button>
+        <div class="d-flex flex-grow-1"></div>
+            <button class="btn btn-outline-secondary" type="button" @onclick="DoneStationRegistration">
+                Ferdigstill
+            </button>
         </div>
     </div>
-    <div class="d-flex justify-content-end">
-        <button class="btn btn-outline-secondary" type="button" @onclick="AddStation">
-            @Resources.ButtonAddNewStation
-        </button>
-    </div>
+    
+    <div class="modal fade" id="DoneRegistrationModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                        <p>Noen planlagte stasjoner er det ikke registrert data på. Vil du likevel ferdigstille prosjektet?</p> 
+                    <div class="mb-3">
+                        <label for="message-text" class="col-form-label">Merknad:</label>
+                        <textarea class="form-control" id="message-text" @bind-value="Comment" @bind-value:event="oninput"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Resources.ButtonCancel</button>
+                    <button type="button" class="btn btn-primary" disabled="@string.IsNullOrWhiteSpace(Comment)">Ferdigstill</button>
+                </div>
+            </div>
+        </div>
     </div>
 }
 
@@ -38,61 +64,81 @@ else
     [Parameter] public ProjectDto? Project { get; set; }
     private List<StationData>? _stationData;
     private bool _isLoading = true;
-    
-    
+    private string Comment { get; set; } = string.Empty;
+
     protected override async Task OnInitializedAsync()
     {
-        _stationData = new List<StationData>
-        {
+        _stationData =
+        [
             new StationData
             {
                 Method = "Parameter I, II og III",
-                Status = "Ferdig"
+                Status = "Utfylt"
             }
-        };
-        
-        int count = (Project?.Antallstasjoner ?? 0);
-        for (int i = 1; i < count; i++)
+        ];
+
+        var count = (Project?.Antallstasjoner ?? 0);
+        for (var i = 1; i < count; i++)
         {
             _stationData.Add(new StationData
             {
                 Method = "Parameter I, II og III",
-                Status = "Nytt"
+                Status = "Ikke utfylt"
             });
         }
-        
+
         _isLoading = false;
-        
+
     }
-    
+
     private void OnStationClick()
     {
     }
-    
+
     private void AddStation()
     {
         _stationData.Add(new StationData
         {
-            Status = "Nytt"
+            Status = "Ikke utfylt"
         });
     }
-    
+
+
+    private async Task DoneStationRegistration()
+    {
+        var anyPlannedStationsNotRegistred = _stationData.Any(station => station.Status == "Ikke utfylt");
+
+        if (anyPlannedStationsNotRegistred)
+        {
+            await Js.InvokeVoidAsync("showModal", "#DoneRegistrationModal");
+        }
+        else
+        {
+            await CompleteStationRegistration();
+        }
+    }
+
+    async Task CompleteStationRegistration()
+    {
+    }
+
     private string GetStatus(string? status)
     {
         return status switch
         {
-            "Nytt" => "card-status-new",
-            "Ferdig" => "card-status-done",
+            "Ikke utfylt" => "card-status-new",
+            "Utfylt" => "card-status-done",
             _ => throw new ArgumentOutOfRangeException(nameof(status), status, null)
         };
     }
-    
+
     public class StationData
     {
         public string? PositionN { get; set; }
         public string? PositionS { get; set; }
         public string? Depth { get; set; }
         public string? Method { get; set; }
-        public string? Status {get; set; }
+        public string? Status { get; set; }
     }
+
 }
