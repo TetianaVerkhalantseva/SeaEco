@@ -12,7 +12,7 @@ else
         @if (_stationData == null)
         {
             <div class="d-flex justify-content-center">
-                Ingen stasjoner planlagt eller registrert i prosjektet
+                @Resources.PageSatationOverviewNoStations
             </div> 
         }
         else
@@ -24,7 +24,7 @@ else
                         <div class="col mb-3 card-col">
                             <div class="card cursor" @onclick="OnStationClick">
                                 <div class="card-body text-center @GetStatus(station.Status)">
-                                    <h5 class="card-title">Stasjon @_stationData.IndexOf(station)</h5>
+                                    <h5 class="card-title">@Resources.InputTextStation @_stationData.IndexOf(station)</h5>
                                     <span class="corner-text">@station.Status</span>
                                 </div>
                                 <ul class="list-group list-group-flush">
@@ -57,7 +57,7 @@ else
                 <div class="modal-body">
                         <p>@Resources.ModalTextCompleteProject</p> 
                     <div class="mb-3">
-                        <label for="message-text" class="col-form-label">Merknad:</label>
+                        <label for="message-text" class="col-form-label">@Resources.ModalComment</label>
                         <textarea class="form-control" id="message-text" @bind-value="Comment" @bind-value:event="oninput"></textarea>
                     </div>
                 </div>

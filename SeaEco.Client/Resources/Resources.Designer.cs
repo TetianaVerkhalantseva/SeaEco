@@ -464,5 +464,17 @@ namespace SeaEco.Client.Resources {
                 return ResourceManager.GetString("ModalTextCompleteProject", resourceCulture);
             }
         }
+        
+        internal static string PageSatationOverviewNoStations {
+            get {
+                return ResourceManager.GetString("PageSatationOverviewNoStations", resourceCulture);
+            }
+        }
+        
+        internal static string ModalComment {
+            get {
+                return ResourceManager.GetString("ModalComment", resourceCulture);
+            }
+        }
     }
 }
