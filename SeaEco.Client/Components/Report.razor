@@ -1,6 +1,75 @@
+@using SeaEco.Abstractions.Models.Project
 
-<h3>Rapport-side er enda ikke utviklet</h3>
+
+
+@if (_isLoading)
+{
+}
+else
+{
+    <div class="d-flex flex-column align-items-center gap-3 mt-3 w-100">
+        <div class="d-flex gap-2 justify-content-center">
+            <button class="btn btn-outline-secondary filter-button" type="button" @onclick="GenerateReportDocumentsOne">
+                + Generer rapporter
+            </button>
+            <button class="btn btn-outline-secondary filter-button" type="button" @onclick="GenerateReportDocumentsTwo">
+                + Generer rapportbilder
+            </button>
+        </div>
+        <div class="d-flex flex-column align-items-center line w-100"></div>
+        <div class="d-flex flex-column align-items-center">
+            <h3>Rapporter</h3>
+            @if (_documentReports == null)
+            {
+                <p>Ingne rapporter generert</p>
+            }
+        </div>
+        <div class="d-flex flex-column align-items-center line w-100"></div>
+    <div class="d-flex flex-column align-items-center">
+        <h3>Bilderapporter</h3>
+        @if (_picturesReports == null)
+        {
+            <p>Ingne bilderapporter generert</p>
+        }
+        
+    </div>
+    </div>
+}
+
+
 
 @code {
+
     
+
+
+    [Parameter] public ProjectDto? Project { get; set; }
+    private bool _isLoading = true;
+    private List<ReportPicture>? _picturesReports;
+    private List<ReportData>? _documentReports;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _isLoading = false;
+
+    }
+
+    private void GenerateReportDocumentsOne()
+    {
+    }
+
+    private void GenerateReportDocumentsTwo()
+    {
+    }
+    
+    private class ReportPicture
+    {
+    }
+    
+    private class ReportData
+    {
+    }
+
 }
+
+
