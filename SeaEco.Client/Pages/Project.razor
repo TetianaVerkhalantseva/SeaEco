@@ -5,6 +5,7 @@
 @using SeaEco.Abstractions.Models.Project
 @using SeaEco.Client.Components
 @inject HttpClient Http
+@inject IJSRuntime Js
 
 @if (project == null)
 {
@@ -99,20 +100,23 @@ else
                 </a>
             </li>
             <li class="nav-item flex-fill" role="presentation">
-                <a class="nav-link text-center @(_activeTab == "b_stations" ? "active" : "")" @onclick=@(() => SelectedTab("b_stations"))>
+                <a class="nav-link text-center @(_activeTab == "b_stations" ? "active" : "")" @onclick=@(() => SelectedTabWithModal("b_stations") )>
                     @Resources.TabBStation
                 </a>
             </li>
             <li class="nav-item flex-fill" role="presentation">
-                <a class="nav-link text-center @(_activeTab == "projectReport" ? "active" : "")" @onclick=@(() => SelectedTab("projectReport"))>
+                <a class="nav-link text-center @(_activeTab == "projectReport" ? "active" : "")" @onclick=@(() => SelectedTabWithModal("projectReport"))>
                     @Resources.TabProjectReport
                 </a>
             </li>
         </ul>
 
+
+        
+        
         @if (_activeTab=="projectPlan")
         {
-             <ProjectPlan Project="projectCopy"></ProjectPlan> 
+             <ProjectPlan Project="projectCopy" EditProjectPlanVar="_editProjectPlan" EditProjectPlanChanged="@OnEditChanged"></ProjectPlan> 
         }
         else if (_activeTab == "b_stations")
         {
@@ -122,7 +126,25 @@ else
         {
             <Report></Report>
         }
-    </div>
+
+
+        <div class="modal fade" id="EditPlanMode" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content ">
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Du holder på å redigere plan. Du må enten lagre plan eller avbryte plan for å bytte fane.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            </div>
 
 }
 
@@ -135,6 +157,7 @@ else
     private bool _editProjectInfo;
     private int numberInputKey = 0;
     private string _activeTab = "projectPlan";
+    private bool _editProjectPlan;
 
 
     protected override async Task OnInitializedAsync()
@@ -180,5 +203,26 @@ else
             Merknad = source.Merknad
         };
     }
+
+
+    private async Task SelectedTabWithModal(string tab)
+    {
+        if (_editProjectPlan)
+        {
+            await Js.InvokeVoidAsync("showModal", "#EditPlanMode");
+        }
+        else
+        {
+            SelectedTab(tab);
+        }
+
+    }
+
+    private void OnEditChanged(bool value)
+    {
+        _editProjectPlan = value;
+        StateHasChanged();
+    }
+
 
 }

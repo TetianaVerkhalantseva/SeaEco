@@ -28,7 +28,7 @@ else
 
 
                 <div class="d-flex form-floating">
-                    <InputSelect @bind-Value="_selectedUser1" id="user1" class="form-control" disabled="@(!_editProjectPlan)">
+                    <InputSelect @bind-Value="_selectedUser1" id="user1" class="form-control" disabled="@(!EditProjectPlanVar)">
                         <option value=""></option>
                         @foreach (var user in _users)
                         {
@@ -38,7 +38,7 @@ else
                     <label for="user1">@Resources.InputTextUser1ProjectPlan</label>
                 </div>
                 <div class="d-flex form-floating">
-                    <InputSelect @bind-Value="_selectedUser2" id="user2" class="form-control" disabled="@(!_editProjectPlan)">
+                    <InputSelect @bind-Value="_selectedUser2" id="user2" class="form-control" disabled="@(!EditProjectPlanVar)">
                         <option value=""></option>
                         @foreach (var user in _users)
                         {
@@ -48,7 +48,7 @@ else
                     <label for="user2">@Resources.InputTextUser2ProjectPlan</label>
                 </div>
                 <div class="d-flex form-floating">
-                    <InputSelect @bind-Value="_selectedUser3" id="user3" class="form-control" disabled="@(!_editProjectPlan)">
+                    <InputSelect @bind-Value="_selectedUser3" id="user3" class="form-control" disabled="@(!EditProjectPlanVar)">
                         <option value=""></option>
                         @foreach (var user in _users)
                         {
@@ -65,7 +65,7 @@ else
                     <div class="d-flex">
                         <span>@Resources.InputTextStation @_stationData.IndexOf(station)</span>
                         <div class="flex-grow-1"></div>
-                        @if (_editProjectPlan)
+                        @if (EditProjectPlanVar)
                         {
                             <span class="bi bi-x-circle show " style="cursor: pointer;" @onclick="@(() => RemoveStation(_stationData.IndexOf(station)))">
                             </span>
@@ -74,26 +74,26 @@ else
 
                     <div class="d-flex flex-row gap-3">
                         <div class="d-flex form-floating">
-                            <InputText class="form-control" id=@($"positionN_{station}")  @bind-Value="station.PositionN" disabled="@(!_editProjectPlan)"/>
+                            <InputText class="form-control" id=@($"positionN_{station}")  @bind-Value="station.PositionN" disabled="@(!EditProjectPlanVar)"/>
                             <label for="positionN_@station">@Resources.InputTextPositionN</label>
                         </div>
                         <div class="d-flex form-floating">
-                            <InputText class="form-control" id=@($"positionS_{station}") @bind-Value="station.PositionS" disabled="@(!_editProjectPlan)"/>
+                            <InputText class="form-control" id=@($"positionS_{station}") @bind-Value="station.PositionS" disabled="@(!EditProjectPlanVar)"/>
                             <label for="positionS_@station">@Resources.InputTextPositionS</label>
                         </div>
                     </div>
                     <div class="d-flex form-floating">
-                        <InputText class="form-control" id=@($"depth_{station}") @bind-Value="station.Depth" disabled="@(!_editProjectPlan)"/>
+                        <InputText class="form-control" id=@($"depth_{station}") @bind-Value="station.Depth" disabled="@(!EditProjectPlanVar)"/>
                         <label for="depth_@station">@Resources.InputTextDepth</label>
                     </div>
                     <div class="d-flex form-floating">
-                        <InputText class="form-control" id=@($"method_{station}") @bind-Value="station.Method" disabled="@(!_editProjectPlan)"/>
+                        <InputText class="form-control" id=@($"method_{station}") @bind-Value="station.Method" disabled="@(!EditProjectPlanVar)"/>
                         <label for="method_@station">@Resources.InputTextMethod</label>
                     </div>
                 </div>
             }
             <div class="d-flex flex-row align-self-end justify-content-end w-100 mb-3">
-                @if (!_editProjectPlan)
+                @if (!EditProjectPlanVar)
                 {
                     <button class="btn btn-outline-secondary filter-button" type="button" @onclick="OnClickProjectPlan">
                         @Resources.ButtonEdit
@@ -124,10 +124,10 @@ else
 
 @code {
     [Parameter] public ProjectDto? Project { get; set; }
-
-    private bool _editProjectPlan;
+    [Parameter] public bool EditProjectPlanVar { get; set; }
+    [Parameter] public EventCallback<bool> EditProjectPlanChanged { get; set; }
+    
     private bool _isLoading = true;
-    private int _addedUser = 1;
     private List<UserDto> _users = new List<UserDto>();
     private string? _selectedUser1;
     private string? _selectedUser2;
@@ -144,9 +144,10 @@ else
         _users = usersList?.OrderBy(user => user.FullName).ToList();
     }
 
-    private void OnClickProjectPlan()
+    private async Task OnClickProjectPlan()
     {
-        _editProjectPlan = true;
+        EditProjectPlanVar = true;
+        await EditProjectPlanChanged.InvokeAsync(EditProjectPlanVar);
         
         if (_stationData==null)
         {
@@ -164,14 +165,16 @@ else
         }
     }
 
-    private void EditProjectPlan()
+    private async Task EditProjectPlan()
     {
-        //_editProjectPlan = false;
+        //EditProjectPlanVar = false;
+        //await EditProjectPlanChanged.InvokeAsync(EditProjectPlanVar);
     }
 
-    private void CancelEditProjectPlan()
+    private async Task CancelEditProjectPlan()
     {
-        _editProjectPlan = false;
+        EditProjectPlanVar = false;
+        await EditProjectPlanChanged.InvokeAsync(EditProjectPlanVar);
         _stationData = _orginalStationData;
     }
 
