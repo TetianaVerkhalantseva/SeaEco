@@ -14,19 +14,19 @@
         <div class="card shadow-lg p-4">
             <h2 class="text-center page-title">@Resources.PageEditCustomerEditCustomer</h2>
 
-            <div class="mb-3">
-                <label for="Oppdragsgiver" class="form-label">@Resources.PageCustomerInfoCustomerName</label>
+            <div class="form-floating mb-3">
                 <InputText id="Oppdragsgiver" class="form-control form-control-lg" @bind-Value="_customerEdit.Oppdragsgiver" placeholder="Oppdragsgiver" />
+                <label for="Oppdragsgiver" class="form-label">@Resources.PageCustomerInfoCustomerName</label>
             </div>
 
-            <div class="mb-3">
-                <label for="Kontaktperson" class="form-label">@Resources.PageCustomerInfoContactPerson</label>
+            <div class="form-floating mb-3">
                 <InputText id="Kontaktperson" class="form-control form-control-lg" @bind-Value="_customerEdit.Kontaktperson" placeholder="Kontaktperson" />
+                <label for="Kontaktperson" class="form-label">@Resources.PageCustomerInfoContactPerson</label>
             </div>
 
-            <div class="mb-3">
-                <label for="Telefonnummer" class="form-label">@Resources.PageCustomerInfoCustomerNumber</label>
+            <div class="form-floating mb-3">
                 <InputText id="Telefonnummer" class="form-control form-control-lg" @bind-Value="_customerEdit.Telefonnummer" placeholder="Telefonnummer" />
+                <label for="Telefonnummer" class="form-label">@Resources.PageCustomerInfoCustomerNumber</label>
             </div>
 
             <div class="text-center mt-4">
