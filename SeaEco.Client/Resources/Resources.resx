@@ -256,4 +256,10 @@
     <data name="PageProjectPlanNoPlan" xml:space="preserve">
         <value>Ingen plan er registrert</value>
     </data>
+    <data name="ButtonOK" xml:space="preserve">
+        <value>OK</value>
+    </data>
+    <data name="ModalTextEditingProjectPlan" xml:space="preserve">
+        <value>Du holder på å redigere en plan. Du må enten lagre planen eller avbryte redigeringen for å bytte fane.</value>
+    </data>
 </root>

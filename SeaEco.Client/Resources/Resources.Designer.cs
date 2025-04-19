@@ -458,5 +458,17 @@ namespace SeaEco.Client.Resources {
                 return ResourceManager.GetString("PageProjectPlanNoPlan", resourceCulture);
             }
         }
+        
+        internal static string ButtonOK {
+            get {
+                return ResourceManager.GetString("ButtonOK", resourceCulture);
+            }
+        }
+        
+        internal static string ModalTextEditingProjectPlan {
+            get {
+                return ResourceManager.GetString("ModalTextEditingProjectPlan", resourceCulture);
+            }
+        }
     }
 }
