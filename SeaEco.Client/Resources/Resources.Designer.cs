@@ -446,5 +446,35 @@ namespace SeaEco.Client.Resources {
                 return ResourceManager.GetString("PageProjectProject", resourceCulture);
             }
         }
+        
+        internal static string ButtonGenerateDocumentReport {
+            get {
+                return ResourceManager.GetString("ButtonGenerateDocumentReport", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonGeneratePicturesReport {
+            get {
+                return ResourceManager.GetString("ButtonGeneratePicturesReport", resourceCulture);
+            }
+        }
+        
+        internal static string PageReportNoReport {
+            get {
+                return ResourceManager.GetString("PageReportNoReport", resourceCulture);
+            }
+        }
+        
+        internal static string PageReportDocumentsReport {
+            get {
+                return ResourceManager.GetString("PageReportDocumentsReport", resourceCulture);
+            }
+        }
+        
+        internal static string PageReportPicturesReport {
+            get {
+                return ResourceManager.GetString("PageReportPicturesReport", resourceCulture);
+            }
+        }
     }
 }

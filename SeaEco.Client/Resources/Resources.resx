@@ -250,4 +250,19 @@
     <data name="PageProjectProject" xml:space="preserve">
         <value>Prosjekt</value>
     </data>
+    <data name="ButtonGenerateDocumentReport" xml:space="preserve">
+        <value>+ Generer rapporter</value>
+    </data>
+    <data name="ButtonGeneratePicturesReport" xml:space="preserve">
+        <value>+ Generer rapportbilder</value>
+    </data>
+    <data name="PageReportNoReport" xml:space="preserve">
+        <value>Ingne rapporter generert</value>
+    </data>
+    <data name="PageReportDocumentsReport" xml:space="preserve">
+        <value>Rapporter</value>
+    </data>
+    <data name="PageReportPicturesReport" xml:space="preserve">
+        <value>Bilderapporter</value>
+    </data>
 </root>
