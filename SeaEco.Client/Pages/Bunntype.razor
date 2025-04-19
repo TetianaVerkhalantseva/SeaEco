@@ -42,7 +42,7 @@
     </div>
 
     <div id="sensoryInfo" class="sensoryInfo-container">
-        <EditForm Model="_sensoryDto">
+        <EditForm Model="_sensoryDto" OnValidSubmit="HandleSubmit">
             <DataAnnotationsValidator />
             <div class="sensoryData">
                 <div class="form-group">
