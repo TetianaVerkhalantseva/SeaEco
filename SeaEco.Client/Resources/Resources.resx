@@ -260,7 +260,7 @@
         <value>Noen planlagte stasjoner er det ikke registrert data på. Vil du likevel ferdigstille prosjektet?</value>
     </data>
     <data name="PageSatationOverviewNoStations" xml:space="preserve">
-        <value>Ingen stasjoner planlagt eller registrert i prosjektetIngen stasjoner planlagt eller registrert i prosjektet</value>
+        <value>Ingen stasjoner planlagt eller registrert i prosjektet</value>
     </data>
     <data name="ModalComment" xml:space="preserve">
         <value>Merknad :</value>
