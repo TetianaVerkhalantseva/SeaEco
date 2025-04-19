@@ -162,7 +162,7 @@
 }
 /* grid lay out */
 
-.form-group {
+.form-floating {
     display: flex;
     flex-direction: column;
 }
