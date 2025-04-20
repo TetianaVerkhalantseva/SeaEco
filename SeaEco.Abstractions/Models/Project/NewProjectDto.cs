@@ -5,7 +5,7 @@ public class NewProjectDto
     public string PoId { get; set; } = null!;
     public int KundeId { get; set; }
     public string Kundekontaktpersons { get; set; } = null!;
-    public int Kundetlf { get; set; }
+    public string Kundetlf { get; set; }
     public string Kundeepost { get; set; } = null!;
     
     public string Lokalitet { get; set; } = null!;

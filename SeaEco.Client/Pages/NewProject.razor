@@ -1,0 +1,136 @@
+@page "/newProject/{CustomerId:int}"
+@using Microsoft.AspNetCore.Authorization
+@using SeaEco.Abstractions.Models.Project
+@attribute [Authorize(Roles = "admin")]
+@using SeaEco.Client.Resources
+@using SeaEco.Abstractions.Models.User
+@inject HttpClient Http
+@using SeaEco.EntityFramework.Entities
+
+
+@if (_isLoading)
+{
+}
+else
+{
+    <div class="d-flex flex-column align-items-center gap-3">
+        <div class="mb-3">
+            <h3>Nytt prosjekt</h3>
+        </div>
+        <div class="d-flex justify-content-lg-start flex-column gap-3">
+            <div class="d-flex gap-3">
+                <div class="form-floating">
+                    <InputText class="form-control" id="poId" @bind-Value="_newProject.PoId"/>
+                    <label for="poId">PO-ID</label>
+                </div>
+            </div>
+            <div class="d-flex flex-column mt-4 mb-4 gap-3">
+                <div class="d-flex gap-3">
+                    <div class="form-floating">
+                        <InputText class="form-control" id="customer" @bind-Value="kundensnavn"/>
+                        <label for="customer">Kunde</label>
+                    </div>
+                    <div class="form-floating">
+                        <InputText class="form-control" id="contactCustomer" @bind-Value="_newProject.Kundekontaktpersons"/>
+                        <label for="contactCustomer">Konaktperson</label>
+                    </div>
+                </div>
+                <div class="d-flex gap-3">
+                    <div class="form-floating">
+                        <InputText class="form-control" id="tlfCustomer" @bind-Value="_newProject.Kundetlf"/>
+                        <label for="tlfCustomer">Telefonnummer</label>
+                    </div>
+                    <div class="form-floating">
+                        <InputText class="form-control" id="emailCustomer" @bind-Value="_newProject.Kundeepost"/>
+                        <label for="emailCustomer">epost</label>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex gap-3">
+                <div class="form-floating">
+                    <InputText class="form-control" id="locality" @bind-Value="_newProject.Lokalitet"/>
+                    <label for="locality">Lokalitet</label>
+                </div>
+                <div class="form-floating">
+                    <InputNumber class="form-control" id="idLocality" @bind-Value="_newProject.Lokalitetid"/>
+                    <label for="idLocality">Lokalitets-ID</label>
+                </div>
+            </div>
+            <div class="d-flex gap-3">
+                <div class="form-floating">
+                    <InputNumber class="form-control" id="mtb" @bind-Value="_newProject.Mtbtillatelse"/>
+                    <label for="tlfCustomer">MTB-tilatelse (tonn)</label>
+                </div>
+            </div>
+            <div class="d-flex gap-3 mt-4">
+                <div class="d-flex form-floating">
+                    <InputSelect @bind-Value="AnsvarligansattNavn" id="user" class="form-control">
+                        <option value=""></option>
+                        @foreach (var user in _users)
+                        {
+                            <option value="@user.FullName">@user.FullName</option>
+                        }
+                    </InputSelect>
+                    <label for="user">Ansvarlig ansatt</label>
+                </div>
+            </div>
+            <div class="d-flex w-100 mt-4 mb-4">
+                <div class="form-floating w-100">
+                    <InputTextArea class="form-control" id="comment" @bind-Value="_newProject.Merknad"/>
+                    <label for="comment">Merknad</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex gap-3">
+            <button class="btn btn-outline-secondary align-self-start" type="button">
+                @Resources.ButtonCancel
+            </button>
+            <button class="btn btn-outline-secondary align-self-end" type="button">
+                @Resources.ButtonSave
+            </button>
+        </div>
+    </div>
+}
+
+@code {
+    private NewProjectDto _newProject = new NewProjectDto();
+    private List<UserDto> _users = new List<UserDto>();
+    private Kunde? _customer = new();
+    private bool _isLoading = true;
+    [Parameter]
+    public int CustomerId { get; set; }
+    
+    //benyttes i form, da backend enda ikke har variabelen. Form må oppdateres når klar.
+    private string? kundensnavn;
+    private string? AnsvarligansattNavn;
+
+    
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _customer = await Http.GetFromJsonAsync<Kunde>($"api/Customer/{CustomerId}");
+            if (_customer != null)
+            {
+                _newProject = new NewProjectDto
+                {
+                    //KundeNavn = _customer.Oppdragsgiver,
+                    Kundekontaktpersons = _customer.Kontaktperson,
+                    Kundetlf = _customer.Telefonnummer
+                };
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Feil ved lasting av kunde: {ex.Message}");
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+        
+        var usersList = await Http.GetFromJsonAsync<List<UserDto>>("api/users");
+        _users = usersList?.OrderBy(user => user.FullName).ToList();
+    }
+}
