@@ -1,5 +1,6 @@
 @using SeaEco.Abstractions.Models.Project
 @using SeaEco.Client.Resources
+@using Microsoft.AspNetCore.Components.Authorization
 
 @if (_isLoading)
 {
@@ -17,18 +18,76 @@ else
         </div>
         <div class="d-flex flex-column align-items-center line w-100"></div>
         <div class="d-flex flex-column align-items-center">
-            <h3>@Resources.PageReportDocumentsReport</h3>
+            <h5>@Resources.PageReportDocumentsReport</h5>
             @if (_documentReports == null)
             {
                 <p>@Resources.PageReportNoReport</p>
             }
+            else
+            {
+                <div class="card-container mt-3">
+                    <div class="row" style="justify-content: center;">
+                        @foreach (var report in _documentReports)
+                        {
+                            <div class="col mb-3 card-col">
+                                <div class="card d-flex">
+                                    <div class="card-body">
+                                        <div class="d-flex mb-3">
+                                        <div class="flex-grow-1"></div>
+                                        <span class="bi bi-printer cursor" @onclick="PrintReport"></span>
+                                        </div>
+                                        <div class="d-flex gap-3">
+                                            <p class="mb-0">Rapporttype: </p>
+                                            <div class="flex-grow-1"></div>
+                                            <p class="mb-0 text-nowrap justify-content-end">@report.RapportType</p>
+                                        </div>
+                                        <div class="d-flex gap-3">
+                                            <p class="mb-0 text-nowrap"> Dato generert: </p>
+                                            <div class="flex-grow-1"></div>
+                                            <p class="mb-0 justify-content-end text-nowrap">@report.DateRegistered</p>
+                                        </div>
+                                        <div class="d-flex gap-3">
+                                                    <p class="mb-3 text-nowrap"> Godkjent av:  </p>
+                                                    <div class="flex-grow-1"></div>
+                                                @if (report.FullName != null)
+                                                {
+                                                    <p class="mb-0 text-nowrap">@report.FullName</p>
+                                                }
+                                                else
+                                                {
+                                                    <p class="mb-0 text-nowrap">Venter på godkjenning</p>
+                                                }
+                                                </div>
+                                        <AuthorizeView Roles="admin">
+                                            <Authorized>
+                                                <button class="btn btn-outline-secondary" type="button" @onclick="ApproveReport">
+                                                    @(report.FullName != null ? "Ikke godkjent" : "Godkjent")
+                                                </button>
+                                            </Authorized>
+                                        </AuthorizeView>
+
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
         </div>
         <div class="d-flex flex-column align-items-center line w-100"></div>
     <div class="d-flex flex-column align-items-center">
-        <h3>@Resources.PageReportPicturesReport</h3>
+        <h5>@Resources.PageReportPicturesReport</h5>
         @if (_picturesReports == null)
         {
             <p>@Resources.PageReportNoReport</p>
+        }
+        else
+        {
+
+
+
+
+
         }
     </div>
     </div>
@@ -44,6 +103,35 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        
+        _documentReports  =
+        [ new ReportData { 
+            RapportType    = "B1",
+            DateRegistered = new DateOnly(2025, 4, 19),
+            FullName = "Rikke G."}
+        ];
+        
+        _documentReports.Add(new ReportData
+        {
+            RapportType    = "B2",
+            DateRegistered = DateOnly.FromDateTime(DateTime.Today),
+            FullName = "Rikke G."
+        });
+        
+        _documentReports.Add(new ReportData
+        {
+            RapportType    = "pH/Eh",
+            DateRegistered = DateOnly.FromDateTime(DateTime.Today),
+            FullName = "Rikke G."
+        });
+        
+        _documentReports.Add(new ReportData
+        {
+            RapportType    = "Posisjon",
+            DateRegistered = DateOnly.FromDateTime(DateTime.Today)
+        });
+        
+        
         _isLoading = false;
 
     }
@@ -59,9 +147,21 @@ else
     private class ReportPicture
     {
     }
-    
+
+    private void PrintReport()
+    {
+    }
+
+
+    private async Task ApproveReport()
+    {
+    }
+
     private class ReportData
     {
+        public string? RapportType { get; set; }
+        public DateOnly? DateRegistered { get; set; }
+        public String? FullName { get; set; }
     }
 
 }
