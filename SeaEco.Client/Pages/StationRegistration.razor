@@ -12,12 +12,14 @@
     <div class="typeRadio-container">
         <h5>Bunntype: </h5>
 
+        @* TODO: Remember to bind and bind-value *@
         <div class="cntr">
             <input type="radio" name="bunntype" id="cbx1" class="hidden-xs-up">
             <label for="cbx1" class="cbx"></label>
             <label for="cbx1" class="lbl">Bløt</label>
         </div>
 
+        @* TODO: Remember to bind and bind-value *@
         <div class="cntr">
             <input type="radio" name="bunntype" id="cbx2" class="hidden-xs-up">
             <label for="cbx2" class="cbx"></label>
@@ -28,12 +30,14 @@
     <div id="sensoryRadio" class="sensoryRadio-container">
         <h5>Er sensorisk utført?</h5>
 
+        @* TODO: Remember to bind and bind-value *@
         <div class="cntr">
             <input type="radio" name="sensorisk" id="cbx3" class="hidden-xs-up">
             <label for="cbx3" class="cbx"></label>
             <label for="cbx3" class="lbl">Ja</label>
         </div>
 
+        @* TODO: Remember to bind and bind-value *@
         <div class="cntr">
             <input type="radio" name="sensorisk" id="cbx4" class="hidden-xs-up">
             <label for="cbx4" class="cbx"></label>
@@ -47,17 +51,17 @@
             <div class="sensoryData">
                 <div class="form-floating mb-3">
                     <InputNumber id="ProvePh" class="form-control" @bind-Value="_sensoryDto.ProvePh" placeholder="pH" />
-                    <label for="ProvePh">pH:</label>
+                    <label for="ProvePh">pH</label>
                 </div>
 
                 <div class="form-floating mb-3">
                     <InputNumber id="ProveEh" class="form-control" @bind-Value="_sensoryDto.ProveEh" placeholder="Eh" />
-                    <label for="ProveEh">EH:</label>
+                    <label for="ProveEh">EH</label>
                 </div>
 
                 <div class="form-floating mb-3">
                     <InputNumber id="ProveTemp" class="form-control" @bind-Value="_sensoryDto.ProveTemp" placeholder="Temp" />
-                    <label for="ProveTemp">Temp:</label>
+                    <label for="ProveTemp">Temp</label>
                 </div>
 
                 <div class="form-floating mb-3">
@@ -66,7 +70,7 @@
                         <option value="0">Lys grå</option>
                         <option value="2">Brunn/svart</option>
                     </InputSelect>
-                    <label for="Farge">Farge:</label>
+                    <label for="Farge">Farge</label>
                 </div>
 
                 <div class="form-floating mb-3">
@@ -76,7 +80,7 @@
                         <option value="2">Noe</option>
                         <option value="4">Sterk</option>
                     </InputSelect>
-                    <label for="Lukt">Lukt:</label>
+                    <label for="Lukt">Lukt</label>
                 </div>
 
                 <div class="form-floating mb-3">
@@ -86,7 +90,7 @@
                         <option value="2">Myk</option>
                         <option value="4">Løs</option>
                     </InputSelect>
-                    <label for="Konsistens">Konsistens:</label>
+                    <label for="Konsistens">Konsistens</label>
                 </div>
 
                 <div class="form-floating mb-3">
@@ -96,7 +100,7 @@
                         <option value="1">1/4 - 3/4</option>
                         <option value="2">Mer enn 3/4</option>
                     </InputSelect>
-                    <label for="GrabbVolum">GrabbVolum:</label>
+                    <label for="GrabbVolum">GrabbVolum</label>
                 </div>
 
                 <div class="form-floating mb-3">
@@ -106,7 +110,7 @@
                         <option value="1">2 - 8cm</option>
                         <option value="2">Mer enn 8cm</option>
                     </InputSelect>
-                    <label for="Tykkelse">Tykkelse:</label>
+                    <label for="Tykkelse">Tykkelse</label>
                 </div>
 
                 <div class="form-floating mb-3">
@@ -115,7 +119,7 @@
                         <option value="4">Ja</option>
                         <option value="0">Nei</option>
                     </InputSelect>
-                    <label for="Gassbobler">Gassbobler:</label>
+                    <label for="Gassbobler">Gassbobler</label>
                 </div>
             </div>
         </EditForm>
@@ -170,7 +174,7 @@
         </div>
     </div>
 
-    <div class="Dyr-1-container">
+    <div class="checkbox-1-container">
         <label class="custom-checkbox" for="beggiota">
             <span class="custom-label">Beggiota</span>
             <input type="checkbox" id="beggiota" @bind="_dyr.Beggiota" />
@@ -189,6 +193,120 @@
             <span class="custom-checkmark"></span>
         </label>
     </div>
+
+    <div class="animalRadio-container">
+        <h5>Dyr: </h5>
+
+        @* TODO: Remember to bind and bind-value *@
+        <div class="cntr">
+            <input type="radio" name="dyr" id="cbx5" class="hidden-xs-up">
+            <label for="cbx5" class="cbx"></label>
+            <label for="cbx5" class="lbl">Ja</label>
+        </div>
+
+        @* TODO: Remember to bind and bind-value *@
+        <div class="cntr">
+            <input type="radio" name="dyr" id="cbx6" class="hidden-xs-up">
+            <label for="cbx6" class="cbx"></label>
+            <label for="cbx6" class="lbl">Nei</label>
+        </div>
+    </div>
+    
+    <div id="animalInfo" class="animalInfo-container">
+        <div class="animalData">
+            <div class="form-floating mb-3">
+                <InputNumber id="pigghuder" class="form-control" @bind-Value="_dyr.Antallpigghunder" placeholder="Pigghuder"/>
+                <label for="pigghuder">Pigghuder</label>
+            </div>
+            <div class="btn-group mb-3" role="group">
+                <button class="btn btn-outline-primary @(_dyr.Antallpigghunder == 31 ? "active" : "")" 
+                        @onclick="() => SetPigghunder(31)">
+                    30+
+                </button>
+                <button class="btn btn-outline-primary @(_dyr.Antallpigghunder == 51 ? "active" : "")" 
+                        @onclick="() => SetPigghunder(51)">
+                    50+
+                </button>
+            </div>
+
+            <div class="form-floating mb-3">
+                <InputNumber id="krepsdyr" class="form-control" @bind-Value="_dyr.Antallkrepsdyr" placeholder="Krepsdyr"/>
+                <label for="krepsdyr">Krepsdyr</label>
+            </div>
+            <div class="btn-group mb-3" role="group">
+                <button class="btn btn-outline-primary @(_dyr.Antallkrepsdyr == 31 ? "active" : "")"
+                        @onclick="() => SetKrepsdyr(31)">
+                    30+
+                </button>
+                <button class="btn btn-outline-primary @(_dyr.Antallkrepsdyr == 51 ? "active" : "")"
+                        @onclick="() => SetKrepsdyr(51)">
+                    50+
+                </button>
+            </div>
+
+            <div class="form-floating mb-3">
+                <InputNumber id="skjell" class="form-control" @bind-Value="_dyr.Antallskjell" placeholder="Skjell"/>
+                <label for="skjell">Skjell</label>
+            </div>
+            <div class="btn-group mb-3" role="group">
+                <button class="btn btn-outline-primary @(_dyr.Antallskjell == 31 ? "active" : "")"
+                        @onclick="() => SetSkjell(31)">
+                    30+
+                </button>
+                <button class="btn btn-outline-primary @(_dyr.Antallskjell == 51 ? "active" : "")"
+                        @onclick="() => SetSkjell(51)">
+                    50+
+                </button>
+            </div>
+
+            <div class="form-floating mb-3">
+                <InputNumber id="borstemark" class="form-control" @bind-Value="_dyr.Antallborstemark" placeholder="Børstemark"/>
+                <label for="borstemark">Børstemark</label>
+            </div>
+            <div class="btn-group mb-3" role="group">
+                <button class="btn btn-outline-primary @(_dyr.Antallborstemark == 31 ? "active" : "")"
+                        @onclick="() => SetBorstemark(31)">
+                    30+
+                </button>
+                <button class="btn btn-outline-primary @(_dyr.Antallborstemark == 51 ? "active" : "")"
+                        @onclick="() => SetBorstemark(51)">
+                    50+
+                </button>
+            </div>
+        </div>
+    </div>
+
+    @* Arter *@
+    <div class="form-floating mb-3 user-input" id="arter-container">
+        <InputText class="form-control" id="arter" placeholder="Arter" @bind-Value="_arter.Kommentar"></InputText>
+        <label for="arter">Arter</label>
+    </div>
+    @* Arter *@
+    
+    <div class="form-floating mb-3 user-input">
+        <InputText class="form-control" id="message" placeholder="Merknader" @bind-Value="_merknadDto.Beskrivelse"></InputText>
+        <label for="message">Merknader</label>
+    </div>
+
+    <div class="checkbox-2-container">
+        <label class="custom-checkbox" for="detritus">
+            <span class="custom-label">D</span>
+            <input type="checkbox" id="detritus" @bind="_merknadDto.Detritus" />
+            <span class="custom-checkmark"></span>
+        </label>
+
+        <label class="custom-checkbox" for="terrestrisk">
+            <span class="custom-label">TM</span>
+            <input type="checkbox" id="terrestrisk" @bind="_merknadDto.TerrestriskMateriale" />
+            <span class="custom-checkmark"></span>
+        </label>
+
+        <label class="custom-checkbox" for="anleggsrens">
+            <span class="custom-label">RAR</span>
+            <input type="checkbox" id="anleggsrens" @bind="_merknadDto.ResterEtterAnleggsrens" />
+            <span class="custom-checkmark"></span>
+        </label>
+    </div>
 </div>
 
 <div class="button-container">
@@ -197,6 +315,8 @@
     <button id="submitBtn" class="custom-btn" style="display: none;" @onclick="HandleSubmit">Lagre</button>
 </div>
 
+
+@* Last and next button script *@
 <script>
     let currentIndex = 1;
     const totalDivs = 3;
@@ -253,6 +373,11 @@
     const tomGrabb_1 = document.getElementById("tomGrabb_1");
     const tomGrabb_2 = document.getElementById("tomGrabb_2");
     
+    const animalYes = document.getElementById("cbx5");
+    const animalNo = document.getElementById("cbx6");
+    const animalInfo = document.getElementById("animalInfo");
+    const arterContainer = document.getElementById("arter-container")
+    
     function updateDisplay() {
         if (radioHard.checked) {
             sensoryQuestion.style.display = "flex";
@@ -288,20 +413,61 @@
         }
     }
     
+    function updateDisplay_2() {
+        if (animalYes.checked) {
+            animalInfo.style.display = "flex";
+            arterContainer.style.display = "flex";
+        }
+        else {
+            animalInfo.style.display = "none";
+            arterContainer.style.display = "none";
+        }
+    }
+    
     radioSoft.addEventListener("change", updateDisplay);
     radioHard.addEventListener("change", updateDisplay);
     radioYes.addEventListener("change", updateDisplay);
     radioNo.addEventListener("change", updateDisplay);
+
+    animalYes.addEventListener("change", updateDisplay_2);
+    animalNo.addEventListener("change", updateDisplay_2);
     
     updateDisplay();
+    updateDisplay_2();
 </script>
 
 @code {
     private BSensoryDto _sensoryDto = new();
-    
+
     private BSedimentTypeDto _sediment = new();
 
-    private BDyr _dyr = new();
+    private static BDyr _dyr = new();
+
+    private void SetPigghunder(int value)
+    {
+        _dyr.Antallpigghunder = value;
+    }
+
+    private void SetKrepsdyr(int value)
+    {
+        _dyr.Antallkrepsdyr = value;
+    }
+
+    private void SetSkjell(int value)
+    {
+        _dyr.Antallskjell = value;
+    }
+
+    private void SetBorstemark(int value)
+    {
+        _dyr.Antallborstemark = value;
+    }
+    
+
+
+    private BMerknadDto _merknadDto = new();
+
+    private BArterDto _arter = new();
 
     private void HandleSubmit()
     {

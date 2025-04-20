@@ -11,7 +11,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 2rem;
+    gap: 7rem;
+    margin: 4rem auto 1rem auto;
 }
 
 .custom-btn {
@@ -39,9 +40,10 @@
 
 .typeRadio-container {
     display: flex;
-    gap: 20px;
+    gap: 72px;
     align-items: center;
-    margin-bottom: 1rem;
+    justify-content: center;
+    margin: 1rem auto 1rem auto;
 }
 
 .cntr {
@@ -130,16 +132,15 @@
 .sensoryRadio-container {
     display: none;
     align-items: center;
-    background: #f5f5f5;
     padding: 10px;
-    border-left: 4px solid dodgerblue;
-    gap: 20px;
+    gap: 40px;
+    margin: 1rem auto 1rem auto;
+    justify-content: center;
 }
 
 .sensoryInfo-container {
-    background: #f5f5f5;
-    padding: 10px;
-    border-left: 4px solid dodgerblue;
+    margin: 0 auto;
+    justify-content: center;
 }
 
 /* grid lay out */
@@ -147,6 +148,8 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 2rem;
+    justify-content: center;
+    margin: 1rem auto 1rem auto;
 }
 
 @media (max-width: 1024px) {
@@ -170,10 +173,9 @@
 .sedimentType-container {
     display: none;
     position: relative;
-    background: #f5f5f5;
     padding: 10px;
-    border-left: 4px solid dodgerblue;
-    margin-top: 1rem;
+    margin: 1rem auto 1rem auto;
+    justify-content: space-evenly;
 }
 
 .sedimentType-container .h5, h5 {
@@ -182,7 +184,7 @@
 
 .checkbox-container {
     display: flex;
-    gap: 2rem;
+    gap: 3rem;
     justify-content: space-between;
     flex-wrap: wrap;
 }
@@ -247,7 +249,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 1rem;
+    margin: 1rem auto 1rem auto;
     gap: 2rem;
 }
 
@@ -355,10 +357,87 @@
     cursor: pointer;
 }
 
-.Dyr-1-container {
+.checkbox-1-container {
+    width: 60%;
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
+    background-color: #f5f5f5;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 1rem auto 1rem auto;
+}
+
+@media (max-width: 1024px) {
+    .checkbox-1-container {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+.animalRadio-container {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    margin: 1rem auto 1rem auto;
     justify-content: center;
-    gap: 1rem;
+}
+
+.animalInfo-container {
+    display: none;
+    margin: 0 auto;
+    justify-content: center;
+}
+
+.animalData {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 3rem;
+}
+
+@media (max-width: 1024px) {
+    .animalData {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .animalData {
+        grid-template-columns: 1fr;
+    }
+}
+
+.user-input {
+    max-width: 60%;
+    background-color: #f5f5f5;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 1rem auto 1rem auto;
+}
+
+@media (max-width: 1024px) {
+    .user-input {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+.checkbox-2-container {
+    max-width: 60%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f5f5f5;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 1rem auto 1rem auto;
+}
+
+@media (max-width: 1024px) {
+    .checkbox-2-container {
+        width: 100%;
+        max-width: 100%;
+    }
 }
