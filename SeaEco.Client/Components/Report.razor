@@ -8,7 +8,7 @@
 else
 {
     <div class="d-flex flex-column align-items-center gap-3 mt-3 w-100">
-        <div class="d-flex gap-2 justify-content-center">
+        <div class="d-flex gap-3 justify-content-center mb-3">
             <button class="btn btn-outline-secondary filter-button" type="button" @onclick="GenerateReportDocumentsOne">
                 @Resources.ButtonGenerateDocumentReport
             </button>
@@ -37,17 +37,17 @@ else
                                         <span class="bi bi-printer cursor" @onclick="PrintReport"></span>
                                         </div>
                                         <div class="d-flex gap-3">
-                                            <p class="mb-0">Rapporttype: </p>
+                                            <p class="mb-0">@Resources.InputTextReportType</p>
                                             <div class="flex-grow-1"></div>
                                             <p class="mb-0 text-nowrap justify-content-end">@report.RapportType</p>
                                         </div>
                                         <div class="d-flex gap-3">
-                                            <p class="mb-0 text-nowrap"> Dato generert: </p>
+                                            <p class="mb-0 text-nowrap">@Resources.InputTextReportDateGenerated</p>
                                             <div class="flex-grow-1"></div>
                                             <p class="mb-0 justify-content-end text-nowrap">@report.DateRegistered</p>
                                         </div>
                                         <div class="d-flex gap-3">
-                                                    <p class="mb-3 text-nowrap"> Godkjent av:  </p>
+                                                    <p class="mb-3 text-nowrap">@Resources.InputTextApprovedBy</p>
                                                     <div class="flex-grow-1"></div>
                                                 @if (report.FullName != null)
                                                 {
@@ -55,13 +55,13 @@ else
                                                 }
                                                 else
                                                 {
-                                                    <p class="mb-0 text-nowrap text-muted fst-italic">Venter på godkjenning</p>
+                                                    <p class="mb-0 text-nowrap text-muted fst-italic">@Resources.InputTextWaitingForApproval</p>
                                                 }
                                                 </div>
                                         <AuthorizeView Roles="admin">
                                             <Authorized>
                                                 <button class="btn btn-outline-secondary" type="button" @onclick="ApproveReport">
-                                                    @(report.FullName != null ? "Ikke godkjent" : "Godkjent")
+                                                    @(report.FullName != null ? Resources.ButtonNotApproved : Resources.ButtonApproved)
                                                 </button>
                                             </Authorized>
                                         </AuthorizeView>

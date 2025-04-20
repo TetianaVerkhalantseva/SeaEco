@@ -476,5 +476,41 @@ namespace SeaEco.Client.Resources {
                 return ResourceManager.GetString("PageReportPicturesReport", resourceCulture);
             }
         }
+        
+        internal static string InputTextWaitingForApproval {
+            get {
+                return ResourceManager.GetString("InputTextWaitingForApproval", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextApprovedBy {
+            get {
+                return ResourceManager.GetString("InputTextApprovedBy", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextReportType {
+            get {
+                return ResourceManager.GetString("InputTextReportType", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextReportDateGenerated {
+            get {
+                return ResourceManager.GetString("InputTextReportDateGenerated", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonApproved {
+            get {
+                return ResourceManager.GetString("ButtonApproved", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonNotApproved {
+            get {
+                return ResourceManager.GetString("ButtonNotApproved", resourceCulture);
+            }
+        }
     }
 }
