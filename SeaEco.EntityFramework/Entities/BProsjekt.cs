@@ -10,7 +10,7 @@ public partial class BProsjekt
 
     public string Kundekontaktpersons { get; set; } = null!;
 
-    public int Kundetlf { get; set; }
+    public string Kundetlf { get; set; }
 
     public string Kundeepost { get; set; } = null!;
 
