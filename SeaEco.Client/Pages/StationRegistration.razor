@@ -45,6 +45,7 @@
             @* TODO: Remember to bind value *@
             <InputSelect id="sampler-2" class="form-select" @bind-Value="_user.Id">
                 <option value="" disabled>Velg prøvetaker</option>
+                <option value="">Ingen</option>
                 <option value="">Rikke</option>
                 <option value="">Sara</option>
                 <option value="">Tor</option>
@@ -533,7 +534,7 @@
 
     private BPositionAndDepthDto _positionAndDepth = new();
 
-    private Bruker _user = new();
+    private Bruker? _user = new();
 
     private BEquipDto _equip = new();
 
