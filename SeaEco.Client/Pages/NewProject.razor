@@ -19,6 +19,7 @@ else
     <div class="d-flex flex-column align-items-center gap-3">
         <div class="mb-3">
             <h3>Nytt prosjekt</h3>
+            <h6>- @_customer.Oppdragsgiver</h6>
         </div>
         <div class="d-flex justify-content-lg-start flex-column gap-3">
             <div class="d-flex gap-3">
@@ -29,10 +30,6 @@ else
             </div>
             <div class="d-flex flex-column mt-4 mb-4 gap-3">
                 <div class="d-flex gap-3">
-                    <div class="form-floating">
-                        <InputText class="form-control" id="customer" @bind-Value="kundensnavn"/>
-                        <label for="customer">Kunde</label>
-                    </div>
                     <div class="form-floating">
                         <InputText class="form-control" id="contactCustomer" @bind-Value="_newProject.Kundekontaktpersons"/>
                         <label for="contactCustomer">Konaktperson</label>
@@ -104,7 +101,6 @@ else
     private string? _errorMessage;
 
     //benyttes i form, da backend enda ikke har variabelen. Form må oppdateres når klar.
-    private string? kundensnavn;
     private string? AnsvarligansattNavn;
 
 
@@ -117,7 +113,6 @@ else
             {
                 _newProject = new NewProjectDto
                 {
-                    //KundeNavn = _customer.Oppdragsgiver,
                     Kundekontaktpersons = _customer.Kontaktperson,
                     Kundetlf = _customer.Telefonnummer
                 };
