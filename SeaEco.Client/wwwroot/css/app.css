@@ -124,3 +124,16 @@ code {
 .custom-validation-summary li {
     margin-left: 0;
 }
+
+.fixed-dropdown {
+    width: 229px;
+    overflow-x: auto;
+    padding: 5px;
+}
+
+.cursor {
+    cursor: pointer;
+}
+
+
+

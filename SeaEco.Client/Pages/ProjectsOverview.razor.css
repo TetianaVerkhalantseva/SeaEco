@@ -1,0 +1,91 @@
+.bi {
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    width: 1.25rem;
+    height: 1.25rem;
+    background-size: cover;
+}
+
+.bi-filter {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='gray' class='bi bi-filter' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d= 'M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5' /%3E%3C/svg%3E");
+}
+
+.btn:hover .bi-filter {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' class='bi bi-filter' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5'/%3E%3C/svg%3E");
+}
+
+
+.bi-arrow-down {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='black' class='bi bi-arrow-down-short' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d= ' M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4 ' /%3E%3C/svg%3E");
+}
+
+.bi-arrow-up {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='black' class='bi bi-arrow-up-short' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d= ' M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5 ' /%3E%3C/svg%3E");
+}
+
+
+.card-status-new {
+    background: linear-gradient(to bottom, #8CBFD9, #6497B1);
+    color: white;
+}
+
+.card-status-started {
+    background: linear-gradient(to bottom, #D98CBF, #B16497);
+    color: white;
+}
+
+.card-status-deactivated {
+    background: linear-gradient(to bottom, #b4b8bb, #7a8288);
+    color: white;
+}
+
+.card-status-done {
+    background: linear-gradient(to bottom, #BFD98C, #97B164);
+    color: white;
+}
+
+.card-body {
+    position: relative;
+}
+
+.corner-text {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 8px;
+    font-size: 0.7rem;
+}
+
+.card-col {
+    flex: 0 0 300px;
+    max-width: 300px;
+    min-width: 300px;
+}
+
+@media (max-width: 1399.98px) {
+    .card-container {
+        max-width: 600px;
+        margin: auto;
+    }
+}
+
+.projects-container {
+    max-width: 1200px;
+    flex-grow: 1;
+}
+
+
+.sort-icon {
+    display: inline-block;
+    width: 1em;
+    text-align: center;
+}
+
+.fixed-width-table {
+    min-width: 1200px;
+    max-width: 1200px;
+    table-layout: fixed;
+}
+
+

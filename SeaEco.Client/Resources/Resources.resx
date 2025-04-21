@@ -21,28 +21,28 @@
 
     <!-- InputText -->
     
-    <data name="MailInputText" xml:space="preserve">
+    <data name="InputTextMail" xml:space="preserve">
     <value>Epost-adresse</value>
   </data>
-    <data name="PasswordInputText" xml:space="preserve">
+    <data name="InputTextPassword" xml:space="preserve">
     <value>Passord</value>
   </data>
-    <data name="RepPasswordInputText" xml:space="preserve">
+    <data name="InputTextRepPassword" xml:space="preserve">
     <value>Gjenta passord</value>
   </data>
-    <data name="FirstNameInputText" xml:space="preserve">
+    <data name="InputTextFirstName" xml:space="preserve">
     <value>Fornavn</value>
   </data>
-    <data name="LastNameInputText" xml:space="preserve">
+    <data name="InputTextLastName" xml:space="preserve">
     <value>Etternavn</value>
   </data>
 
     <!-- ErrorMessage -->
     
-    <data name="RequireElementErrorMessage" xml:space="preserve">
+    <data name="ErrorMessageRequireElement" xml:space="preserve">
         <value>Påkrevde felt må fylles ut</value>
       </data>
-    <data name="UnexpectedErrorMessage" xml:space="preserve">
+    <data name="ErrorMessageUnexpected" xml:space="preserve">
         <value>Noe gikk galt</value>
       </data>
     
@@ -67,14 +67,8 @@
 
     <!-- Checkboks -->
     
-    <data name="AdminCheckboks" xml:space="preserve">
+    <data name="CheckboksAdmin" xml:space="preserve">
         <value>Admin</value>
-    </data>
-    <data name="ActiveUserCheckboks" xml:space="preserve">
-        <value>Deaktiver bruker</value>
-    </data>
-    <data name="DeactiveUserCheckboks" xml:space="preserve">
-        <value>Aktiver bruker</value>
     </data>
 
     <!-- Button -->
@@ -126,6 +120,33 @@
     </data>
     <data name="TableInputIsNotAdmin" xml:space="preserve">
         <value> </value>
+    </data>
+    <data name="TableHeaderCustomer" xml:space="preserve">
+        <value>Kunde</value>
+    </data>
+    <data name="TableHeaderLocality" xml:space="preserve">
+        <value>Lokalitet</value>
+    </data>
+    <data name="TableHeaderLocalityId" xml:space="preserve">
+        <value>lok. ID</value>
+    </data>
+    <data name="TableHeaderPoId" xml:space="preserve">
+        <value>PO-ID</value>
+    </data>
+    <data name="TableHeaderProjectId" xml:space="preserve">
+        <value>ProsjektID</value>
+    </data>
+    <data name="TableHeaderDate" xml:space="preserve">
+        <value>Dato</value>
+    </data>
+    <data name="TableHeaderProjectStatus" xml:space="preserve">
+        <value>Prosjektstatus</value>
+    </data>
+    <data name="TableHeaderStatus" xml:space="preserve">
+        <value>Tilstand</value>
+    </data>
+    <data name="TableHeaderProductionStatus" xml:space="preserve">
+        <value>Produksjnsstatus</value>
     </data>
 
     <!-- PageUser -->
@@ -207,5 +228,26 @@
     </data>
     <data name="PageAddCustomerFailed" xml:space="preserve">
         <value>Kunderegistrering mislykkes.</value>
+    </data>
+
+    <!-- PageProjectsOverview -->
+    
+    <data name="PageProjectsOverviewAllProjects" xml:space="preserve">
+        <value>Alle prosjekter</value>
+    </data>
+    <data name="ButtonFilter" xml:space="preserve">
+        <value>Filter</value>
+    </data>
+    <data name="ButtonReset" xml:space="preserve">
+        <value>Nullstill</value>
+    </data>
+    <data name="TableHeaderMonth" xml:space="preserve">
+        <value>Måned</value>
+    </data>
+    <data name="TableHeaderYear" xml:space="preserve">
+        <value>År</value>
+    </data>
+    <data name="OptionAll" xml:space="preserve">
+        <value>Alle</value>
     </data>
 </root>
