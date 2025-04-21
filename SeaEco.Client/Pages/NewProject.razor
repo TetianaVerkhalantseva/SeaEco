@@ -6,6 +6,7 @@
 @using SeaEco.Abstractions.Models.User
 @inject HttpClient Http
 @using SeaEco.EntityFramework.Entities
+@inject NavigationManager Navigation
 
 
 @if (_isLoading)
@@ -13,6 +14,8 @@
 }
 else
 {
+    <EditForm Model="_newProject" OnValidSubmit="AddNewProject">
+    <DataAnnotationsValidator />
     <div class="d-flex flex-column align-items-center gap-3">
         <div class="mb-3">
             <h3>Nytt prosjekt</h3>
@@ -83,14 +86,13 @@ else
         </div>
 
         <div class="d-flex gap-3">
-            <button class="btn btn-outline-secondary align-self-start" type="button">
-                @Resources.ButtonCancel
-            </button>
-            <button class="btn btn-outline-secondary align-self-end" type="button">
+            <NavLink class="btn btn-outline-secondary align-self-start" type="button" href=@($"/CustomerInfo/{CustomerId}")>@Resources.ButtonCancel</NavLink>
+            <button type=submit class="btn btn-outline-secondary align-self-end">
                 @Resources.ButtonSave
             </button>
         </div>
     </div>
+    </EditForm>
 }
 
 @code {
@@ -98,14 +100,14 @@ else
     private List<UserDto> _users = new List<UserDto>();
     private Kunde? _customer = new();
     private bool _isLoading = true;
-    [Parameter]
-    public int CustomerId { get; set; }
-    
+    [Parameter] public int CustomerId { get; set; }
+    private string? _errorMessage;
+
     //benyttes i form, da backend enda ikke har variabelen. Form må oppdateres når klar.
     private string? kundensnavn;
     private string? AnsvarligansattNavn;
 
-    
+
     protected override async Task OnInitializedAsync()
     {
         try
@@ -129,8 +131,24 @@ else
         {
             _isLoading = false;
         }
-        
+
         var usersList = await Http.GetFromJsonAsync<List<UserDto>>("api/users");
         _users = usersList?.OrderBy(user => user.FullName).ToList();
+    }
+
+    private async Task AddNewProject()
+    {
+        
+        var response = await Http.PostAsJsonAsync("/api/Project", _newProject);
+        
+        if (response.IsSuccessStatusCode)
+        {
+            //Backendd må oppdateres først
+            //Navigation.NavigateTo($"project/{prosjektId:D}", forceLoad: true);
+        }
+        else
+        {
+            _errorMessage = Resources.ErrorMessageUnexpected;
+        }
     }
 }

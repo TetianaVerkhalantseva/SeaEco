@@ -21,6 +21,7 @@ using SeaEco.Services.HashService;
 using SeaEco.Services.ImageServices;
 using SeaEco.Services.JwtServices;
 using SeaEco.Services.ProjectServices;
+using SeaEco.Services.StationServices;
 using SeaEco.Services.TokenServices;
 using SeaEco.Services.UserServices;
 using SeaEco.Services.Validators;
@@ -113,6 +114,7 @@ services.AddScoped<ICustomerService, CustomerService>();
 services.AddScoped<IProjectService, ProjectService>();
 services.AddScoped<EmailMessageManager>();
 services.AddTransient<IImageService, ImageService>();
+services.AddScoped<IStationService, StationService>();
 
 // Models validators
 services.AddScoped<IValidator<LoginDto>, LoginDtoValidator>();
