@@ -135,9 +135,33 @@ namespace SeaEco.Client.Resources {
             }
         }
         
+        internal static string ButtonEdit {
+            get {
+                return ResourceManager.GetString("ButtonEdit", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonDelete {
+            get {
+                return ResourceManager.GetString("ButtonDelete", resourceCulture);
+            }
+        }
+        
         internal static string ButtonAddNewUser {
             get {
                 return ResourceManager.GetString("ButtonAddNewUser", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonAddNewCustomer {
+            get {
+                return ResourceManager.GetString("ButtonAddNewCustomer", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonAddNewProject {
+            get {
+                return ResourceManager.GetString("ButtonAddNewProject", resourceCulture);
             }
         }
         
@@ -270,6 +294,102 @@ namespace SeaEco.Client.Resources {
         internal static string PageRegisterUserNewUser {
             get {
                 return ResourceManager.GetString("PageRegisterUserNewUser", resourceCulture);
+            }
+        }
+        
+        internal static string PageCustomerCustomerList {
+            get {
+                return ResourceManager.GetString("PageCustomerCustomerList", resourceCulture);
+            }
+        }
+        
+        internal static string PageCustomerNoCustomersFound {
+            get {
+                return ResourceManager.GetString("PageCustomerNoCustomersFound", resourceCulture);
+            }
+        }
+        
+        internal static string PageCustomerInfoProjects {
+            get {
+                return ResourceManager.GetString("PageCustomerInfoProjects", resourceCulture);
+            }
+        }
+        
+        internal static string PageCustomerInfoCustomerInfo {
+            get {
+                return ResourceManager.GetString("PageCustomerInfoCustomerInfo", resourceCulture);
+            }
+        }
+        
+        internal static string PageCustomerInfoCustomerName {
+            get {
+                return ResourceManager.GetString("PageCustomerInfoCustomerName", resourceCulture);
+            }
+        }
+        
+        internal static string PageCustomerInfoContactPerson {
+            get {
+                return ResourceManager.GetString("PageCustomerInfoContactPerson", resourceCulture);
+            }
+        }
+        
+        internal static string PageCustomerInfoCustomerNumber {
+            get {
+                return ResourceManager.GetString("PageCustomerInfoCustomerNumber", resourceCulture);
+            }
+        }
+        
+        internal static string PageCustomerInfoDeleteCustomerSuccess {
+            get {
+                return ResourceManager.GetString("PageCustomerInfoDeleteCustomerSuccess", resourceCulture);
+            }
+        }
+        
+        internal static string PageCustomerInfoDeleteCustomerFailed {
+            get {
+                return ResourceManager.GetString("PageCustomerInfoDeleteCustomerFailed", resourceCulture);
+            }
+        }
+        
+        internal static string PageCustomerInfoNoProject {
+            get {
+                return ResourceManager.GetString("PageCustomerInfoNoProject", resourceCulture);
+            }
+        }
+        
+        internal static string PageEditCustomerEditCustomer {
+            get {
+                return ResourceManager.GetString("PageEditCustomerEditCustomer", resourceCulture);
+            }
+        }
+        
+        internal static string PageEditCustomerSuccess {
+            get {
+                return ResourceManager.GetString("PageEditCustomerSuccess", resourceCulture);
+            }
+        }
+        
+        internal static string PageEditCustomerFailed {
+            get {
+                return ResourceManager.GetString("PageEditCustomerFailed", resourceCulture);
+            }
+        }
+        
+        internal static string PageAddCustomerAddCustomer {
+            get {
+                return ResourceManager.GetString("PageAddCustomerAddCustomer", resourceCulture);
+            }
+        }
+        
+        internal static string PageAddCustomerSuccess {
+            get {
+                return ResourceManager.GetString("PageAddCustomerSuccess", resourceCulture);
+            }
+        }
+        
+        internal static string PageAddCustomerFailed {
+            get {
+                return ResourceManager.GetString("PageAddCustomerFailed", resourceCulture);
             }
         }
         

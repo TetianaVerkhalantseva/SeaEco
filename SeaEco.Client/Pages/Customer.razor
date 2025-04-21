@@ -1,0 +1,106 @@
+@page "/Customer"
+@inject HttpClient Http
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+@using SeaEco.Abstractions.Models.Customer
+@inject NavigationManager Navigation
+@using SeaEco.Client.Resources
+
+
+<div class="container position-relative">
+    <h2 class="text-center mt-4 page-title">@Resources.PageCustomerCustomerList</h2>
+    
+    <div class="container mt-3">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div class="w-50">
+                <select class="form-select" @onchange="OnSortChanged">
+                    <option value="name-asc">Sorter etter navn: A-Z</option>
+                    <option value="name-desc">Sorter etter navn: Z-A</option>
+                    <option value="created-asc">Sorter etter dato: eldst først</option>
+                    <option value="created-desc">Sorter etter dato: nyest først</option>
+                </select>
+            </div>
+
+            <button class="btn custom-btn ms-3" @onclick="() => AddCustomerPage()">
+                @Resources.ButtonAddNewCustomer
+            </button>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        @if (_customerNames == null)
+        {
+            <div class="col-12 text-center">
+                <h3 class="text-muted">@Resources.PageCustomerNoCustomersFound</h3>
+            </div>
+        }
+        else
+        {
+            @foreach (var customerName in _customerNames)
+            {
+                <div class="col-md-5 col-lg-4 mb-4">
+                    <div class="card shadow-sm p-4 rounded-3 hover-effect d-flex align-items-center justify-content-center">
+                        <a href="CustomerInfo/@customerName.CustomerId"><h5 class="customer-name">@customerName.CustomerName</h5></a>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+
+@code {
+    private List<CustomerNamesDto>? _customerNames = new();
+    private string _currentSort = "name-asc";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCustomerData();
+    }
+
+    private async Task LoadCustomerData()
+    {
+        try
+        {
+            _customerNames = await Http.GetFromJsonAsync<List<CustomerNamesDto>>("api/Customer/Customer-names");
+            SortCustomerList(_currentSort);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+    private void OnSortChanged(ChangeEventArgs e)
+    {
+        _currentSort = e.Value?.ToString() ?? "name-asc";
+        SortCustomerList(_currentSort);
+    }
+
+    private void SortCustomerList(string sortOption)
+    {
+        if (_customerNames == null) return;
+
+        switch (sortOption)
+        {
+            case "name-asc":
+                _customerNames = _customerNames.OrderBy(c => c.CustomerName).ToList();
+                break;
+            case "name-desc":
+                _customerNames = _customerNames.OrderByDescending(c => c.CustomerName).ToList();
+                break;
+            case "created-asc":
+                _customerNames = _customerNames.OrderBy(c => c.CustomerId).ToList();
+                break;
+            case "created-desc":
+                _customerNames = _customerNames.OrderByDescending(c => c.CustomerId).ToList();
+                break;
+        }
+        StateHasChanged();
+    }
+
+    private void AddCustomerPage()
+    {
+        Navigation.NavigateTo("AddCustomer");
+    }
+}
