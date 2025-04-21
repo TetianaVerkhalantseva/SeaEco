@@ -5,7 +5,69 @@
 <h4>Stasjonsregisrering</h4>
 
 <div id="div1" class="content-div active">
-    <h5>1</h5>
+    <div class="position-depth-container">
+        <div class="form-floating mb-3">
+            <InputNumber id="position_n" class="form-control" @bind-Value="_positionAndDepth.Kordinatern" placeholder="N" />
+            <label for="position_n">Posisjon nord</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <InputNumber id="position_o" class="form-control" @bind-Value="_positionAndDepth.Kordinatero" placeholder="O" />
+            <label for="position_o">Posisjon øst</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <InputNumber id="depth" class="form-control" @bind-Value="_positionAndDepth.Dybde" placeholder="M" />
+            <label for="depth">Dybde</label>
+        </div>
+        
+        <div class="position-depth-button-container">
+            <button class="btn btn-outline-primary clear-data @(_positionAndDepth.Dybde == 0 ? "active" : "")"
+                    @onclick="() => ClearPositionAndDepth(0)">
+                Annen posisjon og dybde
+            </button>
+        </div>
+    </div>
+    
+    <div class="sampler-container">
+        <div class="form-floating mb-3">
+            @* TODO: Remember to bind value *@
+            <InputSelect id="sampler-1" class="form-select" @bind-Value="_user.Id">
+                <option value="" disabled>Velg prøvetaker</option>
+                <option value="">Rikke</option>
+                <option value="">Sara</option>
+                <option value="">Tor</option>
+            </InputSelect>
+            <label for="sampler-1">Prøvetaker nr 1</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            @* TODO: Remember to bind value *@
+            <InputSelect id="sampler-2" class="form-select" @bind-Value="_user.Id">
+                <option value="" disabled>Velg prøvetaker</option>
+                <option value="">Rikke</option>
+                <option value="">Sara</option>
+                <option value="">Tor</option>
+            </InputSelect>
+            <label for="sampler-2">Prøvetaker nr 2</label>
+        </div>
+    </div>
+
+    <div class="equipment-container">
+        <div class="form-floating mb-3">
+            <InputNumber id="equip-1" class="form-control" @bind-Value="_equip.Grabbid" placeholder="Grabbhugg" />
+            <label for="equip-1">Antall grabbhugg</label>
+        </div>
+
+        @* TODO: Remember to bind *@
+        <div class="checkbox-3-container">
+            <label class="custom-checkbox" for="equip-2">
+                <span class="custom-label">Gokjent grabbhastighet</span>
+                <input id="equip-2" type="checkbox">
+                <span class="custom-checkmark"></span>
+            </label>
+        </div>
+    </div>
 </div>
 
 <div id="div2" class="content-div">
@@ -151,6 +213,7 @@
     <div class="picture-container">
         <button class="picture-button" style="vertical-align:middle"><span>+ Usilt</span></button>
 
+        @* TODO: Remember to bind *@
         <div class="tom-grabb-container" id="tomGrabb_1">
             <label class="custom-checkbox" for="tom-grabb-1">
                 <span class="custom-label">Tom grabb</span>
@@ -165,6 +228,7 @@
     <div class="picture-container">
         <button class="picture-button" style="vertical-align:middle"><span>+ Silt</span></button>
 
+        @* TODO: Remember to bind *@
         <div class="tom-grabb-container" id="tomGrabb_2">
             <label class="custom-checkbox" for="tom-grabb-2">
                 <span class="custom-label">Tom grabb</span>
@@ -462,12 +526,24 @@
     {
         _dyr.Antallborstemark = value;
     }
-    
-
 
     private BMerknadDto _merknadDto = new();
 
     private BArterDto _arter = new();
+
+    private BPositionAndDepthDto _positionAndDepth = new();
+
+    private Bruker _user = new();
+
+    private BEquipDto _equip = new();
+
+    private void ClearPositionAndDepth(int value)
+    {
+        if (value != 0) return;
+        _positionAndDepth.Kordinatern = 0;
+        _positionAndDepth.Kordinatero = 0;
+        _positionAndDepth.Dybde = value;
+    }
 
     private void HandleSubmit()
     {

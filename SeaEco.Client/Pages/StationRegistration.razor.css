@@ -7,6 +7,63 @@
     display: block;
 }
 
+.position-depth-container {
+    width: 80%;
+    margin: 1rem auto;
+    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+}
+
+@media (max-width: 1024px) {
+    .position-depth-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .position-depth-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+.position-depth-button-container {
+    display: flex;
+    padding: 16px 0;
+    margin-top: -15px;
+}
+
+.btn-outline-primary.clear-data:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+    box-shadow: 0 0 10px rgba(13, 110, 253, 0.5);
+    transition: all 0.3s ease-in-out;
+}
+
+.sampler-container {
+    display: flex;
+    width: 80%;
+    margin: 1rem auto;
+    gap: 2rem;
+}
+
+.sampler-container.form-floating>.form-select {
+    padding: .375rem 10rem .375rem .75rem;
+}
+
+.equipment-container {
+    display: flex;
+    width: 80%;
+    margin: 1rem auto;
+    gap: 3rem;
+}
+
+.equipment-container.checkbox-3-container {
+    display: flex;
+    align-items: center;
+}
+
 .button-container {
     display: flex;
     justify-content: center;
