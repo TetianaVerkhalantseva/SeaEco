@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace SeaEco.Shared.Enums;
+namespace SeaEco.Abstractions.Models.Enums;
 
 public enum Farge
 {
