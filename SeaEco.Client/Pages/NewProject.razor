@@ -93,8 +93,8 @@ else
 }
 
 @code {
-    private NewProjectDto _newProject = new NewProjectDto();
-    private List<UserDto> _users = new List<UserDto>();
+    private NewProjectDto _newProject = new();
+    private List<UserDto> _users = new();
     private Kunde? _customer = new();
     private bool _isLoading = true;
     [Parameter] public int CustomerId { get; set; }
