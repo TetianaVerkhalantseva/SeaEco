@@ -1,15 +1,15 @@
 using System.ComponentModel;
 
-namespace SeaEco.Abstractions.Models.Enums;
+namespace SeaEco.Abstractions.Enums;
 
 public enum Merknader
 {
     [Description("Detritus")]
-    D,
+    D = 1,
 
     [Description("Terrestrisk materiale")]
-    TM,
+    TM = 2,
 
     [Description("Rester etter anleggsrens")]
-    RAR 
+    RAR = 3
 }

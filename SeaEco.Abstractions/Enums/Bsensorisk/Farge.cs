@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace SeaEco.Abstractions.Models.Enums;
+namespace SeaEco.Abstractions.Enums.Bsensorisk;
 
 public enum Farge
 {

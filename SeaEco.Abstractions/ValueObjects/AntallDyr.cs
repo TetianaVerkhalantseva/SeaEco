@@ -1,4 +1,4 @@
-namespace SeaEco.Abstractions.Models.ValueObjects;
+namespace SeaEco.Abstractions.ValueObjects;
 
 public class AntallDyr
 {

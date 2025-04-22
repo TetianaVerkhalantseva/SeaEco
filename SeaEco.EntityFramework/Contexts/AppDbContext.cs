@@ -62,7 +62,7 @@ public partial class AppDbContext : DbContext
     public virtual DbSet<Token> Tokens { get; set; }
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseNpgsql("Server=10.239.120.212;Database=seaeco;Port=5432;username=admin;password=admin");
+        => optionsBuilder.UseNpgsql("Server=127.0.0.1;Host=localhost;Database=seaeco;Port=5432;username=postgres");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

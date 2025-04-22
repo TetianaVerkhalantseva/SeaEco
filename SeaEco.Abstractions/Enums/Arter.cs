@@ -1,24 +1,24 @@
 using System.ComponentModel;
 
-namespace SeaEco.Abstractions.Models.Enums;
+namespace SeaEco.Abstractions.Enums;
 
 public enum Arter
 {
     [Description("Capitella Capitata")]
-    CC,
+    CC = 1,
 
     [Description("Thyasira sp.")]
-    TH,
+    TH = 2,
 
     [Description("Ophryotrocha sp.")]
-    OP,
+    OP = 3,
 
     [Description("Slangesjøstjerne")]
-    SL,
+    SL = 4,
 
     [Description("Sjømus")]
-    SM,
+    SM = 5,
 
     [Description("Venusskjell")]
-    V
+    V = 6 
 }

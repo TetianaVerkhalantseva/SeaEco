@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using SeaEco.Abstractions.Enums;
 using SeaEco.Abstractions.Extensions;
-using SeaEco.Abstractions.Models.Enums;
 
 namespace SeaEco.Abstractions.Models.Bundersokelse;
 

@@ -1,4 +1,4 @@
-using SeaEco.Abstractions.Models.Enums;
+using SeaEco.Abstractions.Enums.Bsensorisk;
 
 namespace SeaEco.Abstractions.Models.Bundersokelse;
 

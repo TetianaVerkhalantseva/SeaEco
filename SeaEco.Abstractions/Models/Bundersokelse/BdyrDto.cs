@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using SeaEco.Abstractions.Models.ValueObjects;
+using SeaEco.Abstractions.ValueObjects;
 
 namespace SeaEco.Abstractions.Models.Bundersokelse;
 
