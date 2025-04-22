@@ -250,4 +250,7 @@
     <data name="PageProjectProject" xml:space="preserve">
         <value>Prosjekt</value>
     </data>
+    <data name="InputTextPoId" xml:space="preserve">
+        <value>PO-ID</value>
+    </data>
 </root>

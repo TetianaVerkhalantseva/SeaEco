@@ -446,5 +446,11 @@ namespace SeaEco.Client.Resources {
                 return ResourceManager.GetString("PageProjectProject", resourceCulture);
             }
         }
+        
+        internal static string InputTextPoId {
+            get {
+                return ResourceManager.GetString("InputTextPoId", resourceCulture);
+            }
+        }
     }
 }

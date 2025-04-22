@@ -13,7 +13,7 @@ else
 {
     <div class="d-flex flex-column align-items-center gap-3">
         <div class="mb-3">
-            <h3>@Resources.PageProjectProject @prosjektId</h3>
+            <h3>@project.Lokalitet</h3>
             <p>- @project.Status</p>
         </div>
 
@@ -32,31 +32,31 @@ else
         <div class="collapse card-container w-100" id="collapseProjectInfo">
             <div class="card card-body">
                 <div class="d-flex flex-xxl-row flex-column gap-3 ">
-                    <div class="d-flex flex-column gap-4">
                         <div class="form-floating">
-                            <InputText class="form-control" id="location" @bind-Value="project.Lokalitet" @key="numberInputKey"  disabled="@(!_editProjectInfo)"/>
-                            <label for="location">@Resources.InputTextLocation</label>
+                            <InputText class="form-control" id="poid" @bind-Value="project.PoId" @key="numberInputKey"  disabled/>
+                            <label for="poid">@Resources.InputTextPoId</label>
                         </div>
+                    <div class="d-flex flex-column gap-3">
                         <div class="form-floating">
-                            <InputNumber class="form-control" id="locationId" @bind-Value="project.Lokalitetid" @key="numberInputKey"  disabled="@(!_editProjectInfo)"/>
+                            <InputNumber class="form-control" id="locationId" @bind-Value="project.Lokalitetid" @key="numberInputKey" disabled="@(!_editProjectInfo)"/>
                             <label for="locationId">@Resources.InputTextLocationId</label>
                         </div>
                         <div class="d-flex form-floating">
-                            <InputDate class="form-control" id="planedDate" @bind-Value="project.Planlagtfeltdato" @key="numberInputKey"  disabled="@(!_editProjectInfo)"/>
+                            <InputDate class="form-control" id="planedDate" @bind-Value="project.Planlagtfeltdato" @key="numberInputKey" disabled="@(!_editProjectInfo)"/>
                             <label for="planedDate">@Resources.InputTextPlanedDate</label>
                         </div>
                     </div>
-                    <div class="d-flex flex-column gap-4">
+                    <div class="d-flex flex-column gap-3">
                         <div class="d-flex form-floating">
-                            <InputNumber class="form-control" id="numberOfStations" @bind-Value="project.Antallstasjoner" @key="numberInputKey"  disabled="@(!_editProjectInfo)"/>
+                            <InputNumber class="form-control" id="numberOfStations" @bind-Value="project.Antallstasjoner" @key="numberInputKey" disabled="@(!_editProjectInfo)"/>
                             <label for="numberOfStations">@Resources.InputTextNumberOfStations</label>
                         </div>
                         <div class="d-flex form-floating">
-                            <InputNumber class="form-control" id="mtb" @bind-Value="project.Mtbtillatelse" @key="numberInputKey"  disabled="@(!_editProjectInfo)"/>
+                            <InputNumber class="form-control" id="mtb" @bind-Value="project.Mtbtillatelse" @key="numberInputKey" disabled="@(!_editProjectInfo)"/>
                             <label for="mtb">@Resources.InputTextMtb</label>
                         </div>
                     </div>
-                    <div class="d-flex flex-column gap-4">
+                    <div class="d-flex flex-column gap-3">
                         <div class="d-flex form-floating">
                             <InputTextArea class="form-control" id="comment" @bind-Value="project.Merknad" @key="numberInputKey" style="height: 140px" disabled="@(!_editProjectInfo)"></InputTextArea>
                             <label for="comment">@Resources.InputTextComment</label>
@@ -171,6 +171,7 @@ else
     {
         return new ProjectDto
         {
+            PoId = source.PoId,
             ProsjektId = source.ProsjektId,
             Lokalitet = source.Lokalitet,
             Lokalitetid = source.Lokalitetid,
