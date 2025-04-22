@@ -32,7 +32,7 @@
     <div class="sampler-container">
         <div class="form-floating mb-3">
             @* TODO: Remember to bind value *@
-            <InputSelect id="sampler-1" class="form-select" @bind-Value="_user.Id">
+            <InputSelect id="sampler-1" class="form-select" @bind-Value="_user1.Id">
                 <option value="" disabled>Velg prøvetaker</option>
                 <option value="">Rikke</option>
                 <option value="">Sara</option>
@@ -43,7 +43,7 @@
 
         <div class="form-floating mb-3">
             @* TODO: Remember to bind value *@
-            <InputSelect id="sampler-2" class="form-select" @bind-Value="_user.Id">
+            <InputSelect id="sampler-2" class="form-select" @bind-Value="_user2.Id">
                 <option value="" disabled>Velg prøvetaker</option>
                 <option value="">Ingen</option>
                 <option value="">Rikke</option>
@@ -534,7 +534,9 @@
 
     private BPositionAndDepthDto _positionAndDepth = new();
 
-    private Bruker? _user = new();
+    private Bruker _user1 = new();
+
+    private Bruker _user2 = new();
 
     private BEquipDto _equip = new();
 
