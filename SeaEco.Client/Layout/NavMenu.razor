@@ -4,7 +4,6 @@
 
 <div class="ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">SeaEco.Client</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -35,14 +34,14 @@
             <Authorized>
                 <div class="nav-item px-3">
                     <a class="nav-link" href="login" @onclick="OnLogoutClick" @onclick:preventDefault>
-                        <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Log ut
+                        <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Logg ut
                     </a>
                 </div>
             </Authorized>
             <NotAuthorized>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="login">
-                        <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Log in
+                        <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Logg inn
                     </NavLink>
                 </div>
             </NotAuthorized>
