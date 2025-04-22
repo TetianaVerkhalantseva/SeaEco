@@ -107,7 +107,7 @@
         <value>Admin</value>
     </data>
     <data name="TableInputIsNotAdmin" xml:space="preserve">
-        <value> </value>
+        <value>Logg inn</value>
     </data>
     <data name="TableHeaderCustomer" xml:space="preserve">
         <value>Kunde</value>
@@ -180,5 +180,14 @@
     </data>
     <data name="OptionAll" xml:space="preserve">
         <value>Alle</value>
+    </data>
+    <data name="PageLoginLogin" xml:space="preserve">
+        <value>Logg inn</value>
+    </data>
+    <data name="ButtonLogin" xml:space="preserve">
+        <value>Logg inn</value>
+    </data>
+    <data name="ButtonForgotPassword" xml:space="preserve">
+        <value>Glemt passord?</value>
     </data>
 </root>

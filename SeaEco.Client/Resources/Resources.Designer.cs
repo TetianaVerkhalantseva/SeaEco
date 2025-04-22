@@ -308,5 +308,23 @@ namespace SeaEco.Client.Resources {
                 return ResourceManager.GetString("OptionAll", resourceCulture);
             }
         }
+        
+        internal static string PageLoginLogin {
+            get {
+                return ResourceManager.GetString("PageLoginLogin", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonLogin {
+            get {
+                return ResourceManager.GetString("ButtonLogin", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonForgotPassword {
+            get {
+                return ResourceManager.GetString("ButtonForgotPassword", resourceCulture);
+            }
+        }
     }
 }
