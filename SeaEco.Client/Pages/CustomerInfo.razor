@@ -73,7 +73,7 @@
             </div>
 
             <!-- onclick to create new project page -->
-            <button class="btn custom-btn ms-3">
+            <button class="btn custom-btn ms-3" @onclick="ToNewProjectPage"> 
                 @Resources.ButtonAddNewProject
             </button>
         </div>
@@ -240,6 +240,11 @@
     private void EditCustomerPage()
     {
         Navigation.NavigateTo($"EditCustomer/{CustomerId}");
+    }
+
+    private void ToNewProjectPage()
+    {
+        Navigation.NavigateTo($"NewProject/{CustomerId}");
     }
 
     private async Task DeleteCustomer()
