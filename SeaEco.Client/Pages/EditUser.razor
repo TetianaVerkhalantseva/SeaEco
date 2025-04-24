@@ -7,14 +7,9 @@
 @inject NavigationManager Navigation
 
 
-
-
 <EditForm Model="userEdit" OnValidSubmit="UserEdit" >
     <DataAnnotationsValidator />
     <div class="d-flex flex-column align-items-center">
-        
-        
-
         @if (isLoading)
         {
         }
@@ -64,6 +59,7 @@
     </div>
 </EditForm>
 
+
 @code {
     [Parameter]
     public Guid userId { get; set; }
@@ -111,6 +107,4 @@
             _errorMessage = @Resources.ErrorMessageUnexpected;
         }
     }
-    
-
 }
