@@ -108,4 +108,6 @@ a, .btn-link {
 }
 
 
-
+.text-danger{
+    color: red !important;
+}

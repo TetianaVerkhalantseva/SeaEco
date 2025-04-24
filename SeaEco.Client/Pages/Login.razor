@@ -5,7 +5,6 @@
 @inject HttpClient Http
 
 
-
 <EditForm Model="_login" OnValidSubmit="ToMainPage" >
     <DataAnnotationsValidator />
 <div class="d-flex flex-column align-items-center ">
@@ -15,7 +14,7 @@
 
     <div class="d-flex flex-column gap-4">
         <div class="d-flex flex-column gap-2">
-            <InputText type="text" id="email" class="form-control" @bind-Value="_login.Email" placeholder="@Resources.InputTextMail" @oninput="() => _errorMessage = null"/>
+            <InputText type="email" id="email" class="form-control" @bind-Value="_login.Email" placeholder="@Resources.InputTextMail" @oninput="() => _errorMessage = null"/>
             <InputText type="password" id="password" class="form-control" @bind-Value="_login.Password" placeholder="@Resources.InputTextPassword" @oninput="() => _errorMessage = null" />
         </div>
         
@@ -42,7 +41,7 @@
 </EditForm>
 
 @code {
-    private readonly LoginDto? _login = new();
+    private LoginDto? _login = new();
     private string? _errorMessage;
     private bool _clickedOnForgotPassword;
 
