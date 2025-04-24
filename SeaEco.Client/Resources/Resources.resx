@@ -190,4 +190,10 @@
     <data name="ButtonForgotPassword" xml:space="preserve">
         <value>Glemt passord?</value>
     </data>
+    <data name="ErrorMessageMailRequired" xml:space="preserve">
+        <value>Epost-adresse påkrevd</value>
+    </data>
+    <data name="ErrorMessageWrongMailOrPassword" xml:space="preserve">
+        <value>Email eller passord er feil</value>
+    </data>
 </root>

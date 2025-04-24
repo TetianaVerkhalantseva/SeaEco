@@ -326,5 +326,17 @@ namespace SeaEco.Client.Resources {
                 return ResourceManager.GetString("ButtonForgotPassword", resourceCulture);
             }
         }
+        
+        internal static string ErrorMessageMailRequired {
+            get {
+                return ResourceManager.GetString("ErrorMessageMailRequired", resourceCulture);
+            }
+        }
+        
+        internal static string ErrorMessageWrongMailOrPassword {
+            get {
+                return ResourceManager.GetString("ErrorMessageWrongMailOrPassword", resourceCulture);
+            }
+        }
     }
 }

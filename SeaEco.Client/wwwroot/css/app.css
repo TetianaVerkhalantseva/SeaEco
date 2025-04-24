@@ -87,12 +87,7 @@ a, .btn-link {
     .loading-progress-text:after {
         content: var(--blazor-load-percentage-text, "Loading");
     }
-
-code {
-    color: #c02d76;
-}
-
-
+    
 .custom-validation-summary ul {
     list-style-type: none;
     padding-left: 0;
