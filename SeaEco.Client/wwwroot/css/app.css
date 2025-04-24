@@ -1,5 +1,6 @@
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #eef2f4;
 }
 
 h1:focus {
@@ -135,5 +136,12 @@ code {
     cursor: pointer;
 }
 
+.background-card {
+    border: none;
+    border-radius: 12px;
+    background: #eef2f4;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+}
 
 
