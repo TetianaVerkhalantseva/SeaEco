@@ -14,23 +14,23 @@ else
     <div class="d-flex flex-column align-items-center gap-3">
         <div class="mb-3">
             <h3>@project.Lokalitet</h3>
-            <p>- @project.Status</p>
+            <p style="color: #6a6e6e">- @project.Status</p>
         </div>
 
         <div class="d-flex w-100">
-            <button class="btn btn-outline-secondary align-self-start filter-button" type="button"
+            <button class="btn btn-secondary align-self-start filter-button" type="button"
                     data-bs-toggle="collapse" data-bs-target="#collapseProjectInfo" aria-expanded="false" aria-controls="collapseProjectInfo">
                 @Resources.ButtonProjectInfoView
             </button>
             <div class="flex-grow-1"></div>
-            <button class="btn btn-outline-secondary align-self-end" type="button">
+            <button class="btn btn-secondary align-self-end" type="button">
                 @Resources.ButtonProjectLog
             </button>
         </div>
 
 
         <div class="collapse card-container w-100" id="collapseProjectInfo">
-            <div class="card card-body">
+            <div class="card card-body shadow-lg p-4 rounded-3">
                 <div class="d-flex flex-xxl-row flex-column gap-3 ">
                         <div class="form-floating">
                             <InputText class="form-control" id="poid" @bind-Value="project.PoId" @key="numberInputKey"  disabled/>
@@ -66,17 +66,17 @@ else
                     <div class="d-flex flex-xxl-column flex-row align-self-end">
                         @if (!_editProjectInfo)
                         {
-                            <button class="btn btn-outline-secondary filter-button" type="button" @onclick="OnClickProjectInformation">
+                            <button class="btn btn-secondary" type="button" @onclick="OnClickProjectInformation">
                                 @Resources.ButtonEdit
                             </button>
                         }
                         else
                         {
                             <div class="d-flex gap-2">
-                                <button class="btn btn-outline-secondary filter-button" type="button" @onclick="CancelEditProjectInformation">
+                                <button class="btn btn-secondary" type="button" @onclick="CancelEditProjectInformation">
                                     @Resources.ButtonCancel
                                 </button>
-                                <button class="btn btn-outline-secondary filter-button" type="button" @onclick="EditProjectInformation">
+                                <button class="btn btn-secondary" type="button" @onclick="EditProjectInformation">
                                     @Resources.ButtonSave
                                 </button>
                             </div>
