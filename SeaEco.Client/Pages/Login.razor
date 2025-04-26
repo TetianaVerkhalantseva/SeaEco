@@ -14,23 +14,23 @@
 
     <div class="d-flex flex-column gap-4">
         <div class="d-flex flex-column gap-2">
-            <InputText type="email" id="email" class="form-control" @bind-Value="_login.Email" placeholder="@Resources.InputTextMail" @oninput="() => _errorMessage = null"/>
-            <InputText type="password" id="password" class="form-control" @bind-Value="_login.Password" placeholder="@Resources.InputTextPassword" @oninput="() => _errorMessage = null" />
+            @if (_login != null)
+            {
+                <InputText id="email" class="form-control" @bind-Value="_login.Email" placeholder="@Resources.InputTextMail" @oninput="() => _errorMessage = null"/>
+                <InputText type="password" id="password" class="form-control" @bind-Value="_login.Password" placeholder="@Resources.InputTextPassword" @oninput="() => _errorMessage = null"/>
+            }
         </div>
         
         <div class="d-flex justify-content-center">
-            <button class="btn btn-secondary me-2" type ="button" @onclick="ToForgotPassword">@Resources.ButtonForgotPassword</button>
-            <button type="submit" @onclick="() => {_clickedOnForgotPassword = false; _errorMessage = string.Empty; }" class="btn btn-primary">@Resources.ButtonLogin</button>
+            <NavLink class="btn btn-secondary me-2" href="forgotPassword">@Resources.ButtonForgotPassword</NavLink>
+            <button type="submit" class="btn btn-primary">@Resources.ButtonLogin</button>
         </div>
         
 
         <div class=" text-center">
-            @if (!_clickedOnForgotPassword)
-            {
                 <div class="custom-validation-summary">
                     <ValidationSummary/>
                 </div>   
-            }
             @if (!string.IsNullOrEmpty(_errorMessage))
             {
                 <p class="text-danger">@_errorMessage</p>
@@ -41,14 +41,13 @@
 </EditForm>
 
 @code {
-    private LoginDto? _login = new();
+    private readonly LoginDto? _login = new();
     private string? _errorMessage;
-    private bool _clickedOnForgotPassword;
+
 
     private async Task ToMainPage()
     {
         _errorMessage = string.Empty;
-        _clickedOnForgotPassword = false;
         
         var response = await Http.PostAsJsonAsync("api/authentication/login",_login);
         
@@ -58,32 +57,7 @@
         }
         else
         {
-            if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
-            {
-                _errorMessage = Resources.ErrorMessageWrongMailOrPassword;
-            }
-            else
-            {
-                _errorMessage = Resources.ErrorMessageUnexpected;
-            }
+            _errorMessage = response.StatusCode == System.Net.HttpStatusCode.BadRequest ? Resources.ErrorMessageWrongMailOrPassword : Resources.ErrorMessageUnexpected;
         }
     }
-    
-    private void ToForgotPassword()
-    {
-        _errorMessage = string.Empty;
-        var hasError = false;
-        _clickedOnForgotPassword = true;
-
-        if (string.IsNullOrWhiteSpace(_login.Email))
-        {
-            _errorMessage = Resources.ErrorMessageMailRequired;
-            hasError = true;
-        }
-
-        if (hasError) return;
-        
-        Navigation.NavigateTo("/forgotPassword");
-    }
-    
 }
