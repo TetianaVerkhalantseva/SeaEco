@@ -24,30 +24,62 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='black' class='bi bi-arrow-up-short' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d= ' M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5 ' /%3E%3C/svg%3E");
 }
 
-
 .card-status-new {
     background: linear-gradient(to bottom, #8CBFD9, #6497B1);
     color: white;
+    border-top-left-radius: 0.3rem; 
+    border-top-right-radius: 0.3rem;
+    border-bottom: none;           
 }
 
 .card-status-started {
     background: linear-gradient(to bottom, #D98CBF, #B16497);
     color: white;
+    border-top-left-radius: 0.3rem; 
+    border-top-right-radius: 0.3rem; 
+    border-bottom: none;           
 }
 
 .card-status-deactivated {
     background: linear-gradient(to bottom, #b4b8bb, #7a8288);
     color: white;
+    border-top-left-radius: 0.3rem;  
+    border-top-right-radius: 0.3rem;
+    border-bottom: none;           
 }
 
 .card-status-done {
     background: linear-gradient(to bottom, #BFD98C, #97B164);
     color: white;
+    border-top-left-radius: 0.3rem;
+    border-top-right-radius: 0.3rem;
+    border-bottom: none;
 }
+
+.card{
+    background: transparent;
+    border-radius: 0.3rem;
+    
+}
+
+
+
+
+
+
 
 .card-body {
     position: relative;
 }
+
+.card-bottom{
+    padding: 0.3rem;
+    background-color: white;
+    border-bottom-left-radius: 0.3rem;
+    border-bottom-right-radius: 0.3rem;
+    border-top: none;
+  
+   }
 
 .corner-text {
     position: absolute;
@@ -63,10 +95,6 @@
     min-width: 300px;
 }
 
-.card {
-    
-}
-
 @media (max-width: 1399.98px) {
     .card-container {
         max-width: 600px;
@@ -80,6 +108,7 @@
 }
 
 
+
 .sort-icon {
     display: inline-block;
     width: 1em;
@@ -91,7 +120,6 @@
     max-width: 1200px;
     table-layout: fixed;
 }
-
 
 .custom-colour-card {
     background-color: #EFF4F7;
