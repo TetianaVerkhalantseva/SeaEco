@@ -11,82 +11,82 @@
         <h3>@Resources.PageProjectsOverviewAllProjects</h3>
     </div>
     
-<div class="d-flex flex-column card-container w-100 gap-3">
-    
-    <button class="btn btn-secondary align-self-end" type="button"
-            data-bs-toggle="collapse" data-bs-target="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter">
-        @Resources.ButtonFilter <i class="bi bi-filter"></i>
-    </button>
-
-    <div class="collapse card-container w-100 shadow-lg" id="collapseFilter">
-        <div class="card card-body">
-            <div class="d-flex flex-column flex-xxl-row gap-3">
-                <div class="d-flex flex-column gap-2">
-                    <div class="form-group">
-                        <label class="p-1">@Resources.TableHeaderProjectStatus</label>
-                        <MultipleSelectionDropdown
-                            Options="@_allStatuses"
-                            @bind-SelectedOptions="SelectedStatuses" />
+    <div class="d-flex flex-column card-container w-100 gap-4">
+        <div class="d-flex justify-content-end p-1">
+            <button class="btn btn-secondary " type="button"
+                    data-bs-toggle="collapse" data-bs-target="#collapseFilter" aria-expanded="false" aria-controls="collapseFilter">
+                @Resources.ButtonFilter <i class="bi bi-filter"></i>
+            </button>
+        </div>
+        <div class="collapse card-container w-100" id="collapseFilter">
+            <div class="card card-body shadow-lg p-4 rounded-3 mb-4 custom-colour-card">
+                <div class="d-flex flex-column flex-xxl-row gap-3">
+                    <div class="d-flex flex-column gap-2">
+                        <div class="form-group">
+                            <label class="p-1">@Resources.TableHeaderProjectStatus</label>
+                            <MultipleSelectionDropdown
+                                Options="@_allStatuses"
+                                @bind-SelectedOptions="SelectedStatuses"/>
+                        </div>
                     </div>
-                </div>
-                <div class="d-flex flex-column gap-2">
-                    <div class="form-group">
-                        <label for="locationSelected" class="p-1">@Resources.TableHeaderLocality</label>
-                        <select id="locationSelected" class="form-control" @bind="SelectedLocation">
-                            <option value="">@Resources.OptionAll</option>
-                            @foreach (var location in _allLocations!)
-                            {
-                                <option value="@location">@location</option>
-                            }
-                        </select>
+                    <div class="d-flex flex-column gap-2">
+                        <div class="form-group">
+                            <label for="locationSelected" class="p-1">@Resources.TableHeaderLocality</label>
+                            <select id="locationSelected" class="form-control" @bind="SelectedLocation">
+                                <option value="">@Resources.OptionAll</option>
+                                @foreach (var location in _allLocations!)
+                                {
+                                    <option value="@location">@location</option>
+                                }
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div class="d-flex flex-column gap-2">
-                    <div class="form-group ">
-                        <label for="customerSelected" class="p-1">@Resources.TableHeaderCustomer</label>
-                        <select id="customerSelected" class="form-control" @bind="SelectedCustomer">
-                            <option value="">@Resources.OptionAll</option>
-                            @foreach (var customers  in _allCustomers!)
-                            {
-                                <option value="@customers">@customers</option>
-                            }
-                        </select>
+                    <div class="d-flex flex-column gap-2">
+                        <div class="form-group ">
+                            <label for="customerSelected" class="p-1">@Resources.TableHeaderCustomer</label>
+                            <select id="customerSelected" class="form-control" @bind="SelectedCustomer">
+                                <option value="">@Resources.OptionAll</option>
+                                @foreach (var customers in _allCustomers!)
+                                {
+                                    <option value="@customers">@customers</option>
+                                }
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div class="d-flex flex-column gap-2">
-                    <div class="form-group">
-                        <label for="yearSelect" class="p-1">@Resources.TableHeaderYear</label>
-                        <select id="yearSelect" class="form-control" @bind="SelectedYear">
-                            <option value="">@Resources.OptionAll</option>
-                            @for (int year = DateTime.Now.Year; year >= 2012 ; year--)
-                            {
-                                <option value="@year">@year</option>
-                            }
-                        </select>
+                    <div class="d-flex flex-column gap-2">
+                        <div class="form-group">
+                            <label for="yearSelect" class="p-1">@Resources.TableHeaderYear</label>
+                            <select id="yearSelect" class="form-control" @bind="SelectedYear">
+                                <option value="">@Resources.OptionAll</option>
+                                @for (int year = DateTime.Now.Year; year >= 2012; year--)
+                                {
+                                    <option value="@year">@year</option>
+                                }
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div class="d-flex flex-column gap-2">
-                    <div class="form-group">
-                        <label for="mndSelect" class="p-1">@Resources.TableHeaderMonth</label>
-                        <select id="mndSelect" class="form-control" @bind="SelectedMnd">
-                            <option value="">@Resources.OptionAll</option>
-                            @for (int month = 1; month <= 12; month++)
-                            {
-                                <option value="@month">@month</option>
-                            }
-                        </select>
+                    <div class="d-flex flex-column gap-2">
+                        <div class="form-group">
+                            <label for="mndSelect" class="p-1">@Resources.TableHeaderMonth</label>
+                            <select id="mndSelect" class="form-control" @bind="SelectedMnd">
+                                <option value="">@Resources.OptionAll</option>
+                                @for (int month = 1; month <= 12; month++)
+                                {
+                                    <option value="@month">@month</option>
+                                }
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div class="flex-grow-1"></div>
-                <div class="d-flex flex-xxl-column flex-row align-self-end">
-                    <button class="btn btn-secondary" type="button" @onclick="() => ResetFilter()">
-                        @Resources.ButtonReset
-                    </button>
+                    <div class="flex-grow-1"></div>
+                    <div class="d-flex flex-xxl-column flex-row align-self-end">
+                        <button class="btn btn-secondary" type="button" @onclick="() => ResetFilter()">
+                            @Resources.ButtonReset
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-        
+
 
         <div class="table-responsive  d-none d-xxl-block">
             <table class="table table-hover fixed-width-table">
@@ -105,14 +105,14 @@
                 <tr>
                     @foreach (var tableHeader in _listTableHeader)
                     {
-                        <th class = "cursor" @onclick="() => SortBy(tableHeader)">
+                        <th class="cursor" @onclick="() => SortBy(tableHeader)">
                             @tableHeader
-                            
-                                @if (_currentSortColumn == @tableHeader)
-                                {
-                                    <i class="bi @(_sortAscending ? "bi-arrow-up" : "bi-arrow-down")"></i>
-                                }
-                            
+
+                            @if (_currentSortColumn == @tableHeader)
+                            {
+                                <i class="bi @(_sortAscending ? "bi-arrow-down":"bi-arrow-up")"></i>
+                            }
+
                         </th>
                     }
                 </tr>
@@ -134,27 +134,27 @@
                 }
                 </tbody>
             </table>
-    </div>
+        </div>
 
-    <div class="card-container d-block d-xxl-none">
-        <div class="row" style="justify-content: center;">
-            @foreach (var project in SortedProjects)
-            {
-                <div class="col mb-3 card-col ">
-                    <div class="card cursor shadow-lg" @onclick="() => OnRowClick(project.prosjektId)">
-                        <div class="card-body text-center @GetStatus(project.Status)">
-                            <h5 class="card-title">@project.prosjektId</h5>
-                            <span class="corner-text">@project.Status</span>
+        <div class="card-container d-block d-xxl-none">
+            <div class="row" style="justify-content: center;">
+                @foreach (var project in SortedProjects)
+                {
+                    <div class="col mb-3 card-col ">
+                        <div class="card cursor shadow-lg" @onclick="() => OnRowClick(project.prosjektId)">
+                            <div class="card-body text-center @GetStatus(project.Status)">
+                                <h5 class="card-title">@project.prosjektId</h5>
+                                <span class="corner-text">@project.Status</span>
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">@Resources.TableHeaderLocality: @project.Lokalitet</li>
+                            </ul>
                         </div>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">@Resources.TableHeaderLocality: @project.Lokalitet</li>
-                        </ul>
                     </div>
-                </div>
-            }
+                }
+            </div>
         </div>
     </div>
-</div>
 </div>
 </div>
 
