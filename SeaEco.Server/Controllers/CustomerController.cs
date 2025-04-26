@@ -71,7 +71,7 @@ public class CustomerController: ControllerBase
 
       if (result.IsSuccess)
       {
-         return Ok();
+         return Ok(result.Message);
       }
       
       return BadRequest(result.Message);

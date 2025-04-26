@@ -79,8 +79,20 @@
     <data name="ButtonSave" xml:space="preserve">
         <value>Lagre</value>
     </data>
+    <data name="ButtonEdit" xml:space="preserve">
+        <value>Rediger</value>
+    </data>
+    <data name="ButtonDelete" xml:space="preserve">
+        <value>Slett</value>
+    </data>
     <data name="ButtonAddNewUser" xml:space="preserve">
         <value>+ Ny bruker</value>
+    </data>
+    <data name="ButtonAddNewCustomer" xml:space="preserve">
+        <value>+ Ny kunde</value>
+    </data>
+    <data name="ButtonAddNewProject" xml:space="preserve">
+        <value>+ Nytt prosjekt</value>
     </data>
 
     <!-- Table -->
@@ -159,6 +171,63 @@
 
     <data name="PageRegisterUserNewUser" xml:space="preserve">
         <value>Ny bruker</value>
+    </data>
+    
+    <!-- PageCustomer -->
+    <data name="PageCustomerCustomerList">
+        <value>Kundeliste</value>
+    </data>
+    <data name="PageCustomerNoCustomersFound" xml:space="preserve">
+        <value>Ingen kunde er opprettet ennå</value>
+    </data>
+
+    <!-- PageCustomerInfo -->
+    <data name="PageCustomerInfoProjects" xml:space="preserve">
+        <value>Prosjekter</value>
+    </data>
+    <data name="PageCustomerInfoCustomerInfo" xml:space="preserve">
+        <value>Kundeopplysninger</value>
+    </data>
+    <data name="PageCustomerInfoCustomerName" xml:space="preserve">
+        <value>Oppdragsgiver</value>
+    </data>
+    <data name="PageCustomerInfoContactPerson" xml:space="preserve">
+        <value>Kontaktperson</value>
+    </data>
+    <data name="PageCustomerInfoCustomerNumber" xml:space="preserve">
+        <value>Telefonnummer</value>
+    </data>
+    <data name="PageCustomerInfoDeleteCustomerSuccess" xml:space="preserve">
+        <value>Kundesletting vellykket!</value>
+    </data>
+    <data name="PageCustomerInfoDeleteCustomerFailed" xml:space="preserve">
+        <value>Kundesletting misllykkets.</value>
+    </data>
+    
+    <data name="PageCustomerInfoNoProject" xml:space="preserve">
+        <value>Ingen prosjekt er opprettet ennå</value>
+    </data>
+    
+    <!-- PageEditCustomer -->
+    <data name="PageEditCustomerEditCustomer" xml:space="preserve">
+        <value>Rediger kunde</value>
+    </data>
+    <data name="PageEditCustomerSuccess" xml:space="preserve">
+        <value>Kunderedigering vellykket!</value>
+    </data>
+    <data name="PageEditCustomerFailed" xml:space="preserve">
+        <value>Kunderedigering mislykkes.</value>
+    </data>
+    
+    <!-- PageAddCustomer -->
+    <data name="PageAddCustomerAddCustomer" xml:space="preserve">
+        <value>Legg til kunde</value>
+    </data>
+    <data name="PageAddCustomerSuccess" xml:space="preserve">
+        <value>Kunderegistrering vellykket!</value>
+    </data>
+    <data name="PageAddCustomerFailed" xml:space="preserve">
+        <value>Kunderegistrering mislykkes.</value>
     </data>
 
     <!-- PageProjectsOverview -->
