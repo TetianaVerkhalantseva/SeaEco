@@ -458,5 +458,11 @@ namespace SeaEco.Client.Resources {
                 return ResourceManager.GetString("ErrorMessageWrongMailOrPassword", resourceCulture);
             }
         }
+        
+        internal static string ErrorMessageWrongMail {
+            get {
+                return ResourceManager.GetString("ErrorMessageWrongMail", resourceCulture);
+            }
+        }
     }
 }

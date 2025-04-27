@@ -263,6 +263,9 @@
         <value>Epost-adresse påkrevd</value>
     </data>
     <data name="ErrorMessageWrongMailOrPassword" xml:space="preserve">
-        <value>Email eller passord er feil</value>
+        <value>Epost-adressen eller passordet er feil</value>
+    </data>
+    <data name="ErrorMessageWrongMail" xml:space="preserve">
+        <value>Epost-adressen eksisterer ikke</value>
     </data>
 </root>
