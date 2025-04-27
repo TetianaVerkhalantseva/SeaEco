@@ -428,5 +428,35 @@ namespace SeaEco.Client.Resources {
                 return ResourceManager.GetString("OptionAll", resourceCulture);
             }
         }
+        
+        internal static string PageLoginLogin {
+            get {
+                return ResourceManager.GetString("PageLoginLogin", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonLogin {
+            get {
+                return ResourceManager.GetString("ButtonLogin", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonForgotPassword {
+            get {
+                return ResourceManager.GetString("ButtonForgotPassword", resourceCulture);
+            }
+        }
+        
+        internal static string ErrorMessageMailRequired {
+            get {
+                return ResourceManager.GetString("ErrorMessageMailRequired", resourceCulture);
+            }
+        }
+        
+        internal static string ErrorMessageWrongMailOrPassword {
+            get {
+                return ResourceManager.GetString("ErrorMessageWrongMailOrPassword", resourceCulture);
+            }
+        }
     }
 }
