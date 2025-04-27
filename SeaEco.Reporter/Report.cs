@@ -7,7 +7,7 @@ using SeaEco.Reporter.Models;
 using SeaEco.Reporter.Models.B1;
 
 namespace SeaEco.Reporter;
-
+/*
 public sealed class Report
 {
     private const string DocumentNotFoundError = "Document not found";
@@ -46,7 +46,7 @@ public sealed class Report
 
         using ExcelPackage sourcePackage = new ExcelPackage(_options.TemplatePath);
         using ExcelWorksheet worksheet = sourcePackage.Workbook.Worksheets.First();
-        
+
         for (int i = 0; i < columns.Count && i < 10; i++)
         {
             int column = i + 4;
@@ -57,3 +57,4 @@ public sealed class Report
         }
     }
 }
+*/
