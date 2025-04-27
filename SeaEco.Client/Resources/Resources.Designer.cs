@@ -464,5 +464,53 @@ namespace SeaEco.Client.Resources {
                 return ResourceManager.GetString("ErrorMessageWrongMail", resourceCulture);
             }
         }
+        
+        internal static string PageResetPasswordResetPassword {
+            get {
+                return ResourceManager.GetString("PageResetPasswordResetPassword", resourceCulture);
+            }
+        }
+        
+        internal static string PageResetPasswordHowTo {
+            get {
+                return ResourceManager.GetString("PageResetPasswordHowTo", resourceCulture);
+            }
+        }
+        
+        internal static string ErrorMessageToken {
+            get {
+                return ResourceManager.GetString("ErrorMessageToken", resourceCulture);
+            }
+        }
+        
+        internal static string ErrorMessageNoToken {
+            get {
+                return ResourceManager.GetString("ErrorMessageNoToken", resourceCulture);
+            }
+        }
+        
+        internal static string SuccessMessageMailSendt {
+            get {
+                return ResourceManager.GetString("SuccessMessageMailSendt", resourceCulture);
+            }
+        }
+        
+        internal static string PageForgotPasswordForgotPassword {
+            get {
+                return ResourceManager.GetString("PageForgotPasswordForgotPassword", resourceCulture);
+            }
+        }
+        
+        internal static string PageForgotPasswordHow {
+            get {
+                return ResourceManager.GetString("PageForgotPasswordHow", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonSubmit {
+            get {
+                return ResourceManager.GetString("ButtonSubmit", resourceCulture);
+            }
+        }
     }
 }

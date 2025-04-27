@@ -16,8 +16,8 @@
         <div class="d-flex flex-column gap-2">
             @if (_login != null)
             {
-                <InputText id="email" class="form-control" @bind-Value="_login.Email" placeholder="@Resources.InputTextMail" @oninput="() => _errorMessage = null"/>
-                <InputText type="password" id="password" class="form-control" @bind-Value="_login.Password" placeholder="@Resources.InputTextPassword" @oninput="() => _errorMessage = null"/>
+                <InputText id="email" class="form-control inputText-min-width" @bind-Value="_login.Email" placeholder="@Resources.InputTextMail" @oninput="() => _errorMessage = null"/>
+                <InputText type="password" id="password"   class="form-control inputText-min-width" @bind-Value="_login.Password" placeholder="@Resources.InputTextPassword" @oninput="() => _errorMessage = null"/>
             }
         </div>
         

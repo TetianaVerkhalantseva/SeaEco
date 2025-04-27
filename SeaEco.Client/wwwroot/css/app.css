@@ -112,3 +112,8 @@ a, .btn-link {
 .text-danger{
     color: red !important;
 }
+
+.inputText-min-width
+{
+    min-width: 300px;
+}
