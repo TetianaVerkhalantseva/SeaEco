@@ -32,7 +32,7 @@
                     <div class="d-flex flex-column gap-2">
                         <div class="form-group">
                             <label for="locationSelected" class="p-1">@Resources.TableHeaderLocality</label>
-                            <select id="locationSelected" class="form-control" @bind="SelectedLocation">
+                            <select id="locationSelected" class="form-select" @bind="SelectedLocation">
                                 <option value="">@Resources.OptionAll</option>
                                 @foreach (var location in _allLocations!)
                                 {
@@ -44,7 +44,7 @@
                     <div class="d-flex flex-column gap-2">
                         <div class="form-group ">
                             <label for="customerSelected" class="p-1">@Resources.TableHeaderCustomer</label>
-                            <select id="customerSelected" class="form-control" @bind="SelectedCustomer">
+                            <select id="customerSelected" class="form-select" @bind="SelectedCustomer">
                                 <option value="">@Resources.OptionAll</option>
                                 @foreach (var customers in _allCustomers!)
                                 {
@@ -56,7 +56,7 @@
                     <div class="d-flex flex-column gap-2">
                         <div class="form-group">
                             <label for="yearSelect" class="p-1">@Resources.TableHeaderYear</label>
-                            <select id="yearSelect" class="form-control" @bind="SelectedYear">
+                            <select id="yearSelect" class="form-select" @bind="SelectedYear">
                                 <option value="">@Resources.OptionAll</option>
                                 @for (int year = DateTime.Now.Year; year >= 2012; year--)
                                 {
@@ -68,7 +68,7 @@
                     <div class="d-flex flex-column gap-2">
                         <div class="form-group">
                             <label for="mndSelect" class="p-1">@Resources.TableHeaderMonth</label>
-                            <select id="mndSelect" class="form-control" @bind="SelectedMnd">
+                            <select id="mndSelect" class="form-select" @bind="SelectedMnd">
                                 <option value="">@Resources.OptionAll</option>
                                 @for (int month = 1; month <= 12; month++)
                                 {
