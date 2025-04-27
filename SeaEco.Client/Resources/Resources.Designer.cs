@@ -471,12 +471,6 @@ namespace SeaEco.Client.Resources {
             }
         }
         
-        internal static string PageResetPasswordHowTo {
-            get {
-                return ResourceManager.GetString("PageResetPasswordHowTo", resourceCulture);
-            }
-        }
-        
         internal static string ErrorMessageToken {
             get {
                 return ResourceManager.GetString("ErrorMessageToken", resourceCulture);

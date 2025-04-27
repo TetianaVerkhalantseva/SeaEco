@@ -271,9 +271,6 @@
     <data name="PageResetPasswordResetPassword" xml:space="preserve">
         <value>Endre passord</value>
     </data>
-    <data name="PageResetPasswordHowTo" xml:space="preserve">
-        <value>Skriv inn ditt nye passord.</value>
-    </data>
     <data name="ErrorMessageToken" xml:space="preserve">
         <value>Ugyldig token</value>
     </data>
@@ -281,13 +278,13 @@
         <value>Manglende reset-token</value>
     </data>
     <data name="SuccessMessageMailSendt" xml:space="preserve">
-        <value>Link er sendt til oppgitt epost-adresse</value>
+        <value>Mail er sendt til oppgitt epost-adresse</value>
     </data>
     <data name="PageForgotPasswordForgotPassword" xml:space="preserve">
-        <value>Glemt passord ditt?</value>
+        <value>Glemt passordet ditt?</value>
     </data>
     <data name="PageForgotPasswordHow" xml:space="preserve">
-        <value>Skriv inn din epost-adresse og send inn. Du vil motta mail med link til å endre ditt passord.</value>
+        <value>Skriv inn epost-adressen din og send inn. Du vil motta mail med link til å endre passordet.</value>
     </data>
     <data name="ButtonSubmit" xml:space="preserve">
         <value>Send inn</value>
