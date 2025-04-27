@@ -290,6 +290,6 @@
         <value>Skriv inn din epost-adresse og send inn. Du vil motta mail med link til å endre ditt passord.</value>
     </data>
     <data name="ButtonSubmit" xml:space="preserve">
-        <value />
+        <value>Send inn</value>
     </data>
 </root>
