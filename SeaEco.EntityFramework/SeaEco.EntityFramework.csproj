@@ -20,6 +20,8 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Contexts\" />
+      <Folder Include="Entities\" />
       <Folder Include="Migrations\" />
     </ItemGroup>
 

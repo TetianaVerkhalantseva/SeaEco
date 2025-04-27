@@ -5,16 +5,17 @@ using SeaEco.EntityFramework.Entities;
 
 namespace SeaEco.Services.StationServices;
 
+/*
 public class StationService : IStationService
 {
-    
+
     private readonly AppDbContext _context;
 
     public StationService(AppDbContext context)
     {
         _context = context;
     }
-    
+
     public async Task<List<StationDto>> GetStationsAsync(Guid prosjektId)
     {
         return await _context.BStasjons
@@ -88,7 +89,7 @@ public class StationService : IStationService
             .FirstOrDefaultAsync(s => s.Prosjektid == prosjektId && s.Stasjonsid == stasjonsid);
         if (station == null)
             throw new Exception("Stasjon ikke funnet.");
-        
+
         station.Dybde = dto.Dybde;
         station.Kordinatern = dto.Kordinatern;
         station.Kordinatero = dto.Kordinatero;
@@ -113,7 +114,7 @@ public class StationService : IStationService
         _context.BStasjons.Update(station);
         await _context.SaveChangesAsync();
     }
-    
+
     public async Task<int> AddExtraStationAsync(Guid prosjektId, NewStationDto dto)
     {
         var maxNummer = await _context.BStasjons
@@ -155,4 +156,4 @@ public class StationService : IStationService
 
         return newNummer;
     }
-}
+}*/

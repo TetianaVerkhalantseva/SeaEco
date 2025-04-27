@@ -177,8 +177,7 @@ void SeedUser(IServiceProvider serviceProvider)
         PassordHash = password.hashed,
         Salt = password.salt,
         IsAdmin = true,
-        Aktiv = true,
-        Datoregistrert = DateTime.Now
+        Aktiv = true
     };
     
     repository.Add(admin).GetAwaiter().GetResult();

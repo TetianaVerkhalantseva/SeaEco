@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SeaEco.Abstractions.Enums;
 using SeaEco.Abstractions.Models.Project;
-using SeaEco.Abstractions.Models.Stations;
 using SeaEco.EntityFramework.Contexts;
 using SeaEco.EntityFramework.Entities;
 
@@ -25,30 +25,21 @@ public class ProjectService : IProjectService
         var prosjekt = new BProsjekt
         {
             PoId = dto.PoId,
-            Kundeid = dto.KundeId,
-            Kundekontaktpersons = dto.Kundekontaktpersons,
+            KundeId = dto.KundeId,
+            Kundekontaktperson = dto.Kundekontaktperson,
             Kundetlf = dto.Kundetlf,
             Kundeepost = dto.Kundeepost,
-            Lokalitetid = dto.Lokalitetid,
-            Lokalitet = dto.Lokalitet,
-            Antallstasjoner = dto.Antallstasjoner,
+            //LokalitetId = dto.Lokalitetid, //Se hvordan lokalitet endret. Dette er Fk til Lokalitet tabell - der lokalitetsnavn oh lokalitetsID
             Mtbtillatelse = dto.Mtbtillatelse,
-            Biomasse = dto.Biomasse,
-            Ansvarligansattid = dto.Ansvarligansattid,
-            Ansvarligansatt2id = dto.Ansvarligansatt2id,
-            Ansvarligansatt3id = dto.Ansvarligansatt3id,
-            Ansvarligansatt4id = dto.Ansvarligansatt4id,
-            Ansvarligansatt5id = dto.Ansvarligansatt5id,
-            Planlagtfeltdato = dto.Planlagtfeltdato,
+            ProsjektansvarligId = dto.ProsjektansvarligId,
             Merknad = dto.Merknad,
-            Status = dto.Status,
-            Datoregistrert = DateTime.UtcNow
+            Produksjonsstatus = (int)dto.Produksjonsstatus,
         };
 
         _context.BProsjekts.Add(prosjekt);
         await _context.SaveChangesAsync();
 
-        return prosjekt.Prosjektid;
+        return prosjekt.Id;
     }
     
     public async Task<List<ProjectDto>> GetAllProjectsAsync()
@@ -56,48 +47,38 @@ public class ProjectService : IProjectService
         return await _context.BProsjekts
             .Select(p => new ProjectDto
             {
-                ProsjektId = p.Prosjektid,
+                Id = p.Id,
                 PoId = p.PoId,
-                KundeId = p.Kundeid,
-                Kundekontaktpersons = p.Kundekontaktpersons,
+                KundeId = p.KundeId,
+                Kundekontaktperson = p.Kundekontaktperson,
                 Kundetlf = p.Kundetlf,
                 Kundeepost = p.Kundeepost,
-                Lokalitetid = p.Lokalitetid,
-                Lokalitet = p.Lokalitet,
-                Antallstasjoner = p.Antallstasjoner,
+                //Lokalitetid = p.LokalitetId, //Se hvordan lokalitet endret. Dette er Fk til Lokalitet tabell - der lokalitetsnavn oh lokalitetsID
                 Mtbtillatelse = p.Mtbtillatelse,
-                Biomasse = p.Biomasse,
-                Planlagtfeltdato = p.Planlagtfeltdato,
                 Merknad = p.Merknad,
-                Status = p.Status,
-                Datoregistrert = p.Datoregistrert
+                Produksjonsstatus = (Produksjonsstatus)p.Produksjonsstatus,
             })
             .ToListAsync();
     }
 
-    public async Task<ProjectDto?> GetProjectByIdAsync(Guid prosjektId)
+    public async Task<ProjectDto?> GetProjectByIdAsync(Guid Id)
     {
-        var p = await _context.BProsjekts.FirstOrDefaultAsync(p => p.Prosjektid == prosjektId);
+        var p = await _context.BProsjekts.FirstOrDefaultAsync(p => p.Id == Id);
         if (p == null)
             return null;
 
         return new ProjectDto
         {
-            ProsjektId = p.Prosjektid,
+            Id = p.Id,
             PoId = p.PoId,
-            KundeId = p.Kundeid,
-            Kundekontaktpersons = p.Kundekontaktpersons,
+            KundeId = p.KundeId,
+            Kundekontaktperson = p.Kundekontaktperson,
             Kundetlf = p.Kundetlf,
             Kundeepost = p.Kundeepost,
-            Lokalitetid = p.Lokalitetid,
-            Lokalitet = p.Lokalitet,
-            Antallstasjoner = p.Antallstasjoner,
+            //Lokalitetid = p.LokalitetId, //Se hvordan lokalitet endret. Dette er Fk til Lokalitet tabell - der lokalitetsnavn oh lokalitetsID
             Mtbtillatelse = p.Mtbtillatelse,
-            Biomasse = p.Biomasse,
-            Planlagtfeltdato = p.Planlagtfeltdato,
             Merknad = p.Merknad,
-            Status = p.Status,
-            Datoregistrert = p.Datoregistrert
+            Produksjonsstatus = (Produksjonsstatus)p.Produksjonsstatus,
         };
     }
 }
