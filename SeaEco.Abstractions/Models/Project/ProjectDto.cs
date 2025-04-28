@@ -1,23 +1,23 @@
-﻿namespace SeaEco.Abstractions.Models.Project;
+﻿using SeaEco.Abstractions.Enums;
+
+namespace SeaEco.Abstractions.Models.Project;
 
 public class ProjectDto
 {
-    public Guid ProsjektId { get; set; }
+    public Guid Id { get; set; }
     public string PoId { get; set; } = null!;
-    
-    public int KundeId { get; set; }
-    public string Kundekontaktpersons { get; set; } = null!;
-    public string Kundetlf { get; set; }
+    public Guid KundeId { get; set; }
+    public string Kundekontaktperson { get; set; } = null!;
+    public string Kundetlf { get; set; } = null!;
     public string Kundeepost { get; set; } = null!;
     
-    public int Lokalitetid { get; set; }
-    public string Lokalitet { get; set; } = null!;
+    public Guid Lokalitetid { get; set; }
+    public int? Mtbtillatelse { get; set; }
     
-    public int Antallstasjoner { get; set; }
-    public int Mtbtillatelse { get; set; }
-    public int Biomasse { get; set; }
-    public DateOnly Planlagtfeltdato { get; set; }
+    public Guid ProsjektansvarligId { get; set; }
     public string? Merknad { get; set; }
-    public string Status { get; set; } = null!;
-    public DateTime? Datoregistrert { get; set; }
+    
+    public Produksjonsstatus Produksjonsstatus { get; set; }
+    public DateTime Datoregistrert { get; set; }
+    
 }

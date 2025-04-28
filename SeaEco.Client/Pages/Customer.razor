@@ -38,7 +38,7 @@
             {
                 <div class="col-md-5 col-lg-4 mb-4">
                     <div class="card shadow-sm p-4 rounded-3 hover-effect d-flex align-items-center justify-content-center">
-                        <a href="CustomerInfo/@customerName.CustomerId"><h5 class="customer-name">@customerName.CustomerName</h5></a>
+                        <a href="CustomerInfo/@customerName.Id"><h5 class="customer-name">@customerName.CustomerName</h5></a>
                     </div>
                 </div>
             }
@@ -89,10 +89,10 @@
                 _customerNames = _customerNames.OrderByDescending(c => c.CustomerName).ToList();
                 break;
             case "created-asc":
-                _customerNames = _customerNames.OrderBy(c => c.CustomerId).ToList();
+                _customerNames = _customerNames.OrderBy(c => c.Id).ToList();
                 break;
             case "created-desc":
-                _customerNames = _customerNames.OrderByDescending(c => c.CustomerId).ToList();
+                _customerNames = _customerNames.OrderByDescending(c => c.Id).ToList();
                 break;
         }
         StateHasChanged();

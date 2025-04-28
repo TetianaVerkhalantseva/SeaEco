@@ -31,7 +31,7 @@ public class ProjectController : ControllerBase
         try
         {
             var id = await _projectService.CreateProjectAsync(dto);
-            return Ok(new { prosjektId = id });
+            return Ok(new { Id = id });
         }
         catch (KeyNotFoundException knf)
         {
@@ -50,41 +50,41 @@ public class ProjectController : ControllerBase
         return Ok(projects);
     }
     
-    [HttpGet("{prosjektId:guid}")]
-    public async Task<IActionResult> GetProjectById(Guid prosjektId)
+    [HttpGet("{Id:guid}")]
+    public async Task<IActionResult> GetProjectById(Guid Id)
     {
-        var project = await _projectService.GetProjectByIdAsync(prosjektId);
+        var project = await _projectService.GetProjectByIdAsync(Id);
         if (project == null)
             return NotFound();
         return Ok(project);
     }
     
     // Stasjonsoperasjoner
-    [HttpGet("{prosjektId:guid}/stasjon")]
-    public async Task<IActionResult> GetStations(Guid prosjektId)
+    [HttpGet("{Id:guid}/stasjon")]
+    public async Task<IActionResult> GetStations(Guid Id)
     {
-        var stations = await _stationService.GetStationsAsync(prosjektId);
+        var stations = await _stationService.GetStationsAsync(Id);
         return Ok(stations);
     }
 
-    [HttpGet("{prosjektId:guid}/stasjon/{stasjonsid:int}")]
-    public async Task<IActionResult> GetStation(Guid prosjektId, Guid stasjonsid)
+    [HttpGet("{Id:guid}/stasjon/{stasjonsid:int}")]
+    public async Task<IActionResult> GetStation(Guid Id, Guid stasjonsid)
     {
-        var station = await _stationService.GetStationByIdAsync(prosjektId, stasjonsid);
+        var station = await _stationService.GetStationByIdAsync(Id, stasjonsid);
         if (station == null)
             return NotFound();
         return Ok(station);
     }
 
-    [HttpPut("{prosjektId:guid}/stasjon/{stasjonsid:guid}")]
-    public async Task<IActionResult> UpdateStation(Guid prosjektId, Guid stasjonsid, [FromBody] UpdateStationDto dto)
+    [HttpPut("{Id:guid}/stasjon/{stasjonsid:guid}")]
+    public async Task<IActionResult> UpdateStation(Guid Id, Guid stasjonsid, [FromBody] UpdateStationDto dto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
         try
         {
-            await _stationService.UpdateStationAsync(prosjektId, stasjonsid, dto);
+            await _stationService.UpdateStationAsync(Id, stasjonsid, dto);
             return Ok();
         }
         catch (Exception ex)
@@ -93,16 +93,16 @@ public class ProjectController : ControllerBase
         }
     }
     
-    [HttpPost("{prosjektId:guid}/stasjon")]
-    public async Task<IActionResult> AddExtraStation(Guid prosjektId, [FromBody] NewStationDto dto)
+    [HttpPost("{Id:guid}/stasjon")]
+    public async Task<IActionResult> AddExtraStation(Guid Id, [FromBody] NewStationDto dto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
         
         try
         {
-            var newStationId = await _stationService.AddExtraStationAsync(prosjektId, dto);
-            return Ok(new { prosjektId, stasjonsid = newStationId });
+            var newStationId = await _stationService.AddExtraStationAsync(Id, dto);
+            return Ok(new { Id, stasjonsid = newStationId });
         }
         catch (Exception ex)
         {

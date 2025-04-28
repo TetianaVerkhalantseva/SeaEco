@@ -46,7 +46,6 @@ public sealed class AuthService(
             Salt = passwordResult.salt,
             Aktiv = true,
             Id = Guid.NewGuid(),
-            Datoregistrert = DateTime.Now,
             Fornavn = dto.FirstName,
             Etternavn = dto.LastName,
             Epost = dto.Email,

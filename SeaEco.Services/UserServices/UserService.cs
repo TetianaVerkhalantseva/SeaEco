@@ -78,7 +78,6 @@ public sealed class UserService(IGenericRepository<Bruker> userRepository) : IUs
         LastName = model.Etternavn,
         Email = model.Epost,
         IsAdmin = model.IsAdmin,
-        IsActive = model.Aktiv,
-        Datoregistrert = model.Datoregistrert
+        IsActive = model.Aktiv
     };
 }

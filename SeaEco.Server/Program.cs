@@ -11,6 +11,7 @@ using SeaEco.Abstractions.Models.User;
 using SeaEco.EntityFramework.Contexts;
 using SeaEco.EntityFramework.Entities;
 using SeaEco.EntityFramework.GenericRepository;
+using SeaEco.Reporter.Models;
 using SeaEco.Server.Infrastructure;
 using SeaEco.Server.Middlewares;
 using SeaEco.Services.AuthServices;
@@ -96,10 +97,12 @@ services.AddAuthentication(options =>
     };
 });
 
+// Options
 services.Configure<JwtOptions>(configuration.GetSection("JwtOptions"));
 services.Configure<SmtpOptions>(configuration.GetSection("SmtpOptions"));
+services.Configure<ReportOptions>(configuration.GetSection("ReportOptions"));
 
-services.AddDbContext<AppDbContext>(options => options.UseNpgsql(configuration["ConnectionStrings:DefaultConnection"]));
+services.AddDbContext<AppDbContext>(options => options.UseNpgsql(configuration["ConnectionStrings:LocalConnection"]));
 services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 // Core services
@@ -114,7 +117,6 @@ services.AddScoped<ICustomerService, CustomerService>();
 services.AddScoped<IProjectService, ProjectService>();
 services.AddScoped<EmailMessageManager>();
 services.AddTransient<IImageService, ImageService>();
-services.AddScoped<IStationService, StationService>();
 
 // Models validators
 services.AddScoped<IValidator<LoginDto>, LoginDtoValidator>();
@@ -176,8 +178,7 @@ void SeedUser(IServiceProvider serviceProvider)
         PassordHash = password.hashed,
         Salt = password.salt,
         IsAdmin = true,
-        Aktiv = true,
-        Datoregistrert = DateTime.Now
+        Aktiv = true
     };
     
     repository.Add(admin).GetAwaiter().GetResult();

@@ -1,4 +1,4 @@
-@page "/newProject/{CustomerId:int}"
+@page "/newProject/{CustomerId:guid}"
 @using Microsoft.AspNetCore.Authorization
 @using SeaEco.Abstractions.Models.Project
 @attribute [Authorize(Roles = "admin")]
@@ -20,7 +20,7 @@ else
         <div class="d-flex flex-column align-items-center gap-3 mb-3">
         <div class="mb-3">
             <h3>Nytt prosjekt</h3>
-            <h6 style="color: #6a6e6e">- @_customer.Oppdragsgiver</h6>
+            <h6 class="text-secondary">- @_customer.Oppdragsgiver</h6>
         </div>
         <div class="d-flex justify-content-lg-start flex-column gap-3">
             <div class="d-flex gap-3">
@@ -32,7 +32,7 @@ else
             <div class="d-flex flex-column mt-4 mb-4 gap-3">
                 <div class="d-flex gap-3">
                     <div class="form-floating flex-fill">
-                        <InputText class="form-control" id="contactCustomer" @bind-Value="_newProject.Kundekontaktpersons"/>
+                        <InputText class="form-control" id="contactCustomer" @bind-Value="_newProject.Kundekontaktperson"/>
                         <label for="contactCustomer">Konaktperson</label>
                     </div>
                 </div>
@@ -49,13 +49,13 @@ else
             </div>
             <div class="d-flex gap-3">
                 <div class="form-floating flex-fill">
-                    <InputText class="form-control" id="locality" @bind-Value="_newProject.Lokalitet"/>
+                    <InputText class="form-control" id="locality" @bind-Value="_newProject.Kundeepost"/>
                     <label for="locality">Lokalitet</label>
                 </div>
             </div>
             <div class="d-flex gap-3">
                 <div class="form-floating">
-                    <InputNumber class="form-control" id="idLocality" @bind-Value="_newProject.Lokalitetid"/>
+                    <InputNumber class="form-control" id="idLocality" @bind-Value="Lokalitetid"/>
                     <label for="idLocality">Lokalitets-ID</label>
                 </div>
                 <div class="form-floating">
@@ -95,14 +95,15 @@ else
 
 @code {
     private NewProjectDto _newProject = new();
-    private List<UserDto> _users = new();
+    private List<UserDto> _users = [new()];
     private Kunde? _customer = new();
     private bool _isLoading = true;
-    [Parameter] public int CustomerId { get; set; }
+    [Parameter] public Guid CustomerId { get; set; }
     private string? _errorMessage;
 
     //benyttes i form, da backend enda ikke har variabelen. Form må oppdateres når klar.
     private string? AnsvarligansattNavn;
+    private int? Lokalitetid; 
 
 
     protected override async Task OnInitializedAsync()
@@ -113,9 +114,9 @@ else
             if (_customer != null)
             {
                 _newProject = new NewProjectDto
-                {
-                    Kundekontaktpersons = _customer.Kontaktperson,
-                    Kundetlf = _customer.Telefonnummer
+                {   
+                    Kundekontaktperson = _customer.Kontaktperson,
+                    Kundetlf = _customer.Telefon
                 };
             }
         }
