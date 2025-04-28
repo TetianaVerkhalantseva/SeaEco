@@ -6,6 +6,7 @@
 @inject NavigationManager Navigation
 @using SeaEco.EntityFramework.Entities
 @using Microsoft.AspNetCore.Components.Authorization
+@using SeaEco.Abstractions.Enums
 
 
 <div class="container mt-5">
@@ -22,7 +23,7 @@
                         <p class="customer-info">@_customer.Kontaktperson</p>
 
                         <h4 class="customer-title">@Resources.PageCustomerInfoCustomerNumber</h4>
-                        <p class="customer-info">@_customer.Telefonnummer</p>
+                        <p class="customer-info">@_customer.Telefon</p>
                     </div>
 
                     <div class="position-absolute bottom-0 start-0 mb-3 ms-3">
@@ -90,7 +91,7 @@
                         <!-- href to project detail page -->
                         <a href=""><h5 class="project-info">@project.PoId</h5></a>
                         <a href="">
-                            <p>@project.Status</p></a>
+                            <p>@project.Prosjektstatus</p></a>
                     </div>
                 </div>
             }
@@ -127,44 +128,43 @@
             {
                 new BProsjekt
                 {
-                    Prosjektid = new Guid(),
+                    Id = new Guid(),
                     PoId = "1001",
-                    Status = "Ferdig",
-                    Datoregistrert = DateTime.Now
+                    Prosjektstatus = 3
                 },
                 new BProsjekt
                 {
-                    Prosjektid = new Guid(),
+                    Id = new Guid(),
                     PoId = "1002",
-                    Status = "Påbegynt",
+                    Prosjektstatus = 2,
                     Datoregistrert = DateTime.Now
                 },
                 new BProsjekt
                 {
-                    Prosjektid = new Guid(),
+                    Id = new Guid(),
                     PoId = "1003",
-                    Status = "Påbegynt",
+                    Prosjektstatus = 2,
                     Datoregistrert = DateTime.Now
                 },
                 new BProsjekt
                 {
-                    Prosjektid = new Guid(),
+                    Id = new Guid(),
                     PoId = "1004",
-                    Status = "Nytt",
+                    Prosjektstatus = 1,
                     Datoregistrert = DateTime.Now
                 },
                 new BProsjekt
                 {
-                    Prosjektid = new Guid(),
+                    Id = new Guid(),
                     PoId = "1005",
-                    Status = "Påbegynt",
+                    Prosjektstatus = 2,
                     Datoregistrert = DateTime.Now
                 },
                 new BProsjekt
                 {
-                    Prosjektid = new Guid(),
+                    Id = new Guid(),
                     PoId = "1006",
-                    Status = "Nytt",
+                    Prosjektstatus = 1,
                     Datoregistrert = DateTime.Now
                 }
             };
@@ -195,17 +195,17 @@
                 break;
             case "status-started":
                 _customer.BProsjekts = _customer.BProsjekts
-                    .Where(p => p.Status.Trim().Equals("Påbegynt", StringComparison.OrdinalIgnoreCase))
+                    .Where(p => (Prosjektstatus)p.Prosjektstatus == Prosjektstatus.Pabegynt)
                     .ToList();
                 break;
             case "status-new":
                 _customer.BProsjekts = _customer.BProsjekts
-                    .Where(p => p.Status.Trim().Equals("Nytt", StringComparison.OrdinalIgnoreCase))
+                    .Where(p => (Prosjektstatus)p.Prosjektstatus == Prosjektstatus.Nytt)
                     .ToList();
                 break;
             case "status-done":
                 _customer.BProsjekts = _customer.BProsjekts
-                    .Where(p => p.Status.Trim().Equals("Ferdig", StringComparison.OrdinalIgnoreCase))
+                    .Where(p => (Prosjektstatus)p.Prosjektstatus == Prosjektstatus.Ferdig)
                     .ToList();
                 break;
             case "name-asc":
@@ -225,7 +225,7 @@
                 break;
             case "date-desc":
                 _customer.BProsjekts = _customer.BProsjekts
-                    .OrderByDescending(p => p.Datoregistrert)
+                    .OrderBy(p => p.Datoregistrert)
                     .ToList();
                 break;
         }

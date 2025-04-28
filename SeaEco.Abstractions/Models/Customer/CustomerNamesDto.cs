@@ -2,6 +2,6 @@
 
 public class CustomerNamesDto
 {
-    public int CustomerId { get; set; }
+    public Guid Id { get; set; }
     public string CustomerName { get; set; } = null!;
 }

@@ -35,13 +35,10 @@ public sealed class ImageService : IImageService
 
         BBilder dbRecord = new BBilder()
         {
-            Extension = uploadResult.Value.Extension,
-            Silt = dto.Silt,
-            Prosjektid = dto.Prosjektid,
-            Datoregistrert = DateTime.Now,
             Id = imageId,
-            Posisjon = dto.Posisjon,
-            Stasjonsid = dto.Stasjonsid
+            UndersokelseId = dto.UndersokelseId,
+            Silt = dto.Silt,
+            Extension = uploadResult.Value.Extension
         };
         
         Response addResult = await _imageRepository.Add(dbRecord);
