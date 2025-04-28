@@ -136,31 +136,36 @@
                 {
                     Id = new Guid(),
                     PoId = "1002",
-                    Prosjektstatus = 2
+                    Prosjektstatus = 2,
+                    Datoregistrert = DateTime.Now
                 },
                 new BProsjekt
                 {
                     Id = new Guid(),
                     PoId = "1003",
-                    Prosjektstatus = 2
+                    Prosjektstatus = 2,
+                    Datoregistrert = DateTime.Now
                 },
                 new BProsjekt
                 {
                     Id = new Guid(),
                     PoId = "1004",
-                    Prosjektstatus = 1
+                    Prosjektstatus = 1,
+                    Datoregistrert = DateTime.Now
                 },
                 new BProsjekt
                 {
                     Id = new Guid(),
                     PoId = "1005",
-                    Prosjektstatus = 2
+                    Prosjektstatus = 2,
+                    Datoregistrert = DateTime.Now
                 },
                 new BProsjekt
                 {
                     Id = new Guid(),
                     PoId = "1006",
-                    Prosjektstatus = 1
+                    Prosjektstatus = 1,
+                    Datoregistrert = DateTime.Now
                 }
             };
             _allProjects = _customer.BProsjekts.ToList();
@@ -215,10 +220,12 @@
                 break;
             case "date-asc":
                 _customer.BProsjekts = _customer.BProsjekts
+                    .OrderBy(p => p.Datoregistrert)
                     .ToList();
                 break;
             case "date-desc":
                 _customer.BProsjekts = _customer.BProsjekts
+                    .OrderBy(p => p.Datoregistrert)
                     .ToList();
                 break;
         }

@@ -7,7 +7,7 @@ public partial class BProsjekt
 {
     public Guid Id { get; set; }
 
-    public string? ProsjektId { get; set; }
+    public string? ProsjektIdSe { get; set; }
 
     public string PoId { get; set; } = null!;
 
@@ -21,7 +21,7 @@ public partial class BProsjekt
 
     public Guid LokalitetId { get; set; }
 
-    public int Mtbtillatelse { get; set; }
+    public int? Mtbtillatelse { get; set; }
 
     public Guid ProsjektansvarligId { get; set; }
 
@@ -30,6 +30,8 @@ public partial class BProsjekt
     public string? Merknad { get; set; }
 
     public int Prosjektstatus { get; set; }
+
+    public DateTime Datoregistrert { get; set; }
 
     public virtual ICollection<BPreinfo> BPreinfos { get; set; } = new List<BPreinfo>();
 

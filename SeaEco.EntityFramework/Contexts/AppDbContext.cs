@@ -160,11 +160,14 @@ public partial class AppDbContext : DbContext
 
             entity.HasIndex(e => e.PoId, "uq_bprosjekt_poID").IsUnique();
 
-            entity.HasIndex(e => e.ProsjektId, "uq_bprosjekt_prosjektID").IsUnique();
+            entity.HasIndex(e => e.ProsjektIdSe, "uq_bprosjekt_prosjektIdSe").IsUnique();
 
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("id");
+            entity.Property(e => e.Datoregistrert)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("datoregistrert");
             entity.Property(e => e.KundeId).HasColumnName("kunde_id");
             entity.Property(e => e.Kundeepost)
                 .HasMaxLength(45)
@@ -178,9 +181,13 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.LokalitetId).HasColumnName("lokalitet_id");
             entity.Property(e => e.Merknad).HasColumnName("merknad");
             entity.Property(e => e.Mtbtillatelse).HasColumnName("mtbtillatelse");
-            entity.Property(e => e.PoId).HasColumnName("poID");
+            entity.Property(e => e.PoId)
+                .HasMaxLength(6)
+                .HasColumnName("poID");
             entity.Property(e => e.Produksjonsstatus).HasColumnName("produksjonsstatus");
-            entity.Property(e => e.ProsjektId).HasColumnName("prosjektID");
+            entity.Property(e => e.ProsjektIdSe)
+                .HasMaxLength(12)
+                .HasColumnName("prosjektIdSe");
             entity.Property(e => e.ProsjektansvarligId).HasColumnName("prosjektansvarlig_id");
             entity.Property(e => e.Prosjektstatus).HasColumnName("prosjektstatus");
 
