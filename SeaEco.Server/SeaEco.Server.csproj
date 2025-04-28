@@ -17,12 +17,17 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\SeaEco.Reporter\SeaEco.Reporter.csproj" />
       <ProjectReference Include="..\SeaEco.Services\SeaEco.Services.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <_ContentIncludedByDefault Remove="wwwroot\images\499615b2-a5d8-4701-a7ab-e1ffd288959e.png" />
       <_ContentIncludedByDefault Remove="wwwroot\images\69b54be8-9382-4bee-88f8-fdc5962e8e9f.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="wwwroot\reports\generated\" />
     </ItemGroup>
 
 </Project>

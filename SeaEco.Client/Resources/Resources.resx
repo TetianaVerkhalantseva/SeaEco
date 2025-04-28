@@ -21,47 +21,54 @@
 
     <!-- InputText -->
     
-    <data name="MailInputText" xml:space="preserve">
+    <data name="InputTextMail" xml:space="preserve">
     <value>Epost-adresse</value>
   </data>
-    <data name="PasswordInputText" xml:space="preserve">
+    <data name="InputTextPassword" xml:space="preserve">
     <value>Passord</value>
   </data>
-    <data name="RepPasswordInputText" xml:space="preserve">
+    <data name="InputTextRepPassword" xml:space="preserve">
     <value>Gjenta passord</value>
   </data>
-    <data name="FirstNameInputText" xml:space="preserve">
+    <data name="InputTextFirstName" xml:space="preserve">
     <value>Fornavn</value>
   </data>
-    <data name="LastNameInputText" xml:space="preserve">
+    <data name="InputTextLastName" xml:space="preserve">
     <value>Etternavn</value>
   </data>
 
     <!-- ErrorMessage -->
     
-    <data name="RequireElementErrorMessage" xml:space="preserve">
+    <data name="ErrorMessageRequireElement" xml:space="preserve">
         <value>Påkrevde felt må fylles ut</value>
       </data>
-    <data name="UnexpectedErrorMessage" xml:space="preserve">
+    <data name="ErrorMessageUnexpected" xml:space="preserve">
         <value>Noe gikk galt</value>
       </data>
+    
 
     <!-- Tooltip -->
 
-    <data name="AdminTooltip" xml:space="preserve">
-        <value>Admin gir rettigheter til å: \n1. Godkjenne rapporter\n2. Opprette prosjekter\n3. Administrere brukere</value>
+    <data name="TooltipAdmin" xml:space="preserve">
+        <value>Admin gir rettigheter til å:</value>
     </data>
-    <data name="RegisterUserTooltip" xml:space="preserve">
+    <data name="TooltipAdminOne" xml:space="preserve">
+        <value>1. Godkjenne rapporter</value>
+    </data>
+    <data name="TooltipAdminTwo" xml:space="preserve">
+        <value>2. Opprette prosjekter</value>
+    </data>
+    <data name="TooltipAdminThree" xml:space="preserve">
+        <value>3. Administrere brukere</value>
+    </data>
+    <data name="TooltipRegisterUser" xml:space="preserve">
         <value>Rediger bruker</value>
       </data>
 
     <!-- Checkboks -->
     
-    <data name="AdminCheckboks" xml:space="preserve">
+    <data name="CheckboksAdmin" xml:space="preserve">
         <value>Admin</value>
-    </data>
-    <data name="ActiveUserCheckboks" xml:space="preserve">
-        <value>Aktiv bruker</value>
     </data>
 
     <!-- Button -->
@@ -72,8 +79,20 @@
     <data name="ButtonSave" xml:space="preserve">
         <value>Lagre</value>
     </data>
+    <data name="ButtonEdit" xml:space="preserve">
+        <value>Rediger</value>
+    </data>
+    <data name="ButtonDelete" xml:space="preserve">
+        <value>Slett</value>
+    </data>
     <data name="ButtonAddNewUser" xml:space="preserve">
         <value>+ Ny bruker</value>
+    </data>
+    <data name="ButtonAddNewCustomer" xml:space="preserve">
+        <value>+ Ny kunde</value>
+    </data>
+    <data name="ButtonAddNewProject" xml:space="preserve">
+        <value>+ Nytt prosjekt</value>
     </data>
 
     <!-- Table -->
@@ -94,13 +113,40 @@
         <value>Aktiv</value>
     </data>
     <data name="TableInputIsNotActive" xml:space="preserve">
-        <value>Daktivert</value>
+        <value>Deaktivert</value>
     </data>
     <data name="TableInputIsAdmin" xml:space="preserve">
         <value>Admin</value>
     </data>
     <data name="TableInputIsNotAdmin" xml:space="preserve">
-        <value> </value>
+        <value>Logg inn</value>
+    </data>
+    <data name="TableHeaderCustomer" xml:space="preserve">
+        <value>Kunde</value>
+    </data>
+    <data name="TableHeaderLocality" xml:space="preserve">
+        <value>Lokalitet</value>
+    </data>
+    <data name="TableHeaderLocalityId" xml:space="preserve">
+        <value>lok. ID</value>
+    </data>
+    <data name="TableHeaderPoId" xml:space="preserve">
+        <value>PO-ID</value>
+    </data>
+    <data name="TableHeaderProjectId" xml:space="preserve">
+        <value>ProsjektID</value>
+    </data>
+    <data name="TableHeaderDate" xml:space="preserve">
+        <value>Dato</value>
+    </data>
+    <data name="TableHeaderProjectStatus" xml:space="preserve">
+        <value>Prosjektstatus</value>
+    </data>
+    <data name="TableHeaderStatus" xml:space="preserve">
+        <value>Tilstand</value>
+    </data>
+    <data name="TableHeaderProductionStatus" xml:space="preserve">
+        <value>Produksjnsstatus</value>
     </data>
 
     <!-- PageUser -->
@@ -115,7 +161,7 @@
     <!-- PageEditUser -->
     
     <data name="PageEditUserEditUser" xml:space="preserve">
-        <value>Rediger brukeren</value>
+        <value>Rediger bruker</value>
     </data>
     <data name="PageEditUserNoUserFound" xml:space="preserve">
         <value>Fant ikke bruker.</value>
@@ -127,4 +173,120 @@
         <value>Ny bruker</value>
     </data>
     
+    <!-- PageCustomer -->
+    <data name="PageCustomerCustomerList">
+        <value>Kundeliste</value>
+    </data>
+    <data name="PageCustomerNoCustomersFound" xml:space="preserve">
+        <value>Ingen kunde er opprettet ennå</value>
+    </data>
+
+    <!-- PageCustomerInfo -->
+    <data name="PageCustomerInfoProjects" xml:space="preserve">
+        <value>Prosjekter</value>
+    </data>
+    <data name="PageCustomerInfoCustomerInfo" xml:space="preserve">
+        <value>Kundeopplysninger</value>
+    </data>
+    <data name="PageCustomerInfoCustomerName" xml:space="preserve">
+        <value>Oppdragsgiver</value>
+    </data>
+    <data name="PageCustomerInfoContactPerson" xml:space="preserve">
+        <value>Kontaktperson</value>
+    </data>
+    <data name="PageCustomerInfoCustomerNumber" xml:space="preserve">
+        <value>Telefonnummer</value>
+    </data>
+    <data name="PageCustomerInfoDeleteCustomerSuccess" xml:space="preserve">
+        <value>Kundesletting vellykket!</value>
+    </data>
+    <data name="PageCustomerInfoDeleteCustomerFailed" xml:space="preserve">
+        <value>Kundesletting misllykkets.</value>
+    </data>
+    
+    <data name="PageCustomerInfoNoProject" xml:space="preserve">
+        <value>Ingen prosjekt er opprettet ennå</value>
+    </data>
+    
+    <!-- PageEditCustomer -->
+    <data name="PageEditCustomerEditCustomer" xml:space="preserve">
+        <value>Rediger kunde</value>
+    </data>
+    <data name="PageEditCustomerSuccess" xml:space="preserve">
+        <value>Kunderedigering vellykket!</value>
+    </data>
+    <data name="PageEditCustomerFailed" xml:space="preserve">
+        <value>Kunderedigering mislykkes.</value>
+    </data>
+    
+    <!-- PageAddCustomer -->
+    <data name="PageAddCustomerAddCustomer" xml:space="preserve">
+        <value>Legg til kunde</value>
+    </data>
+    <data name="PageAddCustomerSuccess" xml:space="preserve">
+        <value>Kunderegistrering vellykket!</value>
+    </data>
+    <data name="PageAddCustomerFailed" xml:space="preserve">
+        <value>Kunderegistrering mislykkes.</value>
+    </data>
+
+    <!-- PageProjectsOverview -->
+    
+    <data name="PageProjectsOverviewAllProjects" xml:space="preserve">
+        <value>Alle prosjekter</value>
+    </data>
+    <data name="ButtonFilter" xml:space="preserve">
+        <value>Filter</value>
+    </data>
+    <data name="ButtonReset" xml:space="preserve">
+        <value>Nullstill</value>
+    </data>
+    <data name="TableHeaderMonth" xml:space="preserve">
+        <value>Måned</value>
+    </data>
+    <data name="TableHeaderYear" xml:space="preserve">
+        <value>År</value>
+    </data>
+    <data name="OptionAll" xml:space="preserve">
+        <value>Alle</value>
+    </data>
+    <data name="PageLoginLogin" xml:space="preserve">
+        <value>Logg inn</value>
+    </data>
+    <data name="ButtonLogin" xml:space="preserve">
+        <value>Logg inn</value>
+    </data>
+    <data name="ButtonForgotPassword" xml:space="preserve">
+        <value>Glemt passord?</value>
+    </data>
+    <data name="ErrorMessageMailRequired" xml:space="preserve">
+        <value>Epost-adresse påkrevd</value>
+    </data>
+    <data name="ErrorMessageWrongMailOrPassword" xml:space="preserve">
+        <value>Epost-adressen eller passordet er feil</value>
+    </data>
+    <data name="ErrorMessageWrongMail" xml:space="preserve">
+        <value>Epost-adressen eksisterer ikke</value>
+    </data>
+    <data name="PageResetPasswordResetPassword" xml:space="preserve">
+        <value>Endre passord</value>
+    </data>
+    <data name="ErrorMessageToken" xml:space="preserve">
+        <value>Ugyldig token</value>
+    </data>
+    <data name="ErrorMessageNoToken" xml:space="preserve">
+        <value>Manglende reset-token</value>
+    </data>
+    <data name="SuccessMessageMailSendt" xml:space="preserve">
+        <value>Mail er sendt til oppgitt epost-adresse</value>
+    </data>
+    <data name="PageForgotPasswordForgotPassword" xml:space="preserve">
+        <value>Glemt passordet ditt?</value>
+    </data>
+    <data name="PageForgotPasswordHow" xml:space="preserve">
+        <value>Skriv inn epost-adressen din og send inn. Du vil motta mail med link til å endre passordet.</value>
+    </data>
+    <data name="ButtonSubmit" xml:space="preserve">
+        <value>Send inn</value>
+    </data>
 </root>

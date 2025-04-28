@@ -1,19 +1,20 @@
 using System.ComponentModel.DataAnnotations;
+using SeaEco.Abstractions.Resources;
 
 namespace SeaEco.Abstractions.Models.User;
 
 public sealed class EditUserDto
 {
-    [Required(ErrorMessage = "Fornavn er påkrevd")]
-    [MinLength(3, ErrorMessage = "Fornavn må være minst 3 tegn langt")]
+    [Required(ErrorMessageResourceName = "ErrorMessageFirstNameRequired", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    [MinLength(3, ErrorMessageResourceName = "ErrorMessageFirstNameMinLength", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
     public string FirstName { get; set; } = string.Empty;
     
-    [Required(ErrorMessage = "Etternavn er påkrevd")]
-    [MinLength(3, ErrorMessage = "Etternavn må være minst 3 tegn langt")]
+    [Required(ErrorMessageResourceName = "ErrorMessageLastNameRequired", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    [MinLength(3, ErrorMessageResourceName = "ErrorMessageLastNameMinLength", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
     public string LastName { get; set; } = string.Empty;
     
-    [Required(ErrorMessage = "Email er påkrevd")]
-    [EmailAddress(ErrorMessage = "Ugyldig epostadresse")]
+    [Required(ErrorMessageResourceName = "ErrorMessageMailRequired", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    [EmailAddress(ErrorMessageResourceName = "ErrorMessageMailError", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
     public string Email { get; set; } = string.Empty;
     public bool IsAdmin { get; set; }
     public bool IsActive { get; set; }

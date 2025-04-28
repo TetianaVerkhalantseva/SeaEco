@@ -1,0 +1,101 @@
+@using SeaEco.Client.Resources
+@inject IJSRuntime JsRuntime
+
+
+<div class="dropdown" @ref="dropdownRef" >
+    <div class="form-control cursor flex-wrap align-items-center fixed-dropdown" @onclick="ToggleDropdown">
+        @if (SelectedOptions.Any())
+        {
+            @foreach (var option in SelectedOptions)
+            {
+                <span class="badge bg-secondary me-1 mb-1">
+                    @option
+                    <span class="ms-1 cursor" 
+                          @onclick:stopPropagation="true"
+                          @onclick="() => RemoveOption(option)">&times;</span>
+                </span>
+            }
+        }
+        else
+        {
+            <span>@Resources.OptionAll</span>
+        }
+    </div>
+
+    <div>
+        @if (DropdownOpen)
+        {
+            <ul class="dropdown-menu show w-100">
+                @foreach (var option in Options)
+                {
+                    <li>
+                        <a class="dropdown-item cursor" @onclick:preventDefault="true"
+                           @onclick="() => ToggleOption(option)">
+                            @option
+                        </a>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</div>
+
+
+
+@code {
+    [Parameter] public List<string> Options { get; set; } = new List<string>();
+
+    [Parameter] public List<string> SelectedOptions { get; set; } = new List<string>();
+
+    [Parameter] public EventCallback<List<string>> SelectedOptionsChanged { get; set; }
+
+    private ElementReference dropdownRef;
+    private DotNetObjectReference<MultipleSelectionDropdown>? dotNetRef;
+    private object? jsClickHandler;
+
+    private bool DropdownOpen { get; set; } = false;
+
+    private void ToggleDropdown() => DropdownOpen = !DropdownOpen;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            dotNetRef = DotNetObjectReference.Create(this);
+            jsClickHandler = await JsRuntime.InvokeAsync<object>(
+                "clickOutsideHelper.addClickOutsideListener",
+                CancellationToken.None,
+                new object?[] { dropdownRef, dotNetRef });
+        }
+    }
+
+    private async Task ToggleOption(string option)
+    {
+        if (SelectedOptions.Contains(option))
+        {
+            SelectedOptions.Remove(option);
+        }
+        else
+        {
+            SelectedOptions.Add(option);
+        }
+
+        await SelectedOptionsChanged.InvokeAsync(SelectedOptions);
+    }
+
+    private async Task RemoveOption(string option)
+    {
+        SelectedOptions.Remove(option);
+        await SelectedOptionsChanged.InvokeAsync(SelectedOptions);
+    }
+
+    [JSInvokable]
+    public Task CloseDropdown()
+    {
+            DropdownOpen = false;
+            StateHasChanged();
+        
+        return Task.CompletedTask;
+    }
+
+}

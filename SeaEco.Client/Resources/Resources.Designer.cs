@@ -45,69 +45,81 @@ namespace SeaEco.Client.Resources {
             }
         }
         
-        internal static string MailInputText {
+        internal static string InputTextMail {
             get {
-                return ResourceManager.GetString("MailInputText", resourceCulture);
+                return ResourceManager.GetString("InputTextMail", resourceCulture);
             }
         }
         
-        internal static string PasswordInputText {
+        internal static string InputTextPassword {
             get {
-                return ResourceManager.GetString("PasswordInputText", resourceCulture);
+                return ResourceManager.GetString("InputTextPassword", resourceCulture);
             }
         }
         
-        internal static string RepPasswordInputText {
+        internal static string InputTextRepPassword {
             get {
-                return ResourceManager.GetString("RepPasswordInputText", resourceCulture);
+                return ResourceManager.GetString("InputTextRepPassword", resourceCulture);
             }
         }
         
-        internal static string FirstNameInputText {
+        internal static string InputTextFirstName {
             get {
-                return ResourceManager.GetString("FirstNameInputText", resourceCulture);
+                return ResourceManager.GetString("InputTextFirstName", resourceCulture);
             }
         }
         
-        internal static string LastNameInputText {
+        internal static string InputTextLastName {
             get {
-                return ResourceManager.GetString("LastNameInputText", resourceCulture);
+                return ResourceManager.GetString("InputTextLastName", resourceCulture);
             }
         }
         
-        internal static string RequireElementErrorMessage {
+        internal static string ErrorMessageRequireElement {
             get {
-                return ResourceManager.GetString("RequireElementErrorMessage", resourceCulture);
+                return ResourceManager.GetString("ErrorMessageRequireElement", resourceCulture);
             }
         }
         
-        internal static string UnexpectedErrorMessage {
+        internal static string ErrorMessageUnexpected {
             get {
-                return ResourceManager.GetString("UnexpectedErrorMessage", resourceCulture);
+                return ResourceManager.GetString("ErrorMessageUnexpected", resourceCulture);
             }
         }
         
-        internal static string AdminTooltip {
+        internal static string TooltipAdmin {
             get {
-                return ResourceManager.GetString("AdminTooltip", resourceCulture);
+                return ResourceManager.GetString("TooltipAdmin", resourceCulture);
             }
         }
         
-        internal static string RegisterUserTooltip {
+        internal static string TooltipAdminOne {
             get {
-                return ResourceManager.GetString("RegisterUserTooltip", resourceCulture);
+                return ResourceManager.GetString("TooltipAdminOne", resourceCulture);
             }
         }
         
-        internal static string AdminCheckboks {
+        internal static string TooltipAdminTwo {
             get {
-                return ResourceManager.GetString("AdminCheckboks", resourceCulture);
+                return ResourceManager.GetString("TooltipAdminTwo", resourceCulture);
             }
         }
         
-        internal static string ActiveUserCheckboks {
+        internal static string TooltipAdminThree {
             get {
-                return ResourceManager.GetString("ActiveUserCheckboks", resourceCulture);
+                return ResourceManager.GetString("TooltipAdminThree", resourceCulture);
+            }
+        }
+        
+        internal static string TooltipRegisterUser {
+            get {
+                return ResourceManager.GetString("TooltipRegisterUser", resourceCulture);
+            }
+        }
+        
+        internal static string CheckboksAdmin {
+            get {
+                return ResourceManager.GetString("CheckboksAdmin", resourceCulture);
             }
         }
         
@@ -123,9 +135,33 @@ namespace SeaEco.Client.Resources {
             }
         }
         
+        internal static string ButtonEdit {
+            get {
+                return ResourceManager.GetString("ButtonEdit", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonDelete {
+            get {
+                return ResourceManager.GetString("ButtonDelete", resourceCulture);
+            }
+        }
+        
         internal static string ButtonAddNewUser {
             get {
                 return ResourceManager.GetString("ButtonAddNewUser", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonAddNewCustomer {
+            get {
+                return ResourceManager.GetString("ButtonAddNewCustomer", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonAddNewProject {
+            get {
+                return ResourceManager.GetString("ButtonAddNewProject", resourceCulture);
             }
         }
         
@@ -177,6 +213,60 @@ namespace SeaEco.Client.Resources {
             }
         }
         
+        internal static string TableHeaderCustomer {
+            get {
+                return ResourceManager.GetString("TableHeaderCustomer", resourceCulture);
+            }
+        }
+        
+        internal static string TableHeaderLocality {
+            get {
+                return ResourceManager.GetString("TableHeaderLocality", resourceCulture);
+            }
+        }
+        
+        internal static string TableHeaderLocalityId {
+            get {
+                return ResourceManager.GetString("TableHeaderLocalityId", resourceCulture);
+            }
+        }
+        
+        internal static string TableHeaderPoId {
+            get {
+                return ResourceManager.GetString("TableHeaderPoId", resourceCulture);
+            }
+        }
+        
+        internal static string TableHeaderProjectId {
+            get {
+                return ResourceManager.GetString("TableHeaderProjectId", resourceCulture);
+            }
+        }
+        
+        internal static string TableHeaderDate {
+            get {
+                return ResourceManager.GetString("TableHeaderDate", resourceCulture);
+            }
+        }
+        
+        internal static string TableHeaderProjectStatus {
+            get {
+                return ResourceManager.GetString("TableHeaderProjectStatus", resourceCulture);
+            }
+        }
+        
+        internal static string TableHeaderStatus {
+            get {
+                return ResourceManager.GetString("TableHeaderStatus", resourceCulture);
+            }
+        }
+        
+        internal static string TableHeaderProductionStatus {
+            get {
+                return ResourceManager.GetString("TableHeaderProductionStatus", resourceCulture);
+            }
+        }
+        
         internal static string PageUserAllUsers {
             get {
                 return ResourceManager.GetString("PageUserAllUsers", resourceCulture);
@@ -204,6 +294,216 @@ namespace SeaEco.Client.Resources {
         internal static string PageRegisterUserNewUser {
             get {
                 return ResourceManager.GetString("PageRegisterUserNewUser", resourceCulture);
+            }
+        }
+        
+        internal static string PageCustomerCustomerList {
+            get {
+                return ResourceManager.GetString("PageCustomerCustomerList", resourceCulture);
+            }
+        }
+        
+        internal static string PageCustomerNoCustomersFound {
+            get {
+                return ResourceManager.GetString("PageCustomerNoCustomersFound", resourceCulture);
+            }
+        }
+        
+        internal static string PageCustomerInfoProjects {
+            get {
+                return ResourceManager.GetString("PageCustomerInfoProjects", resourceCulture);
+            }
+        }
+        
+        internal static string PageCustomerInfoCustomerInfo {
+            get {
+                return ResourceManager.GetString("PageCustomerInfoCustomerInfo", resourceCulture);
+            }
+        }
+        
+        internal static string PageCustomerInfoCustomerName {
+            get {
+                return ResourceManager.GetString("PageCustomerInfoCustomerName", resourceCulture);
+            }
+        }
+        
+        internal static string PageCustomerInfoContactPerson {
+            get {
+                return ResourceManager.GetString("PageCustomerInfoContactPerson", resourceCulture);
+            }
+        }
+        
+        internal static string PageCustomerInfoCustomerNumber {
+            get {
+                return ResourceManager.GetString("PageCustomerInfoCustomerNumber", resourceCulture);
+            }
+        }
+        
+        internal static string PageCustomerInfoDeleteCustomerSuccess {
+            get {
+                return ResourceManager.GetString("PageCustomerInfoDeleteCustomerSuccess", resourceCulture);
+            }
+        }
+        
+        internal static string PageCustomerInfoDeleteCustomerFailed {
+            get {
+                return ResourceManager.GetString("PageCustomerInfoDeleteCustomerFailed", resourceCulture);
+            }
+        }
+        
+        internal static string PageCustomerInfoNoProject {
+            get {
+                return ResourceManager.GetString("PageCustomerInfoNoProject", resourceCulture);
+            }
+        }
+        
+        internal static string PageEditCustomerEditCustomer {
+            get {
+                return ResourceManager.GetString("PageEditCustomerEditCustomer", resourceCulture);
+            }
+        }
+        
+        internal static string PageEditCustomerSuccess {
+            get {
+                return ResourceManager.GetString("PageEditCustomerSuccess", resourceCulture);
+            }
+        }
+        
+        internal static string PageEditCustomerFailed {
+            get {
+                return ResourceManager.GetString("PageEditCustomerFailed", resourceCulture);
+            }
+        }
+        
+        internal static string PageAddCustomerAddCustomer {
+            get {
+                return ResourceManager.GetString("PageAddCustomerAddCustomer", resourceCulture);
+            }
+        }
+        
+        internal static string PageAddCustomerSuccess {
+            get {
+                return ResourceManager.GetString("PageAddCustomerSuccess", resourceCulture);
+            }
+        }
+        
+        internal static string PageAddCustomerFailed {
+            get {
+                return ResourceManager.GetString("PageAddCustomerFailed", resourceCulture);
+            }
+        }
+        
+        internal static string PageProjectsOverviewAllProjects {
+            get {
+                return ResourceManager.GetString("PageProjectsOverviewAllProjects", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonFilter {
+            get {
+                return ResourceManager.GetString("ButtonFilter", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonReset {
+            get {
+                return ResourceManager.GetString("ButtonReset", resourceCulture);
+            }
+        }
+        
+        internal static string TableHeaderMonth {
+            get {
+                return ResourceManager.GetString("TableHeaderMonth", resourceCulture);
+            }
+        }
+        
+        internal static string TableHeaderYear {
+            get {
+                return ResourceManager.GetString("TableHeaderYear", resourceCulture);
+            }
+        }
+        
+        internal static string OptionAll {
+            get {
+                return ResourceManager.GetString("OptionAll", resourceCulture);
+            }
+        }
+        
+        internal static string PageLoginLogin {
+            get {
+                return ResourceManager.GetString("PageLoginLogin", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonLogin {
+            get {
+                return ResourceManager.GetString("ButtonLogin", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonForgotPassword {
+            get {
+                return ResourceManager.GetString("ButtonForgotPassword", resourceCulture);
+            }
+        }
+        
+        internal static string ErrorMessageMailRequired {
+            get {
+                return ResourceManager.GetString("ErrorMessageMailRequired", resourceCulture);
+            }
+        }
+        
+        internal static string ErrorMessageWrongMailOrPassword {
+            get {
+                return ResourceManager.GetString("ErrorMessageWrongMailOrPassword", resourceCulture);
+            }
+        }
+        
+        internal static string ErrorMessageWrongMail {
+            get {
+                return ResourceManager.GetString("ErrorMessageWrongMail", resourceCulture);
+            }
+        }
+        
+        internal static string PageResetPasswordResetPassword {
+            get {
+                return ResourceManager.GetString("PageResetPasswordResetPassword", resourceCulture);
+            }
+        }
+        
+        internal static string ErrorMessageToken {
+            get {
+                return ResourceManager.GetString("ErrorMessageToken", resourceCulture);
+            }
+        }
+        
+        internal static string ErrorMessageNoToken {
+            get {
+                return ResourceManager.GetString("ErrorMessageNoToken", resourceCulture);
+            }
+        }
+        
+        internal static string SuccessMessageMailSendt {
+            get {
+                return ResourceManager.GetString("SuccessMessageMailSendt", resourceCulture);
+            }
+        }
+        
+        internal static string PageForgotPasswordForgotPassword {
+            get {
+                return ResourceManager.GetString("PageForgotPasswordForgotPassword", resourceCulture);
+            }
+        }
+        
+        internal static string PageForgotPasswordHow {
+            get {
+                return ResourceManager.GetString("PageForgotPasswordHow", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonSubmit {
+            get {
+                return ResourceManager.GetString("ButtonSubmit", resourceCulture);
             }
         }
     }

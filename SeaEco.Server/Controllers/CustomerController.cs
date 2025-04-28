@@ -32,8 +32,8 @@ public class CustomerController: ControllerBase
       return Ok(customerNames);
    }
    
-   [HttpGet("{id:int}")]
-   public async Task<IActionResult> GetCustomerInfoById(int id)
+   [HttpGet("{id:Guid}")]
+   public async Task<IActionResult> GetCustomerInfoById(Guid id)
    {
       var customer = await _customerService.GetCustomerInfoById(id);
       
@@ -45,8 +45,8 @@ public class CustomerController: ControllerBase
       return Ok(customer);
    }
 
-   [HttpGet("Project-details-for-customer/{id:int}")]
-   public async Task<IActionResult> GetAllProjectDetailsById(int id)
+   [HttpGet("Project-details-for-customer/{id:Guid}")]
+   public async Task<IActionResult> GetAllProjectDetailsById(Guid id)
    {
       var customer = await _customerService.GetAllProjectDetailsById(id);
 
@@ -71,15 +71,15 @@ public class CustomerController: ControllerBase
 
       if (result.IsSuccess)
       {
-         return Ok();
+         return Ok(result.Message);
       }
       
       return BadRequest(result.Message);
    }
 
    [RoleAccessor(true)]
-   [HttpPut("Update-customer/{id:int}")]
-   public async Task<IActionResult> UpdateCustomer([FromRoute] int id, [FromBody] EditCustomerDto dto)
+   [HttpPut("Update-customer/{id:Guid}")]
+   public async Task<IActionResult> UpdateCustomer([FromRoute] Guid id, [FromBody] EditCustomerDto dto)
    {
       if (!ModelState.IsValid)
       {
@@ -96,8 +96,8 @@ public class CustomerController: ControllerBase
    }
 
    [RoleAccessor(true)]
-   [HttpDelete("Delete-customer/{id:int}")]
-   public async Task<IActionResult> DeleteCustomer(int id)
+   [HttpDelete("Delete-customer/{id:Guid}")]
+   public async Task<IActionResult> DeleteCustomer(Guid id)
    {
       var result = await _customerService.DeleteCustomer(id);
       if (result.IsSuccess)
