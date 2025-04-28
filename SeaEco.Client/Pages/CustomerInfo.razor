@@ -1,4 +1,4 @@
-﻿@page "/CustomerInfo/{CustomerId:int}"
+﻿@page "/CustomerInfo/{CustomerId:guid}"
 @inject HttpClient Http
 @using Microsoft.AspNetCore.Authorization
 @using SeaEco.Client.Resources
@@ -91,7 +91,7 @@
                         <!-- href to project detail page -->
                         <a href=""><h5 class="project-info">@project.PoId</h5></a>
                         <a href="">
-                            <p>@project.Prosjektstatus</p></a>
+                            <p>@ProsjektstatusDescriptions.GetValueOrDefault(project.Prosjektstatus, "Ukjent")</p></a>
                     </div>
                 </div>
             }
@@ -108,7 +108,7 @@
 
 @code {
     [Parameter]
-    public int CustomerId { get; set; }
+    public Guid CustomerId { get; set; }
     private Kunde? _customer = new();
     private bool? _result;
     private string _currentSort = "all";
@@ -118,6 +118,14 @@
     {
         await LoadCustomerInfoData();
     }
+    
+    private static readonly Dictionary<int, string> ProsjektstatusDescriptions = new()
+    {
+        { 1, "Nytt" },
+        { 2, "Påbegynt" },
+        { 3, "Ferdig" },
+        { 4, "Deaktivert" }
+    };
 
     private async Task LoadCustomerInfoData()
     {
