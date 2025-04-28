@@ -7,6 +7,7 @@
 @using SeaEco.EntityFramework.Entities
 @using Microsoft.AspNetCore.Components.Authorization
 @using SeaEco.Abstractions.Enums
+@using SeaEco.Abstractions.Extensions
 
 
 <div class="container mt-5">
@@ -91,7 +92,8 @@
                         <!-- href to project detail page -->
                         <a href=""><h5 class="project-info">@project.PoId</h5></a>
                         <a href="">
-                            <p>@ProsjektstatusDescriptions.GetValueOrDefault(project.Prosjektstatus, "Ukjent")</p></a>
+                            <p>@(project.Prosjektstatus.ToEnumDescription<Prosjektstatus>())</p>
+                        </a>
                     </div>
                 </div>
             }
@@ -118,14 +120,6 @@
     {
         await LoadCustomerInfoData();
     }
-    
-    private static readonly Dictionary<int, string> ProsjektstatusDescriptions = new()
-    {
-        { 1, "Nytt" },
-        { 2, "Påbegynt" },
-        { 3, "Ferdig" },
-        { 4, "Deaktivert" }
-    };
 
     private async Task LoadCustomerInfoData()
     {
