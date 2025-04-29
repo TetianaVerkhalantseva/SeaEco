@@ -112,17 +112,17 @@
         <EditForm Model="_sensoryDto" OnValidSubmit="HandleSubmit">
             <DataAnnotationsValidator />
             <div class="sensoryData">
-                <div class="form-floating mb-3">
+                <div class="form-floating mb-3" id="sensoryDataSoft_1">
                     <InputNumber id="ProvePh" class="form-control" @bind-Value="_sensoryDto.ProvePh" placeholder="pH" />
                     <label for="ProvePh">pH</label>
                 </div>
 
-                <div class="form-floating mb-3">
+                <div class="form-floating mb-3" id="sensoryDataSoft_2">
                     <InputNumber id="ProveEh" class="form-control" @bind-Value="_sensoryDto.ProveEh" placeholder="Eh" />
                     <label for="ProveEh">EH</label>
                 </div>
 
-                <div class="form-floating mb-3">
+                <div class="form-floating mb-3" id="sensoryDataSoft_3">
                     <InputNumber id="ProveTemp" class="form-control" @bind-Value="_sensoryDto.ProveTemp" placeholder="Temp" />
                     <label for="ProveTemp">Temp</label>
                 </div>
@@ -456,6 +456,13 @@
             
             if (radioYes.checked) {
                 sensoryInfo.style.display = "flex";
+
+                document.getElementById("ProvePh").disabled = true;
+                document.getElementById("ProveEh").disabled = true;
+                document.getElementById("ProveTemp").disabled = true;
+                sensoryDataSoft_1.style.opacity = "0.5";
+                sensoryDataSoft_2.style.opacity = "0.5";
+                sensoryDataSoft_3.style.opacity = "0.5";
             }
             else {
                 sensoryInfo.style.display = "none";
@@ -468,6 +475,13 @@
             sedimentType.style.display = "flex";
             softSediment.style.display = "flex";
             hardSediment.style.display = "none";
+
+            document.getElementById("ProvePh").disabled = false;
+            document.getElementById("ProveEh").disabled = false;
+            document.getElementById("ProveTemp").disabled = false;
+            sensoryDataSoft_1.style.opacity = "1";
+            sensoryDataSoft_2.style.opacity = "1";
+            sensoryDataSoft_3.style.opacity = "1";
 
             tomGrabb_1.style.display = "none";
             tomGrabb_2.style.display = "none";
