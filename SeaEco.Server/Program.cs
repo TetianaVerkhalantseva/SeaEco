@@ -11,6 +11,7 @@ using SeaEco.Abstractions.Models.User;
 using SeaEco.EntityFramework.Contexts;
 using SeaEco.EntityFramework.Entities;
 using SeaEco.EntityFramework.GenericRepository;
+using SeaEco.Reporter;
 using SeaEco.Reporter.Models;
 using SeaEco.Server.Infrastructure;
 using SeaEco.Server.Middlewares;
@@ -103,7 +104,7 @@ services.Configure<JwtOptions>(configuration.GetSection("JwtOptions"));
 services.Configure<SmtpOptions>(configuration.GetSection("SmtpOptions"));
 services.Configure<ReportOptions>(configuration.GetSection("ReportOptions"));
 
-services.AddDbContext<AppDbContext>(options => options.UseNpgsql(configuration["ConnectionStrings:DefaultConnection"]));
+services.AddDbContext<AppDbContext>(options => options.UseNpgsql(configuration["ConnectionStrings:LocalConnection"]));
 services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 // Core services
@@ -120,6 +121,7 @@ services.AddScoped<EmailMessageManager>();
 services.AddTransient<IImageService, ImageService>();
 services.AddTransient<ISamplingPlanService, SamplingPlanService>();
 services.AddTransient<IBSurveyService, BSurveyService>();
+services.AddScoped<Report>();
 
 // Models validators
 services.AddScoped<IValidator<LoginDto>, LoginDtoValidator>();

@@ -1,4 +1,5 @@
 using SeaEco.Abstractions.ValueObjects;
+using SeaEco.Abstractions.ValueObjects.Half;
 
 namespace SeaEco.Reporter.Models.B2;
 
@@ -9,16 +10,22 @@ public class ColumnB2
     public byte Attempts { get; set; }
     public bool BubblingWood { get; set; }
 
-    public bool Leire { get; set; }
-    public bool Silt { get; set; }
-    public bool Sand { get; set; }
-    public bool Grus { get; set; }
-    public bool Skjellsand { get; set; }
-    public bool Steinbunn { get; set; }
-    public bool Fjellbunn { get; set; }
+    public HalfValue Leire { get; set; }
+    public HalfValue Silt { get; set; }
+    public HalfValue Sand { get; set; }
+    public HalfValue Grus { get; set; }
+    public HalfValue Skjellsand { get; set; }
+    public HalfValue Steinbunn { get; set; }
+    public HalfValue Fjellbunn { get; set; }
 
-    public byte Pigghuder { get; set; }
-    public byte Krepsdyr { get; set; }
-    public byte Skjell { get; set; }
-    public byte Børstemark { get; set; }
+    public string Pigghuder { get; set; }
+    public string Krepsdyr { get; set; }
+    public string Skjell { get; set; }
+    public string Børstemark { get; set; }
+
+    public bool Beggiota { get; set; }
+    public bool Fôr { get; set; }
+    public bool Fekalier { get; set; }
+
+    public string Kommentarer { get; set; } = string.Empty;
 }
