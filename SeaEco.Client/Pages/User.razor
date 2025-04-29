@@ -11,19 +11,19 @@
 
 <div class="d-flex flex-column align-items-center" >
     
-    @if (isLoading)
+    @if (_isLoading)
     {
     }
-    else if (users == null)
+    else if (_users == null)
     {
     }
-    else if (!users.Any())
+    else if (!_users.Any())
     {
         <div class="mb-3">         
             <h3>@Resources.PageUserAllUsers</h3>  
         </div>                                           
         <p>@Resources.PageUserNoUserFoun</p>    
-        <div style="width: 100%; display: flex; justify-content: flex-start; margin-top: 1rem;">   
+        <div class="d-flex flex-fill mt-1 justify-content-lg-start">   
             <NavLink class="btn btn-secondary" href="/registerUser">@Resources.ButtonAddNewUser</NavLink>              
         </div>                                                                              
     }
@@ -40,34 +40,34 @@
                     <th>@Resources.TableHeadingMail</th>
                     <th>@Resources.TableHeadingRole</th>
                     <th style="width:60px;"></th>
-                    <th></th>
+                    <th style="min-width:128px;"></th>
                     <th></th>
                 </tr>
                 </thead>
                 <tbody>
-                @foreach (var user in users)
+                @foreach (var user in _users)
                 {
                     <tr>
                         <td>@user.FullName</td>
                         <td>@user.Email</td>
-                        <td>@(user.IsAdmin ? @Resources.TableInputIsAdmin : @Resources.TableInputIsNotAdmin)</td>
+                        <td>@(user.IsAdmin ? Resources.TableInputIsAdmin : Resources.TableInputIsNotAdmin)</td>
                         <td></td>
                         <td>
                             <div class="form-check form-switch">
-                                <input class="form-check-input  " type="checkbox"  role="switch" id="activ" checked="@user.IsActive"  @onchange="@(e => EditUserIsActive(user, e))"/>
+                                <input class="form-check-input cursor" type="checkbox" id="active" checked="@user.IsActive" @onchange="@(e => EditUserIsActive(user, e))"/>
                                 @if(user.IsActive)
                                 {
-                                    <label class="form-check-label"  for="activ">@Resources.TableInputIsActive</label> 
+                                    <label class="form-check-label" for="active">@Resources.TableInputIsActive</label> 
                                 }
                                 else                                                  
                                 {                                                                   
-                                    <label class="form-check-label"  for="activ">@Resources.TableInputIsNotActive</label>     
+                                    <label class="form-check-label" for="active">@Resources.TableInputIsNotActive</label>     
                                 }                                                                   
                             </div>
                         </td>
                         <td>
                             <span title="@Resources.TooltipRegisterUser">
-                                <span class="bi bi-editUser" style="cursor: pointer;" @onclick="@(() => EditUser(user.Id))">
+                                <span class="bi bi-editUser cursor" @onclick="@(() => EditUser(user.Id))">
                                 </span>
                             </span>
                         </td>
@@ -75,43 +75,42 @@
                 }
                 </tbody>
             </table>
-        
-            <div style="width: 100%; display: flex; justify-content: flex-start; margin-top: 1rem;">
-                <NavLink class="btn btn-secondary" href="/registerUser">@Resources.ButtonAddNewUser</NavLink>
+
+            <div class="d-flex flex-fill mt-1 justify-content-lg-start">
+            <NavLink class="btn btn-secondary" href="/registerUser">@Resources.ButtonAddNewUser</NavLink>
             </div>
         </div>} 
         </div>
         
 
 
-
 @code {
-    private List<UserDto>? users;
-    private bool isLoading = true;
+    private List<UserDto>? _users;
+    private bool _isLoading = true;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
             var usersList = await Http.GetFromJsonAsync<List<UserDto>>("api/users");
-            users = usersList?.OrderBy(user => user.FullName).ToList();
+            _users = usersList?.OrderBy(user => user.FullName).ToList();
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Feil ved lasting av brukere: {ex.Message}");
+            Console.WriteLine($@"{Resources.ErrorMessageLoadingUsers} {ex.Message}");
         }
         finally
         {
-            isLoading = false;
+            _isLoading = false;
         }
     }
 
-
-
+    
     private async Task EditUserIsActive(UserDto user, ChangeEventArgs e)
     {
-        if (bool.TryParse(e.Value?.ToString(), out bool isActive))
+        if (bool.TryParse(e.Value?.ToString(), out var isActive))
         {
+            user.IsActive = isActive;
             try
             { 
                 HttpResponseMessage response = await Http.PutAsync($"api/users/{user.Id:D}/update/active", null);
@@ -119,7 +118,7 @@
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Feil ved lasting av brukere: {ex.Message}");
+                Console.WriteLine($@"{Resources.ErrorMessageLoadingUsers} {ex.Message}");
             }
         }
     }
