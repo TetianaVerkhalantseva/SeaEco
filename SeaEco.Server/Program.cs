@@ -153,7 +153,7 @@ app.MapControllers();
 
 try
 {
-    SeedUser(app.Services);
+    SeedData(app.Services);
 }
 catch (Exception e)
 {
@@ -162,29 +162,9 @@ catch (Exception e)
 
 app.Run();
 
-void SeedUser(IServiceProvider serviceProvider)
+void SeedData(IServiceProvider serviceProvider)
 {
     using var scope = serviceProvider.CreateScope();
-    IGenericRepository<Bruker> repository = scope.ServiceProvider.GetRequiredService<IGenericRepository<Bruker>>();
-
-    Bruker? admin = repository.GetBy(record => record.Epost == "gruppe202520@gmail.com").GetAwaiter().GetResult();
-    if (admin is not null)
-    {
-        return;
-    }
-    
-    var password = Hasher.Hash("1111");
-    admin = new()
-    {   
-        Id = Guid.NewGuid(),
-        Fornavn = "admin",
-        Etternavn = "admin",
-        Epost = "gruppe202520@gmail.com",
-        PassordHash = password.hashed,
-        Salt = password.salt,
-        IsAdmin = true,
-        Aktiv = true
-    };
-    
-    repository.Add(admin).GetAwaiter().GetResult();
+    DbSeeder seeder = new DbSeeder();
+    seeder.SeedData(scope.ServiceProvider.GetRequiredService<AppDbContext>()).GetAwaiter().GetResult();
 }
