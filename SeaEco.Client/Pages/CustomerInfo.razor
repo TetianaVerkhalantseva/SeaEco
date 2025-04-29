@@ -1,4 +1,4 @@
-﻿@page "/CustomerInfo/{CustomerId:int}"
+﻿@page "/CustomerInfo/{CustomerId:guid}"
 @inject HttpClient Http
 @using Microsoft.AspNetCore.Authorization
 @using SeaEco.Client.Resources
@@ -7,6 +7,7 @@
 @using SeaEco.EntityFramework.Entities
 @using Microsoft.AspNetCore.Components.Authorization
 @using SeaEco.Abstractions.Enums
+@using SeaEco.Abstractions.Extensions
 
 
 <div class="container mt-5">
@@ -91,7 +92,8 @@
                         <!-- href to project detail page -->
                         <a href=""><h5 class="project-info">@project.PoId</h5></a>
                         <a href="">
-                            <p>@project.Prosjektstatus</p></a>
+                            <p>@(project.Prosjektstatus.ToEnumDescription<Prosjektstatus>())</p>
+                        </a>
                     </div>
                 </div>
             }
@@ -108,7 +110,7 @@
 
 @code {
     [Parameter]
-    public int CustomerId { get; set; }
+    public Guid CustomerId { get; set; }
     private Kunde? _customer = new();
     private bool? _result;
     private string _currentSort = "all";

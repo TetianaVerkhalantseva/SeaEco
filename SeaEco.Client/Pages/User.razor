@@ -88,7 +88,6 @@
 @code {
     private List<UserDto>? users;
     private bool isLoading = true;
-    private EditUserDto userEdit = new EditUserDto();
 
     protected override async Task OnInitializedAsync()
     {
@@ -113,26 +112,16 @@
     {
         if (bool.TryParse(e.Value?.ToString(), out bool isActive))
         {
-            user.IsActive = isActive;
-            
-            userEdit = new EditUserDto
-            {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                IsAdmin = user.IsAdmin,
-                IsActive = isActive
-            };
-        }
-        
             try
             { 
-                 await Http.PutAsJsonAsync($"api/users/{user.Id:D}/update", userEdit);
+                HttpResponseMessage response = await Http.PutAsync($"api/users/{user.Id:D}/update/active", null);
+                Console.WriteLine(await response.Content.ReadAsStringAsync());
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Feil ved lasting av brukere: {ex.Message}");
             }
+        }
     }
 
 

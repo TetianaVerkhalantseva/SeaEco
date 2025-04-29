@@ -15,6 +15,7 @@ using SeaEco.Reporter.Models;
 using SeaEco.Server.Infrastructure;
 using SeaEco.Server.Middlewares;
 using SeaEco.Services.AuthServices;
+using SeaEco.Services.BSurveyService;
 using SeaEco.Services.CustomerServices;
 using SeaEco.Services.EmailServices;
 using SeaEco.Services.EmailServices.Models;
@@ -22,7 +23,7 @@ using SeaEco.Services.HashService;
 using SeaEco.Services.ImageServices;
 using SeaEco.Services.JwtServices;
 using SeaEco.Services.ProjectServices;
-using SeaEco.Services.StationServices;
+using SeaEco.Services.SamplingPlanServices;
 using SeaEco.Services.TokenServices;
 using SeaEco.Services.UserServices;
 using SeaEco.Services.Validators;
@@ -117,6 +118,8 @@ services.AddScoped<ICustomerService, CustomerService>();
 services.AddScoped<IProjectService, ProjectService>();
 services.AddScoped<EmailMessageManager>();
 services.AddTransient<IImageService, ImageService>();
+services.AddTransient<ISamplingPlanService, SamplingPlanService>();
+services.AddTransient<IBSurveyService, BSurveyService>();
 
 // Models validators
 services.AddScoped<IValidator<LoginDto>, LoginDtoValidator>();
