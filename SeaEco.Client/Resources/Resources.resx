@@ -79,8 +79,17 @@
     <data name="ButtonSave" xml:space="preserve">
         <value>Lagre</value>
     </data>
+    <data name="ButtonDelete" xml:space="preserve">
+        <value>Slett</value>
+    </data>
     <data name="ButtonAddNewUser" xml:space="preserve">
         <value>+ Ny bruker</value>
+    </data>
+    <data name="ButtonAddNewCustomer" xml:space="preserve">
+        <value>+ Ny kunde</value>
+    </data>
+    <data name="ButtonAddNewProject" xml:space="preserve">
+        <value>+ Nytt prosjekt</value>
     </data>
 
     <!-- Table -->
@@ -160,6 +169,63 @@
     <data name="PageRegisterUserNewUser" xml:space="preserve">
         <value>Ny bruker</value>
     </data>
+    
+    <!-- PageCustomer -->
+    <data name="PageCustomerCustomerList">
+        <value>Kundeliste</value>
+    </data>
+    <data name="PageCustomerNoCustomersFound" xml:space="preserve">
+        <value>Ingen kunde er opprettet ennå</value>
+    </data>
+
+    <!-- PageCustomerInfo -->
+    <data name="PageCustomerInfoProjects" xml:space="preserve">
+        <value>Prosjekter</value>
+    </data>
+    <data name="PageCustomerInfoCustomerInfo" xml:space="preserve">
+        <value>Kundeopplysninger</value>
+    </data>
+    <data name="PageCustomerInfoCustomerName" xml:space="preserve">
+        <value>Oppdragsgiver</value>
+    </data>
+    <data name="PageCustomerInfoContactPerson" xml:space="preserve">
+        <value>Kontaktperson</value>
+    </data>
+    <data name="PageCustomerInfoCustomerNumber" xml:space="preserve">
+        <value>Telefonnummer</value>
+    </data>
+    <data name="PageCustomerInfoDeleteCustomerSuccess" xml:space="preserve">
+        <value>Kundesletting vellykket!</value>
+    </data>
+    <data name="PageCustomerInfoDeleteCustomerFailed" xml:space="preserve">
+        <value>Kundesletting misllykkets.</value>
+    </data>
+    
+    <data name="PageCustomerInfoNoProject" xml:space="preserve">
+        <value>Ingen prosjekt er opprettet ennå</value>
+    </data>
+    
+    <!-- PageEditCustomer -->
+    <data name="PageEditCustomerEditCustomer" xml:space="preserve">
+        <value>Rediger kunde</value>
+    </data>
+    <data name="PageEditCustomerSuccess" xml:space="preserve">
+        <value>Kunderedigering vellykket!</value>
+    </data>
+    <data name="PageEditCustomerFailed" xml:space="preserve">
+        <value>Kunderedigering mislykkes.</value>
+    </data>
+    
+    <!-- PageAddCustomer -->
+    <data name="PageAddCustomerAddCustomer" xml:space="preserve">
+        <value>Legg til kunde</value>
+    </data>
+    <data name="PageAddCustomerSuccess" xml:space="preserve">
+        <value>Kunderegistrering vellykket!</value>
+    </data>
+    <data name="PageAddCustomerFailed" xml:space="preserve">
+        <value>Kunderegistrering mislykkes.</value>
+    </data>
 
     <!-- PageProjectsOverview -->
     
@@ -180,6 +246,45 @@
     </data>
     <data name="OptionAll" xml:space="preserve">
         <value>Alle</value>
+    </data>
+    <data name="PageLoginLogin" xml:space="preserve">
+        <value>Logg inn</value>
+    </data>
+    <data name="ButtonLogin" xml:space="preserve">
+        <value>Logg inn</value>
+    </data>
+    <data name="ButtonForgotPassword" xml:space="preserve">
+        <value>Glemt passord?</value>
+    </data>
+    <data name="ErrorMessageMailRequired" xml:space="preserve">
+        <value>Epost-adresse påkrevd</value>
+    </data>
+    <data name="ErrorMessageWrongMailOrPassword" xml:space="preserve">
+        <value>Epost-adressen eller passordet er feil</value>
+    </data>
+    <data name="ErrorMessageWrongMail" xml:space="preserve">
+        <value>Epost-adressen eksisterer ikke</value>
+    </data>
+    <data name="PageResetPasswordResetPassword" xml:space="preserve">
+        <value>Endre passord</value>
+    </data>
+    <data name="ErrorMessageToken" xml:space="preserve">
+        <value>Ugyldig token</value>
+    </data>
+    <data name="ErrorMessageNoToken" xml:space="preserve">
+        <value>Manglende reset-token</value>
+    </data>
+    <data name="SuccessMessageMailSendt" xml:space="preserve">
+        <value>Mail er sendt til oppgitt epost-adresse</value>
+    </data>
+    <data name="PageForgotPasswordForgotPassword" xml:space="preserve">
+        <value>Glemt passordet ditt?</value>
+    </data>
+    <data name="PageForgotPasswordHow" xml:space="preserve">
+        <value>Skriv inn epost-adressen din og send inn. Du vil motta mail med link til å endre passordet.</value>
+    </data>
+    <data name="ButtonSubmit" xml:space="preserve">
+        <value>Send inn</value>
     </data>
     <data name="InputTextUser1ProjectPlan" xml:space="preserve">
         <value>Planlegger 1</value>
