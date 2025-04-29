@@ -5,6 +5,8 @@ namespace SeaEco.Abstractions.Models.Project;
 public class ProjectDto
 {
     public Guid Id { get; set; }
+    
+    public string ProjectIdSe { get; set; }
     public string PoId { get; set; } = null!;
     public Guid KundeId { get; set; }
     public string Kundekontaktperson { get; set; } = null!;
@@ -16,7 +18,8 @@ public class ProjectDto
     
     public Guid ProsjektansvarligId { get; set; }
     public string? Merknad { get; set; }
-    
+
+    public Prosjektstatus Prosjektstatus { get; set; }
     public Produksjonsstatus Produksjonsstatus { get; set; }
     public DateTime Datoregistrert { get; set; }
     
