@@ -43,9 +43,8 @@ public class SamplingPlanService: ISamplingPlanService
                 Message = $"Sampling plan created successfully with planning date: {newPlan.Planlagtfeltdato}"
             };
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            Console.WriteLine($"Error: {e.Message}");
             return new EditSamplingPlanResult()
             {
                 IsSuccess = false,
@@ -62,7 +61,7 @@ public class SamplingPlanService: ISamplingPlanService
             return new EditSamplingPlanResult()
             {
                 IsSuccess = false,
-                Message = "Sampling plan not found!",
+                Message = $"Sampling plan with id {id} not found!",
             };
         }
         
@@ -80,9 +79,8 @@ public class SamplingPlanService: ISamplingPlanService
                 Message = $"Sampling plan edited successfully with planning date: {samplingPlan.Planlagtfeltdato}"
             };
         }
-        catch (Exception e)
+        catch (Exception)
         {
-            Console.WriteLine($"Error: {e.Message}");
             return new EditSamplingPlanResult()
             {
                 IsSuccess = false,
@@ -99,7 +97,7 @@ public class SamplingPlanService: ISamplingPlanService
             return new EditSamplingPlanResult()
             {
                 IsSuccess = false,
-                Message = $"Sampling plan not found!",
+                Message = $"Sampling plan with id {id} not found!",
             };
         }
         
