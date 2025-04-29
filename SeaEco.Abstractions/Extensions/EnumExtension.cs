@@ -33,4 +33,13 @@ public static class EnumExtension
         DisplayAttribute? attribute = field.GetCustomAttribute<DisplayAttribute>();
         return attribute is null || string.IsNullOrEmpty(attribute.Name) ? @enum.ToString() : attribute.Name;
     }
+    
+    public static string ToEnumDescription<TEnum>(this int value) where TEnum : Enum
+    {
+        var enumValue = (TEnum)(object)value;
+        var field = enumValue.GetType().GetField(enumValue.ToString());
+        var attribute = field?.GetCustomAttribute<DescriptionAttribute>();
+        return attribute?.Description ?? enumValue.ToString();
+    }
+
 }

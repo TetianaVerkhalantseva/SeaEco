@@ -56,7 +56,7 @@ public class CustomerService: ICustomerService
                 {
                     Id = p.Id,
                     PoId = p.PoId,
-                    Produksjonsstatus = p.Produksjonsstatus
+                    Prosjektstatus = p.Prosjektstatus
                 }).ToList();
         }
         
@@ -67,6 +67,7 @@ public class CustomerService: ICustomerService
     {
         var customer = new Kunde()
         {
+            Id = Guid.NewGuid(),
             Oppdragsgiver = customerDto.Oppdragsgiver,
             Kontaktperson = customerDto.Kontaktperson,
             Telefon = customerDto.Telefon,
