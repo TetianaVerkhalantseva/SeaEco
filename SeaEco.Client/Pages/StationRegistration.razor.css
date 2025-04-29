@@ -222,11 +222,6 @@
 }
 /* grid lay out */
 
-.form-floating {
-    display: flex;
-    flex-direction: column;
-}
-
 .sedimentType-container {
     display: none;
     position: relative;
