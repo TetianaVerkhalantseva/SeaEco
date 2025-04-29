@@ -1,5 +1,7 @@
 @page "/newProject/{CustomerId:guid}"
 @using Microsoft.AspNetCore.Authorization
+@using SeaEco.Abstractions.Enums
+@using SeaEco.Abstractions.Extensions
 @using SeaEco.Abstractions.Models.Project
 @attribute [Authorize(Roles = "admin")]
 @using SeaEco.Client.Resources
@@ -33,7 +35,7 @@ else
                 <div class="d-flex gap-3">
                     <div class="form-floating flex-fill">
                         <InputText class="form-control" id="contactCustomer" @bind-Value="_newProject.Kundekontaktperson"/>
-                        <label for="contactCustomer">Konaktperson</label>
+                        <label for="contactCustomer">Kontaktperson</label>
                     </div>
                 </div>
                 <div class="d-flex gap-3">
@@ -49,27 +51,63 @@ else
             </div>
             <div class="d-flex gap-3">
                 <div class="form-floating flex-fill">
-                    <InputText class="form-control" id="locality" @bind-Value="_newProject.Kundeepost"/>
-                    <label for="locality">Lokalitet</label>
-                </div>
-            </div>
-            <div class="d-flex gap-3">
-                <div class="form-floating">
-                    <InputNumber class="form-control" id="idLocality" @bind-Value="Lokalitetid"/>
-                    <label for="idLocality">Lokalitets-ID</label>
+                    <InputSelect @bind-Value="_newProject.Produksjonsstatus" id="productionStatus" class="form-select">
+                        <option value=""></option>
+                        @foreach (var status in Enum.GetValues<Produksjonsstatus>())
+                        {
+                            <option value="@status">@status.GetDescription()</option>
+                        }
+                    </InputSelect>
+                    <label for="productionStatus">Produksjonsstatus</label>
                 </div>
                 <div class="form-floating">
                     <InputNumber class="form-control" id="mtb" @bind-Value="_newProject.Mtbtillatelse"/>
-                    <label for="tlfCustomer">MTB-tilatelse (tonn)</label>
+                    <label for="mtb">MTB-tilatelse (tonn)</label>
                 </div>
             </div>
+
+            <div class="d-flex gap-3 align-items-end mb-3">
+                @if (!_isNewLocality)
+                {
+                    <div class="form-floating flex-fill">
+                        <InputSelect @bind-Value="_newProject.Lokalitetid" id="locality" class="form-select">
+                            <option value="">Velg lokalitet</option>
+                            @foreach (var loc in _lokalities)
+                            {
+                                <option value="@loc.Id">@loc.Lokalitetsnavn (@loc.LokalitetsId)</option>
+                            }
+                        </InputSelect>
+                        <label for="locality">Lokalitet</label>
+                    </div>
+                }
+                else
+                {
+                    <div class="form-floating flex-fill">
+                        <InputText class="form-control" id="newLocalityName" @bind-Value="_newLocaly.Lokalitetsnavn" />
+                        <label for="newLocalityName">Lokalitetsnavn</label>
+                    </div>
+                    <div class="form-floating flex-fill">
+                        <InputText class="form-control" id="newLocalityId" @bind-Value="_newLocaly.LokalitetsId" />
+                        <label for="newLocalityId">Lokalitets-Id</label>
+                    </div>
+                }
+                
+            </div>
+
+            <button type="button"
+                    class="btn btn-secondary align-self-end"
+                    @onclick="ToggleLocalityMode">
+                @(_isNewLocality ? "Velg eksisterende" : "Ny lokalitet")
+            </button>
+            
+            
             <div class="d-flex gap-3 mt-4">
                 <div class="d-flex form-floating flex-fill">
-                    <InputSelect @bind-Value="AnsvarligansattNavn" id="user" class="form-control">
+                    <InputSelect @bind-Value="_newProject.ProsjektansvarligId" id="user" class="form-select">
                         <option value=""></option>
                         @foreach (var user in _users)
                         {
-                            <option value="@user.FullName">@user.FullName</option>
+                            <option value="@user.Id">@user.FullName</option>
                         }
                     </InputSelect>
                     <label for="user">Ansvarlig ansatt</label>
@@ -82,7 +120,6 @@ else
                 </div>
             </div>
         </div>
-
         <div class="d-flex gap-3">
             <NavLink class="btn btn-secondary align-self-start" type="button" href=@($"/CustomerInfo/{CustomerId}")>@Resources.ButtonCancel</NavLink>
             <button type=submit class="btn btn-secondary align-self-end">
@@ -95,15 +132,17 @@ else
 
 @code {
     private NewProjectDto _newProject = new();
+    private NewLocalityDto _newLocaly = new();
+    private List<LocalityDto> _lokalities = [new()];
     private List<UserDto> _users = [new()];
     private Kunde? _customer = new();
     private bool _isLoading = true;
     [Parameter] public Guid CustomerId { get; set; }
     private string? _errorMessage;
+    private bool _isNewLocality;
 
     //benyttes i form, da backend enda ikke har variabelen. Form må oppdateres når klar.
-    private string? AnsvarligansattNavn;
-    private int? Lokalitetid; 
+    private int? Lokalitetid;
 
 
     protected override async Task OnInitializedAsync()
@@ -114,7 +153,7 @@ else
             if (_customer != null)
             {
                 _newProject = new NewProjectDto
-                {   
+                {
                     Kundekontaktperson = _customer.Kontaktperson,
                     Kundetlf = _customer.Telefon
                 };
@@ -131,10 +170,24 @@ else
 
         var usersList = await Http.GetFromJsonAsync<List<UserDto>>("api/users");
         _users = usersList?.OrderBy(user => user.FullName).ToList();
+
+        _lokalities =
+        [
+            ..new List<LocalityDto>
+            {
+                new LocalityDto
+                {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222222"),
+                    Lokalitetsnavn = "Bergen Brygge", 
+                    LokalitetsId = "12345"
+                }
+            }
+        ];
     }
 
     private async Task AddNewProject()
     {
+        
         
         var response = await Http.PostAsJsonAsync("/api/Project", _newProject);
         
@@ -146,6 +199,22 @@ else
         else
         {
             _errorMessage = Resources.ErrorMessageUnexpected;
+        }
+    }
+    
+    
+    private void ToggleLocalityMode()
+    {
+        _isNewLocality = !_isNewLocality;
+        
+        if (_isNewLocality)
+        {
+            _newLocaly.LokalitetsId = null;
+        }
+        else
+        {
+            _newLocaly.Lokalitetsnavn = null;
+            _newLocaly.LokalitetsId   = null;
         }
     }
 }

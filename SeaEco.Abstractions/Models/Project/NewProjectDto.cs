@@ -10,7 +10,7 @@ public class NewProjectDto
     public string Kundetlf { get; set; }
     public string Kundeepost { get; set; } = null!;
     
-    public Guid Lokalitetid { get; set; }
+    public Guid? Lokalitetid { get; set; }
     public int Mtbtillatelse { get; set; }
     
     public Guid ProsjektansvarligId { get; set; }
