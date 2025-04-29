@@ -1,64 +1,51 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+
 namespace SeaEco.EntityFramework.Entities;
 
 public partial class BProsjekt
 {
-    public Guid Prosjektid { get; set; }
+    public Guid Id { get; set; }
+
+    public string? ProsjektIdSe { get; set; }
+
     public string PoId { get; set; } = null!;
 
-    public int Kundeid { get; set; }
+    public Guid KundeId { get; set; }
 
-    public string Kundekontaktpersons { get; set; } = null!;
+    public string Kundekontaktperson { get; set; } = null!;
 
-    public int Kundetlf { get; set; }
+    public string Kundetlf { get; set; } = null!;
 
-    public string Kundeepost { get; set; } = null!;
+    public string? Kundeepost { get; set; }
 
-    public int Lokalitetid { get; set; }
+    public Guid LokalitetId { get; set; }
 
-    public string Lokalitet { get; set; } = null!;
+    public int? Mtbtillatelse { get; set; }
 
-    public int Antallstasjoner { get; set; }
+    public Guid ProsjektansvarligId { get; set; }
 
-    public int Mtbtillatelse { get; set; }
-
-    public int Biomasse { get; set; }
-
-    public Guid Ansvarligansattid { get; set; }
-
-    public Guid? Ansvarligansatt2id { get; set; }
-
-    public Guid? Ansvarligansatt3id { get; set; }
-
-    public Guid? Ansvarligansatt4id { get; set; }
-
-    public Guid? Ansvarligansatt5id { get; set; }
-
-    public DateOnly Planlagtfeltdato { get; set; }
+    public int Produksjonsstatus { get; set; }
 
     public string? Merknad { get; set; }
 
-    public string Status { get; set; } = null!;
+    public int Prosjektstatus { get; set; }
 
-    public DateTime? Datoregistrert { get; set; }
+    public DateTime Datoregistrert { get; set; }
 
-    public virtual Bruker Ansvarligansatt { get; set; } = null!;
+    public virtual ICollection<BPreinfo> BPreinfos { get; set; } = new List<BPreinfo>();
 
-    public virtual Bruker? Ansvarligansatt2 { get; set; }
-
-    public virtual Bruker? Ansvarligansatt3 { get; set; }
-
-    public virtual Bruker? Ansvarligansatt4 { get; set; }
-
-    public virtual Bruker? Ansvarligansatt5 { get; set; }
-
-    public virtual BProsjektUtstyr? BProsjektUtstyr { get; set; }
-
-    public virtual BProvetakingsplan? BProvetakingsplan { get; set; }
-
-    public virtual ICollection<BRapport> BRapports { get; set; } = new List<BRapport>();
+    public virtual BProvetakningsplan? BProvetakningsplan { get; set; }
 
     public virtual ICollection<BStasjon> BStasjons { get; set; } = new List<BStasjon>();
 
+    public virtual BTilstand? BTilstand { get; set; }
+
+    public virtual ICollection<BUndersokelse> BUndersokelses { get; set; } = new List<BUndersokelse>();
+
     public virtual Kunde Kunde { get; set; } = null!;
+
+    public virtual Lokalitet Lokalitet { get; set; } = null!;
+
+    public virtual Bruker Prosjektansvarlig { get; set; } = null!;
 }
