@@ -18,8 +18,17 @@ public class BSurveyService: IBSurveyService
     public async Task<BUndersokelse?> GetSurveyById(Guid surveyId)
     {
         var survey = await _db.BUndersokelses
-            .Where(s => s.Id == surveyId)
-            .FirstOrDefaultAsync();
+            .Include(s=> s. Prosjekt)
+            .Include(s => s.Preinfo)
+            .Include(s => s.BBilders)
+            .Include(s => s.BUndersokelsesloggs)
+            .Include(s => s.Blotbunn)
+            .Include(s => s.Hardbunn)
+            .Include(s => s.Sediment)
+            .Include(s => s.Sensorisk)
+            .Include(s => s.Dyr)
+            .Include(s => s.BStasjon)
+            .FirstOrDefaultAsync(s => s.Id == surveyId);
         
         return survey ?? null;
     }

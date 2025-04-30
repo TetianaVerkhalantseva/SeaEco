@@ -18,7 +18,10 @@ public class SamplingPlanService: ISamplingPlanService
     public async Task<BProvetakningsplan?> GetSamplingPlanById(Guid id)
     {
         var samplingPlan = await _db.BProvetakningsplans
-            .Where(s => s.Id == id).FirstOrDefaultAsync();
+            .Include(p => p.Prosjekt)
+            .Include(p => p.Planlegger)
+            .Include(p => p.BStasjons)
+            .FirstOrDefaultAsync(p => p.Id == id);
 
         return samplingPlan ?? null;
     }
