@@ -18,26 +18,68 @@ public class ProjectService : IProjectService
     public async Task<Guid> CreateProjectAsync(NewProjectDto dto)
     {
         
-        var customer = await _context.Kundes.FindAsync(dto.KundeId);
-        if (customer == null)
-            throw new KeyNotFoundException("Kunde ikke funnet.");
+        // Sjekk om lokalitet finnes, ellers opprett
+        var lokalitet = await _context.Lokalitets
+            .FirstOrDefaultAsync(l => l.Lokalitetsnavn == dto.Lokalitetsnavn || l.LokalitetsId == dto.LokalitetsId);
+
+        if (lokalitet == null)
+        {
+            lokalitet = new Lokalitet
+            {
+                Id = Guid.NewGuid(),
+                Lokalitetsnavn = dto.Lokalitetsnavn,
+                LokalitetsId = dto.LokalitetsId
+            };
+            _context.Lokalitets.Add(lokalitet);
+            await _context.SaveChangesAsync();
+        }
         
         var prosjekt = new BProsjekt
         {
+            Id = Guid.NewGuid(),
             PoId = dto.PoId,
             KundeId = dto.KundeId,
             Kundekontaktperson = dto.Kundekontaktperson,
             Kundetlf = dto.Kundetlf,
             Kundeepost = dto.Kundeepost,
-            //LokalitetId = dto.Lokalitetid, //Se hvordan lokalitet endret. Dette er Fk til Lokalitet tabell - der lokalitetsnavn oh lokalitetsID
+            LokalitetId = lokalitet.Id,
             Mtbtillatelse = dto.Mtbtillatelse,
             ProsjektansvarligId = dto.ProsjektansvarligId,
             Merknad = dto.Merknad,
             Produksjonsstatus = (int)dto.Produksjonsstatus,
-            Datoregistrert = DateTime.Now
+            Datoregistrert = dto.Datoregistrert
         };
 
         _context.BProsjekts.Add(prosjekt);
+        await _context.SaveChangesAsync();
+
+        // Opprett PTP
+        var ptp = new BProvetakningsplan
+        {
+            Id = Guid.NewGuid(),
+            ProsjektId = prosjekt.Id,
+            PlanleggerId = dto.ProsjektansvarligId
+        };
+
+        _context.BProvetakningsplans.Add(ptp);
+
+        // Opprett stasjoner
+        for (int i = 1; i <= dto.AntallStasjoner; i++)
+        {
+            var stasjon = new BStasjon
+            {
+                Id = Guid.NewGuid(),
+                ProsjektId = prosjekt.Id,
+                ProvetakingsplanId = ptp.Id,
+                Nummer = i,
+                KoordinatNord = "", 
+                KoordinatOst = "",
+                Analyser = ""
+            };
+
+            _context.BStasjons.Add(stasjon);
+        }
+
         await _context.SaveChangesAsync();
 
         return prosjekt.Id;
@@ -46,6 +88,7 @@ public class ProjectService : IProjectService
     public async Task<List<ProjectDto>> GetAllProjectsAsync()
     {
         return await _context.BProsjekts
+            .Include(p => p.Lokalitet)
             .Select(p => new ProjectDto
             {
                 Id = p.Id,
@@ -54,18 +97,25 @@ public class ProjectService : IProjectService
                 Kundekontaktperson = p.Kundekontaktperson,
                 Kundetlf = p.Kundetlf,
                 Kundeepost = p.Kundeepost,
-                //Lokalitetid = p.LokalitetId, //Se hvordan lokalitet endret. Dette er Fk til Lokalitet tabell - der lokalitetsnavn oh lokalitetsID
+                LokalitetId = p.LokalitetId,
+                Lokalitetsnavn = p.Lokalitet.Lokalitetsnavn,
+                LokalitetsId = p.Lokalitet.LokalitetsId,
                 Mtbtillatelse = p.Mtbtillatelse,
+                ProsjektansvarligId = p.ProsjektansvarligId,
                 Merknad = p.Merknad,
                 Produksjonsstatus = (Produksjonsstatus)p.Produksjonsstatus,
-                Datoregistrert = p.Datoregistrert
+                Datoregistrert = p.Datoregistrert,
+                AntallStasjoner = _context.BStasjons.Count(s => s.ProsjektId == p.Id)
             })
             .ToListAsync();
     }
 
-    public async Task<ProjectDto?> GetProjectByIdAsync(Guid Id)
+    public async Task<ProjectDto?> GetProjectByIdAsync(Guid id)
     {
-        var p = await _context.BProsjekts.FirstOrDefaultAsync(p => p.Id == Id);
+        var p = await _context.BProsjekts
+            .Include(p => p.Lokalitet)
+            .FirstOrDefaultAsync(p => p.Id == id);
+
         if (p == null)
             return null;
 
@@ -77,11 +127,50 @@ public class ProjectService : IProjectService
             Kundekontaktperson = p.Kundekontaktperson,
             Kundetlf = p.Kundetlf,
             Kundeepost = p.Kundeepost,
-            //Lokalitetid = p.LokalitetId, //Se hvordan lokalitet endret. Dette er Fk til Lokalitet tabell - der lokalitetsnavn oh lokalitetsID
+            LokalitetId = p.LokalitetId,
+            Lokalitetsnavn = p.Lokalitet.Lokalitetsnavn,
+            LokalitetsId = p.Lokalitet.LokalitetsId,
             Mtbtillatelse = p.Mtbtillatelse,
+            ProsjektansvarligId = p.ProsjektansvarligId,
             Merknad = p.Merknad,
             Produksjonsstatus = (Produksjonsstatus)p.Produksjonsstatus,
-            Datoregistrert = p.Datoregistrert
+            Datoregistrert = p.Datoregistrert,
+            AntallStasjoner = await _context.BStasjons.CountAsync(s => s.ProsjektId == p.Id)
         };
+    }
+    
+    public async Task UpdateProjectAsync(Guid id, EditProjectDto dto)
+    {
+        var prosjekt = await _context.BProsjekts.FindAsync(id);
+        if (prosjekt == null)
+            throw new KeyNotFoundException("Prosjekt ikke funnet.");
+
+        var lokalitet = await _context.Lokalitets
+            .FirstOrDefaultAsync(l => l.Lokalitetsnavn == dto.Lokalitetsnavn || l.LokalitetsId == dto.LokalitetsId);
+
+        if (lokalitet == null)
+        {
+            lokalitet = new Lokalitet
+            {
+                Id = Guid.NewGuid(),
+                Lokalitetsnavn = dto.Lokalitetsnavn,
+                LokalitetsId = dto.LokalitetsId
+            };
+            _context.Lokalitets.Add(lokalitet);
+            await _context.SaveChangesAsync();
+        }
+
+        prosjekt.PoId = dto.PoId;
+        prosjekt.KundeId = dto.KundeId;
+        prosjekt.Kundekontaktperson = dto.Kundekontaktperson;
+        prosjekt.Kundetlf = dto.Kundetlf;
+        prosjekt.Kundeepost = dto.Kundeepost;
+        prosjekt.LokalitetId = lokalitet.Id;
+        prosjekt.Mtbtillatelse = dto.Mtbtillatelse;
+        prosjekt.ProsjektansvarligId = dto.ProsjektansvarligId;
+        prosjekt.Merknad = dto.Merknad;
+        prosjekt.Produksjonsstatus = (int)dto.Produksjonsstatus;
+    
+        await _context.SaveChangesAsync();
     }
 }

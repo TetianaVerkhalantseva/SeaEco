@@ -58,6 +58,27 @@ public class ProjectController : ControllerBase
         return Ok(project);
     }
     
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> UpdateProject(Guid id, [FromBody] EditProjectDto dto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        try
+        {
+            await _projectService.UpdateProjectAsync(id, dto);
+            return Ok();
+        }
+        catch (KeyNotFoundException knf)
+        {
+            return NotFound(knf.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+    
     // Stasjonsoperasjoner
     [HttpGet("{Id:guid}/stasjon")]
     public async Task<IActionResult> GetStations(Guid Id)
