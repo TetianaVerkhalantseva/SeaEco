@@ -1,24 +1,33 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SeaEco.Abstractions.Models.Project;
+using SeaEco.Abstractions.Models.SamplingPlan;
 using SeaEco.Abstractions.Models.Stations;
+using SeaEco.Server.Infrastructure;
 using SeaEco.Services.ProjectServices;
+using SeaEco.Services.SamplingPlanServices;
 using SeaEco.Services.StationServices;
 
 namespace SeaEco.Server.Controllers;
 
+
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class ProjectController : ControllerBase
 {
     private readonly IProjectService _projectService;
     private readonly IStationService _stationService;
+    private readonly ISamplingPlanService _samplingPlanService;
 
     public ProjectController(
         IProjectService projectService,
-        IStationService stationService)
+        IStationService stationService,
+        ISamplingPlanService samplingPlanService)
     {
         _projectService = projectService;
         _stationService = stationService;
+        _samplingPlanService = samplingPlanService;
     }
 
     [HttpPost]
@@ -128,5 +137,63 @@ public class ProjectController : ControllerBase
         {
             return StatusCode(500, ex.Message);
         }
+    }
+    
+    // Operasjoner for prøvtakningsplan
+    [HttpGet("{projectId:guid}/sampling-plan/{samplingPlanId:guid}")]
+    public async Task<IActionResult> GetProjectSamplingPlan(Guid projectId, Guid samplingPlanId)
+    {
+        var samplingPlan = await _samplingPlanService.GetSamplingPlanById(samplingPlanId);
+        if (samplingPlan == null)
+        {
+            return NotFound($"No sampling plan found with id {samplingPlanId}");
+        }
+
+        if (samplingPlan.ProsjektId != projectId)
+        {
+            return BadRequest("Sampling plan does not belong to the given project");
+        }
+        
+        return Ok(samplingPlan);
+    }
+
+    [RoleAccessor(true)]
+    [HttpPost("{projectId:guid}/sampling-plan")]
+    public async Task<IActionResult> CreateSamplingPlan([FromRoute] Guid projectId,
+        [FromBody] EditSamplingPlanDto dto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        dto.ProsjektId = projectId;
+        var result = await _samplingPlanService.CreateSamplingPlan(dto);
+        
+        return result.IsSuccess ? Ok(result.Message) : BadRequest(result.Message);
+    }
+
+    [RoleAccessor(true)]
+    [HttpPut("{projectId:guid}/sampling-plan/{samplingPlanId:guid}")]
+    public async Task<IActionResult> UpdateSamplingPlan([FromRoute] Guid projectId,
+        [FromRoute] Guid samplingPlanId, [FromBody] EditSamplingPlanDto dto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        dto.ProsjektId = projectId;
+        var result = await _samplingPlanService.UpdateSamplingPlan(samplingPlanId, dto);
+        
+        return result.IsSuccess ? Ok(result.Message) : BadRequest(result.Message);
+    }
+
+    [RoleAccessor(true)]
+    [HttpDelete("{projectId:guid}/sampling-plan/{samplingPlanId:guid}")]
+    public async Task<IActionResult> DeleteSamplingPlan(Guid projectId, Guid samplingPlanId)
+    {
+        var result = await _samplingPlanService.DeleteSamplingPlan(projectId, samplingPlanId);
+        return result.IsSuccess ? Ok(result.Message) : BadRequest(result.Message);
     }
 }

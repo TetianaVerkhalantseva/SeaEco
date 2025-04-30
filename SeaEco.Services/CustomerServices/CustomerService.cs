@@ -56,7 +56,7 @@ public class CustomerService: ICustomerService
                 {
                     Id = p.Id,
                     PoId = p.PoId,
-                    Produksjonsstatus = p.Produksjonsstatus
+                    Prosjektstatus = p.Prosjektstatus
                 }).ToList();
         }
         
@@ -67,6 +67,7 @@ public class CustomerService: ICustomerService
     {
         var customer = new Kunde()
         {
+            Id = Guid.NewGuid(),
             Oppdragsgiver = customerDto.Oppdragsgiver,
             Kontaktperson = customerDto.Kontaktperson,
             Telefon = customerDto.Telefon,
@@ -84,7 +85,7 @@ public class CustomerService: ICustomerService
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Error: {e.Message}");
+            Console.WriteLine($@"Error: {e.Message}");
             return new EditCustomerResult
             {
                 IsSuccess = false,
@@ -122,7 +123,7 @@ public class CustomerService: ICustomerService
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Error: {e.Message}");
+            Console.WriteLine($@"Error: {e.Message}");
             return new EditCustomerResult
             {
                 IsSuccess = false,
