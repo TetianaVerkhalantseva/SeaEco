@@ -4,6 +4,7 @@ using SeaEco.Abstractions.Models.Project;
 using SeaEco.Abstractions.Models.SamplingPlan;
 using SeaEco.Abstractions.Models.Stations;
 using SeaEco.Server.Infrastructure;
+using SeaEco.Services.BSurveyService;
 using SeaEco.Services.ProjectServices;
 using SeaEco.Services.SamplingPlanServices;
 using SeaEco.Services.StationServices;
@@ -19,15 +20,18 @@ public class ProjectController : ControllerBase
     private readonly IProjectService _projectService;
     private readonly IStationService _stationService;
     private readonly ISamplingPlanService _samplingPlanService;
+    private readonly IBSurveyService _surveyService;
 
     public ProjectController(
         IProjectService projectService,
         IStationService stationService,
-        ISamplingPlanService samplingPlanService)
+        ISamplingPlanService samplingPlanService,
+        IBSurveyService bSurveyService)
     {
         _projectService = projectService;
         _stationService = stationService;
         _samplingPlanService = samplingPlanService;
+        _surveyService = bSurveyService;
     }
 
     [HttpPost]
@@ -197,5 +201,23 @@ public class ProjectController : ControllerBase
     {
         var result = await _stationService.DeleteStationAsync(stationId);
         return result.IsSuccess ? Ok(result.Message) : BadRequest(result.Message);
+    }
+    
+    // Stasjonsregistrering operasjoner
+    [HttpGet("{projectId:guid}/survey/{surveyId:guid}")]
+    public async Task<IActionResult> GetSurvey(Guid projectId, Guid surveyId)
+    {
+        var survey = await _surveyService.GetSurveyById(surveyId);
+        if (survey == null)
+        {
+            return NotFound($"No survey with id {surveyId}");
+        }
+
+        if (survey.ProsjektId != projectId)
+        {
+            return BadRequest("Survey does not belong to the given project");
+        }
+        
+        return Ok(survey);
     }
 }

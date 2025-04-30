@@ -15,15 +15,22 @@ public class SamplingPlanService: ISamplingPlanService
         _db = db;
     }
 
-    public async Task<BProvetakningsplan?> GetSamplingPlanById(Guid id)
+    public async Task<SamplingPlanDto?> GetSamplingPlanById(Guid id)
     {
         var samplingPlan = await _db.BProvetakningsplans
-            .Include(p => p.Prosjekt)
-            .Include(p => p.Planlegger)
-            .Include(p => p.BStasjons)
-            .FirstOrDefaultAsync(p => p.Id == id);
-
-        return samplingPlan ?? null;
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Id == id);
+        
+        if (samplingPlan == null)
+            return null;
+        
+        return new SamplingPlanDto
+        {
+            Id = samplingPlan.Id,
+            ProsjektId = samplingPlan.ProsjektId,
+            Planlagtfeltdato = samplingPlan.Planlagtfeltdato,
+            PlanleggerId = samplingPlan.PlanleggerId
+        };
     }
 
     public async Task<EditSamplingPlanResult> CreateSamplingPlan(EditSamplingPlanDto samplingPlanDto)

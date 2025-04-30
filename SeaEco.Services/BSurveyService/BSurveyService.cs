@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using SeaEco.Abstractions.Models.BSurvey;
+using SeaEco.Abstractions.Models.Bundersokelse;
 using SeaEco.EntityFramework.Contexts;
 using SeaEco.EntityFramework.Entities;
+using SeaEco.Services.Mapping;
 
 namespace SeaEco.Services.BSurveyService;
 
@@ -15,22 +17,21 @@ public class BSurveyService: IBSurveyService
         _db = db;
     }
 
-    public async Task<BUndersokelse?> GetSurveyById(Guid surveyId)
+    public async Task<SurveyDto?> GetSurveyById(Guid id)
     {
         var survey = await _db.BUndersokelses
-            .Include(s=> s. Prosjekt)
             .Include(s => s.Preinfo)
             .Include(s => s.BBilders)
+            .Include(s => s.BStasjon)
             .Include(s => s.BUndersokelsesloggs)
             .Include(s => s.Blotbunn)
             .Include(s => s.Hardbunn)
             .Include(s => s.Sediment)
             .Include(s => s.Sensorisk)
             .Include(s => s.Dyr)
-            .Include(s => s.BStasjon)
-            .FirstOrDefaultAsync(s => s.Id == surveyId);
-        
-        return survey ?? null;
+            .SingleOrDefaultAsync(s => s.Id == id);
+
+        return survey?.ToSurveyDto();
     }
-    
+
 }
