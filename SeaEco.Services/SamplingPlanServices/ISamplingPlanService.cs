@@ -12,5 +12,5 @@ public interface ISamplingPlanService
     
     Task<EditSamplingPlanResult> UpdateSamplingPlan(Guid id, EditSamplingPlanDto samplingPlanDto);
     
-    Task<EditSamplingPlanResult> DeleteSamplingPlan(Guid id);
+    Task<EditSamplingPlanResult> DeleteSamplingPlan(Guid projectId, Guid id);
 }

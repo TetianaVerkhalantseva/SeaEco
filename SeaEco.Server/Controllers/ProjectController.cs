@@ -119,39 +119,26 @@ public class ProjectController : ControllerBase
     }
     
     // Operasjoner for prøvtakningsplan
-    [HttpGet("samplingPlan/{samplingPlanId:guid}")]
-    public async Task<IActionResult> GetProjectSamplingPlan(Guid samplingPlanId)
+    [HttpGet("{projectId:guid}/sampling-plan/{samplingPlanId:guid}")]
+    public async Task<IActionResult> GetProjectSamplingPlan(Guid projectId, Guid samplingPlanId)
     {
-        var samplingPlan = await _samplingPlanService.GetSamplingPlanById( samplingPlanId );
+        var samplingPlan = await _samplingPlanService.GetSamplingPlanById(samplingPlanId);
         if (samplingPlan == null)
         {
             return NotFound($"No sampling plan found with id {samplingPlanId}");
+        }
+
+        if (samplingPlan.ProsjektId != projectId)
+        {
+            return BadRequest("Sampling plan does not belong to the given project");
         }
         
         return Ok(samplingPlan);
     }
 
     [RoleAccessor(true)]
-    [HttpPost("Create-sampling-plan")]
-    public async Task<IActionResult> CreateSamplingPlan([FromBody] EditSamplingPlanDto dto)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-        
-        var result = await _samplingPlanService.CreateSamplingPlan(dto);
-        if (result.IsSuccess)
-        {
-            return Ok(result.Message);
-        }
-        
-        return BadRequest(result.Message);
-    }
-
-    [RoleAccessor(true)]
-    [HttpPut("Update-sampling-plan/{samplingPlanId:guid}")]
-    public async Task<IActionResult> UpdateSamplingPlan([FromRoute] Guid samplingPlanId,
+    [HttpPost("{projectId:guid}/sampling-plan")]
+    public async Task<IActionResult> CreateSamplingPlan([FromRoute] Guid projectId,
         [FromBody] EditSamplingPlanDto dto)
     {
         if (!ModelState.IsValid)
@@ -159,25 +146,33 @@ public class ProjectController : ControllerBase
             return BadRequest(ModelState);
         }
         
-        var result = await _samplingPlanService.UpdateSamplingPlan(samplingPlanId, dto);
-        if (result.IsSuccess)
-        {
-            return Ok(result.Message);
-        }
+        dto.ProsjektId = projectId;
+        var result = await _samplingPlanService.CreateSamplingPlan(dto);
         
-        return BadRequest(result.Message);
+        return result.IsSuccess ? Ok(result.Message) : BadRequest(result.Message);
     }
 
     [RoleAccessor(true)]
-    [HttpDelete("Delete-sampling-plan/{samplingPlanId:guid}")]
-    public async Task<IActionResult> DeleteSamplingPlan(Guid samplingPlanId)
+    [HttpPut("{projectId:guid}/sampling-plan/{samplingPlanId:guid}")]
+    public async Task<IActionResult> UpdateSamplingPlan([FromRoute] Guid projectId,
+        [FromRoute] Guid samplingPlanId, [FromBody] EditSamplingPlanDto dto)
     {
-        var result = await _samplingPlanService.DeleteSamplingPlan(samplingPlanId);
-        if (result.IsSuccess)
+        if (!ModelState.IsValid)
         {
-            return Ok(result.Message);
+            return BadRequest(ModelState);
         }
         
-        return BadRequest(result.Message);
+        dto.ProsjektId = projectId;
+        var result = await _samplingPlanService.UpdateSamplingPlan(samplingPlanId, dto);
+        
+        return result.IsSuccess ? Ok(result.Message) : BadRequest(result.Message);
+    }
+
+    [RoleAccessor(true)]
+    [HttpDelete("{projectId:guid}/sampling-plan/{samplingPlanId:guid}")]
+    public async Task<IActionResult> DeleteSamplingPlan(Guid projectId, Guid samplingPlanId)
+    {
+        var result = await _samplingPlanService.DeleteSamplingPlan(projectId, samplingPlanId);
+        return result.IsSuccess ? Ok(result.Message) : BadRequest(result.Message);
     }
 }
