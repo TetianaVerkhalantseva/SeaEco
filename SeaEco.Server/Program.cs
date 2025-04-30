@@ -24,6 +24,7 @@ using SeaEco.Services.ImageServices;
 using SeaEco.Services.JwtServices;
 using SeaEco.Services.ProjectServices;
 using SeaEco.Services.SamplingPlanServices;
+using SeaEco.Services.StationServices;
 using SeaEco.Services.TokenServices;
 using SeaEco.Services.UserServices;
 using SeaEco.Services.Validators;
@@ -119,6 +120,7 @@ services.AddScoped<IProjectService, ProjectService>();
 services.AddScoped<EmailMessageManager>();
 services.AddTransient<IImageService, ImageService>();
 services.AddTransient<ISamplingPlanService, SamplingPlanService>();
+services.AddTransient<IStationService, StationService>();
 services.AddTransient<IBSurveyService, BSurveyService>();
 
 // Models validators
