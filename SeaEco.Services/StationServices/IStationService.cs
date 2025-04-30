@@ -4,8 +4,10 @@ namespace SeaEco.Services.StationServices;
 
 public interface IStationService
 {
-    Task<List<StationDto>> GetStationsAsync(Guid Id);
-    Task<StationDto?> GetStationByIdAsync(Guid Id, Guid stasjonsid);
-    Task UpdateStationAsync(Guid Id, Guid stasjonsid, UpdateStationDto dto);
-    Task<int> AddExtraStationAsync(Guid Id, NewStationDto dto);
+    Task<StationResult> GetStationsByProvetakningsplanIdAsync(Guid samplingPlanId);
+    Task<StationResult> GetStationByIdAsync(Guid stationId);
+    Task<StationResult> AddStationToPlanAsync(Guid samplingPlanId, NewStationDto dto);
+    Task<StationResult> AddStationToProjectAsync(Guid projectId, NewStationDto dto);
+    Task<StationResult> UpdateStationAsync(Guid stationId, UpdateStationDto dto);
+    Task<StationResult> DeleteStationAsync(Guid stationId);
 }

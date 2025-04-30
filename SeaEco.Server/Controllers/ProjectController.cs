@@ -88,57 +88,6 @@ public class ProjectController : ControllerBase
         }
     }
     
-    // Stasjonsoperasjoner
-    [HttpGet("{Id:guid}/stasjon")]
-    public async Task<IActionResult> GetStations(Guid Id)
-    {
-        var stations = await _stationService.GetStationsAsync(Id);
-        return Ok(stations);
-    }
-
-    [HttpGet("{Id:guid}/stasjon/{stasjonsid:int}")]
-    public async Task<IActionResult> GetStation(Guid Id, Guid stasjonsid)
-    {
-        var station = await _stationService.GetStationByIdAsync(Id, stasjonsid);
-        if (station == null)
-            return NotFound();
-        return Ok(station);
-    }
-
-    [HttpPut("{Id:guid}/stasjon/{stasjonsid:guid}")]
-    public async Task<IActionResult> UpdateStation(Guid Id, Guid stasjonsid, [FromBody] UpdateStationDto dto)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
-        try
-        {
-            await _stationService.UpdateStationAsync(Id, stasjonsid, dto);
-            return Ok();
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
-    }
-    
-    [HttpPost("{Id:guid}/stasjon")]
-    public async Task<IActionResult> AddExtraStation(Guid Id, [FromBody] NewStationDto dto)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-        
-        try
-        {
-            var newStationId = await _stationService.AddExtraStationAsync(Id, dto);
-            return Ok(new { Id, stasjonsid = newStationId });
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
-    }
-    
     // Operasjoner for prøvtakningsplan
     [HttpGet("{projectId:guid}/sampling-plan/{samplingPlanId:guid}")]
     public async Task<IActionResult> GetProjectSamplingPlan(Guid projectId, Guid samplingPlanId)
@@ -194,6 +143,59 @@ public class ProjectController : ControllerBase
     public async Task<IActionResult> DeleteSamplingPlan(Guid projectId, Guid samplingPlanId)
     {
         var result = await _samplingPlanService.DeleteSamplingPlan(projectId, samplingPlanId);
+        return result.IsSuccess ? Ok(result.Message) : BadRequest(result.Message);
+    }
+    
+    // Stasjonsoperasjoner
+    [HttpGet("{projectId:guid}/sampling-plan/{samplingPlanId:guid}/station")]
+    public async Task<IActionResult> GetStations(Guid projectId, Guid samplingPlanId)
+    {
+        var result = await _stationService.GetStationsByProvetakningsplanIdAsync(samplingPlanId);
+        return result.IsSuccess ? Ok(result.Stations) : NotFound(result.Message);
+    }
+
+    [RoleAccessor(true)]
+    [HttpPut("{projectId:guid}/sampling-plan/station/{stationId:guid}")]
+    public async Task<IActionResult> UpdateStation(Guid projectId, Guid stationId, [FromBody] UpdateStationDto dto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var result = await _stationService.UpdateStationAsync(stationId, dto);
+        return result.IsSuccess ? Ok(result.Message) : NotFound(result.Message);
+    }
+    
+    //Legg til ekstra stasjon i PTP
+    [RoleAccessor(true)]
+    [HttpPost("{projectId:guid}/sampling-plan/{samplingPlanId:guid}/station")]
+    public async Task<IActionResult> AddStation(Guid projectId, Guid samplingPlanId, [FromBody] NewStationDto dto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        dto.ProsjektId = projectId;
+        var result = await _stationService.AddStationToPlanAsync(samplingPlanId, dto);
+        return result.IsSuccess ? Ok(new { id = result.StationId }) : BadRequest(result.Message);
+    }
+    
+    // Legg til ekstra stasjon direkte på prosjekt
+    [RoleAccessor(true)]
+    [HttpPost("{projectId:guid}/station")]
+    public async Task<IActionResult> AddStationToProject(Guid projectId, [FromBody] NewStationDto dto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        dto.ProsjektId = projectId;
+        var result = await _stationService.AddStationToProjectAsync(projectId, dto);
+        return result.IsSuccess ? Ok(new { id = result.StationId }) : BadRequest(result.Message);
+    }
+    
+    [RoleAccessor(true)]
+    [HttpDelete("{projectId:guid}/sampling-plan/station/{stationId:guid}")]
+    public async Task<IActionResult> DeleteStation(Guid projectId, Guid stationId)
+    {
+        var result = await _stationService.DeleteStationAsync(stationId);
         return result.IsSuccess ? Ok(result.Message) : BadRequest(result.Message);
     }
 }
