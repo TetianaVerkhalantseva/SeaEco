@@ -59,15 +59,15 @@ public sealed class Report
         using ExcelPackage sourcePackage = new ExcelPackage(Path.Combine(_options.DestinationPath, path));
         using ExcelWorksheet worksheet = sourcePackage.Workbook.Worksheets.First();
 
-        worksheet.Cells[1, 6].Value = header.Firma;
-        worksheet.Cells[1, 11].Value = $"{header.DateFrom:dd.MM.yyyy} og {header.DateTo:dd.MM.yyyy}";
-        worksheet.Cells[2, 6].Value = header.Lokalitet;
-        worksheet.Cells[2, 11].Value = header.Id;
+        worksheet.Cells[1, 6].Value = header.Oppdragsgiver;
+        worksheet.Cells[1, 11].Value = string.Join(',', header.FeltDatoer.Select(date => date.ToString("dd.MM.yy"))); 
+        worksheet.Cells[2, 6].Value = header.Lokalitetsnavn;
+        worksheet.Cells[2, 11].Value = header.LokalitetsID;
 
-        worksheet.Cells[1, 21].Value = header.Firma;
-        worksheet.Cells[1, 26].Value = $"{header.DateFrom:dd.MM.yyyy} og {header.DateTo:dd.MM.yyyy}";
-        worksheet.Cells[2, 21].Value = header.Lokalitet;
-        worksheet.Cells[2, 26].Value = header.Id;
+        worksheet.Cells[1, 21].Value = header.Oppdragsgiver;
+        worksheet.Cells[1, 26].Value = string.Join(',', header.FeltDatoer.Select(date => date.ToString("dd.MM.yy")));
+        worksheet.Cells[2, 21].Value = header.Lokalitetsnavn;
+        worksheet.Cells[2, 26].Value = header.LokalitetsID;
 
         int index = 4;
         foreach (ColumnB1 column in columns)
@@ -79,11 +79,11 @@ public sealed class Report
             worksheet.Cells[10, index].Value = column.Bunntype == Bunntype.Hardbunn ? string.Empty : $"{column.Eh:F1}";
             worksheet.Cells[11, index].Value = column.Bunntype == Bunntype.Hardbunn ? 0 : column.phEh;
             
-            if (Enum.IsDefined(column.TilstandGruppeII))
+            if (Enum.IsDefined(column.TilstandProveGr2))
             {
-                worksheet.Cells[12, index].Value = (int)column.TilstandGruppeII;
+                worksheet.Cells[12, index].Value = (int)column.TilstandProveGr2;
                 worksheet.Cells[12, index].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                worksheet.Cells[12, index].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(column.TilstandGruppeII.GetDisplay()));
+                worksheet.Cells[12, index].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(column.TilstandProveGr2.GetDisplay()));
             }
 
             worksheet.Cells[column.Gassbobler == Gassbobler.Ja ? 17 : 18, index].Value = (int)column.Gassbobler;
@@ -116,20 +116,20 @@ public sealed class Report
             worksheet.Cells[33, index].Value = column.Sum > 0 ? $"{column.Sum:F2}" : 0;
             worksheet.Cells[34, index].Value = column.KorrigertSum;
 
-            if (Enum.IsDefined(column.TilstandGruppeIII))
+            if (Enum.IsDefined(column.TilstandProveGr3))
             {
-                worksheet.Cells[35, index].Value = (int)column.TilstandGruppeIII;
+                worksheet.Cells[35, index].Value = (int)column.TilstandProveGr3;
                 worksheet.Cells[35, index].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                worksheet.Cells[35, index].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(column.TilstandGruppeIII.GetDisplay()));
+                worksheet.Cells[35, index].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(column.TilstandProveGr3.GetDisplay()));
             }
 
-            worksheet.Cells[38, index].Value = column.MiddelverdiGruppeIIogIII > 0 ? $"{column.MiddelverdiGruppeIIogIII:F2}" : 0;
+            worksheet.Cells[38, index].Value = column.MiddelVerdiGr2Gr3 > 0 ? $"{column.MiddelVerdiGr2Gr3:F2}" : 0;
 
-            if (Enum.IsDefined(column.TilstandPrøve))
+            if (Enum.IsDefined(column.TilstandProveGr2Gr3))
             {
-                worksheet.Cells[39, index].Value = (int)column.TilstandPrøve;
+                worksheet.Cells[39, index].Value = (int)column.TilstandProveGr2Gr3;
                 worksheet.Cells[39, index].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                worksheet.Cells[39, index].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(column.TilstandPrøve.GetDisplay()));
+                worksheet.Cells[39, index].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(column.TilstandProveGr2Gr3.GetDisplay()));
             }
 
             index = index % 13 == 0 ? 19 : index + 1;
@@ -146,23 +146,23 @@ public sealed class Report
 
         int index = 3;
 
-        worksheet.Cells[1, 4].Value = header.Firma;
-        worksheet.Cells[1, 9].Value = $"{header.DateFrom:dd.MM.yyyy} og {header.DateTo:dd.MM.yyyy}";
-        worksheet.Cells[2, 4].Value = header.Lokalitet;
-        worksheet.Cells[2, 9].Value = header.Id;
+        worksheet.Cells[1, 4].Value = header.Oppdragsgiver;
+        worksheet.Cells[1, 9].Value = string.Join(',', header.FeltDatoer.Select(date => date.ToString("dd.MM.yy")));
+        worksheet.Cells[2, 4].Value = header.Lokalitetsnavn;
+        worksheet.Cells[2, 9].Value = header.LokalitetsID;
 
-        worksheet.Cells[1, 17].Value = header.Firma;
-        worksheet.Cells[1, 22].Value = $"{header.DateFrom:dd.MM.yyyy} og {header.DateTo:dd.MM.yyyy}";
-        worksheet.Cells[2, 17].Value = header.Lokalitet;
-        worksheet.Cells[2, 22].Value = header.Id;
+        worksheet.Cells[1, 17].Value = header.Oppdragsgiver;
+        worksheet.Cells[1, 22].Value = string.Join(',', header.FeltDatoer.Select(date => date.ToString("dd.MM.yy")));
+        worksheet.Cells[2, 17].Value = header.Lokalitetsnavn;
+        worksheet.Cells[2, 22].Value = header.LokalitetsID;
 
         foreach (ColumnB2 column in columns)
         {
             worksheet.Cells[5, index].Value = column.Coordinate.North;
             worksheet.Cells[6, index].Value = column.Coordinate.East;
-            worksheet.Cells[7, index].Value = column.Depth;
-            worksheet.Cells[8, index].Value = column.Attempts;
-            worksheet.Cells[9, index].Value = column.BubblingWood;
+            worksheet.Cells[7, index].Value = column.Dyp;
+            worksheet.Cells[8, index].Value = column.AntallForsøk;
+            worksheet.Cells[9, index].Value = column.Bobling;
 
             worksheet.Cells[11, index].Value = column.Leire.Key.GetDescription();
             worksheet.Cells[12, index].Value = column.Silt.Key.GetDescription();
@@ -193,8 +193,8 @@ public sealed class Report
         using ExcelPackage sourcePackage = new ExcelPackage(Path.Combine(_options.DestinationPath, path));
         using ExcelWorksheet worksheet = sourcePackage.Workbook.Worksheets.First();
 
-        worksheet.Cells[1, 2].Value = information.Prosjekt;
-        worksheet.Cells[2, 2].Value = information.Dato;
+        worksheet.Cells[1, 2].Value = information.ProsjektIdSe;
+        worksheet.Cells[2, 2].Value = information.FeltDatoer;
 
         worksheet.Cells[5, 2].Value = information.TotalStasjoner;
         worksheet.Cells[6, 2].Value = information.TotalGrabbhugg;
@@ -202,13 +202,13 @@ public sealed class Report
         worksheet.Cells[8, 2].Value = information.MedDyr;
         worksheet.Cells[9, 2].Value = information.MedPhEh;
 
-        worksheet.Cells[12, 2].Value = $"{information.Leire.Sum(_ => _.Value):F1}";
-        worksheet.Cells[13, 2].Value = $"{information.Silt.Sum(_ => _.Value):F1}";
-        worksheet.Cells[14, 2].Value = $"{information.Sand.Sum(_ => _.Value):F1}";
-        worksheet.Cells[15, 2].Value = $"{information.Grus.Sum(_ => _.Value):F1}";
-        worksheet.Cells[16, 2].Value = $"{information.Skjellsand.Sum(_ => _.Value):F1}";
-        worksheet.Cells[17, 2].Value = $"{information.Steinbunn.Sum(_ => _.Value):F1}";
-        worksheet.Cells[18, 2].Value = $"{information.Fjellbunn.Sum(_ => _.Value):F1}";
+        worksheet.Cells[12, 2].Value = $"{information.Leire:F1}";
+        worksheet.Cells[13, 2].Value = $"{information.Silt:F1}";
+        worksheet.Cells[14, 2].Value = $"{information.Sand:F1}";
+        worksheet.Cells[15, 2].Value = $"{information.Grus:F1}";
+        worksheet.Cells[16, 2].Value = $"{information.Skjellsand:F1}";
+        worksheet.Cells[17, 2].Value = $"{information.Steinbunn:F1}";
+        worksheet.Cells[18, 2].Value = $"{information.Fjellbunn:F1}";
 
         worksheet.Cells[21, 2].Value = information.Tilstand1.Item1 == 0 ? "-" : information.Tilstand1.Item1;
         worksheet.Cells[21, 3].Value = information.Tilstand1.Item2 == 0 ? "-" : information.Tilstand1.Item2;
@@ -221,9 +221,15 @@ public sealed class Report
         
         worksheet.Cells[24, 2].Value = information.Tilstand4.Item1 == 0 ? "-" : information.Tilstand4.Item1;
         worksheet.Cells[24, 3].Value = information.Tilstand4.Item2 == 0 ? "-" : information.Tilstand4.Item2;
-
-        // GrII
-        // GrII
-        // GrII + GrIII
+        
+        
+        //IndeksGr2 
+        //TilstandGr2
+        
+        //IndeksGr3
+        //TilstandGr3
+        
+        //LokalitetsIndeks
+        //LokalitetsTilstand
     }
 }

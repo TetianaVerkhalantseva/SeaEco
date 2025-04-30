@@ -6,9 +6,9 @@ namespace SeaEco.Reporter.Models.B2;
 public class ColumnB2
 {
     public Coordinate Coordinate { get; set; }
-    public short Depth { get; set; }
-    public byte Attempts { get; set; }
-    public bool BubblingWood { get; set; }
+    public short Dyp { get; set; }
+    public byte AntallForsøk { get; set; }
+    public bool Bobling { get; set; }
 
     public HalfValue Leire { get; set; }
     public HalfValue Silt { get; set; }
