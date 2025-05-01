@@ -33,7 +33,7 @@ else
             </div>
             <div class="d-flex flex-column mt-4 mb-4 gap-3">
                 <div class="d-flex gap-3">
-                    <div class="form-floating flex-fill">
+                    <div class="form-floating flex-fill" style="min-width:600px;">
                         <InputText class="form-control" id="contactCustomer" @bind-Value="_newProject.Kundekontaktperson"/>
                         <label for="contactCustomer">Kontaktperson</label>
                     </div>
@@ -43,7 +43,7 @@ else
                         <InputText class="form-control" id="tlfCustomer" @bind-Value="_newProject.Kundetlf"/>
                         <label for="tlfCustomer">Telefonnummer</label>
                     </div>
-                    <div class="form-floating">
+                    <div class="form-floating flex-fill">
                         <InputText class="form-control" id="emailCustomer" @bind-Value="_newProject.Kundeepost"/>
                         <label for="emailCustomer">epost</label>
                     </div>
@@ -66,11 +66,11 @@ else
                 </div>
             </div>
 
-            <div class="d-flex gap-3 align-items-end mb-3">
+            <div class="d-flex gap-3 align-items-end">
                 @if (!_isNewLocality)
                 {
                     <div class="form-floating flex-fill">
-                        <InputSelect @bind-Value="_newProject.Lokalitetid" id="locality" class="form-select">
+                        <InputSelect @bind-Value="_newProject.Lokalitetsnavn" id="locality" class="form-select">
                             <option value="">Velg lokalitet</option>
                             @foreach (var loc in _lokalities)
                             {
@@ -86,18 +86,17 @@ else
                         <InputText class="form-control" id="newLocalityName" @bind-Value="_newLocaly.Lokalitetsnavn" />
                         <label for="newLocalityName">Lokalitetsnavn</label>
                     </div>
-                    <div class="form-floating flex-fill">
+                    <div class="form-floating">
                         <InputText class="form-control" id="newLocalityId" @bind-Value="_newLocaly.LokalitetsId" />
                         <label for="newLocalityId">Lokalitets-Id</label>
                     </div>
                 }
-                
             </div>
 
             <button type="button"
-                    class="btn btn-secondary align-self-end"
+                    class="btn custom-btn align-self-end" style="min-width: 155px"
                     @onclick="ToggleLocalityMode">
-                @(_isNewLocality ? "Velg eksisterende" : "Ny lokalitet")
+                @(_isNewLocality ? "Eksisterende" : "Ny lokalitet")
             </button>
             
             
@@ -121,8 +120,8 @@ else
             </div>
         </div>
         <div class="d-flex gap-3">
-            <NavLink class="btn btn-secondary align-self-start" type="button" href=@($"/CustomerInfo/{CustomerId}")>@Resources.ButtonCancel</NavLink>
-            <button type=submit class="btn btn-secondary align-self-end">
+            <NavLink class="btn custom-outline-secondary-btn align-self-start" type="button" href=@($"/CustomerInfo/{CustomerId}")>@Resources.ButtonCancel</NavLink>
+            <button type=submit class="btn custom-btn align-self-end">
                 @Resources.ButtonSave
             </button>
         </div>
@@ -140,10 +139,7 @@ else
     [Parameter] public Guid CustomerId { get; set; }
     private string? _errorMessage;
     private bool _isNewLocality;
-
-    //benyttes i form, da backend enda ikke har variabelen. Form må oppdateres når klar.
-    private int? Lokalitetid;
-
+    
 
     protected override async Task OnInitializedAsync()
     {
@@ -187,14 +183,13 @@ else
 
     private async Task AddNewProject()
     {
-        
-        
+        _newProject.Datoregistrert = DateTime.Now;
         var response = await Http.PostAsJsonAsync("/api/Project", _newProject);
         
         if (response.IsSuccessStatusCode)
         {
-            //Backendd må oppdateres først
-            //Navigation.NavigateTo($"project/{prosjektId:D}", forceLoad: true);
+            var projectId = await response.Content.ReadFromJsonAsync<Guid>();
+            Navigation.NavigateTo($"project/{projectId:D}", forceLoad: true);
         }
         else
         {

@@ -28,15 +28,15 @@
                     </div>
 
                     <div class="position-absolute bottom-0 start-0 mb-3 ms-3">
-                        <button class="btn btn-outline-secondary me-2" @onclick="BackToCustomerPage">@Resources.ButtonCancel</button>
+                        <button class="btn custom-outline-secondary-btn me-2" @onclick="BackToCustomerPage">@Resources.ButtonCancel</button>
                     </div>
 
                     <div class="position-absolute bottom-0 end-0 mb-3 me-3">
                         <AuthorizeView Roles="admin">
-                            <button class="btn btn-danger" @onclick="DeleteCustomer">@Resources.ButtonDelete</button>
+                            <button class="btn custom-outline-secondary-btn" @onclick="DeleteCustomer">@Resources.ButtonDelete</button>
                         </AuthorizeView>
                         
-                        <button class="btn btn-primary" @onclick="EditCustomerPage">@Resources.ButtonEdit</button>
+                        <button class="btn custom-btn" @onclick="EditCustomerPage">@Resources.ButtonEdit</button>
                     </div>
                 </div>
 

@@ -124,3 +124,47 @@ a, .btn-link {
 {
     min-width: 300px;
 }
+
+
+
+
+.custom-btn {
+    background-color: rgb(100,151,177);
+    color: white;
+    border-color: rgb(100,151,177);
+    padding: 10px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.custom-btn:hover {
+    background-color: rgb(0,91,150);
+    border-color: rgb(0,91,150);
+    color: white;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.custom-btn:active {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    border-color: rgb(0,91,150);
+}
+
+.custom-outline-secondary-btn{
+    background-color: whitesmoke;
+    color: gray;
+    border-color: gray;
+    padding: 10px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.custom-outline-secondary-btn:hover {
+    background-color: gray;
+    color: white;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.custom-outline-secondary-btn:active {
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+    border-color: gray;
+}
