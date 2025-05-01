@@ -54,14 +54,14 @@
                         <td></td>
                         <td>
                             <div class="form-check form-switch">
-                                <input class="form-check-input cursor" type="checkbox" id="active" checked="@user.IsActive" @onchange="@(e => EditUserIsActive(user, e))"/>
+                                <input class="form-check-input cursor" type="checkbox" checked="@user.IsActive" @onchange="@(e => EditUserIsActive(user, e))"/>
                                 @if(user.IsActive)
                                 {
-                                    <label class="form-check-label" for="active">@Resources.TableInputIsActive</label> 
+                                    <label class="form-check-label">@Resources.TableInputIsActive</label> 
                                 }
                                 else                                                  
                                 {                                                                   
-                                    <label class="form-check-label" for="active">@Resources.TableInputIsNotActive</label>     
+                                    <label class="form-check-label">@Resources.TableInputIsNotActive</label>     
                                 }                                                                   
                             </div>
                         </td>
