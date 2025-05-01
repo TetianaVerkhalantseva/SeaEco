@@ -76,7 +76,7 @@ public class StationService : IStationService
     public async Task<StationResult> AddStationToPlanAsync(Guid samplingPlanId, NewStationDto dto)
     {
         var plan = await _db.BProvetakningsplans
-            .FirstOrDefaultAsync(p => p.Id == samplingPlanId && p.ProsjektId == dto.ProsjektId);
+            .FirstOrDefaultAsync(p => p.ProsjektId == dto.ProsjektId && p.Id == samplingPlanId);
 
         if (plan == null)
         {
@@ -98,7 +98,8 @@ public class StationService : IStationService
             KoordinatNord = dto.KoordinatNord,
             KoordinatOst = dto.KoordinatOst,
             Dybde = dto.Dybde,
-            Analyser = dto.Analyser
+            Analyser = dto.Analyser,
+            UndersokelseId = null
         };
 
         await _db.BStasjons.AddAsync(stasjon);
