@@ -35,11 +35,11 @@
                     </div>
 
                 <div class="mt-2">
-                    <input class="cursor" type="checkbox" id="admin" @bind="_userEdit.IsAdmin" />
+                    <input type="checkbox" class="form-check-input cursor" id="admin" @bind="_userEdit.IsAdmin" />
                     <label class="ms-1" title="@(Resources.TooltipAdmin + "\n" + Resources.TooltipAdminOne + "\n" + Resources.TooltipAdminTwo  + "\n" +Resources.TooltipAdminThree)">@Resources.CheckboksAdmin</label>
                 </div>
 
-                <div class="d-flex justify-content-center">
+                <div class="d-flex justify-content-center mt-2">
                     <NavLink class="btn custom-outline-secondary-btn me-2" href="/user">@Resources.ButtonCancel</NavLink>
                     <button type = submit class="btn custom-btn me-2">@Resources.ButtonSave</button>
                 </div>

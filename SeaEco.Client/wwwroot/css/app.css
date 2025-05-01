@@ -168,3 +168,30 @@ a, .btn-link {
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
     border-color: gray;
 }
+
+
+.form-check-input:checked {
+    background-color:rgb(100,151,177); 
+    border-color:rgb(100,151,177);
+}
+
+.form-check-input:checked:hover { 
+    background-color:rgb(0,91,150);
+    border-color:rgb(0,91,150);
+}
+
+.form-check-input:not(:checked):hover { 
+    background-color: lightgrey;
+    border-color: gray;
+}
+
+.form-check-input:not(:checked) {
+    background-color: white;
+    border-color: lightgrey;
+}
+
+.form-check-input:focus {
+    outline: 0;
+    box-shadow: none;
+}
+
