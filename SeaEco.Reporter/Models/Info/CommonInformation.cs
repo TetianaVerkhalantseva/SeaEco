@@ -1,5 +1,4 @@
 using SeaEco.Abstractions.Enums;
-using SeaEco.Abstractions.ValueObjects.Half;
 
 namespace SeaEco.Reporter.Models.Info;
 

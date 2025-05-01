@@ -1,40 +1,40 @@
-namespace SeaEco.Abstractions.ValueObjects.Half;
+namespace SeaEco.Abstractions.ValueObjects.Bunnsubstrat;
 
-public struct HalfValue
+public struct BunnsubstratValue
 {
-    public readonly HalfType Key { get; }
+    public readonly BunnsubstratType Key { get; }
     public readonly float Value { get; }
 
-    public HalfValue(HalfType type)
+    public BunnsubstratValue(BunnsubstratType type)
     {
         Key = type;
         Value = type switch
         {
-            HalfType.x => 0.5f,
-            HalfType.X => 1,
+            BunnsubstratType.x => 0.5f,
+            BunnsubstratType.X => 1,
             _ => 0
         };
     }
 
-    public HalfValue(float value)
+    public BunnsubstratValue(float value)
     {
         switch (value)
         {
             case 0.5f:
             {
-                Key = HalfType.x;
+                Key = BunnsubstratType.x;
                 Value = value;
                 break;
             }
             case 1:
             {
-                Key = HalfType.X;
+                Key = BunnsubstratType.X;
                 Value = value;
                 break;
             }
             default:
             {
-                Key = HalfType.None;
+                Key = BunnsubstratType.None;
                 Value = 0;
                 break;
             }

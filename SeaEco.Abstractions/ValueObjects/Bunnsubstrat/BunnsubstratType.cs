@@ -1,8 +1,8 @@
 using System.ComponentModel;
 
-namespace SeaEco.Abstractions.ValueObjects.Half;
+namespace SeaEco.Abstractions.ValueObjects.Bunnsubstrat;
 
-public enum HalfType
+public enum BunnsubstratType
 {
     [Description("")]
     None = 0,

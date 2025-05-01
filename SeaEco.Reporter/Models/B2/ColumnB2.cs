@@ -1,5 +1,5 @@
 using SeaEco.Abstractions.ValueObjects;
-using SeaEco.Abstractions.ValueObjects.Half;
+using SeaEco.Abstractions.ValueObjects.Bunnsubstrat;
 
 namespace SeaEco.Reporter.Models.B2;
 
@@ -10,13 +10,13 @@ public class ColumnB2
     public byte AntallForsøk { get; set; }
     public bool Bobling { get; set; }
 
-    public HalfValue Leire { get; set; }
-    public HalfValue Silt { get; set; }
-    public HalfValue Sand { get; set; }
-    public HalfValue Grus { get; set; }
-    public HalfValue Skjellsand { get; set; }
-    public HalfValue Steinbunn { get; set; }
-    public HalfValue Fjellbunn { get; set; }
+    public BunnsubstratValue Leire { get; set; }
+    public BunnsubstratValue Silt { get; set; }
+    public BunnsubstratValue Sand { get; set; }
+    public BunnsubstratValue Grus { get; set; }
+    public BunnsubstratValue Skjellsand { get; set; }
+    public BunnsubstratValue Steinbunn { get; set; }
+    public BunnsubstratValue Fjellbunn { get; set; }
 
     public string Pigghuder { get; set; }
     public string Krepsdyr { get; set; }
