@@ -7,10 +7,11 @@ public sealed class ColumnB1
 {
     public Bunntype Bunntype { get; set; }
     public Dyr Dyr { get; set; }
+
     public float pH { get; set; }
     public float Eh { get; set; }
     public int phEh { get; set; }
-    public Indeks TilstandGruppeII{ get; set; }
+    public Tilstand TilstandProveGr2 { get; set; }
 
     public Gassbobler Gassbobler { get; set; }
     public Farge Farge { get; set; }
@@ -20,8 +21,21 @@ public sealed class ColumnB1
     public Tykkelseslamlag Tykkelseslamlag { get; set; }
     public short Sum { get; set; }
     public float KorrigertSum { get; set; }
-    public Indeks TilstandGruppeIII { get; set; }
+    public Tilstand TilstandProveGr3 { get; set; }
 
-    public float MiddelverdiGruppeIIogIII { get; set; }
-    public Indeks TilstandPrøve { get; set; }
+
+    public float MiddelVerdiGr2Gr3 { get; set; }
+    public Tilstand TilstandProveGr2Gr3 { get; set; }
+    
+    
+    public float IndeksGr2 { get; set; }
+    public Tilstand TilstandGr2 { get; set; }
+
+
+    public float IndeksGr3 { get; set; }
+    public Tilstand TilstandGr3 { get; set; }
+
+
+    public float LokalitetsIndeks { get; set; }
+    public Tilstand LokalitetsTilstand { get; set; }
 }
