@@ -81,7 +81,6 @@
             </div>
         </div>} 
         </div>
-        
 
 
 @code {
@@ -105,14 +104,14 @@
         }
     }
 
-    
+
     private async Task EditUserIsActive(UserDto user, ChangeEventArgs e)
     {
         if (bool.TryParse(e.Value?.ToString(), out var isActive))
         {
             user.IsActive = isActive;
             try
-            { 
+            {
                 HttpResponseMessage response = await Http.PutAsync($"api/users/{user.Id:D}/update/active", null);
                 Console.WriteLine(await response.Content.ReadAsStringAsync());
             }
@@ -122,11 +121,9 @@
             }
         }
     }
-
-
+    
     private void EditUser(Guid userId)
     {
         Navigation.NavigateTo($"editUser/{userId:D}");
     }
-    
 }
