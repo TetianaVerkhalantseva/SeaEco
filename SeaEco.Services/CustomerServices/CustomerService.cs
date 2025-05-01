@@ -27,18 +27,21 @@ public class CustomerService: ICustomerService
     }
     
     // Get information except projects for a customer
-    public async Task<Kunde?> GetCustomerInfoById(Guid Id)
+    public async Task<CustomerDto?> GetCustomerInfoById(Guid Id)
     {
         var customer = await _db.Kundes
             .Where(c => c.Id == Id)
             .FirstOrDefaultAsync();
 
-        if (customer == null )
+        if (customer == null) return null;
+
+        return new CustomerDto
         {
-            return null;
-        }
-        
-        return customer;
+            Id = customer.Id,
+            Oppdragsgiver = customer.Oppdragsgiver,
+            Kontaktperson = customer.Kontaktperson,
+            Telefon = customer.Telefon
+        };
     }
 
     // Get all the project ids, statuses and dates for a customer

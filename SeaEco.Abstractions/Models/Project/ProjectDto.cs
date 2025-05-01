@@ -11,7 +11,9 @@ public class ProjectDto
     public string Kundetlf { get; set; } = null!;
     public string Kundeepost { get; set; } = null!;
     
-    public Guid Lokalitetid { get; set; } //Se hvordan lokalitet endret. Dette er Fk til Lokalitet tabell - der lokalitetsnavn oh lokalitetsID
+    public Guid LokalitetId { get; set; } 
+    public string Lokalitetsnavn { get; set; } = null!;
+    public string LokalitetsId { get; set; } = null!;
     public int? Mtbtillatelse { get; set; }
     
     public Guid ProsjektansvarligId { get; set; }
@@ -19,5 +21,6 @@ public class ProjectDto
     
     public Produksjonsstatus Produksjonsstatus { get; set; }
     public DateTime Datoregistrert { get; set; }
+    public int AntallStasjoner { get; set; }
     
 }
