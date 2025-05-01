@@ -506,5 +506,11 @@ namespace SeaEco.Client.Resources {
                 return ResourceManager.GetString("ButtonSubmit", resourceCulture);
             }
         }
+        
+        internal static string ErrorMessageLoadingUsers {
+            get {
+                return ResourceManager.GetString("ErrorMessageLoadingUsers", resourceCulture);
+            }
+        }
     }
 }

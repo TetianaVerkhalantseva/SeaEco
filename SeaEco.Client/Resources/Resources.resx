@@ -119,7 +119,7 @@
         <value>Admin</value>
     </data>
     <data name="TableInputIsNotAdmin" xml:space="preserve">
-        <value>Logg inn</value>
+        <value> </value>
     </data>
     <data name="TableHeaderCustomer" xml:space="preserve">
         <value>Kunde</value>
@@ -288,5 +288,8 @@
     </data>
     <data name="ButtonSubmit" xml:space="preserve">
         <value>Send inn</value>
+    </data>
+    <data name="ErrorMessageLoadingUsers" xml:space="preserve">
+        <value>Feil ved lasting av brukere:</value>
     </data>
 </root>
