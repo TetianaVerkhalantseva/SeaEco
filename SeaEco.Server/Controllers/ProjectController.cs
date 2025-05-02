@@ -64,9 +64,9 @@ public class ProjectController : ControllerBase
     }
     
     [HttpGet("{Id:guid}")]
-    public async Task<IActionResult> GetProjectById(Guid Id)
+    public async Task<IActionResult> GetProjectById(Guid id)
     {
-        var project = await _projectService.GetProjectByIdAsync(Id);
+        var project = await _projectService.GetProjectByIdAsync(id);
         if (project == null)
             return NotFound();
         return Ok(project);

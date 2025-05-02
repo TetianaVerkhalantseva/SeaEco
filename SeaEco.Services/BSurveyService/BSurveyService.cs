@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using SeaEco.Abstractions.Models.BSurvey;
 using SeaEco.Abstractions.Models.Bundersokelse;
 using SeaEco.EntityFramework.Contexts;
-using SeaEco.EntityFramework.Entities;
 using SeaEco.Services.Mapping;
 
 namespace SeaEco.Services.BSurveyService;
