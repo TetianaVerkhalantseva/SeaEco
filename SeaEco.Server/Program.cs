@@ -11,6 +11,7 @@ using SeaEco.Abstractions.Models.User;
 using SeaEco.EntityFramework.Contexts;
 using SeaEco.EntityFramework.Entities;
 using SeaEco.EntityFramework.GenericRepository;
+using SeaEco.Reporter;
 using SeaEco.Reporter.Models;
 using SeaEco.Server.Infrastructure;
 using SeaEco.Server.Middlewares;
@@ -104,7 +105,7 @@ services.Configure<JwtOptions>(configuration.GetSection("JwtOptions"));
 services.Configure<SmtpOptions>(configuration.GetSection("SmtpOptions"));
 services.Configure<ReportOptions>(configuration.GetSection("ReportOptions"));
 
-services.AddDbContext<AppDbContext>(options => options.UseNpgsql(configuration["ConnectionStrings:DefaultConnection"]));
+services.AddDbContext<AppDbContext>(options => options.UseNpgsql(configuration["ConnectionStrings:LocalConnection"]));
 services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 // Core services
@@ -122,6 +123,7 @@ services.AddTransient<IImageService, ImageService>();
 services.AddTransient<ISamplingPlanService, SamplingPlanService>();
 services.AddTransient<IStationService, StationService>();
 services.AddTransient<IBSurveyService, BSurveyService>();
+services.AddScoped<Report>();
 
 // Models validators
 services.AddScoped<IValidator<LoginDto>, LoginDtoValidator>();
@@ -153,7 +155,7 @@ app.MapControllers();
 
 try
 {
-    SeedUser(app.Services);
+    SeedData(app.Services);
 }
 catch (Exception e)
 {
@@ -162,29 +164,9 @@ catch (Exception e)
 
 app.Run();
 
-void SeedUser(IServiceProvider serviceProvider)
+void SeedData(IServiceProvider serviceProvider)
 {
     using var scope = serviceProvider.CreateScope();
-    IGenericRepository<Bruker> repository = scope.ServiceProvider.GetRequiredService<IGenericRepository<Bruker>>();
-
-    Bruker? admin = repository.GetBy(record => record.Epost == "gruppe202520@gmail.com").GetAwaiter().GetResult();
-    if (admin is not null)
-    {
-        return;
-    }
-    
-    var password = Hasher.Hash("1111");
-    admin = new()
-    {   
-        Id = Guid.NewGuid(),
-        Fornavn = "admin",
-        Etternavn = "admin",
-        Epost = "gruppe202520@gmail.com",
-        PassordHash = password.hashed,
-        Salt = password.salt,
-        IsAdmin = true,
-        Aktiv = true
-    };
-    
-    repository.Add(admin).GetAwaiter().GetResult();
+    DbSeeder seeder = new DbSeeder();
+    seeder.SeedData(scope.ServiceProvider.GetRequiredService<AppDbContext>()).GetAwaiter().GetResult();
 }
