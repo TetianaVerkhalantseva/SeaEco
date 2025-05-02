@@ -34,4 +34,30 @@ public class BSurveyService: IBSurveyService
         return survey?.ToSurveyDto();
     }
 
+    public async Task<EditSurveyResult> CreateSurvey(AddSurveyDto dto)
+    {
+        try
+        {
+            var newId = Guid.NewGuid();
+            dto.Id = newId;
+            var entity = dto.ToEntity();
+        
+            _db.BUndersokelses.Add(entity);
+            await _db.SaveChangesAsync();
+            return new EditSurveyResult
+            {
+                IsSuccess = true,
+                Message = "Survey Created Successfully."
+            };
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return new EditSurveyResult
+            {
+                IsSuccess = false,
+                Message = "An error occured while creating the survey."
+            };
+        }
+    }
 }

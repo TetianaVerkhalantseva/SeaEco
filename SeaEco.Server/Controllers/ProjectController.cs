@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SeaEco.Abstractions.Models.BSurvey;
 using SeaEco.Abstractions.Models.Project;
 using SeaEco.Abstractions.Models.SamplingPlan;
 using SeaEco.Abstractions.Models.Stations;
@@ -151,10 +152,17 @@ public class ProjectController : ControllerBase
     }
     
     // Stasjonsoperasjoner
-    [HttpGet("{projectId:guid}/sampling-plan/{samplingPlanId:guid}/station")]
+    [HttpGet("{projectId:guid}/sampling-plan/{samplingPlanId:guid}/stations")]
     public async Task<IActionResult> GetStations(Guid projectId, Guid samplingPlanId)
     {
         var result = await _stationService.GetStationsByProvetakningsplanIdAsync(samplingPlanId);
+        return result.IsSuccess ? Ok(result.Stations) : NotFound(result.Message);
+    }
+
+    [HttpGet("{projectId:guid}/sampling-plan/{samplingPlanId:guid}/station/{stationId:guid}")]
+    public async Task<IActionResult> GetAStaion(Guid projectId, Guid samplingPlanId, Guid stationId)
+    {
+        var result = await _stationService.GetStationByIdAsync(projectId, stationId);
         return result.IsSuccess ? Ok(result.Stations) : NotFound(result.Message);
     }
 
@@ -207,11 +215,13 @@ public class ProjectController : ControllerBase
     [HttpGet("{projectId:guid}/survey/{surveyId:guid}")]
     public async Task<IActionResult> GetSurvey(Guid projectId, Guid surveyId)
     {
+        var project = await _projectService.GetProjectByIdAsync(projectId);
+        if (project == null)
+            return NotFound("Project does not exist");
+        
         var survey = await _surveyService.GetSurveyById(surveyId);
         if (survey == null)
-        {
             return NotFound($"No survey with id {surveyId}");
-        }
 
         if (survey.ProsjektId != projectId)
         {
@@ -219,5 +229,17 @@ public class ProjectController : ControllerBase
         }
         
         return Ok(survey);
+    }
+
+    [RoleAccessor(true)]
+    [HttpPost("{projectId:guid}/survey")]
+    public async Task<IActionResult> CreateSurvey(Guid projectId, [FromBody] AddSurveyDto dto)
+    {
+        var project = await _projectService.GetProjectByIdAsync(projectId);
+        if (project == null)
+            return NotFound("Project does not exist");
+        
+        var result = await _surveyService.CreateSurvey(dto);
+        return result.IsSuccess ? Ok(result.Message) : BadRequest(result.Message);
     }
 }

@@ -46,9 +46,9 @@ public class StationService : IStationService
         };
     }
     
-    public async Task<StationResult> GetStationByIdAsync(Guid stationId)
+    public async Task<StationResult> GetStationByIdAsync(Guid projectId, Guid stationId)
     {
-        var s = await _db.BStasjons.FirstOrDefaultAsync(s => s.Id == stationId);
+        var s = await _db.BStasjons.FirstOrDefaultAsync(s => s.ProsjektId == projectId && s.Id == stationId);
         if (s == null)
         {
             return new StationResult
