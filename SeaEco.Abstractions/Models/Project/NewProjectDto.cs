@@ -16,6 +16,4 @@ public class NewProjectDto
     public Guid ProsjektansvarligId { get; set; }
     public string? Merknad { get; set; }
     public Produksjonsstatus Produksjonsstatus { get; set; }
-    public DateTime Datoregistrert { get; set; }
-    public int AntallStasjoner { get; set; }
 }

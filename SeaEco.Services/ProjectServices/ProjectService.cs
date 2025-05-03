@@ -47,13 +47,13 @@ public class ProjectService : IProjectService
             ProsjektansvarligId = dto.ProsjektansvarligId,
             Merknad = dto.Merknad,
             Produksjonsstatus = (int)dto.Produksjonsstatus,
-            Datoregistrert = dto.Datoregistrert
+            //Prosjektstatus = (int)Prosjektstatus.Nytt,
         };
 
         _context.BProsjekts.Add(prosjekt);
         await _context.SaveChangesAsync();
 
-        // Opprett PTP
+        /*/ Opprett PTP
         var ptp = new BProvetakningsplan
         {
             Id = Guid.NewGuid(),
@@ -79,8 +79,7 @@ public class ProjectService : IProjectService
 
             _context.BStasjons.Add(stasjon);
         }
-
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync();*/
 
         return prosjekt.Id;
     }
@@ -104,7 +103,6 @@ public class ProjectService : IProjectService
                 ProsjektansvarligId = p.ProsjektansvarligId,
                 Merknad = p.Merknad,
                 Produksjonsstatus = (Produksjonsstatus)p.Produksjonsstatus,
-                Datoregistrert = p.Datoregistrert,
                 AntallStasjoner = _context.BStasjons.Count(s => s.ProsjektId == p.Id)
             })
             .ToListAsync();
@@ -134,7 +132,6 @@ public class ProjectService : IProjectService
             ProsjektansvarligId = p.ProsjektansvarligId,
             Merknad = p.Merknad,
             Produksjonsstatus = (Produksjonsstatus)p.Produksjonsstatus,
-            Datoregistrert = p.Datoregistrert,
             AntallStasjoner = await _context.BStasjons.CountAsync(s => s.ProsjektId == p.Id)
         };
     }
@@ -168,7 +165,16 @@ public class ProjectService : IProjectService
         prosjekt.LokalitetId = lokalitet.Id;
         prosjekt.Mtbtillatelse = dto.Mtbtillatelse;
         prosjekt.ProsjektansvarligId = dto.ProsjektansvarligId;
-        prosjekt.Merknad = dto.Merknad;
+        
+        if (!string.IsNullOrWhiteSpace(dto.Merknad))
+        {
+            var nyKommentar = $"{dto.Merknad}";
+
+            if (string.IsNullOrWhiteSpace(prosjekt.Merknad))
+                prosjekt.Merknad = nyKommentar;
+            else
+                prosjekt.Merknad += $"\n{nyKommentar}";
+        }
         prosjekt.Produksjonsstatus = (int)dto.Produksjonsstatus;
     
         await _context.SaveChangesAsync();
