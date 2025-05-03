@@ -60,7 +60,7 @@
 
 .filter-panel {
     overflow: hidden;
-    background-color: white;
+    background-color: #eef2f4;
     border-radius: .5rem;
     z-index: 1000;
 }
