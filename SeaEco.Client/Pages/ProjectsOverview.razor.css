@@ -7,15 +7,6 @@
     background-size: cover;
 }
 
-.bi-filter {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' class='bi bi-filter' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d= 'M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5' /%3E%3C/svg%3E");
-}
-
-.btn:hover .bi-filter {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' class='bi bi-filter' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5'/%3E%3C/svg%3E");
-}
-
-
 .bi-arrow-down {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='black' class='bi bi-arrow-down-short' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d= ' M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4 ' /%3E%3C/svg%3E");
 }
@@ -27,40 +18,43 @@
 .card-status-new {
     background: linear-gradient(to bottom, #8CBFD9, #6497B1);
     color: white;
-    border-top-left-radius: 0.3rem; 
-    border-top-right-radius: 0.3rem;
+    border: 1px solid #ccc;
+    border-top-left-radius: .3rem; 
+    border-top-right-radius: .3rem;
     border-bottom: none;           
 }
 
 .card-status-started {
     background: linear-gradient(to bottom, #D98CBF, #B16497);
     color: white;
-    border-top-left-radius: 0.3rem; 
-    border-top-right-radius: 0.3rem; 
+    border: 1px solid #ccc;
+    border-top-left-radius: .3rem; 
+    border-top-right-radius: .3rem; 
     border-bottom: none;           
 }
 
 .card-status-deactivated {
     background: linear-gradient(to bottom, #b4b8bb, #7a8288);
     color: white;
-    border-top-left-radius: 0.3rem;  
-    border-top-right-radius: 0.3rem;
+    border: 1px solid #ccc;
+    border-top-left-radius: .3rem;  
+    border-top-right-radius: .3rem;
     border-bottom: none;           
 }
 
 .card-status-done {
     background: linear-gradient(to bottom, #BFD98C, #97B164);
     color: white;
-    border-top-left-radius: 0.3rem;
-    border-top-right-radius: 0.3rem;
+    border: 1px solid #ccc;
+    border-top-left-radius: .3rem;
+    border-top-right-radius: .3rem;
     border-bottom: none;
 }
 
 .card{
     background: transparent;
-    border-radius: 0.3rem;
-    border-color: transparent;
-    
+    border-radius: .3rem;
+    overflow: hidden;
 }
 
 
@@ -71,8 +65,9 @@
 .card-bottom{
     padding: 0.3rem;
     background-color: white;
-    border-bottom-left-radius: 0.3rem;
-    border-bottom-right-radius: 0.3rem;
+    border: 1px solid #ccc;
+    border-bottom-left-radius: .3rem;
+    border-bottom-right-radius: .3rem;
     border-top: none;
   
    }
@@ -119,4 +114,49 @@
 
 .custom-colour-card {
     background-color: #EFF4F7;
+}
+
+
+.filter-panel {
+    overflow: hidden;  
+    border-radius: .5rem;
+}
+
+.filter-panel summary {
+    cursor: pointer;
+    position: relative;
+    padding: .5rem 1rem;
+    border: 1px solid #ccc;
+    background: linear-gradient(to bottom, #557e93 0%, #7798A9 100%);
+    color: white;
+    border-radius: .5rem;
+    list-style: none;
+}
+.filter-panel[open] summary {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.filter-options {
+    padding: 1rem;
+    background: transparent;
+    border-bottom-left-radius: .5rem;
+    border-bottom-right-radius: .5rem;
+    border: 1px solid #ccc;
+}
+
+.filter-panel summary::before {
+    content: '';
+    position: absolute;
+    right: .75rem;
+    top: 50%;
+    width: 1.1rem;
+    height: .8rem;
+    background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 6l6 6 6-6'/%3e%3c/svg%3e")
+    center / contain no-repeat;
+    transform: translateY(-50%) rotate(0deg);
+    transition: transform .2s ease;
+}
+
+.filter-panel[open] summary::before {
+    transform: translateY(-50%) rotate(180deg);
 }
