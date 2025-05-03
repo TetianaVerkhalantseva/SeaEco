@@ -344,7 +344,7 @@
         <value>Rapport</value>
     </data>
     <data name="TabBStation" xml:space="preserve">
-        <value>B_undersøkelse</value>
+        <value>Stasjoner</value>
     </data>
     <data name="InputTextNumberOfStations" xml:space="preserve">
         <value>Antall stasjoner</value>
