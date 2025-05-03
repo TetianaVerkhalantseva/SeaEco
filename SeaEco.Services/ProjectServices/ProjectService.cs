@@ -47,7 +47,7 @@ public class ProjectService : IProjectService
             ProsjektansvarligId = dto.ProsjektansvarligId,
             Merknad = dto.Merknad,
             Produksjonsstatus = (int)dto.Produksjonsstatus,
-            //Prosjektstatus = (int)Prosjektstatus.Nytt,
+            Prosjektstatus = (int)Prosjektstatus.Nytt,
         };
 
         _context.BProsjekts.Add(prosjekt);

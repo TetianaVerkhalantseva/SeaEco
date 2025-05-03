@@ -14,7 +14,7 @@ public class ProjectDto
     public Guid LokalitetId { get; set; } 
     public string Lokalitetsnavn { get; set; } = null!;
     public string LokalitetsId { get; set; } = null!;
-    public int? Mtbtillatelse { get; set; }
+    public int Mtbtillatelse { get; set; }
     
     public Guid ProsjektansvarligId { get; set; }
     public string? Merknad { get; set; }
