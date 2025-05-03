@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SeaEco.Abstractions.Enums;
 using SeaEco.Abstractions.Models.SamplingPlan;
 using SeaEco.EntityFramework.Contexts;
 using SeaEco.EntityFramework.Entities;
@@ -66,6 +67,14 @@ public class SamplingPlanService: ISamplingPlanService
         try
         {
             await _db.BProvetakningsplans.AddAsync(newPlan);
+            
+            //Oppdater Prosjektstatus
+            var prosjekt = await _db.BProsjekts.FirstOrDefaultAsync(p => p.Id == samplingPlanDto.ProsjektId);
+            if (prosjekt != null)
+            {
+                prosjekt.Prosjektstatus = (int)Prosjektstatus.Nytt;
+            }
+            
             await _db.SaveChangesAsync();
             return new EditSamplingPlanResult()
             {
