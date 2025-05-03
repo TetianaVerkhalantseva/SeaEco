@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using SeaEco.Abstractions.Models.BSurvey;
 using SeaEco.Abstractions.Models.Bundersokelse;
 using SeaEco.EntityFramework.Contexts;
-using SeaEco.EntityFramework.Entities;
 using SeaEco.Services.Mapping;
 
 namespace SeaEco.Services.BSurveyService;
@@ -34,4 +33,30 @@ public class BSurveyService: IBSurveyService
         return survey?.ToSurveyDto();
     }
 
+    public async Task<EditSurveyResult> CreateSurvey(AddSurveyDto dto)
+    {
+        try
+        {
+            var newId = Guid.NewGuid();
+            dto.Id = newId;
+            var entity = dto.ToEntity();
+        
+            _db.BUndersokelses.Add(entity);
+            await _db.SaveChangesAsync();
+            return new EditSurveyResult
+            {
+                IsSuccess = true,
+                Message = "Survey Created Successfully."
+            };
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return new EditSurveyResult
+            {
+                IsSuccess = false,
+                Message = "An error occured while creating the survey."
+            };
+        }
+    }
 }

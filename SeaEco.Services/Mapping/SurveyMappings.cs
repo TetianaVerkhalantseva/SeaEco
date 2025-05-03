@@ -48,6 +48,16 @@ public static class SurveyMappings
                 Skjellsand = entity.Blotbunn.Skjellsand
                 
             } : null,
+            
+            BAnimal = entity.Dyr != null ? new BAnimalDto
+            {
+                Id = entity.Dyr.Id,
+                Pigghunder = entity.Dyr.Pigghunder,
+                Krepsdyr = entity.Dyr.Krepsdyr,
+                Skjell = entity.Dyr.Skjell,
+                Borstemark = entity.Dyr.Borstemark,
+                Arter = entity.Dyr.Arter
+            } : null,
 
             BHardBase = entity.Hardbunn != null ? new BHardBaseDto
             {
@@ -111,6 +121,115 @@ public static class SurveyMappings
                 UndersokelseId = l.UndersokelseId
             }).ToList()
 
+        };
+    }
+
+    public static BUndersokelse ToEntity(this AddSurveyDto dto)
+    {
+        return new BUndersokelse
+        {
+            Id = dto.Id,
+            ProsjektId = dto.ProsjektId,
+            PreinfoId = dto.PreinfoId,
+            Feltdato = dto.Feltdato,
+            AntallGrabbhugg = dto.AntallGrabbhugg,
+            GrabbhastighetGodkjent = dto.GrabbhastighetGodkjent,
+            BlotbunnId = dto.BlotbunnId,
+            HardbunnId = dto.HardbunnId,
+            SedimentId = dto.SedimentId,
+            SensoriskId = dto.SensoriskId,
+            Beggiatoa = dto.Beggiatoa,
+            Forrester = dto.Forrester,
+            Fekalier = dto.Fekalier,
+            DyrId = dto.DyrId,
+            Merknader = dto.Merknader,
+            DatoRegistrert = dto.DatoRegistrert,
+            DatoEndret = dto.DatoEndret,
+            IndeksGr2Gr3 = dto.IndeksGr2Gr3,
+            TilstandGr2Gr3 = dto.TilstandGr2Gr3,
+
+            Blotbunn = dto.BSoftBase != null
+                ? new BBlotbunn
+                {
+                    Id = dto.BSoftBase.Id,
+                    Leire = dto.BSoftBase.Leire,
+                    Silt = dto.BSoftBase.Silt,
+                    Sand = dto.BSoftBase.Sand,
+                    Grus = dto.BSoftBase.Grus,
+                    Skjellsand = dto.BSoftBase.Skjellsand
+                }
+                : null,
+
+            Hardbunn = dto.BHardBase != null
+                ? new BHardbunn
+                {
+                    Id = dto.BHardBase.Id,
+                    Steinbunn = dto.BHardBase.Steinbunn,
+                    Fjellbunn = dto.BHardBase.Fjellbunn
+                }
+                : null,
+
+            Sediment = dto.BSediment != null
+                ? new BSediment
+                {
+                    Id = dto.BSediment.Id,
+                    Ph = dto.BSediment.Ph,
+                    Eh = dto.BSediment.Eh,
+                    Temperatur = dto.BSediment.Temperatur,
+                    KlasseGr2 = dto.BSediment.KlasseGr2,
+                    TilstandGr2 = dto.BSediment.TilstandGr2
+                }
+                : null,
+
+            Sensorisk = dto.BSensorisk != null
+                ? new BSensorisk
+                {
+                    Id = dto.BSensorisk.Id,
+                    Gassbobler = dto.BSensorisk.Gassbobler,
+                    Farge = dto.BSensorisk.Farge,
+                    Lukt = dto.BSensorisk.Lukt,
+                    Konsistens = dto.BSensorisk.Konsistens,
+                    Grabbvolum = dto.BSensorisk.Grabbvolum,
+                    Tykkelseslamlag = dto.BSensorisk.Tykkelseslamlag,
+                    IndeksGr3 = dto.BSensorisk.IndeksGr3,
+                    TilstandGr3 = dto.BSensorisk.TilstandGr3
+                }
+                : null,
+
+            Dyr = dto.BAnimal != null
+                ? new BDyr
+                {
+                    Id = dto.BAnimal.Id,
+                    Pigghunder = dto.BAnimal.Pigghunder,
+                    Krepsdyr = dto.BAnimal.Krepsdyr,
+                    Skjell = dto.BAnimal.Skjell,
+                    Borstemark = dto.BAnimal.Borstemark,
+                    Arter = dto.BAnimal.Arter
+                }
+                : null,
+
+            BStasjon = dto.BStation != null
+                ? new BStasjon
+                {
+                    Id = dto.BStation.Id,
+                    ProsjektId = dto.BStation.ProsjektId,
+                    Nummer = dto.BStation.Nummer,
+                    KoordinatNord = dto.BStation.KoordinatNord,
+                    KoordinatOst = dto.BStation.KoordinatOst,
+                    Dybde = dto.BStation.Dybde,
+                    Analyser = dto.BStation.Analyser,
+                    ProvetakingsplanId = dto.BStation.ProvetakingsplanId,
+                    UndersokelseId = dto.BStation.UndersokelseId
+                }
+                : null,
+
+            BBilders = dto.BBilders.Select(pic => new BBilder
+            {
+                Id = pic.Id,
+                UndersokelseId = pic.UndersokelseId,
+                Silt = pic.Silt,
+                Extension = pic.Extension
+            }).ToList()
         };
     }
 }
