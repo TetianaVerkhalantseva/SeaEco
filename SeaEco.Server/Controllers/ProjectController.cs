@@ -35,11 +35,13 @@ public class ProjectController : ControllerBase
         _surveyService = bSurveyService;
     }
 
-    [HttpPost]
-    public async Task<IActionResult> CreateProject([FromBody] NewProjectDto dto)
+    [HttpPost("customer/{customerId:guid}")]
+    public async Task<IActionResult> CreateProject(Guid customerId, [FromBody] NewProjectDto dto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
+        
+        dto.KundeId = customerId;
 
         try
         {
