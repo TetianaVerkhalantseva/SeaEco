@@ -55,7 +55,7 @@ public class SurveyDto
     
     public BHardBaseDto? BHardBase { get; set; }
     
-    public BPreInfoDto BPreInfo { get; set; }
+    public BPreInfoDto BPreInfo { get; set; } = new();
     
     public BSedimentDto? BSediment { get; set; }
     
