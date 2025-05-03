@@ -15,7 +15,7 @@ else
     <div class="d-flex flex-column align-items-center gap-3 p-5">
         <div class="mb-3">
             <h3>@project.Lokalitetsnavn</h3>
-            <p class="text-secondary">- </p>
+            <p class="text-secondary">- @project.Prosjektstatus </p>
         </div>
 
         <div class="d-flex w-100 p-1">
@@ -38,10 +38,7 @@ else
                                         <InputText class="form-control" id="locationId" @bind-Value="project.LokalitetsId" @key="numberInputKey" disabled="@(!_editProjectInfo)"/>
                                         <label for="locationId">@Resources.InputTextLocationId</label>
                                     </div>
-                                    <div class="d-flex form-floating">
-                                        <InputDate class="form-control" id="planedDate" @bind-Value="project.Datoregistrert" @key="numberInputKey" disabled="@(!_editProjectInfo)"/>
-                                        <label for="planedDate">@Resources.InputTextPlanedDate</label>
-                                    </div>
+                                    
                                 </div>
                                 <div class="d-flex flex-column gap-3">
                                     <div class="d-flex form-floating">
@@ -152,11 +149,10 @@ else
             Lokalitetsnavn = "Fjord Øst",
             LokalitetsId = "LOC‑001",
             Mtbtillatelse = 15_000, // tonn
-
+            Prosjektstatus =(Prosjektstatus)1,
             ProsjektansvarligId = Guid.Parse("17c9ffea-6b2e-40da-a454-f25143b8e875"),
             Merknad = "Første pilotleveranse",
             Produksjonsstatus = (Produksjonsstatus)1,
-            Datoregistrert = new DateTime(2025, 5, 3),
             AntallStasjoner = 12
         };
 
@@ -193,9 +189,9 @@ else
             PoId = source.PoId,
             Lokalitetsnavn = source.Lokalitetsnavn,
             LokalitetsId = source.LokalitetsId,
-            Datoregistrert = source.Datoregistrert,
             Mtbtillatelse = source.Mtbtillatelse,
             Merknad = source.Merknad,
+            Prosjektstatus = source.Prosjektstatus
         };
     }
 

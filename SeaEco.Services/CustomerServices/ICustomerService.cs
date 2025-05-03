@@ -6,7 +6,7 @@ namespace SeaEco.Services.CustomerServices;
 public interface ICustomerService
 {
     Task<List<CustomerNamesDto>> GetCustomerNames();
-    Task<Kunde?> GetCustomerInfoById(Guid Id);
+    Task<CustomerDto?> GetCustomerInfoById(Guid Id);
     Task<Kunde?> GetAllProjectDetailsById(Guid Id);
     Task<EditCustomerResult> AddCustomer(EditCustomerDto customerDto);
     Task<EditCustomerResult> UpdateCustomer(EditCustomerDto customerDto, Guid Id);

@@ -644,5 +644,11 @@ namespace SeaEco.Client.Resources {
                 return ResourceManager.GetString("InputTextPoId", resourceCulture);
             }
         }
+        
+        internal static string ErrorMessageLoadingUsers {
+            get {
+                return ResourceManager.GetString("ErrorMessageLoadingUsers", resourceCulture);
+            }
+        }
     }
 }

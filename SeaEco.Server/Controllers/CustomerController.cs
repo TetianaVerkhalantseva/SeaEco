@@ -89,7 +89,7 @@ public class CustomerController: ControllerBase
       var result = await _customerService.UpdateCustomer(dto, id);
       if (result.IsSuccess)
       {
-         return Ok($"{result.Message}");
+         return Ok(result.Message);
       }
       
       return BadRequest(result.Message);
@@ -102,7 +102,7 @@ public class CustomerController: ControllerBase
       var result = await _customerService.DeleteCustomer(id);
       if (result.IsSuccess)
       {
-         return Ok($"{result.Message}");
+         return Ok(result.Message);
       }
       
       return BadRequest(result.Message);

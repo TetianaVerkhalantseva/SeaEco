@@ -17,5 +17,4 @@ public sealed class EditUserDto
     [EmailAddress(ErrorMessageResourceName = "ErrorMessageMailError", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
     public string Email { get; set; } = string.Empty;
     public bool IsAdmin { get; set; }
-    public bool IsActive { get; set; }
 }

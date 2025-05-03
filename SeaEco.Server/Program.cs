@@ -11,10 +11,12 @@ using SeaEco.Abstractions.Models.User;
 using SeaEco.EntityFramework.Contexts;
 using SeaEco.EntityFramework.Entities;
 using SeaEco.EntityFramework.GenericRepository;
+using SeaEco.Reporter;
 using SeaEco.Reporter.Models;
 using SeaEco.Server.Infrastructure;
 using SeaEco.Server.Middlewares;
 using SeaEco.Services.AuthServices;
+using SeaEco.Services.BSurveyService;
 using SeaEco.Services.CustomerServices;
 using SeaEco.Services.EmailServices;
 using SeaEco.Services.EmailServices.Models;
@@ -22,6 +24,7 @@ using SeaEco.Services.HashService;
 using SeaEco.Services.ImageServices;
 using SeaEco.Services.JwtServices;
 using SeaEco.Services.ProjectServices;
+using SeaEco.Services.SamplingPlanServices;
 using SeaEco.Services.StationServices;
 using SeaEco.Services.TokenServices;
 using SeaEco.Services.UserServices;
@@ -148,7 +151,7 @@ app.MapControllers();
 
 try
 {
-    SeedUser(app.Services);
+    SeedData(app.Services);
 }
 catch (Exception e)
 {
@@ -157,29 +160,9 @@ catch (Exception e)
 
 app.Run();
 
-void SeedUser(IServiceProvider serviceProvider)
+void SeedData(IServiceProvider serviceProvider)
 {
     using var scope = serviceProvider.CreateScope();
-    IGenericRepository<Bruker> repository = scope.ServiceProvider.GetRequiredService<IGenericRepository<Bruker>>();
-
-    Bruker? admin = repository.GetBy(record => record.Epost == "gruppe202520@gmail.com").GetAwaiter().GetResult();
-    if (admin is not null)
-    {
-        return;
-    }
-    
-    var password = Hasher.Hash("1111");
-    admin = new()
-    {   
-        Id = Guid.NewGuid(),
-        Fornavn = "admin",
-        Etternavn = "admin",
-        Epost = "gruppe202520@gmail.com",
-        PassordHash = password.hashed,
-        Salt = password.salt,
-        IsAdmin = true,
-        Aktiv = true
-    };
-    
-    repository.Add(admin).GetAwaiter().GetResult();
+    DbSeeder seeder = new DbSeeder();
+    seeder.SeedData(scope.ServiceProvider.GetRequiredService<AppDbContext>()).GetAwaiter().GetResult();
 }

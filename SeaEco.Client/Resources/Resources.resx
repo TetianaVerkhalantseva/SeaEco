@@ -358,4 +358,7 @@
     <data name="InputTextPoId" xml:space="preserve">
         <value>PO-ID</value>
     </data>
+    <data name="ErrorMessageLoadingUsers" xml:space="preserve">
+        <value>Feil ved lasting av brukere:</value>
+    </data>
 </root>
