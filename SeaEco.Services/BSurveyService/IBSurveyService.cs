@@ -1,14 +1,12 @@
 using SeaEco.Abstractions.Models.BSurvey;
-using SeaEco.EntityFramework.Entities;
+using SeaEco.Abstractions.Models.Bundersokelse;
 
 namespace SeaEco.Services.BSurveyService;
 
 
 public interface IBSurveyService
 {
-    Task<BUndersokelse?> GetSurveyById(Guid id);
-
-    Task<EditBSurveyResult> CreateSurvey(EditBSurveyDto dto);
+    Task<SurveyDto?> GetSurveyById(Guid id);
     
-    
+    Task<EditSurveyResult> CreateSurvey(AddSurveyDto dto);
 }

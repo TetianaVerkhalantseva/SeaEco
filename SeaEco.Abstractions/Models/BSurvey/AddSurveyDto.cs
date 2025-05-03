@@ -1,7 +1,8 @@
-﻿
-namespace SeaEco.EntityFramework.Entities;
+using SeaEco.Abstractions.Models.Bundersokelse;
 
-public partial class BUndersokelse
+namespace SeaEco.Abstractions.Models.BSurvey;
+
+public class AddSurveyDto
 {
     public Guid Id { get; set; }
 
@@ -40,24 +41,19 @@ public partial class BUndersokelse
     public float? IndeksGr2Gr3 { get; set; }
 
     public int? TilstandGr2Gr3 { get; set; }
-
-    public virtual ICollection<BBilder> BBilders { get; set; } = new List<BBilder>();
-
-    public virtual BStasjon? BStasjon { get; set; }
-
-    public virtual ICollection<BUndersokelseslogg> BUndersokelsesloggs { get; set; } = new List<BUndersokelseslogg>();
-
-    public virtual BBlotbunn? Blotbunn { get; set; }
-
-    public virtual BDyr? Dyr { get; set; }
-
-    public virtual BHardbunn? Hardbunn { get; set; }
-
-    public virtual BPreinfo Preinfo { get; set; } = null!;
-
-    public virtual BProsjekt Prosjekt { get; set; } = null!;
-
-    public virtual BSediment? Sediment { get; set; }
-
-    public virtual BSensorisk? Sensorisk { get; set; }
+    
+    // dto
+    public List<BPictureDto> BBilders { get; set; } = new();
+    
+    public BStationDto? BStation { get; set; }
+    
+    public BSoftBaseDto? BSoftBase { get; set; }
+    
+    public BAnimalDto? BAnimal { get; set; }
+    
+    public BHardBaseDto? BHardBase { get; set; }
+    
+    public BSedimentDto? BSediment { get; set; }
+    
+    public BSensoriskDto? BSensorisk { get; set; }
 }
