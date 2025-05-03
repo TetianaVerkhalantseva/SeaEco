@@ -120,6 +120,7 @@
 .filter-panel {
     overflow: hidden;  
     border-radius: .5rem;
+    background-color: #eef2f4;
 }
 
 .filter-panel summary {
