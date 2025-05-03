@@ -35,13 +35,34 @@ public class ProjectController : ControllerBase
         _surveyService = bSurveyService;
     }
 
-    [HttpPost("customer/{customerId:guid}")]
+    /*[HttpPost("customer/{customerId:guid}")]
     public async Task<IActionResult> CreateProject(Guid customerId, [FromBody] NewProjectDto dto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
         
         dto.KundeId = customerId;
+
+        try
+        {
+            var id = await _projectService.CreateProjectAsync(dto);
+            return Ok(new { Id = id });
+        }
+        catch (KeyNotFoundException knf)
+        {
+            return NotFound(knf.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }*/
+    
+    [HttpPost]
+    public async Task<IActionResult> CreateProject([FromBody] NewProjectDto dto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
         try
         {

@@ -47,39 +47,10 @@ public class ProjectService : IProjectService
             ProsjektansvarligId = dto.ProsjektansvarligId,
             Merknad = dto.Merknad,
             Produksjonsstatus = (int)dto.Produksjonsstatus,
-            //Prosjektstatus = (int)Prosjektstatus.Nytt,
         };
 
         _context.BProsjekts.Add(prosjekt);
         await _context.SaveChangesAsync();
-
-        /*/ Opprett PTP
-        var ptp = new BProvetakningsplan
-        {
-            Id = Guid.NewGuid(),
-            ProsjektId = prosjekt.Id,
-            PlanleggerId = dto.ProsjektansvarligId
-        };
-
-        _context.BProvetakningsplans.Add(ptp);
-
-        // Opprett stasjoner
-        for (int i = 1; i <= dto.AntallStasjoner; i++)
-        {
-            var stasjon = new BStasjon
-            {
-                Id = Guid.NewGuid(),
-                ProsjektId = prosjekt.Id,
-                ProvetakingsplanId = ptp.Id,
-                Nummer = i,
-                KoordinatNord = "", 
-                KoordinatOst = "",
-                Analyser = ""
-            };
-
-            _context.BStasjons.Add(stasjon);
-        }
-        await _context.SaveChangesAsync();*/
 
         return prosjekt.Id;
     }
