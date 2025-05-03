@@ -19,25 +19,15 @@ else
         </div>
 
         <div class="d-flex w-100 p-1">
-            <button class="btn btn-secondary align-self-start" type="button"
-                    data-bs-toggle="collapse" data-bs-target="#collapseProjectInfo" aria-expanded="false" aria-controls="collapseProjectInfo">
-                @Resources.ButtonProjectInfoView
-            </button>
             <div class="flex-grow-1"></div>
             <button class="btn btn-secondary align-self-end" type="button">
                 @Resources.ButtonProjectLog
             </button>
         </div>
-
-        <div class="d-flex flex-column card-container w-100 gap-5">
-            <details class="filter-panel shadow-lg">
-                <summary>Filter</summary>
+        
+            <details class=" filter-panel shadow-lg w-100">
+                <summary>@Resources.ButtonProjectInfoView</summary>
                 <div class="filter-options">
-
-
-
-                    <div class="collapse card-container w-100" id="collapseProjectInfo">
-                        <div class="card card-body shadow-lg p-4 rounded-3">
                             <div class="d-flex flex-xxl-row flex-column gap-3 ">
                                 <div class="form-floating">
                                     <InputText class="form-control" id="poid" @bind-Value="project.PoId" @key="numberInputKey"  disabled/>
@@ -71,7 +61,7 @@ else
                                 </div>
                                 <div class="flex-grow-1"></div>
                             </div>
-                            <div class="d-flex flex-xxl-column flex-row align-self-end mt-3">
+                            <div class="d-flex align-self-end mt-3">
                                 @if (!_editProjectInfo)
                                 {
                                     <button class="btn btn-secondary" type="button" @onclick="OnClickProjectInformation">
@@ -91,14 +81,8 @@ else
                                 }
                             </div>
                         </div>
-
-
-                    </div>
-
-                </div>
             </details>
-
-        </div>
+            
 
 
         @if (_editProjectInfo)
@@ -107,19 +91,19 @@ else
         }
 
 
-        <ul class="nav nav-tabs d-flex flex-xxl-row flex-column w-100 mt-3">
+        <ul class="nav nav-tabs d-flex flex-xxl-row flex-column w-100 mt-5">
             <li class="nav-item flex-fill">
-                <a class="nav-link text-center cursor @(_activeTab == "projectPlan" ? "active" : "")"  @onclick=@(() => SelectedTab("projectPlan"))>
+                <a class="nav-link text-center fw-bold cursor @(_activeTab == "projectPlan" ? "active" : "")"  @onclick=@(() => SelectedTab("projectPlan"))>
                 @Resources.TabProjectPlan
                 </a>
             </li>
             <li class="nav-item flex-fill">
-                <a class="nav-link text-center cursor @(_activeTab == "b_stations" ? "active" : "")" @onclick=@(() => SelectedTab("b_stations"))>
+                <a class="nav-link text-center fw-bold cursor @(_activeTab == "b_stations" ? "active" : "")" @onclick=@(() => SelectedTab("b_stations"))>
                     @Resources.TabBStation
                 </a>
             </li>
             <li class="nav-item flex-fill">
-                <a class="nav-link text-center cursor @(_activeTab == "projectReport" ? "active" : "")" @onclick=@(() => SelectedTab("projectReport"))>
+                <a class="nav-link text-center fw-bold cursor @(_activeTab == "projectReport" ? "active" : "")" @onclick=@(() => SelectedTab("projectReport"))>
                     @Resources.TabProjectReport
                 </a>
             </li>
