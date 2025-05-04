@@ -164,29 +164,12 @@ public class BSurveyService: IBSurveyService
             
             if (dto.BSoftBase != null)
             {
-                dto.BSoftBase.Id = Guid.NewGuid();
                 dto.BHardBase = null;
-            }
-
-            if (dto.BAnimal != null)
-            {
-                dto.BAnimal.Id = Guid.NewGuid();
             }
 
             if (dto.BHardBase != null)
             {
-                dto.BHardBase.Id = Guid.NewGuid();
                 dto.BSoftBase = null;
-            }
-
-            if (dto.BSediment != null)
-            {
-                dto.BSediment.Id = Guid.NewGuid();
-            }
-
-            if (dto.BSensorisk != null)
-            {
-                dto.BSensorisk.Id = Guid.NewGuid();
             }
 
             foreach (var pic in dto.BBilders)
