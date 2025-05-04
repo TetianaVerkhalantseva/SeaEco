@@ -94,6 +94,7 @@ public class ProjectService : IProjectService
     {
         var p = await _context.BProsjekts
             .Include(p => p.Lokalitet)
+            .Include(p => p.BTilstand)
             .FirstOrDefaultAsync(p => p.Id == id);
 
         if (p == null)
@@ -114,6 +115,10 @@ public class ProjectService : IProjectService
             ProsjektansvarligId = p.ProsjektansvarligId,
             Merknad = p.Merknad,
             Produksjonsstatus = (Produksjonsstatus)p.Produksjonsstatus,
+            Prosjektstatus = (Prosjektstatus)p.Prosjektstatus,
+            Tilstand = p.BTilstand != null
+                ? (Tilstand?)p.BTilstand.TilstandLokalitet
+                : null,
             //AntallStasjoner = await _context.BStasjons.CountAsync(s => s.ProsjektId == p.Id)
         };
     }
