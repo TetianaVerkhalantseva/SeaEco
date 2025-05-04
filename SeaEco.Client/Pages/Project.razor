@@ -15,7 +15,7 @@
 }
 else
 {
-    <div class="d-flex flex-column align-items-center gap-3 p-5">
+    <div class="d-flex flex-column align-items-center gap-3 p-custom">
         <div class="mb-3">
             <h2>@_projectCopy.Lokalitetsnavn</h2>
             <p class="text-secondary">- @_project.Prosjektstatus.GetDescription() </p>
@@ -138,7 +138,7 @@ else
 
                                     <div class="d-flex flex-column gap-3">
                                         <div class="d-flex form-floating">
-                                            <InputSelect @bind-Value="_project.Produksjonsstatus" id="productionStatus" class="form-select" @key="_numberInputKey" @oninput="() => _errorMessage = null" disabled="@(!_editProjectInfo)">
+                                            <InputSelect @bind-Value="_project.Produksjonsstatus" id="productionStatus" class="form-select no-arrow-when-disabled" @key="_numberInputKey" @oninput="() => _errorMessage = null" disabled="@(!_editProjectInfo)">
                                                 <option value=""></option>
                                                 @foreach (var status in Enum.GetValues<Produksjonsstatus>())
                                                 {
@@ -317,6 +317,7 @@ else
         _isNewLocality = false;
         _numberInputKey++;
         _editProjectInfo = false;
+        _editContext = new EditContext(_project);
         _errorMessage = string.Empty;
     }
 

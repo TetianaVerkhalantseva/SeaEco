@@ -108,3 +108,26 @@
     border: 1px solid lightgray;
     border-radius: 4px;
 }
+
+.p-custom {
+    padding: 2rem 6rem !important;
+}
+
+/* target only that one select: add a helper class in your markup */
+.no-arrow-when-disabled:disabled {
+    /* remove the native arrow in WebKit, Blink, Gecko */
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    /* kill Bootstrap’s background-image fallback */
+    background-image: none !important;
+    /* optional: keep the same padding so it doesn’t “jump” */
+    padding-right: .75rem !important;
+    /* optional: make it clear it’s disabled */
+    cursor: default !important;
+}
+
+/* Edge/IE */
+.no-arrow-when-disabled:disabled::-ms-expand {
+    display: none !important;
+}
