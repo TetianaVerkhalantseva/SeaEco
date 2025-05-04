@@ -23,7 +23,7 @@ public partial class BProsjekt
 
     public int Mtbtillatelse { get; set; }
 
-    public Guid ProsjektansvarligId { get; set; }
+    public Guid? ProsjektansvarligId { get; set; }
 
     public int Produksjonsstatus { get; set; }
 

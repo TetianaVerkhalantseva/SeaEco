@@ -20,20 +20,20 @@
     else if (!_users.Any())
     {
         <div class="mb-3">         
-            <h3>@Resources.PageUserAllUsers</h3>  
+            <h2>@Resources.PageUserAllUsers</h2>  
         </div>                                           
         <p>@Resources.PageUserNoUserFoun</p>    
-        <div class="d-flex flex-fill mt-1 justify-content-lg-start">   
-            <NavLink class="btn btn-secondary" href="/registerUser">@Resources.ButtonAddNewUser</NavLink>              
+        <div class="d-flex flex-fill mt-1 justify-content-lg-start p-4">   
+            <NavLink class="btn custom-btn" href="/registerUser">@Resources.ButtonAddNewUser</NavLink>              
         </div>                                                                              
     }
     else
     {
         <div class="mb-3">         
-            <h3>@Resources.PageUserAllUsers</h3>  
-        </div>                                            
-        <div class="table-responsive">
-            <table class="table">
+            <h2>@Resources.PageUserAllUsers</h2>  
+        </div>     
+        <div class="table-responsive p-4">
+            <table class="table ">
                 <thead>
                 <tr>
                     <th>@Resources.TableHeadingName</th>
@@ -54,14 +54,14 @@
                         <td></td>
                         <td>
                             <div class="form-check form-switch">
-                                <input class="form-check-input cursor" type="checkbox" id="active" checked="@user.IsActive" @onchange="@(e => EditUserIsActive(user, e))"/>
+                                <input class="form-check-input cursor" type="checkbox" checked="@user.IsActive" @onchange="@(e => EditUserIsActive(user, e))"/>
                                 @if(user.IsActive)
                                 {
-                                    <label class="form-check-label" for="active">@Resources.TableInputIsActive</label> 
+                                    <label class="form-check-label">@Resources.TableInputIsActive</label> 
                                 }
                                 else                                                  
                                 {                                                                   
-                                    <label class="form-check-label" for="active">@Resources.TableInputIsNotActive</label>     
+                                    <label class="form-check-label">@Resources.TableInputIsNotActive</label>     
                                 }                                                                   
                             </div>
                         </td>
@@ -76,12 +76,11 @@
                 </tbody>
             </table>
 
-            <div class="d-flex flex-fill mt-1 justify-content-lg-start">
-            <NavLink class="btn btn-secondary" href="/registerUser">@Resources.ButtonAddNewUser</NavLink>
+            <div class="d-flex flex-fill mt-2 justify-content-lg-start mb-3" >
+            <NavLink class="btn custom-btn" href="/registerUser">@Resources.ButtonAddNewUser</NavLink>
             </div>
         </div>} 
         </div>
-        
 
 
 @code {
@@ -105,14 +104,14 @@
         }
     }
 
-    
+
     private async Task EditUserIsActive(UserDto user, ChangeEventArgs e)
     {
         if (bool.TryParse(e.Value?.ToString(), out var isActive))
         {
             user.IsActive = isActive;
             try
-            { 
+            {
                 HttpResponseMessage response = await Http.PutAsync($"api/users/{user.Id:D}/update/active", null);
                 Console.WriteLine(await response.Content.ReadAsStringAsync());
             }
@@ -122,11 +121,9 @@
             }
         }
     }
-
-
+    
     private void EditUser(Guid userId)
     {
         Navigation.NavigateTo($"editUser/{userId:D}");
     }
-    
 }
