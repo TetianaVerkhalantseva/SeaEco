@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using SeaEco.Abstractions.Enums
 @using SeaEco.Abstractions.Extensions
+@using SeaEco.Abstractions.Models.Lokalitet
 @using SeaEco.Abstractions.Models.Project
 @attribute [Authorize(Roles = "admin")]
 @using SeaEco.Client.Resources
@@ -71,11 +72,16 @@ else
                 @if (!_isNewLocality)
                 {
                     <div class="form-floating flex-fill">
-                        <InputSelect @bind-Value="_newProject.Lokalitetsnavn" id="locality" class="form-select" @oninput="() => _errorMessage = null">
+                        <InputSelect TValue="string"
+                                     Value="_selectedLocalityId"
+                                     ValueChanged="LocalityChanged"
+                                     ValueExpression="() => _newProject.LokalitetsId"
+                                     id="locality"
+                                     class="form-select" @oninput="() => _errorMessage = null">
                             <option value=""></option>
-                            @foreach (var loc in _lokalities)
+                            @foreach (var loc in _location)
                             {
-                                <option value="@loc.Id">@loc.Lokalitetsnavn (@loc.LokalitetsId)</option>
+                                <option value="@loc.LokalitetKode">@loc.Navn (@loc.LokalitetKode)</option>
                             }
                         </InputSelect>
                         <label for="locality">Lokalitet</label>
@@ -141,8 +147,8 @@ else
 
 @code {
     private NewProjectDto _newProject = new();
-    private List<LocalityDto> _lokalities = [new()];
-    private List<UserDto> _users = [new()];
+    private List<LokalitetDto>? _location = [new LokalitetDto()];
+    private List<UserDto>? _users = [new UserDto()];
     private Kunde? _customer = new();
     private bool _isLoading = true;
     [Parameter] public Guid CustomerId { get; set; }
@@ -176,21 +182,8 @@ else
 
         var usersList = await Http.GetFromJsonAsync<List<UserDto>>("api/users");
         _users = usersList?.OrderBy(user => user.FullName).ToList();
-
-        _lokalities =
-        [
-            ..new List<LocalityDto>
-            {
-                new LocalityDto
-                {
-                    Id = Guid.Parse("22222222-2222-2222-2222-222222222222"),
-                    Lokalitetsnavn = "Bergen Brygge", 
-                    LokalitetsId = "12345"
-                        
-                }
-            }
-        ];
-        //_lokalities = await Http.GetFromJsonAsync<Lokalitet>($"api/Project/Lokalitet");
+        
+        _location = await Http.GetFromJsonAsync<List<LokalitetDto>>($"api/Lokalitet");
     }
 
     private async Task AddNewProject()
@@ -222,20 +215,39 @@ else
         }
     }
     
-    
+    private string? _selectedLocalityId;
+
+    private void LocalityChanged(string? id)
+    {
+        _selectedLocalityId = id;
+
+        var selected = _location.FirstOrDefault(l => l.LokalitetKode == id);
+
+        if (selected is not null)
+        {
+            _newProject.Lokalitetsnavn = selected.Navn;
+            _newProject.LokalitetsId = selected.LokalitetKode;
+        }
+        else
+        {
+            _newProject.Lokalitetsnavn = string.Empty;
+            _newProject.LokalitetsId = string.Empty;
+        }
+    }
+
     private void ToggleLocalityButton()
     {
         _isNewLocality = !_isNewLocality;
         
         if (_isNewLocality)
         {
-            _newProject.LokalitetsId = null!;
-            _newProject.Lokalitetsnavn = null!;
+            _newProject.LokalitetsId = string.Empty;
+            _newProject.Lokalitetsnavn = string.Empty;
         }
         else
         {
-            _newProject.Lokalitetsnavn = null!;
-            _newProject.LokalitetsId   = null!;
+            _selectedLocalityId = string.Empty;
+            LocalityChanged(_selectedLocalityId);
         }
     }
     

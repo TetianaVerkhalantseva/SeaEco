@@ -34,4 +34,5 @@ public class NewProjectDto
     [Required(ErrorMessageResourceName = "ErrorMessageProductionStatus", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
     [Range(1,4,ErrorMessageResourceName = "ErrorMessageProductionStatus", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
     public Produksjonsstatus Produksjonsstatus { get; set; }
+   
 }
