@@ -1,6 +1,7 @@
 @page "/project/{prosjektId:guid}"
 @using Microsoft.AspNetCore.Authorization
 @using SeaEco.Abstractions.Enums
+@using SeaEco.Abstractions.Extensions
 @attribute [Authorize]
 @using SeaEco.Client.Resources
 @using SeaEco.Abstractions.Models.Project
@@ -15,7 +16,7 @@ else
     <div class="d-flex flex-column align-items-center gap-3 p-5">
         <div class="mb-3">
             <h3>@_project.Lokalitetsnavn</h3>
-            <p class="text-secondary">- @_project.Prosjektstatus </p>
+            <p class="text-secondary">- @_project.Prosjektstatus.GetDescription() </p>
         </div>
 
         <div class="d-flex w-100 p-1">

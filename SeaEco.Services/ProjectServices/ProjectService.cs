@@ -53,34 +53,6 @@ public class ProjectService : IProjectService
         _context.BProsjekts.Add(prosjekt);
         await _context.SaveChangesAsync();
 
-        /*/ Opprett PTP
-        var ptp = new BProvetakningsplan
-        {
-            Id = Guid.NewGuid(),
-            ProsjektId = prosjekt.Id,
-            PlanleggerId = dto.ProsjektansvarligId
-        };
-
-        _context.BProvetakningsplans.Add(ptp);
-
-        // Opprett stasjoner
-        for (int i = 1; i <= dto.AntallStasjoner; i++)
-        {
-            var stasjon = new BStasjon
-            {
-                Id = Guid.NewGuid(),
-                ProsjektId = prosjekt.Id,
-                ProvetakingsplanId = ptp.Id,
-                Nummer = i,
-                KoordinatNord = "", 
-                KoordinatOst = "",
-                Analyser = ""
-            };
-
-            _context.BStasjons.Add(stasjon);
-        }
-        await _context.SaveChangesAsync();*/
-
         return prosjekt.Id;
     }
     
@@ -103,7 +75,8 @@ public class ProjectService : IProjectService
                 ProsjektansvarligId = p.ProsjektansvarligId,
                 Merknad = p.Merknad,
                 Produksjonsstatus = (Produksjonsstatus)p.Produksjonsstatus,
-                AntallStasjoner = _context.BStasjons.Count(s => s.ProsjektId == p.Id)
+                AntallStasjoner = _context.BStasjons.Count(s => s.ProsjektId == p.Id),
+                Prosjektstatus = (Prosjektstatus)p.Prosjektstatus
             })
             .ToListAsync();
     }
@@ -132,6 +105,7 @@ public class ProjectService : IProjectService
             ProsjektansvarligId = p.ProsjektansvarligId,
             Merknad = p.Merknad,
             Produksjonsstatus = (Produksjonsstatus)p.Produksjonsstatus,
+            Prosjektstatus = (Prosjektstatus)p.Prosjektstatus,
             AntallStasjoner = await _context.BStasjons.CountAsync(s => s.ProsjektId == p.Id)
         };
     }
