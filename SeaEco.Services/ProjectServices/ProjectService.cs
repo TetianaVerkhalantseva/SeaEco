@@ -52,6 +52,7 @@ public class ProjectService : IProjectService
             ProsjektansvarligId = ansvarligId,
             Merknad = dto.Merknad,
             Produksjonsstatus = (int)dto.Produksjonsstatus,
+            Prosjektstatus      = (int)Prosjektstatus.Nytt,
             Datoregistrert = DateTime.Now
         };
 
@@ -65,6 +66,7 @@ public class ProjectService : IProjectService
     {
         return await _context.BProsjekts
             .Include(p => p.Lokalitet)
+            .Include(p => p.BTilstand)
             .Select(p => new ProjectDto
             {
                 Id = p.Id,
@@ -80,7 +82,10 @@ public class ProjectService : IProjectService
                 ProsjektansvarligId = p.ProsjektansvarligId,
                 Merknad = p.Merknad,
                 Produksjonsstatus = (Produksjonsstatus)p.Produksjonsstatus,
-                AntallStasjoner = _context.BStasjons.Count(s => s.ProsjektId == p.Id)
+                Prosjektstatus = (Prosjektstatus)p.Prosjektstatus,
+                Tilstand = p.BTilstand != null
+                    ? (Tilstand?)p.BTilstand.TilstandLokalitet
+                    : null,
             })
             .ToListAsync();
     }
@@ -109,39 +114,46 @@ public class ProjectService : IProjectService
             ProsjektansvarligId = p.ProsjektansvarligId,
             Merknad = p.Merknad,
             Produksjonsstatus = (Produksjonsstatus)p.Produksjonsstatus,
-            AntallStasjoner = await _context.BStasjons.CountAsync(s => s.ProsjektId == p.Id)
+            //AntallStasjoner = await _context.BStasjons.CountAsync(s => s.ProsjektId == p.Id)
         };
     }
     
-    public async Task UpdateProjectAsync(Guid id, EditProjectDto dto)
+    public async Task<ProjectDto> UpdateProjectAsync(Guid id, EditProjectDto dto)
     {
-        var prosjekt = await _context.BProsjekts.FindAsync(id);
+        var prosjekt = await _context.BProsjekts
+            .Include(p => p.Lokalitet)
+            .Include(p => p.BTilstand)
+            .FirstOrDefaultAsync(p => p.Id == id);
+
         if (prosjekt == null)
             throw new KeyNotFoundException("Prosjekt ikke funnet.");
 
-        var lokalitet = await _context.Lokalitets
-            .FirstOrDefaultAsync(l => l.Lokalitetsnavn == dto.Lokalitetsnavn || l.LokalitetsId == dto.LokalitetsId);
-
-        if (lokalitet == null)
+        if (dto.Lokalitetsnavn != prosjekt.Lokalitet.Lokalitetsnavn
+            || dto.LokalitetsId   != prosjekt.Lokalitet.LokalitetsId)
         {
-            lokalitet = new Lokalitet
+            var lokalitet = await _context.Lokalitets
+                .FirstOrDefaultAsync(l => l.Lokalitetsnavn == dto.Lokalitetsnavn
+                                          || l.LokalitetsId    == dto.LokalitetsId);
+            if (lokalitet == null)
             {
-                Id = Guid.NewGuid(),
-                Lokalitetsnavn = dto.Lokalitetsnavn,
-                LokalitetsId = dto.LokalitetsId
-            };
-            _context.Lokalitets.Add(lokalitet);
-            await _context.SaveChangesAsync();
+                lokalitet = new Lokalitet
+                {
+                    Id             = Guid.NewGuid(),
+                    Lokalitetsnavn = dto.Lokalitetsnavn,
+                    LokalitetsId   = dto.LokalitetsId
+                };
+                _context.Lokalitets.Add(lokalitet);
+                await _context.SaveChangesAsync();
+            }
+            prosjekt.LokalitetId = lokalitet.Id;
         }
-
-        prosjekt.PoId = dto.PoId;
-        prosjekt.KundeId = dto.KundeId;
+        
         prosjekt.Kundekontaktperson = dto.Kundekontaktperson;
         prosjekt.Kundetlf = dto.Kundetlf;
         prosjekt.Kundeepost = dto.Kundeepost;
-        prosjekt.LokalitetId = lokalitet.Id;
         prosjekt.Mtbtillatelse = dto.Mtbtillatelse;
         prosjekt.ProsjektansvarligId = dto.ProsjektansvarligId;
+        prosjekt.Produksjonsstatus   = (int)dto.Produksjonsstatus;
         
         if (!string.IsNullOrWhiteSpace(dto.Merknad))
         {
@@ -152,8 +164,29 @@ public class ProjectService : IProjectService
             else
                 prosjekt.Merknad += $"\n{nyKommentar}";
         }
-        prosjekt.Produksjonsstatus = (int)dto.Produksjonsstatus;
     
         await _context.SaveChangesAsync();
+        
+        return new ProjectDto
+        {
+            Id                   = prosjekt.Id,
+            PoId                 = prosjekt.PoId,
+            KundeId              = prosjekt.KundeId,
+            Kundekontaktperson   = prosjekt.Kundekontaktperson,
+            Kundetlf             = prosjekt.Kundetlf,
+            Kundeepost           = prosjekt.Kundeepost,
+            LokalitetId          = prosjekt.LokalitetId,
+            Lokalitetsnavn       = prosjekt.Lokalitet.Lokalitetsnavn,
+            LokalitetsId         = prosjekt.Lokalitet.LokalitetsId,
+            Mtbtillatelse        = prosjekt.Mtbtillatelse,
+            ProsjektansvarligId  = prosjekt.ProsjektansvarligId,
+            Merknad              = prosjekt.Merknad,
+            Produksjonsstatus    = (Produksjonsstatus)prosjekt.Produksjonsstatus,
+            Prosjektstatus       = (Prosjektstatus)prosjekt.Prosjektstatus,
+            Tilstand             = prosjekt.BTilstand != null 
+                ? (Tilstand?)prosjekt.BTilstand.TilstandLokalitet
+                : null,
+            ProsjektIdSe         = prosjekt.ProsjektIdSe
+        };
     }
 }

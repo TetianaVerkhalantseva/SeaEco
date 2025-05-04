@@ -80,8 +80,8 @@ public class ProjectController : ControllerBase
 
         try
         {
-            await _projectService.UpdateProjectAsync(id, dto);
-            return Ok();
+            var updated = await _projectService.UpdateProjectAsync(id, dto);
+            return Ok(updated);
         }
         catch (KeyNotFoundException knf)
         {
