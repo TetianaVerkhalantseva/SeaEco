@@ -27,7 +27,8 @@ else
             <h6 class="text-secondary">- @_customer.Oppdragsgiver</h6>
         </div>
         <div class="d-flex justify-content-lg-start flex-column gap-3">
-            <div class="d-flex flex-column gap-3">
+                <div class="d-flex gap-3 flex-column p-4 box-border">
+                    <h6>Prosjektinformasjon</h6>
                 <div class="d-flex form-floating flex-fill">
                     <InputText class="form-control" id="poId" @bind-Value="_newProject.PoId" @oninput="() => _errorMessage = null"/>
                     <label for="poId">PO-ID</label>
@@ -44,7 +45,8 @@ else
                     <label for="user">Ansvarlig ansatt</label>
                 </div>
             </div>
-            <div class="d-flex flex-column mt-4 mb-4 gap-3">
+                <div class="d-flex gap-3 flex-column p-4 box-border">
+                    <h6>Kundeinformasjon</h6>
                 <div class="d-flex gap-3">
                     <div class="form-floating flex-fill" style="min-width:600px;">
                         <InputText class="form-control" id="contactCustomer" @bind-Value="_newProject.Kundekontaktperson" @oninput="() => _errorMessage = null"/>
@@ -62,17 +64,14 @@ else
                     </div>
                 </div>
             </div>
-            
+
+            <div class="d-flex form-floating gap-3 flex-column p-4 box-border">
+                <h6>Lokalitetsinformasjon</h6>
             <div class="d-flex gap-3 align-items-end">
                 @if (!_isNewLocality)
                 {
                     <div class="form-floating flex-fill">
-                        <InputSelect TValue="string"
-                                     Value="_selectedLocationId"
-                                     ValueChanged="LocationChanged"
-                                     ValueExpression="() => _newProject.LokalitetsId"
-                                     id="locality"
-                                     class="form-select" @oninput="() => _errorMessage = null">
+                        <InputSelect TValue="string" Value="_selectedLocationId" ValueChanged="LocationChanged" ValueExpression="() => _newProject.LokalitetsId" id="locality" class="form-select" @oninput="() => _errorMessage = null">
                             <option value=""></option>
                             @foreach (var loc in _location)
                             {
@@ -99,20 +98,21 @@ else
                     @onclick="ToggleLocalityButton">
                 @(_isNewLocality ? "Eksisterende" : "Ny lokalitet")
             </button>
-            <div class="d-flex gap-3">
-                <div class="form-floating flex-fill">
-                    <InputSelect @bind-Value="_newProject.Produksjonsstatus" id="productionStatus" class="form-select" @oninput="() => _errorMessage = null">
-                        <option value=""></option>
-                        @foreach (var status in Enum.GetValues<Produksjonsstatus>())
-                        {
-                            <option value="@status">@status.GetDescription()</option>
-                        }
-                    </InputSelect>
-                    <label for="productionStatus">Produksjonsstatus</label>
-                </div>
-                <div class="form-floating">
-                    <InputNumber class="form-control" id="mtb" @bind-Value="_newProject.Mtbtillatelse" @oninput="() => _errorMessage = null"/>
-                    <label for="mtb">MTB-tilatelse (tonn)</label>
+                <div class="d-flex gap-3">
+                    <div class="form-floating flex-fill">
+                        <InputSelect @bind-Value="_newProject.Produksjonsstatus" id="productionStatus" class="form-select" @oninput="() => _errorMessage = null">
+                            <option value=""></option>
+                            @foreach (var status in Enum.GetValues<Produksjonsstatus>())
+                            {
+                                <option value="@status">@status.GetDescription()</option>
+                            }
+                        </InputSelect>
+                        <label for="productionStatus">Produksjonsstatus</label>
+                    </div>
+                    <div class="form-floating">
+                        <InputNumber class="form-control" id="mtb" @bind-Value="_newProject.Mtbtillatelse" @oninput="() => _errorMessage = null"/>
+                        <label for="mtb">MTB-tilatelse (tonn)</label>
+                    </div>
                 </div>
             </div>
 
