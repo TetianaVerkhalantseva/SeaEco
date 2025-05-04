@@ -34,6 +34,11 @@ public class ProjectService : IProjectService
             await _context.SaveChangesAsync();
         }
         
+        if (!dto.ProsjektansvarligId.HasValue)
+            throw new ArgumentException("ProsjektansvarligId må oppgis.");
+        
+        var ansvarligId = dto.ProsjektansvarligId.Value;
+        
         var prosjekt = new BProsjekt
         {
             Id = Guid.NewGuid(),
@@ -44,7 +49,7 @@ public class ProjectService : IProjectService
             Kundeepost = dto.Kundeepost,
             LokalitetId = lokalitet.Id,
             Mtbtillatelse = dto.Mtbtillatelse,
-            ProsjektansvarligId = dto.ProsjektansvarligId,
+            ProsjektansvarligId = ansvarligId,
             Merknad = dto.Merknad,
             Produksjonsstatus = (int)dto.Produksjonsstatus,
             Datoregistrert = DateTime.Now
