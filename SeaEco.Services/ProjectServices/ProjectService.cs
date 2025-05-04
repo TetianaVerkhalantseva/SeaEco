@@ -47,6 +47,7 @@ public class ProjectService : IProjectService
             ProsjektansvarligId = dto.ProsjektansvarligId,
             Merknad = dto.Merknad,
             Produksjonsstatus = (int)dto.Produksjonsstatus,
+            Datoregistrert = DateTime.Now
         };
 
         _context.BProsjekts.Add(prosjekt);
