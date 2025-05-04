@@ -18,7 +18,7 @@
 }
 else
 {
-    <EditForm Model="_newProject" OnValidSubmit="AddNewProject">
+    <EditForm EditContext="_editContext" OnValidSubmit="AddNewProject">
     <DataAnnotationsValidator />
 
     <div class="d-flex flex-column align-items-center gap-3 mb-3">
@@ -73,8 +73,8 @@ else
                 {
                     <div class="form-floating flex-fill">
                         <InputSelect TValue="string"
-                                     Value="_selectedLocalityId"
-                                     ValueChanged="LocalityChanged"
+                                     Value="_selectedLocationId"
+                                     ValueChanged="LocationChanged"
                                      ValueExpression="() => _newProject.LokalitetsId"
                                      id="locality"
                                      class="form-select" @oninput="() => _errorMessage = null">
@@ -154,6 +154,8 @@ else
     [Parameter] public Guid CustomerId { get; set; }
     private string? _errorMessage;
     private bool _isNewLocality;
+    private EditContext _editContext; 
+    private string? _selectedLocationId;
     
 
     protected override async Task OnInitializedAsync()
@@ -184,6 +186,8 @@ else
         _users = usersList?.OrderBy(user => user.FullName).ToList();
         
         _location = await Http.GetFromJsonAsync<List<LokalitetDto>>($"api/Lokalitet");
+        
+        _editContext = new EditContext(_newProject);
     }
 
     private async Task AddNewProject()
@@ -215,11 +219,11 @@ else
         }
     }
     
-    private string? _selectedLocalityId;
+    
 
-    private void LocalityChanged(string? id)
+    private void LocationChanged(string? id)
     {
-        _selectedLocalityId = id;
+        _selectedLocationId = id;
 
         var selected = _location.FirstOrDefault(l => l.LokalitetKode == id);
 
@@ -233,6 +237,7 @@ else
             _newProject.Lokalitetsnavn = string.Empty;
             _newProject.LokalitetsId = string.Empty;
         }
+        _editContext.Validate();  
     }
 
     private void ToggleLocalityButton()
@@ -246,9 +251,11 @@ else
         }
         else
         {
-            _selectedLocalityId = string.Empty;
-            LocalityChanged(_selectedLocalityId);
+            _selectedLocationId = string.Empty;
+            LocationChanged(_selectedLocationId);
         }
+        
+        _editContext.Validate();  
     }
     
     public class CreateProjectResponse
