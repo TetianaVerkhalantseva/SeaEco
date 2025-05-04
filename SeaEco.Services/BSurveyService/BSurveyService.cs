@@ -31,24 +31,23 @@ public class BSurveyService: IBSurveyService
             .Include(s => s.Dyr)
             .SingleOrDefaultAsync(s => s.Id == id);
 
-        return survey?.ToSurveyDto();
+        return survey == null ? null : survey.ToSurveyDto();
     }
 
     public async Task<EditSurveyResult> CreateSurvey(Guid projectId, Guid stationId, EditSurveyDto dto)
     {
         try
         {
-            var targetDate = dto.Feltdato.ToDateTime(TimeOnly.MinValue);
-            var nextDay = targetDate.AddDays(1);
+            var targetDate = DateTime.Today;
 
             var preInfo = await _db.BPreinfos
                 .FirstOrDefaultAsync(p =>
                     p.ProsjektId == projectId &&
-                    p.Feltdato >= targetDate &&
-                    p.Feltdato < nextDay);
-
+                    p.Feltdato.Date == targetDate);
+            
             if (preInfo != null)
             {
+                dto.Feltdato = DateOnly.FromDateTime(preInfo.Feltdato);
                 dto.PreinfoId = preInfo.Id;
             }
             else
@@ -69,6 +68,7 @@ public class BSurveyService: IBSurveyService
             dto.SensoriskId = Guid.NewGuid();
             dto.DyrId = Guid.NewGuid();
             dto.DatoRegistrert ??= DateTime.Now;
+            dto.DatoEndret ??= DateTime.Now;
             
             if (dto.BStation != null)
             {
@@ -79,6 +79,7 @@ public class BSurveyService: IBSurveyService
             if (dto.BSoftBase != null)
             {
                 dto.BSoftBase.Id = Guid.NewGuid();
+                dto.BHardBase = null;
             }
 
             if (dto.BAnimal != null)
@@ -89,6 +90,7 @@ public class BSurveyService: IBSurveyService
             if (dto.BHardBase != null)
             {
                 dto.BHardBase.Id = Guid.NewGuid();
+                dto.BSoftBase = null;
             }
 
             if (dto.BSediment != null)
@@ -106,12 +108,12 @@ public class BSurveyService: IBSurveyService
                 pic.Id = Guid.NewGuid();
                 pic.UndersokelseId = dto.Id;
                 // Silt and Extension attributes are missing here
+                // How to convert picture name to standard format?
             }
 
             foreach (var log in dto.BSurveyLogs)
             {
                 log.Id = Guid.NewGuid();
-                // How do I record user changes?
             }
             
             var entity = dto.ToEntity();
@@ -139,7 +141,70 @@ public class BSurveyService: IBSurveyService
     {
         try
         {
-            // TODO: update survey
+            var targetDate = DateTime.Today;
+
+            var preInfo = await _db.BPreinfos
+                .FirstOrDefaultAsync(p =>
+                    p.ProsjektId == projectId &&
+                    p.Feltdato.Date == targetDate);
+            
+            if (preInfo != null)
+            {
+                dto.Feltdato = DateOnly.FromDateTime(DateTime.Today);
+                dto.PreinfoId = preInfo.Id;
+            }
+
+            dto.DatoEndret ??= DateTime.Now;
+            
+            if (dto.BStation != null)
+            {
+                dto.ProsjektId = projectId;
+                dto.BStation.Id = stationId;
+            }
+            
+            if (dto.BSoftBase != null)
+            {
+                dto.BSoftBase.Id = Guid.NewGuid();
+                dto.BHardBase = null;
+            }
+
+            if (dto.BAnimal != null)
+            {
+                dto.BAnimal.Id = Guid.NewGuid();
+            }
+
+            if (dto.BHardBase != null)
+            {
+                dto.BHardBase.Id = Guid.NewGuid();
+                dto.BSoftBase = null;
+            }
+
+            if (dto.BSediment != null)
+            {
+                dto.BSediment.Id = Guid.NewGuid();
+            }
+
+            if (dto.BSensorisk != null)
+            {
+                dto.BSensorisk.Id = Guid.NewGuid();
+            }
+
+            foreach (var pic in dto.BBilders)
+            {
+                pic.UndersokelseId = dto.Id;
+                // Silt and Extension attributes are missing here
+                // How to convert picture name to standard format?
+            }
+
+            foreach (var log in dto.BSurveyLogs)
+            {
+                // How do I record user changes?
+            }
+            
+            var entity = dto.ToEntity();
+            _db.BUndersokelses.Update(entity);
+            await _db.SaveChangesAsync();
+            
             return new EditSurveyResult
             {
                 IsSuccess = true,

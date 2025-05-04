@@ -235,6 +235,11 @@ public class ProjectController : ControllerBase
     [HttpPost("{projectId:guid}/station/{stationId:guid}/survey")]
     public async Task<IActionResult> CreateSurvey(Guid projectId, Guid stationId, [FromBody] EditSurveyDto dto)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
         var project = await _projectService.GetProjectByIdAsync(projectId);
         if (project == null)
             return BadRequest("Project does not exist");
@@ -254,6 +259,11 @@ public class ProjectController : ControllerBase
     public async Task<IActionResult> UpdateSurvey(Guid projectId, Guid stationId, Guid surveyId,
         [FromBody] EditSurveyDto dto)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
         var project = await _projectService.GetProjectByIdAsync(projectId);
         if (project == null)
             return BadRequest("Project does not exist");
