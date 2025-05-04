@@ -34,7 +34,7 @@ public class ProjectController : ControllerBase
         _samplingPlanService = samplingPlanService;
         _surveyService = bSurveyService;
     }
-
+    
     [HttpPost]
     public async Task<IActionResult> CreateProject([FromBody] NewProjectDto dto)
     {
@@ -80,8 +80,8 @@ public class ProjectController : ControllerBase
 
         try
         {
-            await _projectService.UpdateProjectAsync(id, dto);
-            return Ok();
+            var updated = await _projectService.UpdateProjectAsync(id, dto);
+            return Ok(updated);
         }
         catch (KeyNotFoundException knf)
         {

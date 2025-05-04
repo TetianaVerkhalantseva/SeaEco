@@ -6,7 +6,6 @@
 @inject NavigationManager Navigation
 @using SeaEco.Client.Resources
 
-
 <div class="container position-relative">
     <h2 class="text-center mt-4 page-title">@Resources.PageCustomerCustomerList</h2>
     
@@ -26,12 +25,11 @@
             </button>
         </div>
     </div>
-
     <div class="row justify-content-center">
         @if (_customerNames == null)
         {
             <div class="col-12 text-center">
-                <h3 class="text-muted">@Resources.PageCustomerNoCustomersFound</h3>
+                <h2 class="text-muted">@Resources.PageCustomerNoCustomersFound</h2>
             </div>
         }
         else
@@ -47,6 +45,7 @@
         }
     </div>
 </div>
+
 
 
 @code {
