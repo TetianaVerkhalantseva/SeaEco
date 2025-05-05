@@ -23,7 +23,7 @@
     }
     else
     {
-        <div class="d-flex flex-column card-container w-100 gap-5">
+        <div class="d-flex flex-column card-container  gap-5">
             <details class="filter-panel shadow-lg">
                 <summary>Filter</summary>
                 <div class="filter-options">
@@ -222,7 +222,7 @@
             .ToList();
         
         _allCustomers = _projects?
-            .Select(p => p.Kundekontaktperson)
+            .Select(p => p.Oppdragsgiver)
             .Distinct()
             .ToList();
         
