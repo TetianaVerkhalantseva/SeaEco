@@ -1,5 +1,9 @@
 @page "/projectsOverview"
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.EntityFrameworkCore
+@using SeaEco.Abstractions.Enums
+@using SeaEco.Abstractions.Extensions
+@using SeaEco.Abstractions.Models.Project
 @using SeaEco.Client.Resources
 @inject NavigationManager Navigation
 @attribute [Authorize]
@@ -122,16 +126,16 @@
                     <tbody>
                     @foreach (var project in SortedProjects!)
                     {
-                        <tr class="cursor" @onclick="() => OnRowClick(project.ProsjektId)">
-                            <td>@project.KundeNavn</td>
-                            <td>@project.Lokalitet</td>
-                            <td>@project.Lokalitetid</td>
+                        <tr class="cursor" @onclick="() => OnRowClick(project.Id)">
+                            <td>@project.Kundekontaktperson</td>
+                            <td>@project.Lokalitetsnavn</td>
+                            <td>@project.LokalitetsId</td>
                             <td>@project.PoId</td>
-                            <td>@project.prosjektId</td>
-                            <td>@project.Dato</td>
-                            <td>@project.Produksjonsstatus</td>
+                            <td>@project.ProsjektIdSe</td>
+                            <td>@Dato</td>
+                            <td>@project.Produksjonsstatus.GetDescription()</td>
                             <td>@project.Tilstand</td>
-                            <td>@project.Status</td>
+                            <td>@project.Prosjektstatus.GetDescription()</td>
                         </tr>
                     }
                     </tbody>
@@ -143,13 +147,13 @@
                     @foreach (var project in SortedProjects)
                     {
                         <div class="col mb-3 card-col">
-                            <div class="card cursor" @onclick="() => OnRowClick(project.ProsjektId)">
-                                <div class="card-body text-center @GetStatus(project.Status)">
-                                    <h5 class="card-title">@project.prosjektId</h5>
-                                    <span class="corner-text">@project.Status</span>
+                            <div class="card cursor" @onclick="() => OnRowClick(project.Id)">
+                                <div class="card-body text-center (@GetStatus(project.Prosjektstatus.GetDescription()))">
+                                    <h5 class="card-title">@project.PoId</h5>
+                                    <span class="corner-text">@project.Prosjektstatus</span>
                                 </div>
                                 <ul class="list-group list-group-flush">
-                                    <li class="list-group-item">@Resources.TableHeaderLocality: @project.Lokalitet</li>
+                                    <li class="list-group-item">@Resources.TableHeaderLocality: @project.Lokalitetsnavn</li>
                                 </ul>
                             </div>
                         </div>
@@ -187,29 +191,11 @@
     private string? SelectedCustomer { get; set; }
     private string? SelectedLocation { get; set; }
     private List<string> SelectedStatuses { get; set; } = ["Nytt", "Påbegynt", "Ferdig"];
-    
+    private DateOnly Dato;    
     
     private string? _currentSortColumn;
     private bool _sortAscending = true;
-
     
-
-    //midlertidig classe til databasen er klar
-    public class ProjectDto
-    {
-        public Guid ProsjektId { get; set; }
-        public string KundeNavn { get; set; }
-        public string Lokalitet { get; set; }
-        public int Lokalitetid { get; set; }
-        public int PoId { get; set; }
-        public string prosjektId { get; set; }
-        public DateOnly? Dato { get; set; }
-        public string? Produksjonsstatus { get; set; }
-        public int? Tilstand { get; set; }
-        public string Status { get; set; }
-    }
-
-
    
     protected override async Task OnInitializedAsync()
     {
@@ -228,14 +214,15 @@
             _isLoading = false;
         }
 
+        Dato = new DateOnly(2025, 3, 2);
         
         _allLocations = _projects?
-            .Select(p => p.Lokalitet)
+            .Select(p => p.Lokalitetsnavn)
             .Distinct()
             .ToList();
         
         _allCustomers = _projects?
-            .Select(p => p.KundeNavn)
+            .Select(p => p.Kundekontaktperson)
             .Distinct()
             .ToList();
         
@@ -265,11 +252,12 @@
         {
             if (_projects != null)
                 return _projects.Where(p =>
-                    ((SelectedStatuses == null || !SelectedStatuses.Any()) || SelectedStatuses.Contains(p.Status)) &&
-                    (!SelectedYear.HasValue || (p.Dato.HasValue && p.Dato.Value.Year == SelectedYear.Value)) &&
-                    (!SelectedMnd.HasValue || (p.Dato.HasValue && p.Dato.Value.Month == SelectedMnd.Value)) &&
-                    (String.IsNullOrEmpty(SelectedLocation) || p.Lokalitet == SelectedLocation) &&
-                    (String.IsNullOrEmpty(SelectedCustomer) || p.KundeNavn == SelectedCustomer)
+                    ((SelectedStatuses == null || !SelectedStatuses.Any()) || SelectedStatuses.Contains(p.Prosjektstatus.GetDescription())) &&
+                   // (!SelectedYear.HasValue || (p.Dato.HasValue && p.Dato.Value.Year == SelectedYear.Value)) &&
+                   // (!SelectedMnd.HasValue || (p.Dato.HasValue && p.Dato.Value.Month == SelectedMnd.Value)) &&
+                    (String.IsNullOrEmpty(SelectedLocation) || p.Lokalitetsnavn == SelectedLocation) 
+                    //&&
+                    //(String.IsNullOrEmpty(SelectedCustomer) || p.KundeNavn == SelectedCustomer)
                 );
             return _projects;
         }
@@ -284,39 +272,39 @@
                 return null;
             
             //Default sorting by status and date
-            if (string.IsNullOrEmpty(_currentSortColumn))
-                return FilterProjects?.OrderByDescending(projects => projects.Status).ThenByDescending(projects => projects.Dato).ToList();
+            //if (string.IsNullOrEmpty(_currentSortColumn))
+              //  return FilterProjects?.OrderByDescending(projects => projects.Prosjektstatus).ThenByDescending(projects => projects.Dato).ToList();
 
             
             var sorted = _currentSortColumn switch
             {
-                var col when col == Resources.TableHeaderCustomer => _sortAscending
-                    ? FilterProjects.OrderBy(p => p.KundeNavn)
-                    : FilterProjects.OrderByDescending(p => p.KundeNavn),
+                //var col when col == Resources.TableHeaderCustomer => _sortAscending
+                  //  ? FilterProjects.OrderBy(p => p.KundeNavn)
+                   // : FilterProjects.OrderByDescending(p => p.KundeNavn),
                 var col when col == Resources.TableHeaderLocality => _sortAscending
-                    ? FilterProjects.OrderBy(p => p.Lokalitet)
-                    : FilterProjects.OrderByDescending(p => p.Lokalitet),
-                var col when col == Resources.TableHeaderDate => _sortAscending
-                    ? FilterProjects.OrderBy(p => p.Dato)
-                    : FilterProjects.OrderByDescending(p => p.Dato),
+                    ? FilterProjects.OrderBy(p => p.Lokalitetsnavn)
+                    : FilterProjects.OrderByDescending(p => p.Lokalitetsnavn),
+                //var col when col == Resources.TableHeaderDate => _sortAscending
+                  //  ? FilterProjects.OrderBy(p => p.Dato)
+                    //: FilterProjects.OrderByDescending(p => p.Dato),
                 var col when col == Resources.TableHeaderStatus => _sortAscending
                     ? FilterProjects.OrderBy(p => p.Tilstand)
                     : FilterProjects.OrderByDescending(p => p.Tilstand),
                 var col when col == Resources.TableHeaderProjectStatus => _sortAscending
-                    ? FilterProjects.OrderBy(p => p.Status)
-                    : FilterProjects.OrderByDescending(p => p.Status),
+                    ? FilterProjects.OrderBy(p => p.Prosjektstatus.GetDescription())
+                    : FilterProjects.OrderByDescending(p => p.Produksjonsstatus.GetDescription()),
                 var col when col == Resources.TableHeaderProductionStatus => _sortAscending
-                    ? FilterProjects.OrderBy(p => p.Produksjonsstatus)
-                    : FilterProjects.OrderByDescending(p => p.Produksjonsstatus),
+                    ? FilterProjects.OrderBy(p => p.Produksjonsstatus.GetDescription())
+                    : FilterProjects.OrderByDescending(p => p.Produksjonsstatus.GetDescription()),
                 var col when col == Resources.TableHeaderProjectId => _sortAscending
-                    ? FilterProjects.OrderBy(p => p.prosjektId)
-                    : FilterProjects.OrderByDescending(p => p.prosjektId),
+                    ? FilterProjects.OrderBy(p => p.ProsjektIdSe)
+                    : FilterProjects.OrderByDescending(p => p.ProsjektIdSe),
                 var col when col == Resources.TableHeaderPoId => _sortAscending
                     ? FilterProjects.OrderBy(p => p.PoId)
                     : FilterProjects.OrderByDescending(p => p.PoId),
                 var col when col == Resources.TableHeaderLocalityId => _sortAscending
-                    ? FilterProjects.OrderBy(p => p.Lokalitetid)
-                    : FilterProjects.OrderByDescending(p => p.Lokalitetid),
+                    ? FilterProjects.OrderBy(p => p.LokalitetsId)
+                    : FilterProjects.OrderByDescending(p => p.LokalitetsId),
                 _ => FilterProjects
                     
             };
