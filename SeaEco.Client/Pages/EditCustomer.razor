@@ -1,4 +1,4 @@
-﻿@page "/EditCustomer/{CustomerId:int}"
+﻿@page "/EditCustomer/{CustomerId:guid}"
 @using Microsoft.AspNetCore.Authorization
 @inject HttpClient Http
 @attribute [Authorize(Roles = "admin")]
@@ -25,7 +25,7 @@
             </div>
 
             <div class="form-floating mb-3">
-                <InputText id="Telefonnummer" class="form-control form-control-lg" @bind-Value="_customerEdit.Telefonnummer" placeholder="Telefonnummer" />
+                <InputText id="Telefonnummer" class="form-control form-control-lg" @bind-Value="_customerEdit.Telefon" placeholder="Telefonnummer" />
                 <label for="Telefonnummer" class="form-label">@Resources.PageCustomerInfoCustomerNumber</label>
             </div>
 
@@ -57,7 +57,7 @@
 
 
 @code {
-    [Parameter] public int CustomerId { get; set; }
+    [Parameter] public Guid CustomerId { get; set; }
     private Kunde? _customer;
     private EditCustomerDto _customerEdit = new();
     private bool? _result;
@@ -73,7 +73,7 @@
                 {
                     Oppdragsgiver = _customer.Oppdragsgiver,
                     Kontaktperson = _customer.Kontaktperson,
-                    Telefonnummer = _customer.Telefonnummer
+                    Telefon = _customer.Telefon
                 };
             }
         }
