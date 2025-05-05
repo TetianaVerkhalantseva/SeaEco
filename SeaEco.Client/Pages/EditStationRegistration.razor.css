@@ -367,11 +367,11 @@
     height: 28px;
     border-radius: 10px;
     background-color: #ffffff2b;
-    box-shadow:
-            rgba(0, 0, 0, 0.62) 0 0 5px inset,
-            rgba(0, 0, 0, 0.21) 0 0 0 24px inset,
-            dodgerblue 0 0 0 0 inset,
-            rgba(224, 224, 224, 0.45) 0 1px 0 0;
+    box-shadow: 
+        rgba(0, 0, 0, 0.62) 0 0 5px inset,
+        rgba(0, 0, 0, 0.21) 0 0 0 24px inset,
+        dodgerblue 0 0 0 0 inset,
+        rgba(224, 224, 224, 0.45) 0 1px 0 0;
     cursor: pointer;
     position: relative;
 }
@@ -392,11 +392,11 @@
 
 .custom-checkbox input:checked + .custom-checkmark {
     background-color: dodgerblue;
-    box-shadow:
-            rgba(0, 0, 0, 0.62) 0 0 5px inset,
-            dodgerblue 0 0 0 2px inset,
-            dodgerblue 0 0 0 24px inset,
-            rgba(224, 224, 224, 0.45) 0 1px 0 0;
+    box-shadow: 
+        rgba(0, 0, 0, 0.62) 0 0 5px inset,
+        dodgerblue 0 0 0 2px inset,
+        dodgerblue 0 0 0 24px inset,
+        rgba(224, 224, 224, 0.45) 0 1px 0 0;
 }
 
 .custom-checkbox input:checked + .custom-checkmark::after {

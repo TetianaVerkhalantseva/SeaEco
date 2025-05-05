@@ -1,13 +1,8 @@
-@page "/project/{ProjectId:guid}/station/{StationId:guid}/survey/{SurveyId:guid}"
-@using Microsoft.AspNetCore.Authorization
+@page "/EditStationRegistration"
 @using SeaEco.Abstractions.Models.Project
 @using SeaEco.EntityFramework.Entities
-@inject HttpClient Http
-@attribute [Authorize]
-@inject NavigationManager Navigation
 
-
-<h4>Stasjonsregistrering</h4>
+<h4>Stasjonsredigering</h4>
 
 <div id="div1" class="content-div active">
     <div class="position-depth-container">
@@ -382,7 +377,7 @@
 <div class="button-container">
     <button id="lastBtn" onclick="showLast()" class="custom-btn">Forrige</button>
     <button id="nextBtn" onclick="showNext()" class="custom-btn">Neste</button>
-    <button id="editBtn" class="custom-btn" style="display: none;" @onclick="HandleEdit">Rediger</button>
+    <button id="submitBtn" class="custom-btn" style="display: none;" @onclick="HandleSubmit">Lagre</button>
 </div>
 
 
@@ -416,180 +411,158 @@
     function updateButtons() {
         const lastBtn = document.getElementById('lastBtn');
         const nextBtn = document.getElementById('nextBtn');
-        const editBtn = document.getElementById('editBtn');
+        const submitBtn = document.getElementById('submitBtn');
 
         lastBtn.style.display = currentIndex === 1 ? 'none' : 'inline-block';
         nextBtn.style.display = currentIndex === totalDivs ? 'none' : 'inline-block';
-        editBtn.style.display = currentIndex === totalDivs ? 'inline-block' : 'none';
+        submitBtn.style.display = currentIndex === totalDivs ? 'inline-block' : 'none';
     }
 
     updateButtons();
 
 </script>
 
-@* <script> *@
-@*     const radioSoft = document.getElementById("cbx1"); *@
-@*     const radioHard = document.getElementById("cbx2"); *@
-@*     const sensoryQuestion = document.getElementById("sensoryRadio"); *@
-@*      *@
-@*     const radioYes = document.getElementById("cbx3"); *@
-@*     const radioNo = document.getElementById("cbx4"); *@
-@*     const sensoryInfo = document.getElementById("sensoryInfo"); *@
-@*      *@
-@*     const sedimentType = document.getElementById("sedimentType"); *@
-@*     const hardSediment = document.getElementById("hardSediment"); *@
-@*     const softSediment = document.getElementById("softSediment"); *@
-@*      *@
-@*     const tomGrabb_1 = document.getElementById("tomGrabb_1"); *@
-@*     const tomGrabb_2 = document.getElementById("tomGrabb_2"); *@
-@*      *@
-@*     const animalYes = document.getElementById("cbx5"); *@
-@*     const animalNo = document.getElementById("cbx6"); *@
-@*     const animalInfo = document.getElementById("animalInfo"); *@
-@*     const arterContainer = document.getElementById("arter-container") *@
-@*      *@
-@*     function updateDisplay() { *@
-@*         if (radioHard.checked) { *@
-@*             sensoryQuestion.style.display = "flex"; *@
-@* *@
-@*             sedimentType.style.display = "flex"; *@
-@*             hardSediment.style.display = "flex"; *@
-@*             softSediment.style.display = "none"; *@
-@*              *@
-@*             tomGrabb_1.style.display = "flex"; *@
-@*             tomGrabb_2.style.display = "flex"; *@
-@*              *@
-@*             if (radioYes.checked) { *@
-@*                 sensoryInfo.style.display = "flex"; *@
-@* *@
-@*                 document.getElementById("ProvePh").disabled = true; *@
-@*                 document.getElementById("ProveEh").disabled = true; *@
-@*                 document.getElementById("ProveTemp").disabled = true; *@
-@*                 sensoryDataSoft_1.style.opacity = "0.5"; *@
-@*                 sensoryDataSoft_2.style.opacity = "0.5"; *@
-@*                 sensoryDataSoft_3.style.opacity = "0.5"; *@
-@*             } *@
-@*             else { *@
-@*                 sensoryInfo.style.display = "none"; *@
-@*             } *@
-@*         } *@
-@*         else if (radioSoft.checked) { *@
-@*             sensoryQuestion.style.display = "none"; *@
-@*             sensoryInfo.style.display = "flex"; *@
-@* *@
-@*             sedimentType.style.display = "flex"; *@
-@*             softSediment.style.display = "flex"; *@
-@*             hardSediment.style.display = "none"; *@
-@* *@
-@*             document.getElementById("ProvePh").disabled = false; *@
-@*             document.getElementById("ProveEh").disabled = false; *@
-@*             document.getElementById("ProveTemp").disabled = false; *@
-@*             sensoryDataSoft_1.style.opacity = "1"; *@
-@*             sensoryDataSoft_2.style.opacity = "1"; *@
-@*             sensoryDataSoft_3.style.opacity = "1"; *@
-@* *@
-@*             tomGrabb_1.style.display = "none"; *@
-@*             tomGrabb_2.style.display = "none"; *@
-@*         } *@
-@*         else { *@
-@*             sensoryQuestion.style.display = "none"; *@
-@*             sensoryInfo.style.display = "none"; *@
-@*         } *@
-@*     } *@
-@*      *@
-@*     function updateDisplay_2() { *@
-@*         if (animalYes.checked) { *@
-@*             animalInfo.style.display = "flex"; *@
-@*             arterContainer.style.display = "flex"; *@
-@*         } *@
-@*         else { *@
-@*             animalInfo.style.display = "none"; *@
-@*             arterContainer.style.display = "none"; *@
-@*         } *@
-@*     } *@
-@*      *@
-@*     radioSoft.addEventListener("change", updateDisplay); *@
-@*     radioHard.addEventListener("change", updateDisplay); *@
-@*     radioYes.addEventListener("change", updateDisplay); *@
-@*     radioNo.addEventListener("change", updateDisplay); *@
-@* *@
-@*     animalYes.addEventListener("change", updateDisplay_2); *@
-@*     animalNo.addEventListener("change", updateDisplay_2); *@
-@*      *@
-@*     updateDisplay(); *@
-@*     updateDisplay_2(); *@
-@* </script> *@
+<script>
+    const radioSoft = document.getElementById("cbx1");
+    const radioHard = document.getElementById("cbx2");
+    const sensoryQuestion = document.getElementById("sensoryRadio");
+    
+    const radioYes = document.getElementById("cbx3");
+    const radioNo = document.getElementById("cbx4");
+    const sensoryInfo = document.getElementById("sensoryInfo");
+    
+    const sedimentType = document.getElementById("sedimentType");
+    const hardSediment = document.getElementById("hardSediment");
+    const softSediment = document.getElementById("softSediment");
+    
+    const tomGrabb_1 = document.getElementById("tomGrabb_1");
+    const tomGrabb_2 = document.getElementById("tomGrabb_2");
+    
+    const animalYes = document.getElementById("cbx5");
+    const animalNo = document.getElementById("cbx6");
+    const animalInfo = document.getElementById("animalInfo");
+    const arterContainer = document.getElementById("arter-container")
+    
+    function updateDisplay() {
+        if (radioHard.checked) {
+            sensoryQuestion.style.display = "flex";
+
+            sedimentType.style.display = "flex";
+            hardSediment.style.display = "flex";
+            softSediment.style.display = "none";
+            
+            tomGrabb_1.style.display = "flex";
+            tomGrabb_2.style.display = "flex";
+            
+            if (radioYes.checked) {
+                sensoryInfo.style.display = "flex";
+
+                document.getElementById("ProvePh").disabled = true;
+                document.getElementById("ProveEh").disabled = true;
+                document.getElementById("ProveTemp").disabled = true;
+                sensoryDataSoft_1.style.opacity = "0.5";
+                sensoryDataSoft_2.style.opacity = "0.5";
+                sensoryDataSoft_3.style.opacity = "0.5";
+            }
+            else {
+                sensoryInfo.style.display = "none";
+            }
+        }
+        else if (radioSoft.checked) {
+            sensoryQuestion.style.display = "none";
+            sensoryInfo.style.display = "flex";
+
+            sedimentType.style.display = "flex";
+            softSediment.style.display = "flex";
+            hardSediment.style.display = "none";
+
+            document.getElementById("ProvePh").disabled = false;
+            document.getElementById("ProveEh").disabled = false;
+            document.getElementById("ProveTemp").disabled = false;
+            sensoryDataSoft_1.style.opacity = "1";
+            sensoryDataSoft_2.style.opacity = "1";
+            sensoryDataSoft_3.style.opacity = "1";
+
+            tomGrabb_1.style.display = "none";
+            tomGrabb_2.style.display = "none";
+        }
+        else {
+            sensoryQuestion.style.display = "none";
+            sensoryInfo.style.display = "none";
+        }
+    }
+    
+    function updateDisplay_2() {
+        if (animalYes.checked) {
+            animalInfo.style.display = "flex";
+            arterContainer.style.display = "flex";
+        }
+        else {
+            animalInfo.style.display = "none";
+            arterContainer.style.display = "none";
+        }
+    }
+    
+    radioSoft.addEventListener("change", updateDisplay);
+    radioHard.addEventListener("change", updateDisplay);
+    radioYes.addEventListener("change", updateDisplay);
+    radioNo.addEventListener("change", updateDisplay);
+
+    animalYes.addEventListener("change", updateDisplay_2);
+    animalNo.addEventListener("change", updateDisplay_2);
+    
+    updateDisplay();
+    updateDisplay_2();
+</script>
 
 @code {
-    // private BSensoryDto _sensoryDto = new();
-    //
-    // private BSedimentTypeDto _sediment = new();
-    //
-    // private static BDyr _dyr = new();
-    //
-    // private void SetPigghunder(int value)
-    // {
-    //     _dyr.Antallpigghunder = value;
-    // }
-    //
-    // private void SetKrepsdyr(int value)
-    // {
-    //     _dyr.Antallkrepsdyr = value;
-    // }
-    //
-    // private void SetSkjell(int value)
-    // {
-    //     _dyr.Antallskjell = value;
-    // }
-    //
-    // private void SetBorstemark(int value)
-    // {
-    //     _dyr.Antallborstemark = value;
-    // }
-    //
-    // private BMerknadDto _merknadDto = new();
-    //
-    // private BArterDto _arter = new();
-    //
-    // private BPositionAndDepthDto _positionAndDepth = new();
-    //
-    // private Bruker _user1 = new();
-    //
-    // private Bruker _user2 = new();
-    //
-    // private BEquipDto _equip = new();
-    //
-    // private void ClearPositionAndDepth(int value)
-    // {
-    //     if (value != 0) return;
-    //     _positionAndDepth.Kordinatern = 0;
-    //     _positionAndDepth.Kordinatero = 0;
-    //     _positionAndDepth.Dybde = value;
-    // }
+    private BSensoryDto _sensoryDto = new();
 
-    [Parameter]
-    public Guid ProjectId { get; set; }
-    public Guid StationId { get; set; }
-    public Guid SurveyId { get; set; }
+    private BSedimentTypeDto _sediment = new();
 
-    protected override async Task OnInitializedAsync()
+    private static BDyr _dyr = new();
+
+    private void SetPigghunder(int value)
     {
-        await LoadSurveyData();
+        _dyr.Antallpigghunder = value;
     }
 
-    private async Task LoadSurveyData()
+    private void SetKrepsdyr(int value)
     {
-        try
-        {
-            survey = await Http.GetFromJsonAsync<>()
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
+        _dyr.Antallkrepsdyr = value;
     }
 
-    private void HandleEdit()
+    private void SetSkjell(int value)
+    {
+        _dyr.Antallskjell = value;
+    }
+
+    private void SetBorstemark(int value)
+    {
+        _dyr.Antallborstemark = value;
+    }
+
+    private BMerknadDto _merknadDto = new();
+
+    private BArterDto _arter = new();
+
+    private BPositionAndDepthDto _positionAndDepth = new();
+
+    private Bruker _user1 = new();
+
+    private Bruker _user2 = new();
+
+    private BEquipDto _equip = new();
+
+    private void ClearPositionAndDepth(int value)
+    {
+        if (value != 0) return;
+        _positionAndDepth.Kordinatern = 0;
+        _positionAndDepth.Kordinatero = 0;
+        _positionAndDepth.Dybde = value;
+    }
+
+    private void HandleSubmit()
     {
         Console.WriteLine("");
     }
