@@ -1,5 +1,8 @@
 @page "/project/{ProjectId:guid}/station/{StationId:guid}/survey/{SurveyId:guid}"
 @using Microsoft.AspNetCore.Authorization
+@using SeaEco.Abstractions.Enums.Bsensorisk
+@using SeaEco.Abstractions.Extensions
+@using SeaEco.Abstractions.Models.Bundersokelse
 @using SeaEco.Abstractions.Models.Project
 @using SeaEco.EntityFramework.Entities
 @inject HttpClient Http
@@ -9,67 +12,65 @@
 
 <h4>Stasjonsregistrering</h4>
 
+
 <div id="div1" class="content-div active">
     <div class="position-depth-container">
         <div class="form-floating mb-3">
-            <InputNumber id="position_n" class="form-control" @bind-Value="_positionAndDepth.Kordinatern" placeholder="N" />
+            <InputText id="position_n" class="form-control" @bind-Value="_survey.BStation.KoordinatNord" placeholder="N"/>
             <label for="position_n">Posisjon nord</label>
         </div>
 
         <div class="form-floating mb-3">
-            <InputNumber id="position_o" class="form-control" @bind-Value="_positionAndDepth.Kordinatero" placeholder="O" />
+            <InputText id="position_o" class="form-control" @bind-Value="_survey.BStation.KoordinatOst" placeholder="O"/>
             <label for="position_o">Posisjon øst</label>
         </div>
 
         <div class="form-floating mb-3">
-            <InputNumber id="depth" class="form-control" @bind-Value="_positionAndDepth.Dybde" placeholder="M" />
+            <InputNumber id="depth" class="form-control" @bind-Value="_survey.BStation.Dybde" placeholder="M"/>
             <label for="depth">Dybde</label>
         </div>
-        
+
         <div class="position-depth-button-container">
-            <button class="btn btn-outline-primary clear-data @(_positionAndDepth.Dybde == 0 ? "active" : "")"
+            <button class="btn btn-outline-primary clear-data @(_survey.BStation.Dybde == 0 ? "active" : "")"
                     @onclick="() => ClearPositionAndDepth(0)">
                 Annen posisjon og dybde
             </button>
         </div>
     </div>
-    
-    <div class="sampler-container">
-        <div class="form-floating mb-3">
-            @* TODO: Remember to bind value *@
-            <InputSelect id="sampler-1" class="form-select" @bind-Value="_user1.Id">
-                <option value="" disabled>Velg prøvetaker</option>
-                <option value="">Rikke</option>
-                <option value="">Sara</option>
-                <option value="">Tor</option>
-            </InputSelect>
-            <label for="sampler-1">Prøvetaker nr 1</label>
-        </div>
 
-        <div class="form-floating mb-3">
-            @* TODO: Remember to bind value *@
-            <InputSelect id="sampler-2" class="form-select" @bind-Value="_user2.Id">
-                <option value="" disabled>Velg prøvetaker</option>
-                <option value="">Ingen</option>
-                <option value="">Rikke</option>
-                <option value="">Sara</option>
-                <option value="">Tor</option>
-            </InputSelect>
-            <label for="sampler-2">Prøvetaker nr 2</label>
-        </div>
-    </div>
+    @* <div class="sampler-container"> *@
+    @*     <div class="form-floating mb-3"> *@
+    @*         <InputSelect id="sampler-1" class="form-select" @bind-Value="_user1.Id"> *@
+    @*             <option value="" disabled>Velg prøvetaker</option> *@
+    @*             <option value="">Rikke</option> *@
+    @*             <option value="">Sara</option> *@
+    @*             <option value="">Tor</option> *@
+    @*         </InputSelect> *@
+    @*         <label for="sampler-1">Prøvetaker nr 1</label> *@
+    @*     </div> *@
+    @* *@
+    @*     <div class="form-floating mb-3"> *@
+    @*         <InputSelect id="sampler-2" class="form-select" @bind-Value="_user2.Id"> *@
+    @*             <option value="" disabled>Velg prøvetaker</option> *@
+    @*             <option value="">Ingen</option> *@
+    @*             <option value="">Rikke</option> *@
+    @*             <option value="">Sara</option> *@
+    @*             <option value="">Tor</option> *@
+    @*         </InputSelect> *@
+    @*         <label for="sampler-2">Prøvetaker nr 2</label> *@
+    @*     </div> *@
+    @* </div> *@
 
     <div class="equipment-container">
         <div class="form-floating mb-3">
-            <InputNumber id="equip-1" class="form-control" @bind-Value="_equip.Grabbid" placeholder="Grabbhugg" />
+            <input class="form-control" id="equip-1" value="@_survey.AntallGrabbhugg" />
             <label for="equip-1">Antall grabbhugg</label>
         </div>
 
-        @* TODO: Remember to bind *@
         <div class="checkbox-3-container">
             <label class="custom-checkbox" for="equip-2">
                 <span class="custom-label">Gokjent grabbhastighet</span>
-                <input id="equip-2" type="checkbox">
+                <input id="equip-2" type="checkbox" @bind="_survey.GrabbhastighetGodkjent">
                 <span class="custom-checkmark"></span>
             </label>
         </div>
@@ -80,16 +81,16 @@
     <div class="typeRadio-container">
         <h5>Bunntype: </h5>
 
-        @* TODO: Remember to bind and bind-value *@
         <div class="cntr">
-            <input type="radio" name="bunntype" id="cbx1" class="hidden-xs-up">
+            <input type="radio" name="bunntype" id="cbx1" class="hidden-xs-up"
+                   @(_survey.BlotbunnId != null ? "checked" : "")>
             <label for="cbx1" class="cbx"></label>
             <label for="cbx1" class="lbl">Bløt</label>
         </div>
 
-        @* TODO: Remember to bind and bind-value *@
         <div class="cntr">
-            <input type="radio" name="bunntype" id="cbx2" class="hidden-xs-up">
+            <input type="radio" name="bunntype" id="cbx2" class="hidden-xs-up"
+                   @(_survey.HardbunnId != null ? "checked" : "")>
             <label for="cbx2" class="cbx"></label>
             <label for="cbx2" class="lbl">Hard</label>
         </div>
@@ -98,101 +99,83 @@
     <div id="sensoryRadio" class="sensoryRadio-container">
         <h5>Er sensorisk utført?</h5>
 
-        @* TODO: Remember to bind and bind-value *@
         <div class="cntr">
-            <input type="radio" name="sensorisk" id="cbx3" class="hidden-xs-up">
+            <input type="radio" name="sensorisk" id="cbx3" class="hidden-xs-up"
+                   @(_survey.SensoriskId != null ? "checked" : "")>
             <label for="cbx3" class="cbx"></label>
             <label for="cbx3" class="lbl">Ja</label>
         </div>
 
-        @* TODO: Remember to bind and bind-value *@
         <div class="cntr">
-            <input type="radio" name="sensorisk" id="cbx4" class="hidden-xs-up">
+            <input type="radio" name="sensorisk" id="cbx4" class="hidden-xs-up"
+                   @(_survey.SensoriskId == null ? "checked" : "")>
             <label for="cbx4" class="cbx"></label>
             <label for="cbx4" class="lbl">Nei</label>
         </div>
     </div>
 
     <div id="sensoryInfo" class="sensoryInfo-container">
-        <EditForm Model="_sensoryDto" OnValidSubmit="HandleSubmit">
-            <DataAnnotationsValidator />
-            <div class="sensoryData">
+        <div class="sensoryData">
+            @if (_survey.BSediment != null)
+            {
                 <div class="form-floating mb-3" id="sensoryDataSoft_1">
-                    <InputNumber id="ProvePh" class="form-control" @bind-Value="_sensoryDto.ProvePh" placeholder="pH" />
+                    <InputNumber id="ProvePh" class="form-control" @bind-Value="_survey.BSediment.Ph" placeholder="pH"/>
                     <label for="ProvePh">pH</label>
                 </div>
 
                 <div class="form-floating mb-3" id="sensoryDataSoft_2">
-                    <InputNumber id="ProveEh" class="form-control" @bind-Value="_sensoryDto.ProveEh" placeholder="Eh" />
+                    <InputNumber id="ProveEh" class="form-control" @bind-Value="_survey.BSediment.Eh" placeholder="Eh"/>
                     <label for="ProveEh">EH</label>
                 </div>
 
                 <div class="form-floating mb-3" id="sensoryDataSoft_3">
-                    <InputNumber id="ProveTemp" class="form-control" @bind-Value="_sensoryDto.ProveTemp" placeholder="Temp" />
+                    <InputNumber id="ProveTemp" class="form-control" @bind-Value="_survey.BSediment.Temperatur" placeholder="Temp"/>
                     <label for="ProveTemp">Temp</label>
                 </div>
-
+            }
+            
+            @if (_survey.BSensorisk != null)
+            { 
                 <div class="form-floating mb-3">
-                    <InputSelect id="Farge" class="form-select" @bind-Value="_sensoryDto.Farge">
-                        <option value="" disabled>Velg farge</option>
-                        <option value="0">Lys grå</option>
-                        <option value="2">Brunn/svart</option>
-                    </InputSelect>
+                    <input class="form-control" id="Farge"
+                           value="@_survey.BSensorisk.Farge.ToEnumDescription<Farge>()" />
                     <label for="Farge">Farge</label>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <InputSelect id="Lukt" class="form-select" @bind-Value="_sensoryDto.Lukt">
-                        <option value="" disabled>Velg lukt</option>
-                        <option value="0">Ingen</option>
-                        <option value="2">Noe</option>
-                        <option value="4">Sterk</option>
-                    </InputSelect>
+                    <input class="form-control" id="Lukt"
+                           value="@_survey.BSensorisk.Lukt.ToEnumDescription<Lukt>()" />
                     <label for="Lukt">Lukt</label>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <InputSelect id="Konsistens" class="form-select" @bind-Value="_sensoryDto.Konsistens">
-                        <option value="" disabled>Velg konsistens</option>
-                        <option value="0">Fast</option>
-                        <option value="2">Myk</option>
-                        <option value="4">Løs</option>
-                    </InputSelect>
+                    <input class="form-control" id="Konsistens"
+                           value="@_survey.BSensorisk.Konsistens.ToEnumDescription<Konsistens>()" />
                     <label for="Konsistens">Konsistens</label>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <InputSelect id="GrabbVolum" class="form-select" @bind-Value="_sensoryDto.Grabbvolum">
-                        <option value="" disabled>Velg grabbvolum</option>
-                        <option value="0">0 - 1/4</option>
-                        <option value="1">1/4 - 3/4</option>
-                        <option value="2">Mer enn 3/4</option>
-                    </InputSelect>
+                    <input class="form-control" id="GrabbVolum"
+                           value="@_survey.BSensorisk.Grabbvolum.ToEnumDescription<Grabbvolum>()" />
                     <label for="GrabbVolum">GrabbVolum</label>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <InputSelect id="Tykkelse" class="form-select" @bind-Value="_sensoryDto.Tykkelseslamlag">
-                        <option value="" disabled>Velg tykkelseslamlag</option>
-                        <option value="0">0 - 2cm</option>
-                        <option value="1">2 - 8cm</option>
-                        <option value="2">Mer enn 8cm</option>
-                    </InputSelect>
+                    <input class="form-control" id="Tykkelse"
+                           value="@_survey.BSensorisk.Tykkelseslamlag.ToEnumDescription<Tykkelseslamlag>()" />
                     <label for="Tykkelse">Tykkelse</label>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <InputSelect id="Gassbobler" class="form-select" @bind-Value="_sensoryDto.Gassbobler">
-                        <option value="" disabled>Velg av gassbobler</option>
-                        <option value="4">Ja</option>
-                        <option value="0">Nei</option>
-                    </InputSelect>
+                    <input class="form-control" id="Gassbobler"
+                           value="@_survey.BSensorisk.Gassbobler.ToEnumDescription<Gassbobler>()" />
                     <label for="Gassbobler">Gassbobler</label>
                 </div>
-            </div>
-        </EditForm>
+            }
+        </div>
     </div>
 
+    // TODO:   
     <div class="sedimentType-container" id="sedimentType">
         <div class="hardSediment-container" id="hardSediment">
             <h5>Bunntype:</h5>
@@ -380,52 +363,53 @@
 </div>
 
 <div class="button-container">
-    <button id="lastBtn" onclick="showLast()" class="custom-btn">Forrige</button>
-    <button id="nextBtn" onclick="showNext()" class="custom-btn">Neste</button>
-    <button id="editBtn" class="custom-btn" style="display: none;" @onclick="HandleEdit">Rediger</button>
+    @* <button id="lastBtn" onclick="showLast()" class="custom-btn">Forrige</button> *@
+    @* <button id="nextBtn" onclick="showNext()" class="custom-btn">Neste</button> *@
+    <button id="backBtn" class="custom-btn" @onclick="BackToStationPage">Tilbake</button>
+    <button id="editBtn" class="custom-btn" @onclick="HandleEdit">Rediger</button>
 </div>
 
 
 @* Last and next button script *@
-<script>
-    let currentIndex = 1;
-    const totalDivs = 3;
-
-    function showDiv(index) {
-        for (let i = 1; i <= totalDivs; i++) {
-            document.getElementById('div' + i).classList.remove('active');
-        }
-        document.getElementById('div' + index).classList.add('active');
-        updateButtons();
-    }
-
-    function showLast() {
-        if (currentIndex > 1) {
-            currentIndex--;
-            showDiv(currentIndex);
-        }
-    }
-
-    function showNext() {
-        if (currentIndex < totalDivs) {
-            currentIndex++;
-            showDiv(currentIndex);
-        }
-    }
-
-    function updateButtons() {
-        const lastBtn = document.getElementById('lastBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const editBtn = document.getElementById('editBtn');
-
-        lastBtn.style.display = currentIndex === 1 ? 'none' : 'inline-block';
-        nextBtn.style.display = currentIndex === totalDivs ? 'none' : 'inline-block';
-        editBtn.style.display = currentIndex === totalDivs ? 'inline-block' : 'none';
-    }
-
-    updateButtons();
-
-</script>
+@* <script> *@
+@*     let currentIndex = 1; *@
+@*     const totalDivs = 3; *@
+@* *@
+@*     function showDiv(index) { *@
+@*         for (let i = 1; i <= totalDivs; i++) { *@
+@*             document.getElementById('div' + i).classList.remove('active'); *@
+@*         } *@
+@*         document.getElementById('div' + index).classList.add('active'); *@
+@*         updateButtons(); *@
+@*     } *@
+@* *@
+@*     function showLast() { *@
+@*         if (currentIndex > 1) { *@
+@*             currentIndex--; *@
+@*             showDiv(currentIndex); *@
+@*         } *@
+@*     } *@
+@* *@
+@*     function showNext() { *@
+@*         if (currentIndex < totalDivs) { *@
+@*             currentIndex++; *@
+@*             showDiv(currentIndex); *@
+@*         } *@
+@*     } *@
+@* *@
+@*     function updateButtons() { *@
+@*         const lastBtn = document.getElementById('lastBtn'); *@
+@*         const nextBtn = document.getElementById('nextBtn'); *@
+@*         const editBtn = document.getElementById('editBtn'); *@
+@* *@
+@*         lastBtn.style.display = currentIndex === 1 ? 'none' : 'inline-block'; *@
+@*         nextBtn.style.display = currentIndex === totalDivs ? 'none' : 'inline-block'; *@
+@*         editBtn.style.display = currentIndex === totalDivs ? 'inline-block' : 'none'; *@
+@*     } *@
+@* *@
+@*     updateButtons(); *@
+@* *@
+@* </script> *@
 
 @* <script> *@
 @*     const radioSoft = document.getElementById("cbx1"); *@
@@ -572,6 +556,8 @@
     public Guid StationId { get; set; }
     public Guid SurveyId { get; set; }
 
+    private SurveyDto? _survey = new();
+
     protected override async Task OnInitializedAsync()
     {
         await LoadSurveyData();
@@ -581,7 +567,7 @@
     {
         try
         {
-            survey = await Http.GetFromJsonAsync<>()
+            _survey = await Http.GetFromJsonAsync<SurveyDto>($"api/Project/{ProjectId:guid}/station/{StationId:guid}/survey/{SurveyId:guid}");
         }
         catch (Exception ex)
         {
@@ -589,6 +575,19 @@
         }
     }
 
+    private void ClearPositionAndDepth(int value)
+    {
+        if (value == 0) return;
+        _survey.BStation.KoordinatNord = "Annen posisjon";
+        _survey.BStation.KoordinatOst = "Annen posisjon";
+        _survey.BStation.Dybde = value;
+    }
+
+    private void BackToStationPage()
+    {
+        Console.WriteLine("");
+    }
+    
     private void HandleEdit()
     {
         Console.WriteLine("");
