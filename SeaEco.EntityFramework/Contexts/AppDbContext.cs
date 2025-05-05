@@ -30,6 +30,8 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<BProvetakningsplan> BProvetakningsplans { get; set; }
 
+    public virtual DbSet<BRapporter> BRapporters { get; set; }
+
     public virtual DbSet<BSediment> BSediments { get; set; }
 
     public virtual DbSet<BSensorisk> BSensorisks { get; set; }
@@ -71,6 +73,9 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("id");
+            entity.Property(e => e.Datogenerert)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("datogenerert");
             entity.Property(e => e.Extension).HasColumnName("extension");
             entity.Property(e => e.Silt).HasColumnName("silt");
             entity.Property(e => e.UndersokelseId).HasColumnName("undersokelse_id");
@@ -233,6 +238,40 @@ public partial class AppDbContext : DbContext
                 .HasConstraintName("fk_bprovetakingsplan_prosjekt_id");
         });
 
+        modelBuilder.Entity<BRapporter>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("pk_b_rapporter");
+
+            entity.ToTable("b_rapporter");
+
+            entity.HasIndex(e => e.GodkjentAv, "fki_fk_brapporter_bruker_id");
+
+            entity.HasIndex(e => e.ProsjektId, "fki_fk_brapporter_prosjekt_id");
+
+            entity.HasIndex(e => new { e.ProsjektId, e.ArkNavn }, "uq_brapporter_prosjektid_arknavn").IsUnique();
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.ArkNavn).HasColumnName("ark_navn");
+            entity.Property(e => e.Datogenerert).HasColumnName("datogenerert");
+            entity.Property(e => e.ErGodkjent)
+                .HasDefaultValue(false)
+                .HasColumnName("er_godkjent");
+            entity.Property(e => e.GodkjentAv).HasColumnName("godkjent_av");
+            entity.Property(e => e.ProsjektId).HasColumnName("prosjekt_id");
+
+            entity.HasOne(d => d.GodkjentAvNavigation).WithMany(p => p.BRapporters)
+                .HasForeignKey(d => d.GodkjentAv)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_brapporter_bruker_id");
+
+            entity.HasOne(d => d.Prosjekt).WithMany(p => p.BRapporters)
+                .HasForeignKey(d => d.ProsjektId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_brapporter_prosjekt_id");
+        });
+
         modelBuilder.Entity<BSediment>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("pk_b_sediment");
@@ -282,6 +321,7 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Eh).HasColumnName("eh");
             entity.Property(e => e.Ph).HasColumnName("ph");
             entity.Property(e => e.PreinfoId).HasColumnName("preinfo_id");
+            entity.Property(e => e.RefElektrode).HasColumnName("ref_elektrode");
             entity.Property(e => e.Temperatur).HasColumnName("temperatur");
 
             entity.HasOne(d => d.Preinfo).WithOne(p => p.BSjovann)
@@ -489,7 +529,7 @@ public partial class AppDbContext : DbContext
 
             entity.ToTable("bruker");
 
-            entity.HasIndex(e => new { e.Fornavn, e.Etternavn }, "uq_bruker_fornavn_etternavn").IsUnique();
+            entity.HasIndex(e => e.Epost, "uq_bruker_epost").IsUnique();
 
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
