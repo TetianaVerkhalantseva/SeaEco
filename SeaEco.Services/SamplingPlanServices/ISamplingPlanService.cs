@@ -6,11 +6,11 @@ namespace SeaEco.Services.SamplingPlanServices;
 
 public interface ISamplingPlanService
 {
-    Task<BProvetakningsplan?> GetSamplingPlanById(Guid id);
+    Task<SamplingPlanDto?> GetSamplingPlanById(Guid id);
     
     Task<EditSamplingPlanResult> CreateSamplingPlan(EditSamplingPlanDto samplingPlanDto);
     
     Task<EditSamplingPlanResult> UpdateSamplingPlan(Guid id, EditSamplingPlanDto samplingPlanDto);
     
-    Task<EditSamplingPlanResult> DeleteSamplingPlan(Guid id);
+    Task<EditSamplingPlanResult> DeleteSamplingPlan(Guid projectId, Guid id);
 }
