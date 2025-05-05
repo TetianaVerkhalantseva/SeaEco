@@ -15,5 +15,7 @@ public partial class BSjovann
 
     public float Temperatur { get; set; }
 
+    public float? RefElektrode { get; set; }
+
     public virtual BPreinfo Preinfo { get; set; } = null!;
 }
