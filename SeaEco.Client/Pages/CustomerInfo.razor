@@ -1,4 +1,4 @@
-﻿@page "/CustomerInfo/{CustomerId:int}"
+﻿@page "/CustomerInfo/{CustomerId:guid}"
 @inject HttpClient Http
 @using Microsoft.AspNetCore.Authorization
 @using SeaEco.Client.Resources
@@ -7,6 +7,7 @@
 @using SeaEco.EntityFramework.Entities
 @using Microsoft.AspNetCore.Components.Authorization
 @using SeaEco.Abstractions.Enums
+@using SeaEco.Abstractions.Extensions
 
 
 <div class="container mt-5">
@@ -27,15 +28,15 @@
                     </div>
 
                     <div class="position-absolute bottom-0 start-0 mb-3 ms-3">
-                        <button class="btn btn-outline-secondary me-2" @onclick="BackToCustomerPage">@Resources.ButtonCancel</button>
+                        <button class="btn custom-outline-secondary-btn me-2" @onclick="BackToCustomerPage">@Resources.ButtonCancel</button>
                     </div>
 
                     <div class="position-absolute bottom-0 end-0 mb-3 me-3">
                         <AuthorizeView Roles="admin">
-                            <button class="btn btn-danger" @onclick="DeleteCustomer">@Resources.ButtonDelete</button>
+                            <button class="btn custom-outline-secondary-btn" @onclick="DeleteCustomer">@Resources.ButtonDelete</button>
                         </AuthorizeView>
                         
-                        <button class="btn btn-primary" @onclick="EditCustomerPage">@Resources.ButtonEdit</button>
+                        <button class="btn custom-btn" @onclick="EditCustomerPage">@Resources.ButtonEdit</button>
                     </div>
                 </div>
 
@@ -74,7 +75,7 @@
             </div>
 
             <!-- onclick to create new project page -->
-            <button class="btn custom-btn ms-3">
+            <button class="btn custom-btn ms-3" @onclick="ToNewProjectPage"> 
                 @Resources.ButtonAddNewProject
             </button>
         </div>
@@ -91,7 +92,8 @@
                         <!-- href to project detail page -->
                         <a href=""><h5 class="project-info">@project.PoId</h5></a>
                         <a href="">
-                            <p>@project.Prosjektstatus</p></a>
+                            <p>@(project.Prosjektstatus.ToEnumDescription<Prosjektstatus>())</p>
+                        </a>
                     </div>
                 </div>
             }
@@ -108,7 +110,7 @@
 
 @code {
     [Parameter]
-    public int CustomerId { get; set; }
+    public Guid CustomerId { get; set; }
     private Kunde? _customer = new();
     private bool? _result;
     private string _currentSort = "all";
@@ -240,6 +242,11 @@
     private void EditCustomerPage()
     {
         Navigation.NavigateTo($"EditCustomer/{CustomerId}");
+    }
+
+    private void ToNewProjectPage()
+    {
+        Navigation.NavigateTo($"NewProject/{CustomerId}");
     }
 
     private async Task DeleteCustomer()

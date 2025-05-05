@@ -1,24 +1,31 @@
 using SeaEco.Abstractions.ValueObjects;
+using SeaEco.Abstractions.ValueObjects.Bunnsubstrat;
 
 namespace SeaEco.Reporter.Models.B2;
 
 public class ColumnB2
 {
     public Coordinate Coordinate { get; set; }
-    public short Depth { get; set; }
-    public byte Attempts { get; set; }
-    public bool BubblingWood { get; set; }
+    public short Dyp { get; set; }
+    public byte AntallForsøk { get; set; }
+    public bool Bobling { get; set; }
 
-    public bool Leire { get; set; }
-    public bool Silt { get; set; }
-    public bool Sand { get; set; }
-    public bool Grus { get; set; }
-    public bool Skjellsand { get; set; }
-    public bool Steinbunn { get; set; }
-    public bool Fjellbunn { get; set; }
+    public BunnsubstratValue Leire { get; set; }
+    public BunnsubstratValue Silt { get; set; }
+    public BunnsubstratValue Sand { get; set; }
+    public BunnsubstratValue Grus { get; set; }
+    public BunnsubstratValue Skjellsand { get; set; }
+    public BunnsubstratValue Steinbunn { get; set; }
+    public BunnsubstratValue Fjellbunn { get; set; }
 
-    public byte Pigghuder { get; set; }
-    public byte Krepsdyr { get; set; }
-    public byte Skjell { get; set; }
-    public byte Børstemark { get; set; }
+    public string Pigghuder { get; set; }
+    public string Krepsdyr { get; set; }
+    public string Skjell { get; set; }
+    public string Børstemark { get; set; }
+
+    public bool Beggiota { get; set; }
+    public bool Fôr { get; set; }
+    public bool Fekalier { get; set; }
+
+    public string Kommentarer { get; set; } = string.Empty;
 }

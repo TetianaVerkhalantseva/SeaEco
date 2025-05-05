@@ -4,154 +4,161 @@
 @inject NavigationManager Navigation
 @attribute [Authorize]
 @using SeaEco.Client.Components
+@inject HttpClient Http
+
+
 
 <div class="d-flex justify-content-center">
 <div class="d-flex flex-column align-items-center projects-container">
-    <div class="mb-4">
-        <h3>@Resources.PageProjectsOverviewAllProjects</h3>
+    <div class="mb-3">
+        <h2>@Resources.PageProjectsOverviewAllProjects</h2>
     </div>
-    
-    <div class="d-flex flex-column card-container w-100 gap-5">
-        <details class="filter-panel shadow-lg">
-            <summary>Filter</summary>
-            <div class="filter-options">
-                <div class="d-flex flex-column flex-xxl-row gap-3">
-                    <div class="d-flex flex-column gap-2">
-                        <div class="form-group">
-                            <label class="p-1">@Resources.TableHeaderProjectStatus</label>
-                            <MultipleSelectionDropdown
-                                Options="@_allStatuses"
-                                @bind-SelectedOptions="SelectedStatuses"/>
+
+    @if (_isLoading)
+    {
+    }
+    else
+    {
+        <div class="d-flex flex-column card-container w-100 gap-5">
+            <details class="filter-panel shadow-lg">
+                <summary>Filter</summary>
+                <div class="filter-options">
+                    <div class="d-flex flex-column flex-xxl-row gap-3">
+                        <div class="d-flex flex-column gap-2">
+                            <div class="form-group">
+                                <label class="p-1">@Resources.TableHeaderProjectStatus</label>
+                                <MultipleSelectionDropdown
+                                    Options="@_allStatuses"
+                                    @bind-SelectedOptions="SelectedStatuses"/>
+                            </div>
                         </div>
-                    </div>
-                    <div class="d-flex flex-column gap-2">
-                        <div class="form-group">
-                            <label for="locationSelected" class="p-1">@Resources.TableHeaderLocality</label>
-                            <select id="locationSelected" class="form-select" @bind="SelectedLocation">
-                                <option value="">@Resources.OptionAll</option>
-                                @foreach (var location in _allLocations!)
-                                {
-                                    <option value="@location">@location</option>
-                                }
-                            </select>
+                        <div class="d-flex flex-column gap-2">
+                            <div class="form-group">
+                                <label for="locationSelected" class="p-1">@Resources.TableHeaderLocality</label>
+                                <select id="locationSelected" class="form-select" @bind="SelectedLocation">
+                                    <option value="">@Resources.OptionAll</option>
+                                    @foreach (var location in _allLocations!)
+                                    {
+                                        <option value="@location">@location</option>
+                                    }
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="d-flex flex-column gap-2">
-                        <div class="form-group ">
-                            <label for="customerSelected" class="p-1">@Resources.TableHeaderCustomer</label>
-                            <select id="customerSelected" class="form-select" @bind="SelectedCustomer">
-                                <option value="">@Resources.OptionAll</option>
-                                @foreach (var customers in _allCustomers!)
-                                {
-                                    <option value="@customers">@customers</option>
-                                }
-                            </select>
+                        <div class="d-flex flex-column gap-2">
+                            <div class="form-group ">
+                                <label for="customerSelected" class="p-1">@Resources.TableHeaderCustomer</label>
+                                <select id="customerSelected" class="form-select" @bind="SelectedCustomer">
+                                    <option value="">@Resources.OptionAll</option>
+                                    @foreach (var customers in _allCustomers!)
+                                    {
+                                        <option value="@customers">@customers</option>
+                                    }
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="d-flex flex-column gap-2">
-                        <div class="form-group">
-                            <label for="yearSelect" class="p-1">@Resources.TableHeaderYear</label>
-                            <select id="yearSelect" class="form-select" @bind="SelectedYear">
-                                <option value="">@Resources.OptionAll</option>
-                                @for (int year = DateTime.Now.Year; year >= 2012; year--)
-                                {
-                                    <option value="@year">@year</option>
-                                }
-                            </select>
+                        <div class="d-flex flex-column gap-2">
+                            <div class="form-group">
+                                <label for="yearSelect" class="p-1">@Resources.TableHeaderYear</label>
+                                <select id="yearSelect" class="form-select" @bind="SelectedYear">
+                                    <option value="">@Resources.OptionAll</option>
+                                    @for (int year = DateTime.Now.Year; year >= 2012; year--)
+                                    {
+                                        <option value="@year">@year</option>
+                                    }
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="d-flex flex-column gap-2">
-                        <div class="form-group">
-                            <label for="mndSelect" class="p-1">@Resources.TableHeaderMonth</label>
-                            <select id="mndSelect" class="form-select" @bind="SelectedMnd">
-                                <option value="">@Resources.OptionAll</option>
-                                @for (int month = 1; month <= 12; month++)
-                                {
-                                    <option value="@month">@month</option>
-                                }
-                            </select>
+                        <div class="d-flex flex-column gap-2">
+                            <div class="form-group">
+                                <label for="mndSelect" class="p-1">@Resources.TableHeaderMonth</label>
+                                <select id="mndSelect" class="form-select" @bind="SelectedMnd">
+                                    <option value="">@Resources.OptionAll</option>
+                                    @for (int month = 1; month <= 12; month++)
+                                    {
+                                        <option value="@month">@month</option>
+                                    }
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="flex-grow-1"></div>
-                    <div class="d-flex flex-xxl-column flex-row align-self-end">
-                        <button class="btn btn-secondary" type="button" @onclick="() => ResetFilter()">
-                            @Resources.ButtonReset
-                        </button>
+                        <div class="flex-grow-1"></div>
+                        <div class="d-flex flex-xxl-column flex-row align-self-end">
+                            <button class="btn btn-secondary" type="button" @onclick="() => ResetFilter()">
+                                @Resources.ButtonReset
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </details>
+            </details>
 
-        <div class="table-responsive  d-none d-xxl-block">
-            <table class="table table-hover fixed-width-table">
-                <colgroup>
-                    <col style="width: 190px;">
-                    <col style="width: 140px;">
-                    <col style="width: 80px;">
-                    <col style="width: 80px;">
-                    <col style="width: 110px;">
-                    <col style="width: 100px;">
-                    <col style="width: 160px;">
-                    <col style="width: 90px;">
-                    <col style="width: 140px;">
-                </colgroup>
-                <thead>
-                <tr>
-                    @foreach (var tableHeader in _listTableHeader)
-                    {
-                        <th class="cursor" @onclick="() => SortBy(tableHeader)">
-                            @tableHeader
+            <div class="table-responsive  d-none d-xxl-block">
+                <table class="table table-hover fixed-width-table">
+                    <colgroup>
+                        <col style="width: 190px;">
+                        <col style="width: 140px;">
+                        <col style="width: 80px;">
+                        <col style="width: 80px;">
+                        <col style="width: 110px;">
+                        <col style="width: 100px;">
+                        <col style="width: 160px;">
+                        <col style="width: 90px;">
+                        <col style="width: 140px;">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        @foreach (var tableHeader in _listTableHeader)
+                        {
+                            <th class="cursor" @onclick="() => SortBy(tableHeader)">
+                                @tableHeader
 
-                            @if (_currentSortColumn == @tableHeader)
-                            {
-                                <i class="bi @(_sortAscending ? "bi-arrow-down":"bi-arrow-up")"></i>
-                            }
+                                @if (_currentSortColumn == @tableHeader)
+                                {
+                                    <i class="bi @(_sortAscending ? "bi-arrow-down" : "bi-arrow-up")"></i>
+                                }
 
-                        </th>
-                    }
-                </tr>
-                </thead>
-                <tbody>
-                @foreach (var project in SortedProjects!)
-                {
-                    <tr class="cursor" @onclick="() => OnRowClick(project.prosjektId)">
-                        <td>@project.KundeNavn</td>
-                        <td>@project.Lokalitet</td>
-                        <td>@project.Lokalitetid</td>
-                        <td>@project.PoId</td>
-                        <td>@project.prosjektId</td>
-                        <td>@project.Dato</td>
-                        <td>@project.Produksjonsstatus</td>
-                        <td>@project.Tilstand</td>
-                        <td>@project.Status</td>
+                            </th>
+                        }
                     </tr>
-                }
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody>
+                    @foreach (var project in SortedProjects!)
+                    {
+                        <tr class="cursor" @onclick="() => OnRowClick(project.ProsjektId)">
+                            <td>@project.KundeNavn</td>
+                            <td>@project.Lokalitet</td>
+                            <td>@project.Lokalitetid</td>
+                            <td>@project.PoId</td>
+                            <td>@project.prosjektId</td>
+                            <td>@project.Dato</td>
+                            <td>@project.Produksjonsstatus</td>
+                            <td>@project.Tilstand</td>
+                            <td>@project.Status</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
 
-        <div class="card-container d-block d-xxl-none">
-            <div class="row" style="justify-content: center;">
-                @foreach (var project in SortedProjects)
-                {
-                    <div class="col mb-3 card-col ">
-                        <div class="card cursor shadow-lg" @onclick="() => OnRowClick(project.prosjektId)">
-                            <div class="card-body text-center @GetStatus(project.Status)">
-                                <h5 class="card-title">@project.prosjektId</h5>
-                                <span class="corner-text">@project.Status</span>
-                            </div>
-                            <div class="card-bottom">
+            <div class="card-container d-block d-xxl-none">
+                <div class="row" style="justify-content: center;">
+                    @foreach (var project in SortedProjects)
+                    {
+                        <div class="col mb-3 card-col">
+                            <div class="card cursor" @onclick="() => OnRowClick(project.ProsjektId)">
+                                <div class="card-body text-center @GetStatus(project.Status)">
+                                    <h5 class="card-title">@project.prosjektId</h5>
+                                    <span class="corner-text">@project.Status</span>
+                                </div>
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item">@Resources.TableHeaderLocality: @project.Lokalitet</li>
                                 </ul>
                             </div>
                         </div>
-                    </div>
-                }
+                    }
+                </div>
             </div>
         </div>
-    </div>
-</div>
+    }
+</div >
 </div>
 
 
@@ -160,6 +167,7 @@
     private List<ProjectDto>? _projects;
     private List<string>? _allLocations;
     private List<string>? _allCustomers;
+    private bool _isLoading = true;
     private readonly List<string> _allStatuses = ["Nytt", "Påbegynt", "Deaktivert", "Ferdig"];
     private readonly List<string> _listTableHeader =
     [
@@ -189,7 +197,7 @@
     //midlertidig classe til databasen er klar
     public class ProjectDto
     {
-        public int ProsjektId { get; set; }
+        public Guid ProsjektId { get; set; }
         public string KundeNavn { get; set; }
         public string Lokalitet { get; set; }
         public int Lokalitetid { get; set; }
@@ -202,33 +210,24 @@
     }
 
 
-    //midlertidig data til databasen er klar
+   
     protected override async Task OnInitializedAsync()
     {
-        _projects =
-        [
-            new ProjectDto { ProsjektId = 1, KundeNavn = "Mortenlaks AS", Lokalitet = "Lille Djupfest", Lokalitetid = 36479, PoId = 450, prosjektId = "SE25-BU-1", Dato = new DateOnly(2025, 1, 14), Produksjonsstatus = "", Tilstand = 2, Status = "Ferdig" },
-            new ProjectDto { ProsjektId = 2, KundeNavn = "Mortenlaks AS", Lokalitet = "Lille Djupfest", Lokalitetid = 36479, PoId = 451, prosjektId = "SE25-BU-3", Dato = new DateOnly(2025, 2, 18), Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
-            new ProjectDto { ProsjektId = 3, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 452, prosjektId = "SE25-BU-4", Dato = new DateOnly(2025, 3, 2), Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
-            new ProjectDto { ProsjektId = 4, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 453, prosjektId = "SE25-BU-5", Dato = null, Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
-            new ProjectDto { ProsjektId = 5, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 456, prosjektId = "SE25-BU-2", Dato = new DateOnly(2023, 2, 14), Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
-            new ProjectDto { ProsjektId = 6, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 457, prosjektId = "SE25-BU-6", Dato = new DateOnly(2025, 1, 1), Produksjonsstatus = "", Tilstand = null, Status = "Deaktivert" },
-            new ProjectDto { ProsjektId = 7, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 458, prosjektId = "SE25-BU-7", Dato = new DateOnly(2025, 1, 2), Produksjonsstatus = "", Tilstand = null, Status = "Påbegynt" },
-            new ProjectDto { ProsjektId = 1, KundeNavn = "Mortenlaks AS", Lokalitet = "Lille Djupfest", Lokalitetid = 36479, PoId = 450, prosjektId = "SE25-BU-1", Dato = new DateOnly(2023, 1, 14), Produksjonsstatus = "", Tilstand = 2, Status = "Ferdig" },
-            new ProjectDto { ProsjektId = 2, KundeNavn = "Mortenlaks AS", Lokalitet = "Lille Djupfest", Lokalitetid = 36479, PoId = 451, prosjektId = "SE25-BU-3", Dato = new DateOnly(2025, 2, 18), Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
-            new ProjectDto { ProsjektId = 3, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 452, prosjektId = "SE25-BU-4", Dato = new DateOnly(2025, 3, 2), Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
-            new ProjectDto { ProsjektId = 4, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 453, prosjektId = "SE25-BU-5", Dato = null, Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
-            new ProjectDto { ProsjektId = 5, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 456, prosjektId = "SE25-BU-2", Dato = new DateOnly(2024, 2, 14), Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
-            new ProjectDto { ProsjektId = 6, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 457, prosjektId = "SE25-BU-6", Dato = new DateOnly(2024, 1, 1), Produksjonsstatus = "", Tilstand = null, Status = "Deaktivert" },
-            new ProjectDto { ProsjektId = 7, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 458, prosjektId = "SE25-BU-7", Dato = new DateOnly(2025, 1, 2), Produksjonsstatus = "", Tilstand = null, Status = "Påbegynt" },
-            new ProjectDto { ProsjektId = 1, KundeNavn = "Mortenlaks AS", Lokalitet = "Lille Djupfest", Lokalitetid = 36479, PoId = 450, prosjektId = "SE25-BU-1", Dato = new DateOnly(2025, 1, 14), Produksjonsstatus = "", Tilstand = 2, Status = "Ferdig" },
-            new ProjectDto { ProsjektId = 2, KundeNavn = "Mortenlaks AS", Lokalitet = "Lille Djupfest", Lokalitetid = 36479, PoId = 451, prosjektId = "SE25-BU-3", Dato = new DateOnly(2025, 2, 18), Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
-            new ProjectDto { ProsjektId = 3, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 452, prosjektId = "SE25-BU-4", Dato = new DateOnly(2025, 3, 2), Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
-            new ProjectDto { ProsjektId = 4, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 453, prosjektId = "SE25-BU-5", Dato = null, Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
-            new ProjectDto { ProsjektId = 5, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 456, prosjektId = "SE25-BU-2", Dato = new DateOnly(2025, 2, 14), Produksjonsstatus = "", Tilstand = null, Status = "Nytt" },
-            new ProjectDto { ProsjektId = 6, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Mohamen", Lokalitetid = 34057, PoId = 457, prosjektId = "SE25-BU-6", Dato = new DateOnly(2025, 1, 1), Produksjonsstatus = "", Tilstand = null, Status = "Deaktivert" },
-            new ProjectDto { ProsjektId = 7, KundeNavn = "Salaks Produksjon AS", Lokalitet = "Veldig lang lokalitetsnavn........", Lokalitetid = 34057, PoId = 458, prosjektId = "SE25-BU-7", Dato = new DateOnly(2025, 1, 2), Produksjonsstatus = "", Tilstand = null, Status = "Påbegynt" }
-        ];
+        
+        try
+        {
+            _projects = await Http.GetFromJsonAsync<List<ProjectDto>>("/api/Project");
+            
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($@"{Resources.ErrorMessageLoadingUsers} {ex.Message}");
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+
         
         _allLocations = _projects?
             .Select(p => p.Lokalitet)
@@ -242,10 +241,10 @@
         
     }
 
-    //Må endres til Guid når vi får påplass databasen
-    private void OnRowClick(string prosjektId)
+
+    private void OnRowClick(Guid prosjektId)
     {
-        Navigation.NavigateTo($"project/{prosjektId}");
+        Navigation.NavigateTo($"project/{prosjektId:D}");
     }
     
     private string GetStatus(string? status)

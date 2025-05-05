@@ -1,26 +1,63 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using SeaEco.Abstractions.Models.BSurvey;
 using SeaEco.Abstractions.Models.Project;
+using SeaEco.Abstractions.Models.SamplingPlan;
 using SeaEco.Abstractions.Models.Stations;
+using SeaEco.Server.Infrastructure;
+using SeaEco.Services.BSurveyService;
 using SeaEco.Services.ProjectServices;
+using SeaEco.Services.SamplingPlanServices;
 using SeaEco.Services.StationServices;
 
 namespace SeaEco.Server.Controllers;
 
+
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class ProjectController : ControllerBase
 {
     private readonly IProjectService _projectService;
     private readonly IStationService _stationService;
+    private readonly ISamplingPlanService _samplingPlanService;
+    private readonly IBSurveyService _surveyService;
 
     public ProjectController(
         IProjectService projectService,
-        IStationService stationService)
+        IStationService stationService,
+        ISamplingPlanService samplingPlanService,
+        IBSurveyService bSurveyService)
     {
         _projectService = projectService;
         _stationService = stationService;
+        _samplingPlanService = samplingPlanService;
+        _surveyService = bSurveyService;
     }
 
+    /*[HttpPost("customer/{customerId:guid}")]
+    public async Task<IActionResult> CreateProject(Guid customerId, [FromBody] NewProjectDto dto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+        
+        dto.KundeId = customerId;
+
+        try
+        {
+            var id = await _projectService.CreateProjectAsync(dto);
+            return Ok(new { Id = id });
+        }
+        catch (KeyNotFoundException knf)
+        {
+            return NotFound(knf.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }*/
+    
     [HttpPost]
     public async Task<IActionResult> CreateProject([FromBody] NewProjectDto dto)
     {
@@ -50,62 +87,182 @@ public class ProjectController : ControllerBase
     }
     
     [HttpGet("{Id:guid}")]
-    public async Task<IActionResult> GetProjectById(Guid Id)
+    public async Task<IActionResult> GetProjectById(Guid id)
     {
-        var project = await _projectService.GetProjectByIdAsync(Id);
+        var project = await _projectService.GetProjectByIdAsync(id);
         if (project == null)
             return NotFound();
         return Ok(project);
     }
     
-    // Stasjonsoperasjoner
-    [HttpGet("{Id:guid}/stasjon")]
-    public async Task<IActionResult> GetStations(Guid Id)
-    {
-        var stations = await _stationService.GetStationsAsync(Id);
-        return Ok(stations);
-    }
-
-    [HttpGet("{Id:guid}/stasjon/{stasjonsid:int}")]
-    public async Task<IActionResult> GetStation(Guid Id, Guid stasjonsid)
-    {
-        var station = await _stationService.GetStationByIdAsync(Id, stasjonsid);
-        if (station == null)
-            return NotFound();
-        return Ok(station);
-    }
-
-    [HttpPut("{Id:guid}/stasjon/{stasjonsid:guid}")]
-    public async Task<IActionResult> UpdateStation(Guid Id, Guid stasjonsid, [FromBody] UpdateStationDto dto)
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> UpdateProject(Guid id, [FromBody] EditProjectDto dto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
         try
         {
-            await _stationService.UpdateStationAsync(Id, stasjonsid, dto);
+            await _projectService.UpdateProjectAsync(id, dto);
             return Ok();
         }
-        catch (Exception ex)
+        catch (KeyNotFoundException knf)
         {
-            return BadRequest(ex.Message);
-        }
-    }
-    
-    [HttpPost("{Id:guid}/stasjon")]
-    public async Task<IActionResult> AddExtraStation(Guid Id, [FromBody] NewStationDto dto)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-        
-        try
-        {
-            var newStationId = await _stationService.AddExtraStationAsync(Id, dto);
-            return Ok(new { Id, stasjonsid = newStationId });
+            return NotFound(knf.Message);
         }
         catch (Exception ex)
         {
             return StatusCode(500, ex.Message);
         }
+    }
+    
+    // Operasjoner for prøvtakningsplan
+    [HttpGet("{projectId:guid}/sampling-plan/{samplingPlanId:guid}")]
+    public async Task<IActionResult> GetProjectSamplingPlan(Guid projectId, Guid samplingPlanId)
+    {
+        var samplingPlan = await _samplingPlanService.GetSamplingPlanById(samplingPlanId);
+        if (samplingPlan == null)
+        {
+            return NotFound($"No sampling plan found with id {samplingPlanId}");
+        }
+
+        if (samplingPlan.ProsjektId != projectId)
+        {
+            return BadRequest("Sampling plan does not belong to the given project");
+        }
+        
+        return Ok(samplingPlan);
+    }
+
+    [RoleAccessor(true)]
+    [HttpPost("{projectId:guid}/sampling-plan")]
+    public async Task<IActionResult> CreateSamplingPlan([FromRoute] Guid projectId,
+        [FromBody] EditSamplingPlanDto dto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        dto.ProsjektId = projectId;
+        var result = await _samplingPlanService.CreateSamplingPlan(dto);
+        
+        return result.IsSuccess ? Ok(result.Message) : BadRequest(result.Message);
+    }
+
+    [RoleAccessor(true)]
+    [HttpPut("{projectId:guid}/sampling-plan/{samplingPlanId:guid}")]
+    public async Task<IActionResult> UpdateSamplingPlan([FromRoute] Guid projectId,
+        [FromRoute] Guid samplingPlanId, [FromBody] EditSamplingPlanDto dto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        dto.ProsjektId = projectId;
+        var result = await _samplingPlanService.UpdateSamplingPlan(samplingPlanId, dto);
+        
+        return result.IsSuccess ? Ok(result.Message) : BadRequest(result.Message);
+    }
+
+    [RoleAccessor(true)]
+    [HttpDelete("{projectId:guid}/sampling-plan/{samplingPlanId:guid}")]
+    public async Task<IActionResult> DeleteSamplingPlan(Guid projectId, Guid samplingPlanId)
+    {
+        var result = await _samplingPlanService.DeleteSamplingPlan(projectId, samplingPlanId);
+        return result.IsSuccess ? Ok(result.Message) : BadRequest(result.Message);
+    }
+    
+    // Stasjonsoperasjoner
+    [HttpGet("{projectId:guid}/sampling-plan/{samplingPlanId:guid}/stations")]
+    public async Task<IActionResult> GetStations(Guid projectId, Guid samplingPlanId)
+    {
+        var result = await _stationService.GetStationsByProvetakningsplanIdAsync(samplingPlanId);
+        return result.IsSuccess ? Ok(result.Stations) : NotFound(result.Message);
+    }
+
+    [HttpGet("{projectId:guid}/sampling-plan/{samplingPlanId:guid}/station/{stationId:guid}")]
+    public async Task<IActionResult> GetAStaion(Guid projectId, Guid samplingPlanId, Guid stationId)
+    {
+        var result = await _stationService.GetStationByIdAsync(projectId, stationId);
+        return result.IsSuccess ? Ok(result.Stations) : NotFound(result.Message);
+    }
+
+    [RoleAccessor(true)]
+    [HttpPut("{projectId:guid}/sampling-plan/station/{stationId:guid}")]
+    public async Task<IActionResult> UpdateStation(Guid projectId, Guid stationId, [FromBody] UpdateStationDto dto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var result = await _stationService.UpdateStationAsync(stationId, dto);
+        return result.IsSuccess ? Ok(result.Message) : NotFound(result.Message);
+    }
+    
+    //Legg til ekstra stasjon i PTP
+    [RoleAccessor(true)]
+    [HttpPost("{projectId:guid}/sampling-plan/{samplingPlanId:guid}/station")]
+    public async Task<IActionResult> AddStation(Guid projectId, Guid samplingPlanId, [FromBody] NewStationDto dto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        dto.ProsjektId = projectId;
+        var result = await _stationService.AddStationToPlanAsync(samplingPlanId, dto);
+        return result.IsSuccess ? Ok(new { id = result.StationId }) : BadRequest(result.Message);
+    }
+    
+    // Legg til ekstra stasjon direkte på prosjekt
+    [RoleAccessor(true)]
+    [HttpPost("{projectId:guid}/station")]
+    public async Task<IActionResult> AddStationToProject(Guid projectId, [FromBody] NewStationDto dto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        dto.ProsjektId = projectId;
+        var result = await _stationService.AddStationToProjectAsync(projectId, dto);
+        return result.IsSuccess ? Ok(new { id = result.StationId }) : BadRequest(result.Message);
+    }
+    
+    [RoleAccessor(true)]
+    [HttpDelete("{projectId:guid}/sampling-plan/station/{stationId:guid}")]
+    public async Task<IActionResult> DeleteStation(Guid projectId, Guid stationId)
+    {
+        var result = await _stationService.DeleteStationAsync(stationId);
+        return result.IsSuccess ? Ok(result.Message) : BadRequest(result.Message);
+    }
+    
+    // Stasjonsregistrering operasjoner
+    [HttpGet("{projectId:guid}/survey/{surveyId:guid}")]
+    public async Task<IActionResult> GetSurvey(Guid projectId, Guid surveyId)
+    {
+        var project = await _projectService.GetProjectByIdAsync(projectId);
+        if (project == null)
+            return NotFound("Project does not exist");
+        
+        var survey = await _surveyService.GetSurveyById(surveyId);
+        if (survey == null)
+            return NotFound($"No survey with id {surveyId}");
+
+        if (survey.ProsjektId != projectId)
+        {
+            return BadRequest("Survey does not belong to the given project");
+        }
+        
+        return Ok(survey);
+    }
+
+    [RoleAccessor(true)]
+    [HttpPost("{projectId:guid}/survey")]
+    public async Task<IActionResult> CreateSurvey(Guid projectId, [FromBody] AddSurveyDto dto)
+    {
+        var project = await _projectService.GetProjectByIdAsync(projectId);
+        if (project == null)
+            return NotFound("Project does not exist");
+        
+        var result = await _surveyService.CreateSurvey(dto);
+        return result.IsSuccess ? Ok(result.Message) : BadRequest(result.Message);
     }
 }

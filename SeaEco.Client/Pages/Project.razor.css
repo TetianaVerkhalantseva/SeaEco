@@ -1,0 +1,133 @@
+
+
+
+.nav-tabs .nav-link {
+    background-color: #eef2f4;
+    color: #333;
+    position: relative;
+    transition: background-color 0.3s ease;
+    border-top: none !important;
+    border-right: none !important;
+    border-left: none !important;
+    border-bottom: solid 1px lightgray !important;
+}
+
+.nav-tabs .nav-link::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    transform-origin: center;
+    width: 100%;
+    height: 3px;
+    background-color: #6497B1;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    opacity: 0;
+}
+
+.nav-tabs .nav-link:hover::after,
+.nav-tabs .nav-link.active::after,
+.nav-tabs .nav-link[aria-selected="true"]::after {
+    transform: translateX(-50%) scaleX(1);
+    opacity: 1;
+}
+
+@media (max-width: 576px) {
+    .nav-tabs .nav-link {
+        font-size: 0.9rem;
+        padding: 0.75rem;
+    }
+}
+
+
+.main-content {
+    position: relative;  
+}
+
+.background-overlay {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(5px);
+    z-index: 900;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+
+
+.filter-panel {
+    background-color: #eef2f4;
+    border-radius: .5rem;
+    z-index: 1000;
+}
+
+.filter-panel summary {
+    cursor: pointer;
+    position: relative;
+    padding: .5rem 1rem;
+    border: 1px solid #ccc;
+    background: linear-gradient(to bottom, #557e93 0%, #7798A9 100%);
+    color: white;
+    border-radius: .5rem;
+    list-style: none;
+}
+.filter-panel[open] summary {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.filter-options {
+    padding: 1rem;
+    background: transparent;
+    border-bottom-left-radius: .5rem;
+    border-bottom-right-radius: .5rem;
+    border: 1px solid #ccc;
+}
+
+.filter-panel summary::before {
+    content: '';
+    position: absolute;
+    right: .75rem;
+    top: 50%;
+    width: 1.1rem;
+    height: .8rem;
+    background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 6l6 6 6-6'/%3e%3c/svg%3e")
+    center / contain no-repeat;
+    transform: translateY(-50%) rotate(0deg);
+    transition: transform .2s ease;
+}
+
+.filter-panel[open] summary::before {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+
+.box-border {
+    border: 1px solid lightgray;
+    border-radius: 4px;
+}
+
+.p-custom {
+    padding: 2rem 6rem !important;
+}
+
+/* target only that one select: add a helper class in your markup */
+.no-arrow-when-disabled:disabled {
+    /* remove the native arrow in WebKit, Blink, Gecko */
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    /* kill Bootstrap’s background-image fallback */
+    background-image: none !important;
+    /* optional: keep the same padding so it doesn’t “jump” */
+    padding-right: .75rem !important;
+    /* optional: make it clear it’s disabled */
+    cursor: default !important;
+}
+
+/* Edge/IE */
+.no-arrow-when-disabled:disabled::-ms-expand {
+    display: none !important;
+}

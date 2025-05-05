@@ -1,4 +1,6 @@
-﻿using SeaEco.Abstractions.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using SeaEco.Abstractions.Enums;
+using SeaEco.Abstractions.Resources;
 
 namespace SeaEco.Abstractions.Models.Project;
 
@@ -7,16 +9,30 @@ public class ProjectDto
     public Guid Id { get; set; }
     public string PoId { get; set; } = null!;
     public Guid KundeId { get; set; }
+    [Required(ErrorMessageResourceName = "ErrorMessageCustomer", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+
     public string Kundekontaktperson { get; set; } = null!;
     public string Kundetlf { get; set; } = null!;
+    [Required(ErrorMessageResourceName = "ErrorMessageMailRequired", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    [EmailAddress(ErrorMessageResourceName = "ErrorMessageMailError", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+
     public string Kundeepost { get; set; } = null!;
     
-    public Guid Lokalitetid { get; set; }
-    public int? Mtbtillatelse { get; set; }
-    
-    public Guid ProsjektansvarligId { get; set; }
+    public Guid LokalitetId { get; set; } 
+    [Required(ErrorMessageResourceName = "ErrorMessageLocalityName", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    public string Lokalitetsnavn { get; set; } = null!;
+    [Required(ErrorMessageResourceName = "ErrorMessageLocalityId", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    [MinLength(5, ErrorMessageResourceName = "ErrorMessageLocalityIdLength", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    [MaxLength(5, ErrorMessageResourceName = "ErrorMessageLocalityIdLength", ErrorMessageResourceType = typeof(ResourcesAbstractions))] 
+    [RegularExpression(@"^\d+$", ErrorMessageResourceName = "ErrorMessageLocalityIdNumber", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    public string LokalitetsId { get; set; } = null!;
+    [Required(ErrorMessageResourceName = "ErrorMessageProjectMtb", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    public int Mtbtillatelse { get; set; }
+    [Required(ErrorMessageResourceName = "ErrorMessageProjectResponsible", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    public Guid? ProsjektansvarligId { get; set; }
     public string? Merknad { get; set; }
-    
+    [Required(ErrorMessageResourceName = "ErrorMessageProductionStatus", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    [Range(1,4,ErrorMessageResourceName = "ErrorMessageProductionStatus", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
     public Produksjonsstatus Produksjonsstatus { get; set; }
     public DateTime Datoregistrert { get; set; }
     
