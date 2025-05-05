@@ -1,8 +1,8 @@
-using SeaEco.Abstractions.Models.BSurvey;
+using SeaEco.Abstractions.Models.Bundersokelse;
 
-namespace SeaEco.Abstractions.Models.Bundersokelse;
+namespace SeaEco.Abstractions.Models.BSurvey;
 
-public class SurveyDto
+public class EditSurveyDto
 {
     public Guid Id { get; set; }
 
@@ -35,7 +35,7 @@ public class SurveyDto
     public string? Merknader { get; set; }
 
     public DateTime? DatoRegistrert { get; set; }
-
+    
     public DateTime? DatoEndret { get; set; }
 
     public float? IndeksGr2Gr3 { get; set; }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SeaEco.Abstractions.Enums;
 using SeaEco.Abstractions.Models.SamplingPlan;
 using SeaEco.EntityFramework.Contexts;
 using SeaEco.EntityFramework.Entities;
@@ -66,6 +67,7 @@ public class SamplingPlanService: ISamplingPlanService
         try
         {
             await _db.BProvetakningsplans.AddAsync(newPlan);
+            
             await _db.SaveChangesAsync();
             return new EditSamplingPlanResult()
             {
@@ -119,7 +121,7 @@ public class SamplingPlanService: ISamplingPlanService
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine(ex.Message);
             return new EditSamplingPlanResult()
             {
                 IsSuccess = false,
@@ -163,7 +165,7 @@ public class SamplingPlanService: ISamplingPlanService
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine(ex.Message);
             return new EditSamplingPlanResult()
             {
                 IsSuccess = false,

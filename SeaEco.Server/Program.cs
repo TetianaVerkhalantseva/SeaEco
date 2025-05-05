@@ -21,6 +21,7 @@ using SeaEco.Services.EmailServices;
 using SeaEco.Services.EmailServices.Models;
 using SeaEco.Services.ImageServices;
 using SeaEco.Services.JwtServices;
+using SeaEco.Services.LokalitetServices;
 using SeaEco.Services.ProjectServices;
 using SeaEco.Services.ReportServices;
 using SeaEco.Services.SamplingPlanServices;
@@ -122,6 +123,7 @@ services.AddTransient<IImageService, ImageService>();
 services.AddTransient<ISamplingPlanService, SamplingPlanService>();
 services.AddTransient<IStationService, StationService>();
 services.AddTransient<IBSurveyService, BSurveyService>();
+services.AddScoped<ILokalitetService, LokalitetService>();
 services.AddScoped<Report>();
 services.AddTransient<IReportService, ReportService>();
 

@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using SeaEco.Abstractions.Resources;
 
 namespace SeaEco.Abstractions.Enums;
 
@@ -16,3 +17,4 @@ public enum Produksjonsstatus
     [Description("Annet")]
     Annet = 4
 }
+
