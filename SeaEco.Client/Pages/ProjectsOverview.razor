@@ -127,7 +127,7 @@
                     @foreach (var project in SortedProjects!)
                     {
                         <tr class="cursor" @onclick="() => OnRowClick(project.Id)">
-                            <td>@project.Kundekontaktperson</td>
+                            <td>@project.Oppdragsgiver</td>
                             <td>@project.Lokalitetsnavn</td>
                             <td>@project.LokalitetsId</td>
                             <td>@project.PoId</td>
@@ -148,9 +148,9 @@
                     {
                         <div class="col mb-3 card-col">
                             <div class="card cursor" @onclick="() => OnRowClick(project.Id)">
-                                <div class="card-body text-center (@GetStatus(project.Prosjektstatus.GetDescription()))">
+                                <div class="card-body text-center @GetStatus(project.Prosjektstatus.GetDescription())">
                                     <h5 class="card-title">@project.PoId</h5>
-                                    <span class="corner-text">@project.Prosjektstatus</span>
+                                    <span class="corner-text">@project.Prosjektstatus.GetDescription()</span>
                                 </div>
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item">@Resources.TableHeaderLocality: @project.Lokalitetsnavn</li>
@@ -253,11 +253,10 @@
             if (_projects != null)
                 return _projects.Where(p =>
                     ((SelectedStatuses == null || !SelectedStatuses.Any()) || SelectedStatuses.Contains(p.Prosjektstatus.GetDescription())) &&
-                   // (!SelectedYear.HasValue || (p.Dato.HasValue && p.Dato.Value.Year == SelectedYear.Value)) &&
-                   // (!SelectedMnd.HasValue || (p.Dato.HasValue && p.Dato.Value.Month == SelectedMnd.Value)) &&
-                    (String.IsNullOrEmpty(SelectedLocation) || p.Lokalitetsnavn == SelectedLocation) 
-                    //&&
-                    //(String.IsNullOrEmpty(SelectedCustomer) || p.KundeNavn == SelectedCustomer)
+                    //(!SelectedYear.HasValue || (p.Dato.HasValue && p.Dato.Value.Year == SelectedYear.Value)) &&
+                    //(!SelectedMnd.HasValue || (p.Dato.HasValue && p.Dato.Value.Month == SelectedMnd.Value)) &&
+                    (string.IsNullOrEmpty(SelectedLocation) || p.Lokalitetsnavn == SelectedLocation) &&
+                    (string.IsNullOrEmpty(SelectedCustomer) || p.Oppdragsgiver == SelectedCustomer)
                 );
             return _projects;
         }
@@ -272,21 +271,21 @@
                 return null;
             
             //Default sorting by status and date
-            //if (string.IsNullOrEmpty(_currentSortColumn))
-              //  return FilterProjects?.OrderByDescending(projects => projects.Prosjektstatus).ThenByDescending(projects => projects.Dato).ToList();
+            if (string.IsNullOrEmpty(_currentSortColumn))
+                return FilterProjects?.OrderByDescending(projects => projects.Prosjektstatus).ThenByDescending(projects => Dato).ToList();
 
             
             var sorted = _currentSortColumn switch
             {
-                //var col when col == Resources.TableHeaderCustomer => _sortAscending
-                  //  ? FilterProjects.OrderBy(p => p.KundeNavn)
-                   // : FilterProjects.OrderByDescending(p => p.KundeNavn),
+                var col when col == Resources.TableHeaderCustomer => _sortAscending
+                    ? FilterProjects.OrderBy(p => p.Oppdragsgiver)
+                    : FilterProjects.OrderByDescending(p => p.Oppdragsgiver),
                 var col when col == Resources.TableHeaderLocality => _sortAscending
                     ? FilterProjects.OrderBy(p => p.Lokalitetsnavn)
                     : FilterProjects.OrderByDescending(p => p.Lokalitetsnavn),
-                //var col when col == Resources.TableHeaderDate => _sortAscending
-                  //  ? FilterProjects.OrderBy(p => p.Dato)
-                    //: FilterProjects.OrderByDescending(p => p.Dato),
+                var col when col == Resources.TableHeaderDate => _sortAscending
+                    ? FilterProjects.OrderBy(p => Dato)
+                    : FilterProjects.OrderByDescending(p => Dato),
                 var col when col == Resources.TableHeaderStatus => _sortAscending
                     ? FilterProjects.OrderBy(p => p.Tilstand)
                     : FilterProjects.OrderByDescending(p => p.Tilstand),
