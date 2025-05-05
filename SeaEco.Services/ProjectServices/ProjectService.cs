@@ -65,6 +65,7 @@ public class ProjectService : IProjectService
     public async Task<List<ProjectDto>> GetAllProjectsAsync()
     {
         return await _context.BProsjekts
+            .Include(p => p.Kunde)  
             .Include(p => p.Lokalitet)
             .Include(p => p.BTilstand)
             .Select(p => new ProjectDto
@@ -72,6 +73,7 @@ public class ProjectService : IProjectService
                 Id = p.Id,
                 PoId = p.PoId,
                 KundeId = p.KundeId,
+                Oppdragsgiver       = p.Kunde.Oppdragsgiver, 
                 Kundekontaktperson = p.Kundekontaktperson,
                 Kundetlf = p.Kundetlf,
                 Kundeepost = p.Kundeepost,

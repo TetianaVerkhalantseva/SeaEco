@@ -121,7 +121,7 @@ public class SamplingPlanService: ISamplingPlanService
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine(ex.Message);
             return new EditSamplingPlanResult()
             {
                 IsSuccess = false,
@@ -165,7 +165,7 @@ public class SamplingPlanService: ISamplingPlanService
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine(ex.Message);
             return new EditSamplingPlanResult()
             {
                 IsSuccess = false,

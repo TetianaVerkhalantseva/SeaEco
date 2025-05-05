@@ -30,13 +30,13 @@ public static class SurveyMappings
             IndeksGr2Gr3 = entity.IndeksGr2Gr3,
             TilstandGr2Gr3 = entity.TilstandGr2Gr3,
             
-            BPreInfo = entity.Preinfo != null ? new BPreInfoDto
+            BPreInfo = new BPreInfoDto
             {
                 Id = entity.Preinfo.Id,
                 ProsjektId = entity.Preinfo.ProsjektId,
                 Feltdato = entity.Preinfo.Feltdato,
                 FeltansvarligId = entity.Preinfo.FeltansvarligId
-            } : null!,
+            },
 
             BSoftBase = entity.Blotbunn != null ? new BSoftBaseDto
             {
@@ -124,7 +124,7 @@ public static class SurveyMappings
         };
     }
 
-    public static BUndersokelse ToEntity(this AddSurveyDto dto)
+    public static BUndersokelse ToEntity(this EditSurveyDto dto)
     {
         return new BUndersokelse
         {
@@ -207,6 +207,25 @@ public static class SurveyMappings
                     Arter = dto.BAnimal.Arter
                 }
                 : null,
+            
+            Preinfo = new BPreinfo
+                {
+                    Id = dto.BPreInfo.Id,
+                    ProsjektId = dto.BPreInfo.ProsjektId,
+                    Feltdato = dto.BPreInfo.Feltdato,
+                    FeltansvarligId = dto.BPreInfo.FeltansvarligId
+                },
+            
+            BUndersokelsesloggs = dto.BSurveyLogs.Select(log => new BUndersokelseslogg
+            {
+                Id = log.Id,
+                Felt = log.Felt,
+                GammelVerdi = log.GammelVerdi,
+                NyVerdi = log.GammelVerdi,
+                DatoEndret = log.DatoEndret,
+                EndretAv = log.EndretAv,
+                UndersokelseId = log.UndersokelseId
+            }).ToList(),
 
             BStasjon = dto.BStation != null
                 ? new BStasjon

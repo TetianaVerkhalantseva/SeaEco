@@ -2,7 +2,7 @@ using SeaEco.Abstractions.Models.Bundersokelse;
 
 namespace SeaEco.Abstractions.Models.BSurvey;
 
-public class AddSurveyDto
+public class EditSurveyDto
 {
     public Guid Id { get; set; }
 
@@ -35,7 +35,7 @@ public class AddSurveyDto
     public string? Merknader { get; set; }
 
     public DateTime? DatoRegistrert { get; set; }
-
+    
     public DateTime? DatoEndret { get; set; }
 
     public float? IndeksGr2Gr3 { get; set; }
@@ -47,11 +47,15 @@ public class AddSurveyDto
     
     public BStationDto? BStation { get; set; }
     
+    public List<BSurveyLogDto> BSurveyLogs { get; set; } = new();
+    
     public BSoftBaseDto? BSoftBase { get; set; }
     
     public BAnimalDto? BAnimal { get; set; }
     
     public BHardBaseDto? BHardBase { get; set; }
+    
+    public BPreInfoDto BPreInfo { get; set; } = new();
     
     public BSedimentDto? BSediment { get; set; }
     
