@@ -9,7 +9,6 @@ using Microsoft.IdentityModel.Tokens;
 using SeaEco.Abstractions.Models.Authentication;
 using SeaEco.Abstractions.Models.User;
 using SeaEco.EntityFramework.Contexts;
-using SeaEco.EntityFramework.Entities;
 using SeaEco.EntityFramework.GenericRepository;
 using SeaEco.Reporter;
 using SeaEco.Reporter.Models;
@@ -20,10 +19,10 @@ using SeaEco.Services.BSurveyService;
 using SeaEco.Services.CustomerServices;
 using SeaEco.Services.EmailServices;
 using SeaEco.Services.EmailServices.Models;
-using SeaEco.Services.HashService;
 using SeaEco.Services.ImageServices;
 using SeaEco.Services.JwtServices;
 using SeaEco.Services.ProjectServices;
+using SeaEco.Services.ReportServices;
 using SeaEco.Services.SamplingPlanServices;
 using SeaEco.Services.StationServices;
 using SeaEco.Services.TokenServices;
@@ -124,6 +123,7 @@ services.AddTransient<ISamplingPlanService, SamplingPlanService>();
 services.AddTransient<IStationService, StationService>();
 services.AddTransient<IBSurveyService, BSurveyService>();
 services.AddScoped<Report>();
+services.AddTransient<IReportService, ReportService>();
 
 // Models validators
 services.AddScoped<IValidator<LoginDto>, LoginDtoValidator>();

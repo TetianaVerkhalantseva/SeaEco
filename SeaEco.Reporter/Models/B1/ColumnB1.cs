@@ -19,23 +19,11 @@ public sealed class ColumnB1
     public Konsistens Konsistens { get; set; }
     public Grabbvolum Grabbvolum { get; set; }
     public Tykkelseslamlag Tykkelseslamlag { get; set; }
-    public short Sum { get; set; }
+    public int Sum { get; set; }
     public float KorrigertSum { get; set; }
     public Tilstand TilstandProveGr3 { get; set; }
 
 
     public float MiddelVerdiGr2Gr3 { get; set; }
     public Tilstand TilstandProveGr2Gr3 { get; set; }
-    
-    
-    public float IndeksGr2 { get; set; }
-    public Tilstand TilstandGr2 { get; set; }
-
-
-    public float IndeksGr3 { get; set; }
-    public Tilstand TilstandGr3 { get; set; }
-
-
-    public float LokalitetsIndeks { get; set; }
-    public Tilstand LokalitetsTilstand { get; set; }
 }

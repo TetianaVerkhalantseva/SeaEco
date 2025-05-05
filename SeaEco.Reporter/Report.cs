@@ -52,7 +52,7 @@ public sealed class Report
         return Response<string>.Ok(newPeportName);
     }
 
-    public void FillB1(string path, IEnumerable<ColumnB1> columns, BHeader header)
+    public void FillB1(string path, IEnumerable<ColumnB1> columns, BHeader header, TilstandB1 tilstand, SjovannB1 sjovann)
     {
         ExcelPackage.License.SetNonCommercialPersonal(_options.NonCommercialPersonalName);
 
@@ -69,14 +69,21 @@ public sealed class Report
         worksheet.Cells[2, 21].Value = header.Lokalitetsnavn;
         worksheet.Cells[2, 26].Value = header.LokalitetsID;
 
+        worksheet.Cells["H14"].Value = sjovann.SjoTemperatur;
+        worksheet.Cells["J14"].Value = sjovann.SjoTemperatur;
+        worksheet.Cells["H15"].Value = sjovann.pHSjo;
+        worksheet.Cells["J15"].Value = sjovann.EhSjo;
+        worksheet.Cells["M14"].Value = sjovann.SedimentTemperatur;
+        worksheet.Cells["M15"].Value = sjovann.RefElektrode;
+        
         int index = 4;
         foreach (ColumnB1 column in columns)
         {
             worksheet.Cells[5, index].Value = column.Bunntype.GetDisplay();
             worksheet.Cells[7, index].Value = (int)column.Dyr;
 
-            worksheet.Cells[9, index].Value = column.Bunntype == Bunntype.Hardbunn ? string.Empty : $"{column.pH:F1}";
-            worksheet.Cells[10, index].Value = column.Bunntype == Bunntype.Hardbunn ? string.Empty : $"{column.Eh:F1}";
+            worksheet.Cells[9, index].Value = column.Bunntype == Bunntype.Hardbunn || column.pH == 0 ? string.Empty : $"{column.pH:F1}";
+            worksheet.Cells[10, index].Value = column.Bunntype == Bunntype.Hardbunn || column.Eh == 0 ? string.Empty : $"{column.Eh:F1}";
             worksheet.Cells[11, index].Value = column.Bunntype == Bunntype.Hardbunn ? 0 : column.phEh;
             
             if (Enum.IsDefined(column.TilstandProveGr2))
@@ -85,9 +92,19 @@ public sealed class Report
                 worksheet.Cells[12, index].Style.Fill.PatternType = ExcelFillStyle.Solid;
                 worksheet.Cells[12, index].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(column.TilstandProveGr2.GetDisplay()));
             }
-
+            
+            
             worksheet.Cells[column.Gassbobler == Gassbobler.Ja ? 17 : 18, index].Value = (int)column.Gassbobler;
             worksheet.Cells[column.Farge == Farge.LysGrå ? 19 : 20, index].Value = (int)column.Farge;
+            
+            
+            worksheet.Cells[column.Lukt switch 
+            { 
+                Lukt.Ingen => 21,
+                Lukt.Noe=> 22,
+                Lukt.Sterk => 23,
+                _ => 21
+            }, index].Value = (int)column.Lukt;
 
             worksheet.Cells[column.Konsistens switch 
             { 
@@ -116,7 +133,7 @@ public sealed class Report
             worksheet.Cells[33, index].Value = column.Sum > 0 ? $"{column.Sum:F2}" : 0;
             worksheet.Cells[34, index].Value = column.KorrigertSum;
 
-            if (Enum.IsDefined(column.TilstandProveGr3))
+            if (Enum.IsDefined(typeof(Tilstand), column.TilstandProveGr3))
             {
                 worksheet.Cells[35, index].Value = (int)column.TilstandProveGr3;
                 worksheet.Cells[35, index].Style.Fill.PatternType = ExcelFillStyle.Solid;
@@ -125,7 +142,9 @@ public sealed class Report
 
             worksheet.Cells[38, index].Value = column.MiddelVerdiGr2Gr3 > 0 ? $"{column.MiddelVerdiGr2Gr3:F2}" : 0;
 
-            if (Enum.IsDefined(column.TilstandProveGr2Gr3))
+            
+            
+            if (Enum.IsDefined(typeof(Tilstand), column.TilstandProveGr2Gr3))
             {
                 worksheet.Cells[39, index].Value = (int)column.TilstandProveGr2Gr3;
                 worksheet.Cells[39, index].Style.Fill.PatternType = ExcelFillStyle.Solid;
@@ -134,6 +153,25 @@ public sealed class Report
 
             index = index % 13 == 0 ? 19 : index + 1;
         }
+
+        worksheet.Cells["AC11"].Value = tilstand.IndeksGr2;
+        
+        worksheet.Cells["S13"].Value = (int)tilstand.TilstandGr2;
+        worksheet.Cells["S13"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+        worksheet.Cells["S13"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(tilstand.TilstandGr2.GetDisplay()));
+        
+        worksheet.Cells["AC34"].Value = tilstand.IndeksGr3;
+        
+        worksheet.Cells["S36"].Value = (int)tilstand.TilstandGr3;
+        worksheet.Cells["S36"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+        worksheet.Cells["S36"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(tilstand.TilstandGr3.GetDisplay()));
+
+        worksheet.Cells["AC38"].Value = tilstand.LokalitetsIndeks;
+        
+        worksheet.Cells["Z41"].Value = (int)tilstand.LokalitetsTilstand;
+        worksheet.Cells["Z41"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+        worksheet.Cells["Z41"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(tilstand.LokalitetsTilstand.GetDisplay()));
+
         sourcePackage.Save();
     }
 
@@ -221,15 +259,5 @@ public sealed class Report
         
         worksheet.Cells[24, 2].Value = information.Tilstand4.Item1 == 0 ? "-" : information.Tilstand4.Item1;
         worksheet.Cells[24, 3].Value = information.Tilstand4.Item2 == 0 ? "-" : information.Tilstand4.Item2;
-        
-        
-        //IndeksGr2 
-        //TilstandGr2
-        
-        //IndeksGr3
-        //TilstandGr3
-        
-        //LokalitetsIndeks
-        //LokalitetsTilstand
     }
 }
