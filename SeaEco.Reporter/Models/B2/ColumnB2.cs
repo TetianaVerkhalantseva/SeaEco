@@ -5,9 +5,10 @@ namespace SeaEco.Reporter.Models.B2;
 
 public class ColumnB2
 {
-    public Coordinate Coordinate { get; set; }
-    public short Dyp { get; set; }
-    public byte AntallForsøk { get; set; }
+    public string KoordinatNord { get; set; }
+    public string KoordinatOst { get; set; }
+    public int Dyp { get; set; }
+    public int AntallGrabbhugg { get; set; }
     public bool Bobling { get; set; }
 
     public BunnsubstratValue Leire { get; set; }

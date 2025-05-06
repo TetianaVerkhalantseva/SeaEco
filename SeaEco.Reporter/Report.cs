@@ -196,11 +196,11 @@ public sealed class Report
 
         foreach (ColumnB2 column in columns)
         {
-            worksheet.Cells[5, index].Value = column.Coordinate.North;
-            worksheet.Cells[6, index].Value = column.Coordinate.East;
+            worksheet.Cells[5, index].Value = column.KoordinatNord;
+            worksheet.Cells[6, index].Value = column.KoordinatOst;
             worksheet.Cells[7, index].Value = column.Dyp;
-            worksheet.Cells[8, index].Value = column.AntallForsøk;
-            worksheet.Cells[9, index].Value = column.Bobling;
+            worksheet.Cells[8, index].Value = column.AntallGrabbhugg;
+            worksheet.Cells[9, index].Value = column.Bobling ? "x" : string.Empty;
 
             worksheet.Cells[11, index].Value = column.Leire.Key.GetDescription();
             worksheet.Cells[12, index].Value = column.Silt.Key.GetDescription();
@@ -214,14 +214,16 @@ public sealed class Report
             worksheet.Cells[20, index].Value = column.Krepsdyr;
             worksheet.Cells[21, index].Value = column.Skjell;
             worksheet.Cells[22, index].Value = column.Børstemark;
-            worksheet.Cells[23, index].Value = "???";
+            worksheet.Cells[23, index].Value = string.Empty;
 
-            worksheet.Cells[24, index].Value = column.Beggiota ? "X" : string.Empty;
-            worksheet.Cells[25, index].Value = column.Fôr ? "X" : string.Empty;
-            worksheet.Cells[26, index].Value = column.Fekalier ? "X" : string.Empty;
+            worksheet.Cells[24, index].Value = column.Beggiota ? "x" : string.Empty;
+            worksheet.Cells[25, index].Value = column.Fôr ? "x" : string.Empty;
+            worksheet.Cells[26, index].Value = column.Fekalier ? "x" : string.Empty;
 
             worksheet.Cells[27, index].Value = column.Kommentarer;
         }
+        
+        sourcePackage.Save();
     }
 
     public void FillInfo(string path, CommonInformation information)
