@@ -9,5 +9,5 @@ public interface IProjectService
     Task<ProjectDto?> GetProjectByIdAsync(Guid id);
     Task<List<ProjectDto>> GetAllProjectsAsync();
     Task<ProjectDto> UpdateProjectAsync(Guid id, EditProjectDto dto);
-    // Task<string> GenerateAndSetProjectIdSeAsync(Guid prosjektId, DateOnly feltDato);
+    Task<string> GenerateAndSetProsjektIdSeAsync(Guid prosjektId, DateTime feltdato);
 }

@@ -13,5 +13,7 @@ public partial class BBilder
 
     public string Extension { get; set; } = null!;
 
+    public DateTime Datogenerert { get; set; }
+
     public virtual BUndersokelse Undersokelse { get; set; } = null!;
 }

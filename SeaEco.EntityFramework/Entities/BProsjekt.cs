@@ -37,6 +37,8 @@ public partial class BProsjekt
 
     public virtual BProvetakningsplan? BProvetakningsplan { get; set; }
 
+    public virtual ICollection<BRapporter> BRapporters { get; set; } = new List<BRapporter>();
+
     public virtual ICollection<BStasjon> BStasjons { get; set; } = new List<BStasjon>();
 
     public virtual BTilstand? BTilstand { get; set; }

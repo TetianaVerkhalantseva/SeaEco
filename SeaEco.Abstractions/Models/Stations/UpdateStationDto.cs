@@ -2,8 +2,10 @@
 
 public class UpdateStationDto
 {
-    public string KoordinatNord { get; set; } = string.Empty;
-    public string KoordinatOst { get; set; } = string.Empty;
+    public int NorthDegree { get; }
+    public float NorthMinutes { get; }
+    public int EastDegree { get; }
+    public float EastMinutes { get; }
     public int Dybde { get; set; }
     public string Analyser { get; set; } = string.Empty;
 }
