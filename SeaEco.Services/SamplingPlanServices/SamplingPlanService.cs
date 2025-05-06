@@ -68,13 +68,6 @@ public class SamplingPlanService: ISamplingPlanService
         {
             await _db.BProvetakningsplans.AddAsync(newPlan);
             
-            //Oppdater Prosjektstatus
-            var prosjekt = await _db.BProsjekts.FirstOrDefaultAsync(p => p.Id == samplingPlanDto.ProsjektId);
-            if (prosjekt != null)
-            {
-                prosjekt.Prosjektstatus = (int)Prosjektstatus.Nytt;
-            }
-            
             await _db.SaveChangesAsync();
             return new EditSamplingPlanResult()
             {
@@ -128,7 +121,7 @@ public class SamplingPlanService: ISamplingPlanService
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine(ex.Message);
             return new EditSamplingPlanResult()
             {
                 IsSuccess = false,
@@ -172,7 +165,7 @@ public class SamplingPlanService: ISamplingPlanService
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.WriteLine(ex.Message);
             return new EditSamplingPlanResult()
             {
                 IsSuccess = false,

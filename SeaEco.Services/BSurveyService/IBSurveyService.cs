@@ -8,5 +8,7 @@ public interface IBSurveyService
 {
     Task<SurveyDto?> GetSurveyById(Guid id);
     
-    Task<EditSurveyResult> CreateSurvey(AddSurveyDto dto);
+    Task<EditSurveyResult> CreateSurvey(Guid projectId, Guid stationId, EditSurveyDto dto);
+    
+    Task<EditSurveyResult> UpdateSurvey(Guid projectId, Guid stationId, Guid surveyId, EditSurveyDto dto);
 }

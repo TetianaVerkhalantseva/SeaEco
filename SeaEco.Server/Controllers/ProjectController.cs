@@ -34,29 +34,6 @@ public class ProjectController : ControllerBase
         _samplingPlanService = samplingPlanService;
         _surveyService = bSurveyService;
     }
-
-    /*[HttpPost("customer/{customerId:guid}")]
-    public async Task<IActionResult> CreateProject(Guid customerId, [FromBody] NewProjectDto dto)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-        
-        dto.KundeId = customerId;
-
-        try
-        {
-            var id = await _projectService.CreateProjectAsync(dto);
-            return Ok(new { Id = id });
-        }
-        catch (KeyNotFoundException knf)
-        {
-            return NotFound(knf.Message);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
-    }*/
     
     [HttpPost]
     public async Task<IActionResult> CreateProject([FromBody] NewProjectDto dto)
@@ -103,8 +80,8 @@ public class ProjectController : ControllerBase
 
         try
         {
-            await _projectService.UpdateProjectAsync(id, dto);
-            return Ok();
+            var updated = await _projectService.UpdateProjectAsync(id, dto);
+            return Ok(updated);
         }
         catch (KeyNotFoundException knf)
         {
@@ -235,16 +212,16 @@ public class ProjectController : ControllerBase
     }
     
     // Stasjonsregistrering operasjoner
-    [HttpGet("{projectId:guid}/survey/{surveyId:guid}")]
-    public async Task<IActionResult> GetSurvey(Guid projectId, Guid surveyId)
+    [HttpGet("{projectId:guid}/station/{stationId:guid}/survey/{surveyId:guid}")]
+    public async Task<IActionResult> GetSurvey(Guid projectId, Guid stationId, Guid surveyId)
     {
         var project = await _projectService.GetProjectByIdAsync(projectId);
         if (project == null)
-            return NotFound("Project does not exist");
+            return BadRequest("Project does not exist");
         
         var survey = await _surveyService.GetSurveyById(surveyId);
         if (survey == null)
-            return NotFound($"No survey with id {surveyId}");
+            return BadRequest($"No survey with id {surveyId}");
 
         if (survey.ProsjektId != projectId)
         {
@@ -255,14 +232,53 @@ public class ProjectController : ControllerBase
     }
 
     [RoleAccessor(true)]
-    [HttpPost("{projectId:guid}/survey")]
-    public async Task<IActionResult> CreateSurvey(Guid projectId, [FromBody] AddSurveyDto dto)
+    [HttpPost("{projectId:guid}/station/{stationId:guid}/survey")]
+    public async Task<IActionResult> CreateSurvey(Guid projectId, Guid stationId, [FromBody] EditSurveyDto dto)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
         var project = await _projectService.GetProjectByIdAsync(projectId);
         if (project == null)
-            return NotFound("Project does not exist");
+            return BadRequest("Project does not exist");
         
-        var result = await _surveyService.CreateSurvey(dto);
+        var stationResult = await _stationService.GetStationByIdAsync(projectId, stationId);
+        if (stationResult.IsSuccess == false)
+        {
+            return BadRequest("Station does not exist");
+        }
+        
+        var result = await _surveyService.CreateSurvey(projectId, stationId, dto);
+        return result.IsSuccess ? Ok(result.Message) : BadRequest(result.Message);
+    }
+
+    [RoleAccessor(true)]
+    [HttpPut("{projectId:guid}/station/{stationId:guid}/survey/{surveyId:guid}")]
+    public async Task<IActionResult> UpdateSurvey(Guid projectId, Guid stationId, Guid surveyId,
+        [FromBody] EditSurveyDto dto)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        var project = await _projectService.GetProjectByIdAsync(projectId);
+        if (project == null)
+            return BadRequest("Project does not exist");
+        
+        var stationResult = await _stationService.GetStationByIdAsync(projectId, stationId);
+        if (stationResult.IsSuccess == false)
+        {
+            return BadRequest("Station does not exist");
+        }
+        
+        var survey = await _surveyService.GetSurveyById(surveyId);
+        if (survey == null)
+            return BadRequest($"No survey with id {surveyId}");
+        
+        var result = await _surveyService.UpdateSurvey(projectId, stationId, surveyId, dto);
         return result.IsSuccess ? Ok(result.Message) : BadRequest(result.Message);
     }
 }
