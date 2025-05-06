@@ -102,13 +102,13 @@ public static class SurveyMappings
                 UndersokelseId = entity.BStasjon.UndersokelseId,
             } : null,
 
-            BBilders = entity.BBilders.Select(b => new BPictureDto
+            /*BBilders = entity.BBilders.Select(b => new ImageDto
             {
                 Id = b.Id,
                 UndersokelseId = b.UndersokelseId,
                 Silt = b.Silt,
                 Extension = b.Extension
-            }).ToList(),
+            }).ToList(),*/
 
             BSurveyLogs = entity.BUndersokelsesloggs.Select(l => new BSurveyLogDto
             {
@@ -242,13 +242,13 @@ public static class SurveyMappings
                 }
                 : null,
 
-            BBilders = dto.BBilders.Select(pic => new BBilder
+            /*BBilders = dto.BBilders.Select(pic => new BBilder
             {
                 Id = pic.Id,
                 UndersokelseId = pic.UndersokelseId,
                 Silt = pic.Silt,
                 Extension = pic.Extension
-            }).ToList()
+            }).ToList()*/
         };
     }
 }

@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using SeaEco.Abstractions.Models.BSurvey;
 using SeaEco.Abstractions.Models.Bundersokelse;
 using SeaEco.EntityFramework.Contexts;
-using SeaEco.EntityFramework.Entities;
 using SeaEco.Services.Mapping;
 
 namespace SeaEco.Services.BSurveyService;
@@ -71,15 +70,7 @@ public class BSurveyService: IBSurveyService
             {
                 dto.BAnimal.Id = Guid.NewGuid();
             }
-
-            foreach (var pic in dto.BBilders)
-            {
-                pic.Id = Guid.NewGuid();
-                pic.UndersokelseId = dto.Id;
-                // Silt and Extension attributes are missing here
-                // How to convert picture name to standard format?
-            }
-
+            
             foreach (var log in dto.BSurveyLogs)
             {
                 log.Id = Guid.NewGuid();
@@ -139,13 +130,6 @@ public class BSurveyService: IBSurveyService
             if (dto.BHardBase != null)
             {
                 dto.BSoftBase = null;
-            }
-
-            foreach (var pic in dto.BBilders)
-            {
-                pic.UndersokelseId = dto.Id;
-                // Silt and Extension attributes are missing here
-                // How to convert picture name to standard format?
             }
 
             foreach (var log in dto.BSurveyLogs)

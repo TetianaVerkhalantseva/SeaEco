@@ -27,6 +27,8 @@ public partial class Bruker
 
     public virtual ICollection<BProvetakningsplan> BProvetakningsplans { get; set; } = new List<BProvetakningsplan>();
 
+    public virtual ICollection<BRapporter> BRapporters { get; set; } = new List<BRapporter>();
+
     public virtual ICollection<BUndersokelseslogg> BUndersokelsesloggs { get; set; } = new List<BUndersokelseslogg>();
 
     public virtual ICollection<Token> Tokens { get; set; } = new List<Token>();

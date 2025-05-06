@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SeaEco.Abstractions.Models.BSurvey;
 using SeaEco.Abstractions.Models.Stations;
+using SeaEco.Abstractions.ValueObjects;
 using SeaEco.EntityFramework.Contexts;
 using SeaEco.EntityFramework.Entities;
 
@@ -110,14 +111,16 @@ public class StationService : IStationService
 
         var nummer = await GetNextStationNumberAsync(dto.ProsjektId);
 
+        Coordinate coordinate = new Coordinate(dto.NorthDegree, dto.NorthMinutes, dto.EastDegree, dto.EastMinutes);
+        
         var stasjon = new BStasjon
         {
             Id = Guid.NewGuid(),
             ProsjektId = dto.ProsjektId,
             ProvetakingsplanId = samplingPlanId,
             Nummer = nummer,
-            KoordinatNord = dto.KoordinatNord,
-            KoordinatOst = dto.KoordinatOst,
+            KoordinatNord = coordinate.North,
+            KoordinatOst = coordinate.East,
             Dybde = dto.Dybde,
             Analyser = dto.Analyser,
             UndersokelseId = null
@@ -146,14 +149,16 @@ public class StationService : IStationService
     {
         var nummer = await GetNextStationNumberAsync(dto.ProsjektId);
 
+        Coordinate coordinate = new Coordinate(dto.NorthDegree, dto.NorthMinutes, dto.EastDegree, dto.EastMinutes);
+        
         var stasjon = new BStasjon
         {
             Id = Guid.NewGuid(),
             ProsjektId = dto.ProsjektId,
             ProvetakingsplanId = null,
             Nummer = nummer,
-            KoordinatNord = dto.KoordinatNord,
-            KoordinatOst = dto.KoordinatOst,
+            KoordinatNord = coordinate.North,
+            KoordinatOst = coordinate.East,
             Dybde = dto.Dybde,
             Analyser = dto.Analyser
         };
@@ -184,9 +189,11 @@ public class StationService : IStationService
         {
             return new StationResult { IsSuccess = false, Message = "Stasjon ikke funnet." };
         }
+        
+        Coordinate coordinate = new Coordinate(dto.NorthDegree, dto.NorthMinutes, dto.EastDegree, dto.EastMinutes);
 
-        stasjon.KoordinatNord = dto.KoordinatNord;
-        stasjon.KoordinatOst = dto.KoordinatOst;
+        stasjon.KoordinatNord = coordinate.North;
+        stasjon.KoordinatOst = coordinate.East;
         stasjon.Dybde = dto.Dybde;
         stasjon.Analyser = dto.Analyser;
 

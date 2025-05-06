@@ -7,6 +7,7 @@ public class ProjectDto
     public Guid Id { get; set; }
     public string PoId { get; set; } = null!;
     public Guid KundeId { get; set; }
+    public string Oppdragsgiver        { get; set; } = null!;
     public string Kundekontaktperson { get; set; } = null!;
     public string Kundetlf { get; set; } = null!;
     public string Kundeepost { get; set; } = null!;
@@ -21,10 +22,10 @@ public class ProjectDto
     
     public Produksjonsstatus Produksjonsstatus { get; set; }
     
-    //public int AntallStasjoner { get; set; }
+    public int AntallStasjoner { get; set; } //Med ferdig BUndersøkelse
     
     public Prosjektstatus Prosjektstatus { get; set; }
     public Tilstand? Tilstand { get; set; }
     public string? ProsjektIdSe { get; set; }
-    
+    public List<DateTime> Feltdatoer { get; set; } = new();
 }

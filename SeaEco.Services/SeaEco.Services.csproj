@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\SeaEco.EntityFramework\SeaEco.EntityFramework.csproj" />
+      <ProjectReference Include="..\SeaEco.Reporter\SeaEco.Reporter.csproj" />
     </ItemGroup>
 
     <ItemGroup>
