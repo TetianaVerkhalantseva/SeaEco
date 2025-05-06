@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using SeaEco.Abstractions.Models.Image;
 using SeaEco.Abstractions.ResponseService;
 using SeaEco.EntityFramework.Entities;
 using SeaEco.EntityFramework.GenericRepository;
@@ -27,6 +28,18 @@ public sealed class ImageService : IImageService
     {
         Guid imageId = Guid.NewGuid();
         
+        BBilder? dbRecords = await _imageRepository.GetBy(_ => _.UndersokelseId == dto.UndersokelseId &&
+                                                               _.Silt == dto.Silt);
+
+        if (dbRecords is not null)
+        {
+            Response removeResult = await DeleteImage(dbRecords.Id);
+            if (removeResult.IsError)
+            {
+                return removeResult;
+            }
+        }
+        
         Response<ImageModel> uploadResult = SaveImage(dto.Image, imageId.ToString());
         if (uploadResult.IsError)
         {
@@ -38,7 +51,8 @@ public sealed class ImageService : IImageService
             Id = imageId,
             UndersokelseId = dto.UndersokelseId,
             Silt = dto.Silt,
-            Extension = uploadResult.Value.Extension
+            Extension = uploadResult.Value.Extension,
+            Datogenerert = DateTime.Now
         };
         
         Response addResult = await _imageRepository.Add(dbRecord);
@@ -58,7 +72,30 @@ public sealed class ImageService : IImageService
             return Response.Error(IMAGE_NOT_FOUND_ERROR);
         }
 
-        return RemoveImage(dbRecord.Id.ToString());
+        Response removeResult = RemoveImage(dbRecord.Id.ToString());
+        if (removeResult.IsError)
+        {
+            return removeResult;
+        }
+        
+        return await _imageRepository.Delete(dbRecord);
+    }
+
+    public async Task<Response<ImageDto>> GetImage(Guid id)
+    {
+        BBilder? dbRecord = await _imageRepository.GetBy(record => record.Id == id);
+        if (dbRecord is null)
+        {
+            return Response<ImageDto>.Error(IMAGE_NOT_FOUND_ERROR);
+        }
+
+        return Response<ImageDto>.Ok(new ImageDto()
+        {
+            Id = dbRecord.Id,
+            UploadDate = dbRecord.Datogenerert,
+            Silt = dbRecord.Silt,
+            Path = Path.Combine("/images", $"{dbRecord.Id.ToString()}.{dbRecord.Extension}"),
+        });
     }
     
     private Response<ImageModel> SaveImage(IFormFile image, string newName)
