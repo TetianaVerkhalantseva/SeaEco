@@ -118,7 +118,7 @@
 
 
 .filter-panel {
-    overflow: hidden;  
+    overflow: visible; 
     border-radius: .5rem;
     background-color: transparent;
     align-self: flex-start;
