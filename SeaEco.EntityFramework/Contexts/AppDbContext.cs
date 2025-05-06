@@ -30,11 +30,11 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<BProvetakningsplan> BProvetakningsplans { get; set; }
 
+    public virtual DbSet<BRapporter> BRapporters { get; set; }
+
     public virtual DbSet<BSediment> BSediments { get; set; }
 
     public virtual DbSet<BSensorisk> BSensorisks { get; set; }
-
-    public virtual DbSet<BSjovann> BSjovanns { get; set; }
 
     public virtual DbSet<BStasjon> BStasjons { get; set; }
 
@@ -43,8 +43,6 @@ public partial class AppDbContext : DbContext
     public virtual DbSet<BUndersokelse> BUndersokelses { get; set; }
 
     public virtual DbSet<BUndersokelseslogg> BUndersokelsesloggs { get; set; }
-
-    public virtual DbSet<BUtstyrsid> BUtstyrsids { get; set; }
 
     public virtual DbSet<Bruker> Brukers { get; set; }
 
@@ -71,6 +69,9 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("id");
+            entity.Property(e => e.Datogenerert)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("datogenerert");
             entity.Property(e => e.Extension).HasColumnName("extension");
             entity.Property(e => e.Silt).HasColumnName("silt");
             entity.Property(e => e.UndersokelseId).HasColumnName("undersokelse_id");
@@ -135,11 +136,21 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("id");
+            entity.Property(e => e.EhSjo).HasColumnName("eh_sjo");
             entity.Property(e => e.FeltansvarligId).HasColumnName("feltansvarlig_id");
             entity.Property(e => e.Feltdato)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("feltdato");
+            entity.Property(e => e.Grabb).HasColumnName("grabb");
+            entity.Property(e => e.Kalibreringsdato).HasColumnName("kalibreringsdato");
+            entity.Property(e => e.PhMeter).HasColumnName("ph_meter");
+            entity.Property(e => e.PhSjo).HasColumnName("ph_sjo");
             entity.Property(e => e.ProsjektId).HasColumnName("prosjekt_id");
+            entity.Property(e => e.RefElektrode)
+                .HasDefaultValue(0)
+                .HasColumnName("ref_elektrode");
+            entity.Property(e => e.Sil).HasColumnName("sil");
+            entity.Property(e => e.SjoTemperatur).HasColumnName("sjo_temperatur");
 
             entity.HasOne(d => d.Feltansvarlig).WithMany(p => p.BPreinfos)
                 .HasForeignKey(d => d.FeltansvarligId)
@@ -233,6 +244,40 @@ public partial class AppDbContext : DbContext
                 .HasConstraintName("fk_bprovetakingsplan_prosjekt_id");
         });
 
+        modelBuilder.Entity<BRapporter>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("pk_b_rapporter");
+
+            entity.ToTable("b_rapporter");
+
+            entity.HasIndex(e => e.GodkjentAv, "fki_fk_brapporter_bruker_id");
+
+            entity.HasIndex(e => e.ProsjektId, "fki_fk_brapporter_prosjekt_id");
+
+            entity.HasIndex(e => new { e.ProsjektId, e.ArkNavn }, "uq_brapporter_prosjektid_arknavn").IsUnique();
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.ArkNavn).HasColumnName("ark_navn");
+            entity.Property(e => e.Datogenerert).HasColumnName("datogenerert");
+            entity.Property(e => e.ErGodkjent)
+                .HasDefaultValue(false)
+                .HasColumnName("er_godkjent");
+            entity.Property(e => e.GodkjentAv).HasColumnName("godkjent_av");
+            entity.Property(e => e.ProsjektId).HasColumnName("prosjekt_id");
+
+            entity.HasOne(d => d.GodkjentAvNavigation).WithMany(p => p.BRapporters)
+                .HasForeignKey(d => d.GodkjentAv)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_brapporter_bruker_id");
+
+            entity.HasOne(d => d.Prosjekt).WithMany(p => p.BRapporters)
+                .HasForeignKey(d => d.ProsjektId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_brapporter_prosjekt_id");
+        });
+
         modelBuilder.Entity<BSediment>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("pk_b_sediment");
@@ -266,28 +311,6 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Lukt).HasColumnName("lukt");
             entity.Property(e => e.TilstandGr3).HasColumnName("tilstand _gr3");
             entity.Property(e => e.Tykkelseslamlag).HasColumnName("tykkelseslamlag");
-        });
-
-        modelBuilder.Entity<BSjovann>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("pk_b_sjovann");
-
-            entity.ToTable("b_sjovann");
-
-            entity.HasIndex(e => e.PreinfoId, "uq_bsjovann_preinfo_id").IsUnique();
-
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
-            entity.Property(e => e.Eh).HasColumnName("eh");
-            entity.Property(e => e.Ph).HasColumnName("ph");
-            entity.Property(e => e.PreinfoId).HasColumnName("preinfo_id");
-            entity.Property(e => e.Temperatur).HasColumnName("temperatur");
-
-            entity.HasOne(d => d.Preinfo).WithOne(p => p.BSjovann)
-                .HasForeignKey<BSjovann>(d => d.PreinfoId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("fk_bsjovann_preinfo_id");
         });
 
         modelBuilder.Entity<BStasjon>(entity =>
@@ -460,36 +483,13 @@ public partial class AppDbContext : DbContext
                 .HasConstraintName("fk_bundersokelseslogg_undersokelse_id");
         });
 
-        modelBuilder.Entity<BUtstyrsid>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("pk_b_utstyrsid");
-
-            entity.ToTable("b_utstyrsid");
-
-            entity.HasIndex(e => e.PreinfoId, "uq_butstyrsid_preinfo_id").IsUnique();
-
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
-            entity.Property(e => e.Grabb).HasColumnName("grabb");
-            entity.Property(e => e.Kalibreringsdato).HasColumnName("kalibreringsdato");
-            entity.Property(e => e.PhMeter).HasColumnName("ph_meter");
-            entity.Property(e => e.PreinfoId).HasColumnName("preinfo_id");
-            entity.Property(e => e.Sil).HasColumnName("sil");
-
-            entity.HasOne(d => d.Preinfo).WithOne(p => p.BUtstyrsid)
-                .HasForeignKey<BUtstyrsid>(d => d.PreinfoId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("fk_butstyrsid_preinfo_id");
-        });
-
         modelBuilder.Entity<Bruker>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("pk_bruker");
 
             entity.ToTable("bruker");
 
-            entity.HasIndex(e => new { e.Fornavn, e.Etternavn }, "uq_bruker_fornavn_etternavn").IsUnique();
+            entity.HasIndex(e => e.Epost, "uq_bruker_epost").IsUnique();
 
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
@@ -512,19 +512,19 @@ public partial class AppDbContext : DbContext
 
             entity.HasMany(d => d.Preinfos).WithMany(p => p.Provetakers)
                 .UsingEntity<Dictionary<string, object>>(
-                    "ProvetakerBpreinfo",
+                    "BpreinfoProvetaker",
                     r => r.HasOne<BPreinfo>().WithMany()
                         .HasForeignKey("PreinfoId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .HasConstraintName("fk_provetaker_bpreinfo_preinfo_id"),
+                        .HasConstraintName("fk_bpreinfo_provetaker_preinfo_id"),
                     l => l.HasOne<Bruker>().WithMany()
                         .HasForeignKey("ProvetakerId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .HasConstraintName("fk_provetaker_bpreinfo__bruker_id"),
+                        .HasConstraintName("fk_bpreinfo_provetaker_bruker_id"),
                     j =>
                     {
                         j.HasKey("ProvetakerId", "PreinfoId").HasName("pk_provetaker_bpreinfo");
-                        j.ToTable("provetaker_bpreinfo");
+                        j.ToTable("bpreinfo_provetaker");
                         j.IndexerProperty<Guid>("ProvetakerId").HasColumnName("provetaker_id");
                         j.IndexerProperty<Guid>("PreinfoId").HasColumnName("preinfo_id");
                     });

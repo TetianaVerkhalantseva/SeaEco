@@ -68,12 +68,13 @@ public class ProjectService : IProjectService
             .Include(p => p.Kunde)  
             .Include(p => p.Lokalitet)
             .Include(p => p.BTilstand)
+            .Include(p => p.BPreinfos)  
             .Select(p => new ProjectDto
             {
                 Id = p.Id,
                 PoId = p.PoId,
                 KundeId = p.KundeId,
-                Oppdragsgiver       = p.Kunde.Oppdragsgiver, 
+                Oppdragsgiver = p.Kunde.Oppdragsgiver, 
                 Kundekontaktperson = p.Kundekontaktperson,
                 Kundetlf = p.Kundetlf,
                 Kundeepost = p.Kundeepost,
@@ -88,6 +89,10 @@ public class ProjectService : IProjectService
                 Tilstand = p.BTilstand != null
                     ? (Tilstand?)p.BTilstand.TilstandLokalitet
                     : null,
+                Feltdatoer = p.BPreinfos
+                    .Select(pi => pi.Feltdato)
+                    .OrderBy(d => d)
+                    .ToList()
             })
             .ToListAsync();
     }
@@ -97,6 +102,7 @@ public class ProjectService : IProjectService
         var p = await _context.BProsjekts
             .Include(p => p.Lokalitet)
             .Include(p => p.BTilstand)
+            .Include(p => p.BPreinfos) 
             .FirstOrDefaultAsync(p => p.Id == id);
 
         if (p == null)
@@ -121,7 +127,12 @@ public class ProjectService : IProjectService
             Tilstand = p.BTilstand != null
                 ? (Tilstand?)p.BTilstand.TilstandLokalitet
                 : null,
-            //AntallStasjoner = await _context.BStasjons.CountAsync(s => s.ProsjektId == p.Id)
+            Feltdatoer = p.BPreinfos
+                .Select(pi => pi.Feltdato)
+                .OrderBy(d => d)
+                .ToList(),
+            AntallStasjoner = await _context.BUndersokelses
+                .CountAsync(u => u.ProsjektId == p.Id)
         };
     }
     
@@ -195,5 +206,38 @@ public class ProjectService : IProjectService
                 : null,
             ProsjektIdSe         = prosjekt.ProsjektIdSe
         };
+    }
+    
+    public async Task<string> GenerateAndSetProsjektIdSeAsync(Guid prosjektId, DateTime feltdato)
+    {
+        var prosjekt = await _context.BProsjekts.FindAsync(prosjektId)
+                       ?? throw new InvalidOperationException("Prosjekt ikke funnet");
+
+        // Hvis allerede satt, returner eksisterende:
+        if (!string.IsNullOrEmpty(prosjekt.ProsjektIdSe))
+            return prosjekt.ProsjektIdSe;
+
+        // Hent år (to siste siffer) fra feltdato:
+        var yearSuffix = feltdato.ToString("yy");
+
+        // Finn antall andre prosjekter for samme år som har minst én preinfo:
+        var countThisYear = await _context.BPreinfos
+            .Where(p => p.Feltdato.Year == feltdato.Year)
+            .Select(p => p.ProsjektId)
+            .Distinct()
+            .CountAsync();
+
+        // Løpenummer = antall + 1
+        var løpenummer = countThisYear + 1;
+
+        // Formater: SE-25-BU-1
+        var idSe = $"SE-{yearSuffix}-BU-{løpenummer}";
+
+        // Sett og lagre:
+        prosjekt.ProsjektIdSe = idSe;
+        _context.BProsjekts.Update(prosjekt);
+        await _context.SaveChangesAsync();
+
+        return idSe;
     }
 }

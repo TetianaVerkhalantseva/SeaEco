@@ -13,11 +13,23 @@ public partial class BPreinfo
 
     public Guid FeltansvarligId { get; set; }
 
-    public virtual BSjovann? BSjovann { get; set; }
+    public float PhSjo { get; set; }
+
+    public float EhSjo { get; set; }
+
+    public float SjoTemperatur { get; set; }
+
+    public int RefElektrode { get; set; }
+
+    public string Grabb { get; set; } = null!;
+
+    public string Sil { get; set; } = null!;
+
+    public string PhMeter { get; set; } = null!;
+
+    public DateOnly Kalibreringsdato { get; set; }
 
     public virtual ICollection<BUndersokelse> BUndersokelses { get; set; } = new List<BUndersokelse>();
-
-    public virtual BUtstyrsid? BUtstyrsid { get; set; }
 
     public virtual Bruker Feltansvarlig { get; set; } = null!;
 

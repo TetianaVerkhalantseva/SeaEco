@@ -75,5 +75,5 @@ public sealed class GenericRepository<T> : IGenericRepository<T> where T : class
 
     public IQueryable<T> GetAll() => _table.AsNoTracking();
     
-    public async Task<T?> GetBy(Expression<Func<T, bool>> predicate) => await _table.AsNoTracking().FirstOrDefaultAsync(predicate);
+    public async Task<T?> GetBy(Expression<Func<T, bool>> predicate) => await _table.FirstOrDefaultAsync(predicate);
 }

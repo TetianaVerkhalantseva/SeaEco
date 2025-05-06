@@ -171,5 +171,109 @@ public sealed class DbSeeder
                 await context.SaveChangesAsync();
             }
         }
+        
+        // Seed BPreinfo
+        Guid preinfoId1 = Guid.Parse("cc2642ba-0cd4-49a6-92cb-cb7eb2f15e7d");
+        Guid preinfoId2 = Guid.Parse("a7ad11e6-edb4-40bf-b7af-51fefb215788");
+
+
+        Guid feltansvarligId = Guid.Parse("8fffdaa4-7dfe-4d78-a28b-b80558d542b6");
+
+        IEnumerable<BPreinfo> preinfos =
+        [
+            new BPreinfo()
+            {
+                Id = preinfoId1,
+                ProsjektId = prosjektId1,
+                Feltdato = new DateTime(2025, 4, 8, 8, 30, 0),
+                FeltansvarligId = feltansvarligId,
+                PhSjo = 7.94f,
+                EhSjo = 185.2f,
+                SjoTemperatur = 10.8f,
+                RefElektrode = 0,
+                Grabb = "2",
+                Sil = "3",
+                PhMeter = "2",
+                Kalibreringsdato = new DateOnly(2025, 4, 7)
+            },
+            new BPreinfo()
+            {
+                Id = preinfoId2,
+                ProsjektId = prosjektId2,
+                Feltdato = new DateTime(2025, 4, 25, 10, 0, 0),
+                FeltansvarligId = feltansvarligId,
+                PhSjo = 6.94f,
+                EhSjo = 182.0f,
+                SjoTemperatur = 11.1f,
+                RefElektrode = 0,
+                Grabb = "2",
+                Sil = "3",
+                PhMeter = "2",
+                Kalibreringsdato = new DateOnly(2025, 4, 24)
+            }
+        ];
+
+        List<BPreinfo> preinfoRecords = await context.BPreinfos.Where(x =>
+            x.Id == preinfoId1 ||
+            x.Id == preinfoId2).ToListAsync();
+
+        foreach (BPreinfo p in preinfos)
+        {
+            if (!preinfoRecords.Any(x => x.Id == p.Id))
+            {
+                await context.BPreinfos.AddAsync(p);
+                await context.SaveChangesAsync();
+            }
+        }
+
+        
+        // Seed BUndersokelse
+        Guid undersokelseId1 = Guid.Parse("3f7e477f-a26e-4b5b-93f3-546b6be693d1");
+        Guid undersokelseId2 = Guid.Parse("6aa7a8eb-1491-4ebe-9901-09553a9f71f8");
+
+        IEnumerable<BUndersokelse> undersokelser =
+        [
+            new BUndersokelse()
+            {
+                Id = undersokelseId1,
+                ProsjektId = prosjektId1,
+                PreinfoId = preinfoId1,
+                Feltdato = DateOnly.FromDateTime(DateTime.Now),
+                AntallGrabbhugg = 5,
+                GrabbhastighetGodkjent = true,
+                Beggiatoa = false,
+                Forrester = true,
+                Fekalier = false,
+                DatoRegistrert = DateTime.Now,
+                DatoEndret = DateTime.Now
+            },
+            new BUndersokelse()
+            {
+                Id = undersokelseId2,
+                ProsjektId = prosjektId2,
+                PreinfoId = preinfoId2,
+                Feltdato = DateOnly.FromDateTime(DateTime.Now),
+                AntallGrabbhugg = 8,
+                GrabbhastighetGodkjent = true,
+                Beggiatoa = true,
+                Forrester = false,
+                Fekalier = false,
+                DatoRegistrert = DateTime.Now,
+                DatoEndret = DateTime.Now
+            }
+        ];
+
+        List<BUndersokelse> undersokelseRecords = await context.BUndersokelses.Where(x =>
+            x.Id == undersokelseId1 ||
+            x.Id == undersokelseId2).ToListAsync();
+
+        foreach (BUndersokelse u in undersokelser)
+        {
+            if (!undersokelseRecords.Any(x => x.Id == u.Id))
+            {
+                await context.BUndersokelses.AddAsync(u);
+                await context.SaveChangesAsync();
+            }
+        }
     }
 }
