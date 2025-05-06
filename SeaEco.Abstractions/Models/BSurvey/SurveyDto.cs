@@ -43,7 +43,6 @@ public class SurveyDto
     public int? TilstandGr2Gr3 { get; set; }
     
     // dto
-    public List<BPictureDto> BBilders { get; set; } = new();
     
     public BStationDto? BStation { get; set; }
     

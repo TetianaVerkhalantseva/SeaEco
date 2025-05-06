@@ -1,4 +1,6 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+
 namespace SeaEco.EntityFramework.Entities;
 
 public partial class BUndersokelse
