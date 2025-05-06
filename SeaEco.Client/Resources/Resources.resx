@@ -125,7 +125,7 @@
         <value>Lokalitet</value>
     </data>
     <data name="TableHeaderLocalityId" xml:space="preserve">
-        <value>lok. ID</value>
+        <value>Lok. ID</value>
     </data>
     <data name="TableHeaderPoId" xml:space="preserve">
         <value>PO-ID</value>
@@ -143,7 +143,7 @@
         <value>Tilstand</value>
     </data>
     <data name="TableHeaderProductionStatus" xml:space="preserve">
-        <value>Produksjnsstatus</value>
+        <value>Produksjonsstatus</value>
     </data>
 
     <!-- PageUser -->
