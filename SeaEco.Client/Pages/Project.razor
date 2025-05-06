@@ -15,7 +15,7 @@
 }
 else
 {
-    <div class="d-flex flex-column align-items-center gap-3 p-custom">
+    <div class="d-flex flex-column align-items-center gap-3 p-1">
         <div class="mb-3">
             <h2>@_projectCopy.Lokalitetsnavn</h2>
             <p class="text-secondary mb-0">- Prosjektstatus: @_project.Prosjektstatus.GetDescription() </p>
@@ -27,9 +27,7 @@ else
 
         <div class="d-flex w-100 p-1">
             <div class="flex-grow-1"></div>
-            <button class="btn custom-btn align-self-end" type="button">
-                @Resources.ButtonProjectLog
-            </button>
+            <NavLink class="btn custom-btn align-self-end me-2" href="/projectLogPage">@Resources.ButtonProjectLog</NavLink>
         </div>
         
         <details class=" filter-panel shadow-lg w-100">
@@ -43,7 +41,7 @@ else
 
                             <div class="d-flex form-floating gap-3 mb-4 flex-column p-4 box-border">
                                 <h6>Prosjektinformasjon</h6>
-                                <div class="d-flex form-floating gap-3">
+                                <div class="d-flex form-floating flex-sm-row gap-3">
                                     <div class="d-flex form-floating">
                                         <InputText class="form-control" id="poid" @bind-Value="_project.PoId" disabled/>
                                         <label for="poid">@Resources.InputTextPoId</label>
@@ -67,7 +65,7 @@ else
 
                             
                             <div class="d-flex form-floating gap-4 flex-xxl-row">
-                                <div class="d-flex form-floating gap-3 flex-column  p-4 box-border">
+                                <div class="d-flex form-floating gap-3 flex-column p-4 box-border">
                                     <h6>Kundeinformasjon</h6>
                                     <div class="d-flex form-floating">
                                         <InputText class="form-control" id="customer" @bind-Value="_project.Oppdragsgiver" @key="_numberInputKey" @oninput="() => _errorMessage = null" disabled/>
