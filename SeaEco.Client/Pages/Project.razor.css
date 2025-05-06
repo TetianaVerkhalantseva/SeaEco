@@ -58,32 +58,32 @@
 
 
 
+
+
 .filter-panel {
-    background-color: #eef2f4;
+    overflow: hidden;
     border-radius: .5rem;
-    z-index: 1000;
+    background-color: transparent;
+    align-self: flex-start;
 }
 
 .filter-panel summary {
     cursor: pointer;
+    padding: .5rem 2.5rem .5rem 1rem;
     position: relative;
-    padding: .5rem 1rem;
     border: 1px solid #ccc;
     background: linear-gradient(to bottom, #557e93 0%, #7798A9 100%);
     color: white;
     border-radius: .5rem;
     list-style: none;
+    transition: background 0.2s ease;
 }
+
+
+
 .filter-panel[open] summary {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
-}
-.filter-options {
-    padding: 1rem;
-    background: transparent;
-    border-bottom-left-radius: .5rem;
-    border-bottom-right-radius: .5rem;
-    border: 1px solid #ccc;
 }
 
 .filter-panel summary::before {
@@ -96,7 +96,18 @@
     background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 6l6 6 6-6'/%3e%3c/svg%3e")
     center / contain no-repeat;
     transform: translateY(-50%) rotate(0deg);
-    transition: transform .2s ease;
+    transition: transform .5s ease;
+}
+
+.filter-panel[open] summary::before {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.filter-panel[open] .filter-options  {
+    max-height: 1000px;
+    opacity: 1;
+    padding: 1rem;
+    background-color: #eef2f4;
 }
 
 .filter-panel[open] summary::before {
@@ -113,21 +124,3 @@
     padding: 2rem 6rem !important;
 }
 
-/* target only that one select: add a helper class in your markup */
-.no-arrow-when-disabled:disabled {
-    /* remove the native arrow in WebKit, Blink, Gecko */
-    -webkit-appearance: none !important;
-    -moz-appearance: none !important;
-    appearance: none !important;
-    /* kill Bootstrap’s background-image fallback */
-    background-image: none !important;
-    /* optional: keep the same padding so it doesn’t “jump” */
-    padding-right: .75rem !important;
-    /* optional: make it clear it’s disabled */
-    cursor: default !important;
-}
-
-/* Edge/IE */
-.no-arrow-when-disabled:disabled::-ms-expand {
-    display: none !important;
-}

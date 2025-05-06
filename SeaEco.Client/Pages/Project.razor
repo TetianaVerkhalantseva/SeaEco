@@ -66,8 +66,8 @@ else
                                 <div class="d-flex form-floating gap-3 flex-column  p-4 box-border">
                                     <h6>Kundeinformasjon</h6>
                                     <div class="d-flex form-floating">
-                                        <InputText class="form-control" id="customer" @bind-Value="_project.Kundekontaktperson" @key="_numberInputKey" @oninput="() => _errorMessage = null" disabled/>
-                                        <label for="customer">KundensNavn</label>
+                                        <InputText class="form-control" id="customer" @bind-Value="_project.Oppdragsgiver" @key="_numberInputKey" @oninput="() => _errorMessage = null" disabled/>
+                                        <label for="customer">Oppdragsgiver</label>
                                     </div>
                                     <div class="d-flex form-floating">
                                         <InputText class="form-control" id="customer" @bind-Value="_project.Kundekontaktperson" @key="_numberInputKey" @oninput="() => _errorMessage = null" disabled="@(!_editProjectInfo)"/>
@@ -292,9 +292,8 @@ else
         var response = await Http.PutAsJsonAsync($"api/Project/{_project.Id:D}", _project);
         if (response.IsSuccessStatusCode)
         {
-            //ønsker helst å ikke gjøre et ekstra kall, men å hente fra response
-            _project = await Http.GetFromJsonAsync<ProjectDto>($"api/Project/{prosjektId:D}");
-            _projectCopy = BackupProject(_project);
+            var updated = await response.Content.ReadFromJsonAsync<ProjectDto>();
+            _projectCopy = BackupProject(updated);
             _selectedLocationId = _projectCopy.LokalitetsId;
             _editProjectInfo = false;
             if (_isNewLocality)
