@@ -160,10 +160,17 @@ public class ProjectController : ControllerBase
     }
 
     [HttpGet("{projectId:guid}/sampling-plan/{samplingPlanId:guid}/station/{stationId:guid}")]
-    public async Task<IActionResult> GetAStaion(Guid projectId, Guid samplingPlanId, Guid stationId)
+    public async Task<IActionResult> GetAStation(Guid projectId, Guid samplingPlanId, Guid stationId)
     {
         var result = await _stationService.GetStationByIdAsync(projectId, stationId);
-        return result.IsSuccess ? Ok(result.Stations) : NotFound(result.Message);
+        return result.IsSuccess ? Ok(result.Station) : NotFound(result.Message);
+    }
+
+    [HttpGet("{projectId:guid}/station/{stationId:guid}")]
+    public async Task<BStationDto?> GetStationById(Guid projectId, Guid stationId)
+    {
+        var result = await _stationService.GetBStationDtoByStationId(projectId, stationId);
+        return result;
     }
 
     [RoleAccessor(true)]
