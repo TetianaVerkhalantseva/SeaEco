@@ -18,7 +18,12 @@ else
     <div class="d-flex flex-column align-items-center gap-3 p-custom">
         <div class="mb-3">
             <h2>@_projectCopy.Lokalitetsnavn</h2>
-            <p class="text-secondary">- @_project.Prosjektstatus.GetDescription() </p>
+            <p class="text-secondary mb-0">- Prosjektstatus: @_project.Prosjektstatus.GetDescription() </p>
+            <p class="text-secondary mt-0">- Tilstand: 2 </p>
+            @if (_project.Tilstand != null)
+            {
+                <p class="text-secondary">- Tilstand: @_project.Tilstand </p>
+            }
         </div>
 
         <div class="d-flex w-100 p-1">
