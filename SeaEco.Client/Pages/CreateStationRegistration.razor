@@ -1,10 +1,12 @@
 @page "/project/{ProjectId:guid}/station/{StationId:guid}/survey"
 @using Microsoft.AspNetCore.Authorization
+@using SeaEco.Abstractions.Enums
 @using SeaEco.Abstractions.Enums.Bsensorisk
 @using SeaEco.Abstractions.Extensions
 @using SeaEco.Abstractions.Models.BSurvey
 @using SeaEco.Abstractions.Models.Bundersokelse
 @using SeaEco.Abstractions.Models.Stations
+@using SeaEco.Abstractions.ValueObjects
 @inject HttpClient Http
 @attribute [Authorize(Roles = "admin")]
 @inject NavigationManager Navigation
@@ -81,33 +83,52 @@
         <h5>Bunntype: </h5>
 
         <div class="cntr">
-            <input type="radio" name="bunntype" id="cbx1" class="hidden-xs-up"
-                   value="blot" @bind="_selectBunnType">
+            <input type="radio"
+                   name="bunntype"
+                   id="cbx1"
+                   class="hidden-xs-up"
+                   @onchange="@(() => _selectBunnType = "blot")"
+                   checked="@(_selectBunnType == "blot")" />
             <label for="cbx1" class="cbx"></label>
             <label for="cbx1" class="lbl">Bløt</label>
         </div>
 
         <div class="cntr">
-            <input type="radio" name="bunntype" id="cbx2" class="hidden-xs-up"
-                   value="hard" @bind="_selectBunnType">
+            <input type="radio"
+                   name="bunntype"
+                   id="cbx2"
+                   class="hidden-xs-up"
+                   @onchange="@(() => _selectBunnType = "hard")"
+                   checked="@(_selectBunnType == "hard")" />
             <label for="cbx2" class="cbx"></label>
             <label for="cbx2" class="lbl">Hard</label>
         </div>
     </div>
 
+
     <div id="sensoryRadio" class="sensoryRadio-container">
         <h5>Er sensorisk utført?</h5>
 
         <div class="cntr">
-            <input type="radio" name="sensorisk" id="cbx3" class="hidden-xs-up"
-                   value="ja" @bind="_selectSensorisk">
+            <input type="radio" 
+                   name="sensorisk" 
+                   id="cbx3" 
+                   class="hidden-xs-up"
+                   @onchange="@(() => _selectSensorisk = "ja")"
+                   checked="@(_selectSensorisk == "ja")"
+            />
             <label for="cbx3" class="cbx"></label>
             <label for="cbx3" class="lbl">Ja</label>
         </div>
 
         <div class="cntr">
-            <input type="radio" name="sensorisk" id="cbx4" class="hidden-xs-up"
-                   value="nei" @bind="_selectSensorisk">
+            <input type="radio"
+                   name="sensorisk"
+                   id="cbx4"
+                   class="hidden-xs-up"
+                   @onchange="@(() => _selectSensorisk = "nei")"
+                   checked="@(_selectSensorisk == "nei")"
+            />
             <label for="cbx4" class="cbx"></label>
             <label for="cbx4" class="lbl">Nei</label>
         </div>
@@ -199,6 +220,7 @@
         </div>
     </div>
 
+    @* TODO *@
     <div class="sedimentType-container" id="sedimentType">
         <div class="hardSediment-container" id="hardSediment">
             <h5>Bunntype:</h5>
@@ -213,19 +235,20 @@
             <h5>Sedimenttype:</h5>
             
             <div class="checkbox-container">
-                <label><input type="checkbox" @bind="_sediment.Sand"/> Sand</label>
-                <label><input type="checkbox" @bind="_sediment.Leire"/> Leire</label>
-                <label><input type="checkbox" @bind="_sediment.Silt"/> Silt</label>
-                <label><input type="checkbox" @bind="_sediment.Grus"/> Grus</label>
-                <label><input type="checkbox" @bind="_sediment.Skjellsand"/> Skjellsand</label>
+                <label><input type="checkbox" @bind="_surveyDto.BSoftBase.Sand"/> Sand</label>
+                <label><input type="checkbox" @bind="_surveyDto.BSoftBase.Leire"/> Leire</label>
+                <label><input type="checkbox" @bind="_surveyDto.BSoftBase.Silt"/> Silt</label>
+                <label><input type="checkbox" @bind="_surveyDto.BSoftBase.Grus"/> Grus</label>
+                <label><input type="checkbox" @bind="_surveyDto.BSoftBase.Skjellsand"/> Skjellsand</label>
             </div>
         </div>
     </div>
-    
+    @* TODO *@
+
+    @* TODO: Picture usilt and tom grabb container *@
     <div class="picture-container">
         <button class="picture-button" style="vertical-align:middle"><span>+ Usilt</span></button>
 
-        @* TODO: Remember to bind *@
         <div class="tom-grabb-container" id="tomGrabb_1">
             <label class="custom-checkbox" for="tom-grabb-1">
                 <span class="custom-label">Tom grabb</span>
@@ -234,13 +257,14 @@
             </label>
         </div>
     </div>
+    @* TODO: Picture usilt and tom grabb container *@
 </div>
 
 <div id="div3" class="content-div">
+    @* TODO: Picture silt and tom grabb container *@
     <div class="picture-container">
         <button class="picture-button" style="vertical-align:middle"><span>+ Silt</span></button>
 
-        @* TODO: Remember to bind *@
         <div class="tom-grabb-container" id="tomGrabb_2">
             <label class="custom-checkbox" for="tom-grabb-2">
                 <span class="custom-label">Tom grabb</span>
@@ -249,23 +273,24 @@
             </label>
         </div>
     </div>
+    @* TODO: Picture usilt and tom grabb container *@
 
     <div class="checkbox-1-container">
-        <label class="custom-checkbox" for="beggiota">
-            <span class="custom-label">Beggiota</span>
-            <input type="checkbox" id="beggiota" @bind="_dyr.Beggiota" />
+        <label class="custom-checkbox" for="beggiatoa">
+            <span class="custom-label">Beggiatoa</span>
+            <input type="checkbox" id="beggiatoa" @bind="_surveyDto.Beggiatoa"/>
             <span class="custom-checkmark"></span>
         </label>
 
         <label class="custom-checkbox" for="forrester">
             <span class="custom-label">Forrester</span>
-            <input type="checkbox" id="forrester" @bind="_dyr.Foor" />
+            <input type="checkbox" id="forrester" @bind="_surveyDto.Forrester"/>
             <span class="custom-checkmark"></span>
         </label>
 
         <label class="custom-checkbox" for="fekalier">
             <span class="custom-label">Fekalier</span>
-            <input type="checkbox" id="fekalier" @bind="_dyr.Fekalier" />
+            <input type="checkbox" id="fekalier" @bind="_surveyDto.Fekalier"/>
             <span class="custom-checkmark"></span>
         </label>
     </div>
@@ -273,115 +298,111 @@
     <div class="animalRadio-container">
         <h5>Dyr: </h5>
 
-        @* TODO: Remember to bind and bind-value *@
         <div class="cntr">
-            <input type="radio" name="dyr" id="cbx5" class="hidden-xs-up">
+            <input type="radio"
+                   name="dyr" 
+                   id="cbx5" 
+                   class="hidden-xs-up"
+                   @onchange="@(() => _selectDyr = "ja")"
+                   checked="@(_selectDyr == "ja")"
+            />
             <label for="cbx5" class="cbx"></label>
             <label for="cbx5" class="lbl">Ja</label>
         </div>
 
-        @* TODO: Remember to bind and bind-value *@
         <div class="cntr">
-            <input type="radio" name="dyr" id="cbx6" class="hidden-xs-up">
+            <input type="radio"
+                   name="dyr" 
+                   id="cbx6" 
+                   class="hidden-xs-up"
+                   @onchange="@(() => _selectDyr = "nei")"
+                   checked="@(_selectDyr == "nei")"
+            />
             <label for="cbx6" class="cbx"></label>
             <label for="cbx6" class="lbl">Nei</label>
         </div>
     </div>
-    
+
     <div id="animalInfo" class="animalInfo-container">
         <div class="animalData">
             <div class="form-floating mb-3">
-                <InputNumber id="pigghuder" class="form-control" @bind-Value="_dyr.Antallpigghunder" placeholder="Pigghuder"/>
-                <label for="pigghuder">Pigghuder</label>
+                <InputText id="pigghunder" class="form-control"
+                           @bind-Value="_surveyDto.BAnimal.Pigghunder"
+                           placeholder="Pigghunder" />
+                <label for="pigghunder">Pigghunder</label>
             </div>
             <div class="btn-group mb-3" role="group">
-                <button class="btn btn-outline-primary @(_dyr.Antallpigghunder == 31 ? "active" : "")" 
-                        @onclick="() => SetPigghunder(31)">
-                    30+
-                </button>
-                <button class="btn btn-outline-primary @(_dyr.Antallpigghunder == 51 ? "active" : "")" 
-                        @onclick="() => SetPigghunder(51)">
-                    50+
-                </button>
+                <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Pigghunder == "30+" ? "active" : "")"
+                        @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Pigghunder = v)'>30+</button>
+                <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Pigghunder == "50+" ? "active" : "")"
+                        @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Pigghunder = v)'>50+</button>
             </div>
 
             <div class="form-floating mb-3">
-                <InputNumber id="krepsdyr" class="form-control" @bind-Value="_dyr.Antallkrepsdyr" placeholder="Krepsdyr"/>
+                <InputText id="krepsdyr" class="form-control"
+                           @bind-Value="_surveyDto.BAnimal.Krepsdyr"
+                           placeholder="Krepsdyr" />
                 <label for="krepsdyr">Krepsdyr</label>
             </div>
             <div class="btn-group mb-3" role="group">
-                <button class="btn btn-outline-primary @(_dyr.Antallkrepsdyr == 31 ? "active" : "")"
-                        @onclick="() => SetKrepsdyr(31)">
-                    30+
-                </button>
-                <button class="btn btn-outline-primary @(_dyr.Antallkrepsdyr == 51 ? "active" : "")"
-                        @onclick="() => SetKrepsdyr(51)">
-                    50+
-                </button>
+                <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Krepsdyr == "30+" ? "active" : "")"
+                        @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Krepsdyr = v)'>30+</button>
+                <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Krepsdyr == "50+" ? "active" : "")"
+                        @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Krepsdyr = v)'>50+</button>
             </div>
 
-            <div class="form-floating mb-3">
-                <InputNumber id="skjell" class="form-control" @bind-Value="_dyr.Antallskjell" placeholder="Skjell"/>
+            <div class="form-floating mb-3">                
+                <InputText id="skjell" class="form-control"
+                           @bind-Value="_surveyDto.BAnimal.Skjell"
+                           placeholder="Skjell"/>
                 <label for="skjell">Skjell</label>
             </div>
             <div class="btn-group mb-3" role="group">
-                <button class="btn btn-outline-primary @(_dyr.Antallskjell == 31 ? "active" : "")"
-                        @onclick="() => SetSkjell(31)">
-                    30+
-                </button>
-                <button class="btn btn-outline-primary @(_dyr.Antallskjell == 51 ? "active" : "")"
-                        @onclick="() => SetSkjell(51)">
-                    50+
-                </button>
+                <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Skjell == "30+" ? "active" : "")"
+                        @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Skjell = v)'>30+</button>
+                <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Skjell == "50+" ? "active" : "")"
+                        @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Skjell = v)'>50+</button>
             </div>
 
             <div class="form-floating mb-3">
-                <InputNumber id="borstemark" class="form-control" @bind-Value="_dyr.Antallborstemark" placeholder="Børstemark"/>
+                <InputText id="borstemark" class="form-control"
+                           @bind-Value="_surveyDto.BAnimal.Borstemark"
+                           placeholder="Børstemark"/>
                 <label for="borstemark">Børstemark</label>
             </div>
             <div class="btn-group mb-3" role="group">
-                <button class="btn btn-outline-primary @(_dyr.Antallborstemark == 31 ? "active" : "")"
-                        @onclick="() => SetBorstemark(31)">
-                    30+
-                </button>
-                <button class="btn btn-outline-primary @(_dyr.Antallborstemark == 51 ? "active" : "")"
-                        @onclick="() => SetBorstemark(51)">
-                    50+
-                </button>
+                <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Borstemark == "30+" ? "active" : "")"
+                        @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Borstemark = v)'>30+</button>
+                <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Borstemark == "50+" ? "active" : "")"
+                        @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Borstemark = v)'>50+</button>
             </div>
         </div>
     </div>
 
-    @* Arter *@
     <div class="form-floating mb-3 user-input" id="arter-container">
-        <InputText class="form-control" id="arter" placeholder="Arter" @bind-Value="_arter.Kommentar"></InputText>
+        @foreach (Arter art in Enum.GetValues(typeof(Arter)))
+        {
+            <button type="button" class="btn btn-outline-primary btn-sm me-1 mb-1"
+                    @onclick="() => AddArter(art)">
+                @art.GetDescription()
+            </button>
+        }
+        
+        <InputText class="form-control" id="arter" placeholder="Arter" @bind-Value="_surveyDto.BAnimal.Arter" />
         <label for="arter">Arter</label>
     </div>
-    @* Arter *@
-    
+
     <div class="form-floating mb-3 user-input">
-        <InputText class="form-control" id="message" placeholder="Merknader" @bind-Value="_merknadDto.Beskrivelse"></InputText>
-        <label for="message">Merknader</label>
-    </div>
-
-    <div class="checkbox-2-container">
-        <label class="custom-checkbox" for="detritus">
-            <span class="custom-label">D</span>
-            <input type="checkbox" id="detritus" @bind="_merknadDto.Detritus" />
-            <span class="custom-checkmark"></span>
-        </label>
-
-        <label class="custom-checkbox" for="terrestrisk">
-            <span class="custom-label">TM</span>
-            <input type="checkbox" id="terrestrisk" @bind="_merknadDto.TerrestriskMateriale" />
-            <span class="custom-checkmark"></span>
-        </label>
-
-        <label class="custom-checkbox" for="anleggsrens">
-            <span class="custom-label">RAR</span>
-            <input type="checkbox" id="anleggsrens" @bind="_merknadDto.ResterEtterAnleggsrens" />
-            <span class="custom-checkmark"></span>
-        </label>
+        @foreach (Merknader note in Enum.GetValues(typeof(Merknader)))
+        {
+            <button type="button" class="btn btn-outline-secondary btn-sm me-1 mb-1"
+                    @onclick="() => AddMerknad(note)">
+                @note.GetDescription()
+            </button>
+        }
+        
+        <InputText class="form-control" id="merknader" placeholder="Merknader" @bind-Value="_surveyDto.Merknader"/>
+        <label for="merknader">Merknader</label>
     </div>
 
     @switch (_result)
@@ -546,6 +567,7 @@
 
     private string? _selectBunnType;
     private string? _selectSensorisk;
+    private string? _selectDyr;
     
     private bool? _result;
     private string? _resultMessage;
@@ -565,6 +587,47 @@
             _surveyDto.BStation.KoordinatNord = "Annen posisjon";
             _surveyDto.BStation.KoordinatOst = "Annen posisjon";
             _surveyDto.BStation.Dybde = value;
+        }
+    }
+    
+    private void SetAntallDyrVerdi(string verdi, Action<string> setValue)
+    {
+        try
+        {
+            var antall = new AntallDyr(verdi);
+            setValue(antall.ToString());
+        }
+        catch (ArgumentException ex)
+        {
+            _resultMessage = ex.Message;
+        }
+    }
+    
+    private void AddArter(Arter arter)
+    {
+        var newValue = arter.GetDescription();
+
+        if (string.IsNullOrWhiteSpace(_surveyDto.BAnimal.Arter))
+        {
+            _surveyDto.BAnimal.Arter = newValue;
+        }
+        else if (!_surveyDto.BAnimal.Arter.Contains(newValue))
+        {
+            _surveyDto.BAnimal.Arter += $", {newValue}";
+        }
+    }
+    
+    private void AddMerknad(Merknader merknad)
+    {
+        var newValue = merknad.GetDescription();
+
+        if (string.IsNullOrWhiteSpace(_surveyDto.Merknader))
+        {
+            _surveyDto.Merknader = newValue;
+        }
+        else if (!_surveyDto.Merknader.Contains(newValue))
+        {
+            _surveyDto.Merknader += $", {newValue}";
         }
     }
 
@@ -608,6 +671,19 @@
         else
         {
             _surveyDto.SensoriskId = null;
+        }
+
+        if (_selectDyr == "ja")
+        {
+            _surveyDto.DyrId = Guid.NewGuid();
+            _surveyDto.BAnimal = new BAnimalDto
+            {
+                Id = _surveyDto.DyrId.Value
+            };
+        }
+        else
+        {
+            _surveyDto.DyrId = null;
         }
         
         var response = await Http.PostAsJsonAsync($"api/Project/{ProjectId}/station/{StationId}/survey", _surveyDto);

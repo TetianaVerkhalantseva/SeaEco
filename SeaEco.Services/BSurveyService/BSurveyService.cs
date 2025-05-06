@@ -62,14 +62,8 @@ public class BSurveyService: IBSurveyService
             dto.Id = Guid.NewGuid();
             dto.ProsjektId = projectId;
             
-            dto.DyrId = Guid.NewGuid();
             dto.DatoRegistrert ??= DateTime.Now;
             dto.DatoEndret ??= DateTime.Now;
-            
-            if (dto.BAnimal != null)
-            {
-                dto.BAnimal.Id = Guid.NewGuid();
-            }
             
             foreach (var log in dto.BSurveyLogs)
             {
