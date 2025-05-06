@@ -88,7 +88,6 @@ public sealed class ReportService(Report report, IGenericRepository<BProsjekt> p
         BProsjekt? dbRecord = await projectRepository.GetAll()
             .Include(project => project.Kunde)
             .Include(project => project.BPreinfos)
-                .ThenInclude(undersokelses => undersokelses.BSjovann)
             .Include(project => project.Lokalitet)
             .Include(project => project.BTilstand)
             .Include(project => project.BUndersokelses)
@@ -138,16 +137,16 @@ public sealed class ReportService(Report report, IGenericRepository<BProsjekt> p
             Lokalitetsnavn = dbRecord.Lokalitet.Lokalitetsnavn,
             LokalitetsID = dbRecord.Lokalitet.LokalitetsId
         };
-
-        BSjovann? dbSjovann = dbRecord.BPreinfos.OrderBy(_ => _.Feltdato).FirstOrDefault()?.BSjovann;
+        
+        BPreinfo? dbPreinfo = dbRecord.BPreinfos.OrderBy(_ => _.Feltdato).FirstOrDefault();
         
         SjovannB1 sjovann = new SjovannB1()
         {
-            SjoTemperatur = dbSjovann?.Temperatur ?? 0,
-            pHSjo = dbSjovann?.Ph ?? 0,
-            EhSjo = dbSjovann?.Eh ?? 0,
+            SjoTemperatur = dbPreinfo?.SjoTemperatur ?? 0,
+            pHSjo = dbPreinfo?.PhSjo ?? 0,
+            EhSjo = dbPreinfo?.EhSjo ?? 0,
             SedimentTemperatur = dbRecord.BUndersokelses.Any() ? dbRecord.BUndersokelses.Average(u => u.Sediment?.Temperatur ?? 0): 0,
-            //RefElektrode = dbSjovann?.RefElektrode ?? 0,
+            RefElektrode = dbPreinfo?.RefElektrode ?? 0,
         };
 
         TilstandB1 tilstand = new TilstandB1()

@@ -185,15 +185,31 @@ public sealed class DbSeeder
             {
                 Id = preinfoId1,
                 ProsjektId = prosjektId1,
-                Feltdato = DateTime.Now,
-                FeltansvarligId = feltansvarligId
+                Feltdato = new DateTime(2025, 4, 8, 8, 30, 0),
+                FeltansvarligId = feltansvarligId,
+                PhSjo = 7.94f,
+                EhSjo = 185.2f,
+                SjoTemperatur = 10.8f,
+                RefElektrode = 0,
+                Grabb = "2",
+                Sil = "3",
+                PhMeter = "2",
+                Kalibreringsdato = new DateOnly(2025, 4, 7)
             },
             new BPreinfo()
             {
                 Id = preinfoId2,
                 ProsjektId = prosjektId2,
-                Feltdato = DateTime.Now,
-                FeltansvarligId = feltansvarligId
+                Feltdato = new DateTime(2025, 4, 25, 10, 0, 0),
+                FeltansvarligId = feltansvarligId,
+                PhSjo = 6.94f,
+                EhSjo = 182.0f,
+                SjoTemperatur = 11.1f,
+                RefElektrode = 0,
+                Grabb = "2",
+                Sil = "3",
+                PhMeter = "2",
+                Kalibreringsdato = new DateOnly(2025, 4, 24)
             }
         ];
 
