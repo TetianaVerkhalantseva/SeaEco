@@ -108,7 +108,7 @@
                     <label for="ProveTemp">Temp</label>
                 </div>
             }
-            
+
             @if (_survey?.BSensorisk != null)
             {
                 <div class="form-floating mb-3">
@@ -194,7 +194,7 @@
             </div>
         }
     </div>
-    
+
     @* TODO: Picture usilt and tom grabb container *@
     @* <div class="picture-container"> *@
     @*     <button class="picture-button" style="vertical-align:middle"><span>Usilt bilde</span></button> *@
@@ -453,7 +453,7 @@
     private string? _selectedBunnType;
     private string? _selectedSensorisk;
     private string? _selectedDyr;
-    
+
     protected override async Task OnInitializedAsync()
     {
         await LoadSurveyData();
@@ -464,7 +464,7 @@
         try
         {
             _survey = await Http.GetFromJsonAsync<SurveyDto>($"api/Project/{ProjectId:guid}/station/{StationId:guid}/survey/{SurveyId:guid}");
-            
+
             // Test code
             // _survey = new SurveyDto
             // {
@@ -544,7 +544,7 @@
                 _selectedBunnType = "hard";
 
             _selectedSensorisk = _survey?.SensoriskId != null ? "ja" : "nei";
-            
+
             _selectedDyr = _survey?.DyrId != null ? "ja" : "nei";
         }
         catch (Exception ex)
@@ -560,7 +560,7 @@
             await Js.InvokeVoidAsync("updateDisplay_2");
         }
     }
-    
+
     private void HandleEdit()
     {
         Navigation.NavigateTo("");
