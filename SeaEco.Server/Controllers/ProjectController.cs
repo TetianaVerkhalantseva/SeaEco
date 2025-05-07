@@ -93,6 +93,18 @@ public class ProjectController : ControllerBase
         }
     }
     
+    [HttpPost("{projectId:guid}/status")]
+    public async Task<IActionResult> ChangeStatus(Guid projectId, [FromBody] UpdateProjectStatusDto dto)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+        try
+        {
+            await _projectService.UpdateProjectStatusAsync(projectId, dto.NewStatus, dto.Merknad);
+            return Ok();
+        }
+        catch (Exception e) { return BadRequest(e.Message); }
+    }
+    
     // Operasjoner for prøvtakningsplan
     [HttpGet("{projectId:guid}/sampling-plan/{samplingPlanId:guid}")]
     public async Task<IActionResult> GetProjectSamplingPlan(Guid projectId, Guid samplingPlanId)

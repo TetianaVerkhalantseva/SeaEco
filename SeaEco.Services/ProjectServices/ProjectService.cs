@@ -240,4 +240,30 @@ public class ProjectService : IProjectService
 
         return idSe;
     }
+    
+    public async Task UpdateProjectStatusAsync(Guid projectId, Prosjektstatus newStatus, string? merknad = null)
+    {
+        var prosjekt = await _context.BProsjekts.FindAsync(projectId);
+        if (prosjekt == null)
+            throw new KeyNotFoundException($"Prosjekt {projectId} ikke funnet.");
+
+        // Dersom vi går til Ferdig eller Deaktivert, må bruker legge inn merknad:
+        if ((newStatus == Prosjektstatus.Ferdig || newStatus == Prosjektstatus.Deaktivert)
+            && string.IsNullOrWhiteSpace(merknad))
+        {
+            throw new ArgumentException("Merknad må fylles ut når status settes til Ferdig eller Deaktivert.");
+        }
+
+        prosjekt.Prosjektstatus = (int)newStatus;
+
+        // Når man legger til merknad, append på eksisterende med ny linje:
+        if (!string.IsNullOrWhiteSpace(merknad))
+        {
+            prosjekt.Merknad = string.IsNullOrWhiteSpace(prosjekt.Merknad)
+                ? merknad
+                : $"{prosjekt.Merknad}\n{merknad}";
+        }
+
+        await _context.SaveChangesAsync();
+    }
 }
