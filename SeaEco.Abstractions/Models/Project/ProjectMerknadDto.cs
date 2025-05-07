@@ -3,11 +3,15 @@ using SeaEco.Abstractions.Enums;
 
 namespace SeaEco.Abstractions.Models.Project;
 
-public class UpdateProjectStatusDto
+public class MerknadDto
 {
     [Required]
-    public Prosjektstatus NewStatus { get; set; }
+    public string Merknad { get; set; } = null!;
+}
 
-    // Må skrives inn Merknad ved Ferdig/Deaktivert
+public class UpdateStatusDto
+{
+    [Required]
+    public Prosjektstatus Status { get; set; }
     public string? Merknad { get; set; }
 }

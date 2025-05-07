@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using SeaEco.Abstractions.Enums;
 using SeaEco.Abstractions.Models.BSurvey;
 using SeaEco.Abstractions.Models.Bundersokelse;
 using SeaEco.EntityFramework.Contexts;
 using SeaEco.Services.Mapping;
+using SeaEco.Services.ProjectServices;
 
 namespace SeaEco.Services.BSurveyService;
 
@@ -10,10 +12,14 @@ namespace SeaEco.Services.BSurveyService;
 public class BSurveyService: IBSurveyService
 {
     private readonly AppDbContext _db;
+    private readonly IProjectService _projectService;
 
-    public BSurveyService(AppDbContext db)
+    public BSurveyService(
+        AppDbContext db,
+        IProjectService projectService)
     {
         _db = db;
+        _projectService = projectService;
     }
 
     public async Task<SurveyDto?> GetSurveyById(Guid id)
@@ -73,6 +79,16 @@ public class BSurveyService: IBSurveyService
             var entity = dto.ToEntity();
             _db.BUndersokelses.Add(entity);
             await _db.SaveChangesAsync();
+            
+            var proj = await _projectService.GetProjectByIdAsync(projectId);
+            if (proj.Prosjektstatus == Prosjektstatus.Pabegynt)
+            {
+                await _projectService.UpdateProjectStatusAsync(
+                    projectId,
+                    Prosjektstatus.Pagar,
+                    merknad: null
+                );
+            }
             
             return new EditSurveyResult
             {

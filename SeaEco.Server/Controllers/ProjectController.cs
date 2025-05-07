@@ -93,17 +93,58 @@ public class ProjectController : ControllerBase
         }
     }
     
-    [HttpPost("{projectId:guid}/status")]
-    public async Task<IActionResult> ChangeStatus(Guid projectId, [FromBody] UpdateProjectStatusDto dto)
+    [HttpPost("{projectId:guid}/merknad")]
+    public async Task<IActionResult> AddMerknad(Guid projectId, [FromBody] MerknadDto dto)
     {
-        if (!ModelState.IsValid) return BadRequest(ModelState);
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
         try
         {
-            await _projectService.UpdateProjectStatusAsync(projectId, dto.NewStatus, dto.Merknad);
+            await _projectService.AddMerknadAsync(projectId, dto.Merknad);
             return Ok();
         }
-        catch (Exception e) { return BadRequest(e.Message); }
+        catch (KeyNotFoundException knf)
+        {
+            return NotFound(knf.Message);
+        }
     }
+    
+    [HttpPut("{projectId:guid}/merknad")]
+    public async Task<IActionResult> EditMerknad(Guid projectId, [FromBody] MerknadDto dto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        try
+        {
+            await _projectService.EditMerknadAsync(projectId, dto.Merknad);
+            return Ok();
+        }
+        catch (KeyNotFoundException knf)
+        {
+            return NotFound(knf.Message);
+        }
+    }
+    
+    [HttpPut("{projectId:guid}/status")]
+    public async Task<IActionResult> UpdateStatus(Guid projectId, [FromBody] UpdateStatusDto dto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        try
+        {
+            await _projectService.UpdateProjectStatusAsync(projectId, dto.Status, dto.Merknad);
+            return Ok();
+        }
+        catch (KeyNotFoundException knf)
+        {
+            return NotFound(knf.Message);
+        }
+    }
+    
+    
     
     // Operasjoner for prøvtakningsplan
     [HttpGet("{projectId:guid}/sampling-plan/{samplingPlanId:guid}")]

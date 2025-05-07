@@ -12,4 +12,6 @@ public interface IProjectService
     Task<ProjectDto> UpdateProjectAsync(Guid id, EditProjectDto dto);
     Task<string> GenerateAndSetProsjektIdSeAsync(Guid prosjektId, DateTime feltdato);
     Task UpdateProjectStatusAsync(Guid projectId, Prosjektstatus newStatus, string? merknad = null);
+    Task AddMerknadAsync(Guid projectId, string merknad);
+    Task EditMerknadAsync(Guid projectId, string merknad);
 }

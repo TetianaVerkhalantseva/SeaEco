@@ -173,17 +173,17 @@ public class ProjectService : IProjectService
         prosjekt.ProsjektansvarligId = dto.ProsjektansvarligId;
         prosjekt.Produksjonsstatus   = (int)dto.Produksjonsstatus;
         
+        await _context.SaveChangesAsync();
+        
         if (!string.IsNullOrWhiteSpace(dto.Merknad))
         {
-            var nyKommentar = $"{dto.Merknad}";
-
-            if (string.IsNullOrWhiteSpace(prosjekt.Merknad))
-                prosjekt.Merknad = nyKommentar;
-            else
-                prosjekt.Merknad += $"\n{nyKommentar}";
+            await AddMerknadAsync(id, dto.Merknad!);
+            prosjekt = await _context.BProsjekts
+                           .Include(p => p.Lokalitet)
+                           .Include(p => p.BTilstand)
+                           .FirstOrDefaultAsync(p => p.Id == id)
+                       ?? throw new InvalidOperationException("Kunne ikke laste prosjekt etter merknad.");
         }
-    
-        await _context.SaveChangesAsync();
         
         return new ProjectDto
         {
@@ -206,6 +206,28 @@ public class ProjectService : IProjectService
                 : null,
             ProsjektIdSe         = prosjekt.ProsjektIdSe
         };
+    }
+    
+    public async Task AddMerknadAsync(Guid projectId, string merknad)
+    {
+        var prosjekt = await _context.BProsjekts.FindAsync(projectId);
+        if (prosjekt == null) throw new KeyNotFoundException($"Prosjekt {projectId} ikke funnet.");
+
+        if (string.IsNullOrWhiteSpace(prosjekt.Merknad))
+            prosjekt.Merknad = merknad;
+        else
+            prosjekt.Merknad += "\n" + merknad;
+
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task EditMerknadAsync(Guid projectId, string merknad)
+    {
+        var prosjekt = await _context.BProsjekts.FindAsync(projectId);
+        if (prosjekt == null) throw new KeyNotFoundException($"Prosjekt {projectId} ikke funnet.");
+
+        prosjekt.Merknad = merknad;
+        await _context.SaveChangesAsync();
     }
     
     public async Task<string> GenerateAndSetProsjektIdSeAsync(Guid prosjektId, DateTime feltdato)
@@ -232,8 +254,7 @@ public class ProjectService : IProjectService
 
         // Formater: SE-25-BU-1
         var idSe = $"SE-{yearSuffix}-BU-{løpenummer}";
-
-        // Sett og lagre:
+        
         prosjekt.ProsjektIdSe = idSe;
         _context.BProsjekts.Update(prosjekt);
         await _context.SaveChangesAsync();
@@ -241,27 +262,20 @@ public class ProjectService : IProjectService
         return idSe;
     }
     
-    public async Task UpdateProjectStatusAsync(Guid projectId, Prosjektstatus newStatus, string? merknad = null)
+    public async Task UpdateProjectStatusAsync(Guid projectId, Prosjektstatus nyStatus, string? merknad = null)
     {
         var prosjekt = await _context.BProsjekts.FindAsync(projectId);
-        if (prosjekt == null)
-            throw new KeyNotFoundException($"Prosjekt {projectId} ikke funnet.");
+        if (prosjekt == null) throw new KeyNotFoundException($"Prosjekt {projectId} ikke funnet.");
 
-        // Dersom vi går til Ferdig eller Deaktivert, må bruker legge inn merknad:
-        if ((newStatus == Prosjektstatus.Ferdig || newStatus == Prosjektstatus.Deaktivert)
-            && string.IsNullOrWhiteSpace(merknad))
+        prosjekt.Prosjektstatus = (int)nyStatus;
+        
+        if (merknad != null &&
+            (nyStatus == Prosjektstatus.Ferdig || nyStatus == Prosjektstatus.Deaktivert))
         {
-            throw new ArgumentException("Merknad må fylles ut når status settes til Ferdig eller Deaktivert.");
-        }
-
-        prosjekt.Prosjektstatus = (int)newStatus;
-
-        // Når man legger til merknad, append på eksisterende med ny linje:
-        if (!string.IsNullOrWhiteSpace(merknad))
-        {
-            prosjekt.Merknad = string.IsNullOrWhiteSpace(prosjekt.Merknad)
-                ? merknad
-                : $"{prosjekt.Merknad}\n{merknad}";
+            if (string.IsNullOrWhiteSpace(prosjekt.Merknad))
+                prosjekt.Merknad = merknad;
+            else
+                prosjekt.Merknad += "\n" + merknad;
         }
 
         await _context.SaveChangesAsync();
