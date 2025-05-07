@@ -81,7 +81,7 @@ public class BSurveyService: IBSurveyService
             await _db.SaveChangesAsync();
             
             var proj = await _projectService.GetProjectByIdAsync(projectId);
-            if (proj.Prosjektstatus == Prosjektstatus.Pabegynt)
+            if (proj?.Prosjektstatus == Prosjektstatus.Pabegynt)
             {
                 await _projectService.UpdateProjectStatusAsync(
                     projectId,

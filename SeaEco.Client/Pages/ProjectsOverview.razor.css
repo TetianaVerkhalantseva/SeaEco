@@ -25,7 +25,7 @@
 }
 
 .card-status-started {
-    background: linear-gradient(to bottom, #D98CBF, #B16497);
+    background: linear-gradient(to bottom, #CD8CD9, #A564B1);
     color: white;
     border: 1px solid #ccc;
     border-top-left-radius: .3rem; 
@@ -42,8 +42,17 @@
     border-bottom: none;           
 }
 
+.card-status-paagar {
+    background: linear-gradient(to bottom, #D9A68C, #B17E64);
+    color: white;
+    border: 1px solid #ccc;
+    border-top-left-radius: .3rem;
+    border-top-right-radius: .3rem;
+    border-bottom: none;
+}
+
 .card-status-done {
-    background: linear-gradient(to bottom, #BFD98C, #97B164);
+    background: linear-gradient(to bottom, #99D98C, #70B164);
     color: white;
     border: 1px solid #ccc;
     border-top-left-radius: .3rem;
@@ -165,4 +174,7 @@
     opacity: 1;
     padding: 1rem;
     background-color: #eef2f4;
+    border-bottom-left-radius: .5rem;
+    border-bottom-right-radius: .5rem;
+    
 }

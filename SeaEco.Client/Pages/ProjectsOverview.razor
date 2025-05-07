@@ -172,7 +172,7 @@
     private List<string>? _allLocations;
     private List<string>? _allCustomers;
     private bool _isLoading = true;
-    private readonly List<string> _allStatuses = ["Nytt", "Påbegynt", "Deaktivert", "Ferdig"];
+    private readonly List<string> _allStatuses = ["Nytt", "Påbegynt", "Pågår", "Deaktivert", "Ferdig"];
     private readonly List<string> _listTableHeader =
     [
         Resources.TableHeaderCustomer,
@@ -190,7 +190,7 @@
     private int? SelectedMnd { get; set; }
     private string? SelectedCustomer { get; set; }
     private string? SelectedLocation { get; set; }
-    private List<string> SelectedStatuses { get; set; } = ["Nytt", "Påbegynt", "Ferdig"];
+    private List<string> SelectedStatuses { get; set; } = ["Nytt", "Påbegynt", "Pågår", "Ferdig"];
     
     private string? _currentSortColumn;
     private bool _sortAscending = true;
@@ -238,6 +238,7 @@
             "Nytt" => "card-status-new",
             "Ferdig" => "card-status-done",
             "Påbegynt" => "card-status-started",
+            "Pågår" => "card-status-paagar",
             "Deaktivert" => "card-status-deactivated",
             _ => throw new ArgumentOutOfRangeException(nameof(status), status, null)
         };
@@ -268,7 +269,7 @@
             
             //Default sorting by status and date
             if (string.IsNullOrEmpty(_currentSortColumn))
-                return FilterProjects?.OrderByDescending(projects => projects.Prosjektstatus).ThenByDescending(projects => projects.StationDatesString).ToList();
+                return FilterProjects?.OrderBy(projects => projects.Prosjektstatus).ThenByDescending(projects => projects.StationDatesString).ToList();
 
             
             var sorted = _currentSortColumn switch
@@ -335,7 +336,7 @@
         SelectedMnd = null;
         SelectedCustomer = null;
         SelectedLocation = null;
-        SelectedStatuses = ["Nytt", "Påbegynt", "Ferdig"];
+        SelectedStatuses = ["Nytt", "Påbegynt", "Pågår", "Ferdig"];
     }
 
 }

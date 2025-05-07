@@ -18,7 +18,7 @@ public class ProjectService : IProjectService
     public async Task<Guid> CreateProjectAsync(NewProjectDto dto)
     {
         
-        // Sjekk om lokalitet finnes, ellers opprett
+        // Sjekk om lokalitet finnes, ellers opprettes
         var lokalitet = await _context.Lokalitets
             .FirstOrDefaultAsync(l => l.Lokalitetsnavn == dto.Lokalitetsnavn || l.LokalitetsId == dto.LokalitetsId);
 
@@ -73,6 +73,7 @@ public class ProjectService : IProjectService
             {
                 Id = p.Id,
                 PoId = p.PoId,
+                ProsjektIdSe = p.ProsjektIdSe,
                 KundeId = p.KundeId,
                 Oppdragsgiver = p.Kunde.Oppdragsgiver, 
                 Kundekontaktperson = p.Kundekontaktperson,
@@ -122,6 +123,7 @@ public class ProjectService : IProjectService
             Mtbtillatelse = p.Mtbtillatelse,
             ProsjektansvarligId = p.ProsjektansvarligId,
             Merknad = p.Merknad,
+            ProsjektIdSe = p.ProsjektIdSe,
             Produksjonsstatus = (Produksjonsstatus)p.Produksjonsstatus,
             Prosjektstatus = (Prosjektstatus)p.Prosjektstatus,
             Tilstand = p.BTilstand != null

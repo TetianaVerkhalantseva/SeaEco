@@ -252,6 +252,24 @@
     padding-left: 28px;
 }
 
+.toggle-btn {
+    padding: 0.5rem 1rem;
+    margin: 0.25rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: lightgray;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.toggle-btn[data-level='0.5'] {
+    background-color: orange;
+}
+
+.toggle-btn[data-level='1'] {
+    background-color: green;
+}
+
 /* Hide default checkbox */
 .checkbox-container input[type="checkbox"] {
     appearance: none;

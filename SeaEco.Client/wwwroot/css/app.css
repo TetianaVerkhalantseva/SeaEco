@@ -99,7 +99,7 @@ a, .btn-link {
 }
 
 .fixed-dropdown {
-    width: 270px;
+    width: 320px;
     overflow-x: auto;
     padding: 5px;
     z-index: 2000;
