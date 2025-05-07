@@ -6,4 +6,5 @@ public interface IReportService
 {
     Task<Response<string>> GenerateInfoReport(Guid projectId);
     Task<Response<string>> GenerateB1Report(Guid projectId);
+    Task<Response<string>> GenerateB2Report(Guid projectId);
 }

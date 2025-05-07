@@ -93,6 +93,59 @@ public class ProjectController : ControllerBase
         }
     }
     
+    [HttpPost("{projectId:guid}/merknad")]
+    public async Task<IActionResult> AddMerknad(Guid projectId, [FromBody] MerknadDto dto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        try
+        {
+            await _projectService.AddMerknadAsync(projectId, dto.Merknad);
+            return Ok();
+        }
+        catch (KeyNotFoundException knf)
+        {
+            return NotFound(knf.Message);
+        }
+    }
+    
+    [HttpPut("{projectId:guid}/merknad")]
+    public async Task<IActionResult> EditMerknad(Guid projectId, [FromBody] MerknadDto dto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        try
+        {
+            await _projectService.EditMerknadAsync(projectId, dto.Merknad);
+            return Ok();
+        }
+        catch (KeyNotFoundException knf)
+        {
+            return NotFound(knf.Message);
+        }
+    }
+    
+    [HttpPut("{projectId:guid}/status")]
+    public async Task<IActionResult> UpdateStatus(Guid projectId, [FromBody] UpdateStatusDto dto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        try
+        {
+            await _projectService.UpdateProjectStatusAsync(projectId, dto.Status, dto.Merknad);
+            return Ok();
+        }
+        catch (KeyNotFoundException knf)
+        {
+            return NotFound(knf.Message);
+        }
+    }
+    
+    
+    
     // Operasjoner for prøvtakningsplan
     [HttpGet("{projectId:guid}/sampling-plan/{samplingPlanId:guid}")]
     public async Task<IActionResult> GetProjectSamplingPlan(Guid projectId, Guid samplingPlanId)
