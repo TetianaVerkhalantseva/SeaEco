@@ -14,72 +14,487 @@ public partial class AppDbContext : DbContext
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
     {
-        Database.Migrate();
     }
-    
-    public virtual DbSet<Bruker> Brukers { get; set; }
 
     public virtual DbSet<BBilder> BBilders { get; set; }
 
+    public virtual DbSet<BBlotbunn> BBlotbunns { get; set; }
+
     public virtual DbSet<BDyr> BDyrs { get; set; }
+
+    public virtual DbSet<BHardbunn> BHardbunns { get; set; }
+
+    public virtual DbSet<BPreinfo> BPreinfos { get; set; }
 
     public virtual DbSet<BProsjekt> BProsjekts { get; set; }
 
-    public virtual DbSet<BProsjektUtstyr> BProsjektUtstyrs { get; set; }
+    public virtual DbSet<BProvetakningsplan> BProvetakningsplans { get; set; }
 
-    public virtual DbSet<BProvetakingsplan> BProvetakingsplans { get; set; }
+    public virtual DbSet<BRapporter> BRapporters { get; set; }
 
-    public virtual DbSet<BRapport> BRapports { get; set; }
+    public virtual DbSet<BSediment> BSediments { get; set; }
 
     public virtual DbSet<BSensorisk> BSensorisks { get; set; }
 
     public virtual DbSet<BStasjon> BStasjons { get; set; }
 
-    public virtual DbSet<Endringslogg> Endringsloggs { get; set; }
+    public virtual DbSet<BTilstand> BTilstands { get; set; }
+
+    public virtual DbSet<BUndersokelse> BUndersokelses { get; set; }
+
+    public virtual DbSet<BUndersokelseslogg> BUndersokelsesloggs { get; set; }
+
+    public virtual DbSet<Bruker> Brukers { get; set; }
 
     public virtual DbSet<Kunde> Kundes { get; set; }
 
-    public virtual DbSet<Revisjonslogg> Revisjonsloggs { get; set; }
+    public virtual DbSet<Lokalitet> Lokalitets { get; set; }
 
-    public virtual DbSet<SysArter> SysArters { get; set; }
-
-    public virtual DbSet<SysBunsammensettning> SysBunsammensettnings { get; set; }
-
-    public virtual DbSet<SysFarge> SysFarges { get; set; }
-
-    public virtual DbSet<SysGassbobler> SysGassboblers { get; set; }
-
-    public virtual DbSet<SysGrabbvolum> SysGrabbvolums { get; set; }
-
-    public virtual DbSet<SysKonsisten> SysKonsistens { get; set; }
-
-    public virtual DbSet<SysLukt> SysLukts { get; set; }
-
-    public virtual DbSet<SysMerknad> SysMerknads { get; set; }
-
-    public virtual DbSet<SysTykkelsepaslam> SysTykkelsepaslams { get; set; }
+    public virtual DbSet<Programversjon> Programversjons { get; set; }
 
     public virtual DbSet<Token> Tokens { get; set; }
-    
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseNpgsql("Server=127.0.0.1;Host=localhost;Database=seaeco;Port=5432;username=postgres");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<BBilder>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("pk_b_bilder");
+
+            entity.ToTable("b_bilder");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.Datogenerert)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("datogenerert");
+            entity.Property(e => e.Extension).HasColumnName("extension");
+            entity.Property(e => e.Silt).HasColumnName("silt");
+            entity.Property(e => e.UndersokelseId).HasColumnName("undersokelse_id");
+
+            entity.HasOne(d => d.Undersokelse).WithMany(p => p.BBilders)
+                .HasForeignKey(d => d.UndersokelseId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_bbilder_undersokelse_id");
+        });
+
+        modelBuilder.Entity<BBlotbunn>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("pk_b_blotbunn");
+
+            entity.ToTable("b_blotbunn");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.Grus).HasColumnName("grus");
+            entity.Property(e => e.Leire).HasColumnName("leire");
+            entity.Property(e => e.Sand).HasColumnName("sand");
+            entity.Property(e => e.Silt).HasColumnName("silt");
+            entity.Property(e => e.Skjellsand).HasColumnName("skjellsand");
+        });
+
+        modelBuilder.Entity<BDyr>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("pk_b_dyr");
+
+            entity.ToTable("b_dyr");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.Arter).HasColumnName("arter");
+            entity.Property(e => e.Borstemark).HasColumnName("borstemark");
+            entity.Property(e => e.Krepsdyr).HasColumnName("krepsdyr");
+            entity.Property(e => e.Pigghunder).HasColumnName("pigghunder");
+            entity.Property(e => e.Skjell).HasColumnName("skjell");
+        });
+
+        modelBuilder.Entity<BHardbunn>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("pk_b_hardbunn");
+
+            entity.ToTable("b_hardbunn");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.Fjellbunn).HasColumnName("fjellbunn");
+            entity.Property(e => e.Steinbunn).HasColumnName("steinbunn");
+        });
+
+        modelBuilder.Entity<BPreinfo>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("pk_b_preinfo");
+
+            entity.ToTable("b_preinfo");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.EhSjo).HasColumnName("eh_sjo");
+            entity.Property(e => e.FeltansvarligId).HasColumnName("feltansvarlig_id");
+            entity.Property(e => e.Feltdato)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("feltdato");
+            entity.Property(e => e.Grabb).HasColumnName("grabb");
+            entity.Property(e => e.Kalibreringsdato).HasColumnName("kalibreringsdato");
+            entity.Property(e => e.PhMeter).HasColumnName("ph_meter");
+            entity.Property(e => e.PhSjo).HasColumnName("ph_sjo");
+            entity.Property(e => e.ProsjektId).HasColumnName("prosjekt_id");
+            entity.Property(e => e.RefElektrode)
+                .HasDefaultValue(0)
+                .HasColumnName("ref_elektrode");
+            entity.Property(e => e.Sil).HasColumnName("sil");
+            entity.Property(e => e.SjoTemperatur).HasColumnName("sjo_temperatur");
+
+            entity.HasOne(d => d.Feltansvarlig).WithMany(p => p.BPreinfos)
+                .HasForeignKey(d => d.FeltansvarligId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_bpreinfo_bruker_id");
+
+            entity.HasOne(d => d.Prosjekt).WithMany(p => p.BPreinfos)
+                .HasForeignKey(d => d.ProsjektId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_bpreinfo_prosjekt_id");
+        });
+
+        modelBuilder.Entity<BProsjekt>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("pk_b_prosjekt");
+
+            entity.ToTable("b_prosjekt");
+
+            entity.HasIndex(e => e.PoId, "uq_bprosjekt_poID").IsUnique();
+
+            entity.HasIndex(e => e.ProsjektIdSe, "uq_bprosjekt_prosjektIdSe").IsUnique();
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.Datoregistrert)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("datoregistrert");
+            entity.Property(e => e.KundeId).HasColumnName("kunde_id");
+            entity.Property(e => e.Kundeepost)
+                .HasMaxLength(45)
+                .HasColumnName("kundeepost");
+            entity.Property(e => e.Kundekontaktperson)
+                .HasMaxLength(45)
+                .HasColumnName("kundekontaktperson");
+            entity.Property(e => e.Kundetlf)
+                .HasMaxLength(12)
+                .HasColumnName("kundetlf");
+            entity.Property(e => e.LokalitetId).HasColumnName("lokalitet_id");
+            entity.Property(e => e.Merknad).HasColumnName("merknad");
+            entity.Property(e => e.Mtbtillatelse).HasColumnName("mtbtillatelse");
+            entity.Property(e => e.PoId)
+                .HasMaxLength(6)
+                .HasColumnName("poID");
+            entity.Property(e => e.Produksjonsstatus).HasColumnName("produksjonsstatus");
+            entity.Property(e => e.ProsjektIdSe)
+                .HasMaxLength(12)
+                .HasColumnName("prosjektIdSe");
+            entity.Property(e => e.ProsjektansvarligId).HasColumnName("prosjektansvarlig_id");
+            entity.Property(e => e.Prosjektstatus).HasColumnName("prosjektstatus");
+
+            entity.HasOne(d => d.Kunde).WithMany(p => p.BProsjekts)
+                .HasForeignKey(d => d.KundeId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_bprosjekt_kunde_id");
+
+            entity.HasOne(d => d.Lokalitet).WithMany(p => p.BProsjekts)
+                .HasForeignKey(d => d.LokalitetId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_bprosjekt_lokalitet_id");
+
+            entity.HasOne(d => d.Prosjektansvarlig).WithMany(p => p.BProsjekts)
+                .HasForeignKey(d => d.ProsjektansvarligId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_bprosjekt_bruker_id");
+        });
+
+        modelBuilder.Entity<BProvetakningsplan>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("pk_b_provetakningsplan");
+
+            entity.ToTable("b_provetakningsplan");
+
+            entity.HasIndex(e => e.ProsjektId, "uq_bprovetakningsplan_prosjekt_id").IsUnique();
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.Planlagtfeltdato).HasColumnName("planlagtfeltdato");
+            entity.Property(e => e.PlanleggerId).HasColumnName("planlegger_id");
+            entity.Property(e => e.ProsjektId).HasColumnName("prosjekt_id");
+
+            entity.HasOne(d => d.Planlegger).WithMany(p => p.BProvetakningsplans)
+                .HasForeignKey(d => d.PlanleggerId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_bprovetakningsplan_bruker_id");
+
+            entity.HasOne(d => d.Prosjekt).WithOne(p => p.BProvetakningsplan)
+                .HasForeignKey<BProvetakningsplan>(d => d.ProsjektId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_bprovetakingsplan_prosjekt_id");
+        });
+
+        modelBuilder.Entity<BRapporter>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("pk_b_rapporter");
+
+            entity.ToTable("b_rapporter");
+
+            entity.HasIndex(e => e.GodkjentAv, "fki_fk_brapporter_bruker_id");
+
+            entity.HasIndex(e => e.ProsjektId, "fki_fk_brapporter_prosjekt_id");
+
+            entity.HasIndex(e => new { e.ProsjektId, e.ArkNavn }, "uq_brapporter_prosjektid_arknavn").IsUnique();
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.ArkNavn).HasColumnName("ark_navn");
+            entity.Property(e => e.Datogenerert).HasColumnName("datogenerert");
+            entity.Property(e => e.ErGodkjent)
+                .HasDefaultValue(false)
+                .HasColumnName("er_godkjent");
+            entity.Property(e => e.GodkjentAv).HasColumnName("godkjent_av");
+            entity.Property(e => e.ProsjektId).HasColumnName("prosjekt_id");
+
+            entity.HasOne(d => d.GodkjentAvNavigation).WithMany(p => p.BRapporters)
+                .HasForeignKey(d => d.GodkjentAv)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_brapporter_bruker_id");
+
+            entity.HasOne(d => d.Prosjekt).WithMany(p => p.BRapporters)
+                .HasForeignKey(d => d.ProsjektId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_brapporter_prosjekt_id");
+        });
+
+        modelBuilder.Entity<BSediment>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("pk_b_sediment");
+
+            entity.ToTable("b_sediment");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.Eh).HasColumnName("eh");
+            entity.Property(e => e.KlasseGr2).HasColumnName("klasse_gr2");
+            entity.Property(e => e.Ph).HasColumnName("ph");
+            entity.Property(e => e.Temperatur).HasColumnName("temperatur");
+            entity.Property(e => e.TilstandGr2).HasColumnName("tilstand_gr2");
+        });
+
+        modelBuilder.Entity<BSensorisk>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("pk_b_sensorisk");
+
+            entity.ToTable("b_sensorisk");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.Farge).HasColumnName("farge");
+            entity.Property(e => e.Gassbobler).HasColumnName("gassbobler");
+            entity.Property(e => e.Grabbvolum).HasColumnName("grabbvolum");
+            entity.Property(e => e.IndeksGr3).HasColumnName("indeks_gr3");
+            entity.Property(e => e.Konsistens).HasColumnName("konsistens");
+            entity.Property(e => e.Lukt).HasColumnName("lukt");
+            entity.Property(e => e.TilstandGr3).HasColumnName("tilstand _gr3");
+            entity.Property(e => e.Tykkelseslamlag).HasColumnName("tykkelseslamlag");
+        });
+
+        modelBuilder.Entity<BStasjon>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("pk_b_stasjon");
+
+            entity.ToTable("b_stasjon");
+
+            entity.HasIndex(e => new { e.ProsjektId, e.Nummer }, "uq_bstasjon_prosjektid_nummer").IsUnique();
+
+            entity.HasIndex(e => e.UndersokelseId, "uq_bstasjon_undersokelse_id").IsUnique();
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.Analyser).HasColumnName("analyser");
+            entity.Property(e => e.Dybde).HasColumnName("dybde");
+            entity.Property(e => e.KoordinatNord).HasColumnName("koordinat_nord");
+            entity.Property(e => e.KoordinatOst).HasColumnName("koordinat_ost");
+            entity.Property(e => e.Nummer).HasColumnName("nummer");
+            entity.Property(e => e.ProsjektId).HasColumnName("prosjekt_id");
+            entity.Property(e => e.ProvetakingsplanId).HasColumnName("provetakingsplan_id");
+            entity.Property(e => e.UndersokelseId).HasColumnName("undersokelse_id");
+
+            entity.HasOne(d => d.Prosjekt).WithMany(p => p.BStasjons)
+                .HasForeignKey(d => d.ProsjektId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_bstasjon_prosjekt_id ");
+
+            entity.HasOne(d => d.Provetakingsplan).WithMany(p => p.BStasjons)
+                .HasForeignKey(d => d.ProvetakingsplanId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_bstasjon_provetakingsplan_id ");
+
+            entity.HasOne(d => d.Undersokelse).WithOne(p => p.BStasjon)
+                .HasForeignKey<BStasjon>(d => d.UndersokelseId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_bstasjon_undersokelse_id ");
+        });
+
+        modelBuilder.Entity<BTilstand>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("pk_b_tilstand");
+
+            entity.ToTable("b_tilstand");
+
+            entity.HasIndex(e => e.ProsjektId, "uq_btilstand_prosjekt_id").IsUnique();
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.IndeksGr2).HasColumnName("indeks_gr2");
+            entity.Property(e => e.IndeksGr3).HasColumnName("indeks_gr3");
+            entity.Property(e => e.IndeksLokalitet).HasColumnName("indeks_lokalitet");
+            entity.Property(e => e.ProsjektId).HasColumnName("prosjekt_id");
+            entity.Property(e => e.TilstandGr2).HasColumnName("tilstand_gr2");
+            entity.Property(e => e.TilstandGr3).HasColumnName("tilstand_gr3");
+            entity.Property(e => e.TilstandLokalitet).HasColumnName("tilstand_lokalitet");
+
+            entity.HasOne(d => d.Prosjekt).WithOne(p => p.BTilstand)
+                .HasForeignKey<BTilstand>(d => d.ProsjektId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_btilstand_prosjekt_id");
+        });
+
+        modelBuilder.Entity<BUndersokelse>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("pk_b_undersokelse");
+
+            entity.ToTable("b_undersokelse");
+
+            entity.HasIndex(e => e.BlotbunnId, "uq_bundersokelse_blotbunn_id").IsUnique();
+
+            entity.HasIndex(e => e.DyrId, "uq_bundersokelse_dyr_id").IsUnique();
+
+            entity.HasIndex(e => e.HardbunnId, "uq_bundersokelse_hardbunn_id").IsUnique();
+
+            entity.HasIndex(e => e.SedimentId, "uq_bundersokelse_sediment_id").IsUnique();
+
+            entity.HasIndex(e => e.SensoriskId, "uq_bundersokelse_sensorisk_id").IsUnique();
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.AntallGrabbhugg).HasColumnName("antall_grabbhugg");
+            entity.Property(e => e.Beggiatoa).HasColumnName("beggiatoa");
+            entity.Property(e => e.BlotbunnId).HasColumnName("blotbunn_id");
+            entity.Property(e => e.DatoEndret)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("dato_endret");
+            entity.Property(e => e.DatoRegistrert)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("dato_registrert");
+            entity.Property(e => e.DyrId).HasColumnName("dyr_id");
+            entity.Property(e => e.Fekalier).HasColumnName("fekalier");
+            entity.Property(e => e.Feltdato).HasColumnName("feltdato");
+            entity.Property(e => e.Forrester).HasColumnName("forrester");
+            entity.Property(e => e.GrabbhastighetGodkjent).HasColumnName("grabbhastighet_godkjent");
+            entity.Property(e => e.HardbunnId).HasColumnName("hardbunn_id");
+            entity.Property(e => e.IndeksGr2Gr3).HasColumnName("indeks_gr2_gr3");
+            entity.Property(e => e.Merknader).HasColumnName("merknader");
+            entity.Property(e => e.PreinfoId).HasColumnName("preinfo_id");
+            entity.Property(e => e.ProsjektId).HasColumnName("prosjekt_id");
+            entity.Property(e => e.SedimentId).HasColumnName("sediment_id");
+            entity.Property(e => e.SensoriskId).HasColumnName("sensorisk_id");
+            entity.Property(e => e.TilstandGr2Gr3).HasColumnName("tilstand_gr2_gr3");
+
+            entity.HasOne(d => d.Blotbunn).WithOne(p => p.BUndersokelse)
+                .HasForeignKey<BUndersokelse>(d => d.BlotbunnId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_bundersokelse_blotbunn_id");
+
+            entity.HasOne(d => d.Dyr).WithOne(p => p.BUndersokelse)
+                .HasForeignKey<BUndersokelse>(d => d.DyrId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_bundersokelse_dyr_id");
+
+            entity.HasOne(d => d.Hardbunn).WithOne(p => p.BUndersokelse)
+                .HasForeignKey<BUndersokelse>(d => d.HardbunnId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_bundersøkelse_hardbunn_id");
+
+            entity.HasOne(d => d.Preinfo).WithMany(p => p.BUndersokelses)
+                .HasForeignKey(d => d.PreinfoId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_bundersokelse_preinfo_id");
+
+            entity.HasOne(d => d.Prosjekt).WithMany(p => p.BUndersokelses)
+                .HasForeignKey(d => d.ProsjektId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_bundersokelse_prosjekt_id");
+
+            entity.HasOne(d => d.Sediment).WithOne(p => p.BUndersokelse)
+                .HasForeignKey<BUndersokelse>(d => d.SedimentId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_bundersokelse_sediment_id");
+
+            entity.HasOne(d => d.Sensorisk).WithOne(p => p.BUndersokelse)
+                .HasForeignKey<BUndersokelse>(d => d.SensoriskId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_bundersokelse_sensorisk_id");
+        });
+
+        modelBuilder.Entity<BUndersokelseslogg>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("pk_b_undersokelseslogg");
+
+            entity.ToTable("b_undersokelseslogg");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.DatoEndret)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("dato_endret");
+            entity.Property(e => e.EndretAv).HasColumnName("endret_av");
+            entity.Property(e => e.Felt).HasColumnName("felt");
+            entity.Property(e => e.GammelVerdi).HasColumnName("gammel_verdi");
+            entity.Property(e => e.NyVerdi).HasColumnName("ny_verdi");
+            entity.Property(e => e.UndersokelseId).HasColumnName("undersokelse_id");
+
+            entity.HasOne(d => d.EndretAvNavigation).WithMany(p => p.BUndersokelsesloggs)
+                .HasForeignKey(d => d.EndretAv)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_bundersokelseslogg_bruker_id");
+
+            entity.HasOne(d => d.Undersokelse).WithMany(p => p.BUndersokelsesloggs)
+                .HasForeignKey(d => d.UndersokelseId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("fk_bundersokelseslogg_undersokelse_id");
+        });
+
         modelBuilder.Entity<Bruker>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("bruker_pkey");
+            entity.HasKey(e => e.Id).HasName("pk_bruker");
 
             entity.ToTable("bruker");
+
+            entity.HasIndex(e => e.Epost, "uq_bruker_epost").IsUnique();
 
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("id");
             entity.Property(e => e.Aktiv).HasColumnName("aktiv");
-            entity.Property(e => e.Datoregistrert)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("datoregistrert");
             entity.Property(e => e.Epost)
                 .HasMaxLength(45)
                 .HasColumnName("epost");
@@ -93,555 +508,98 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.PassordHash)
                 .HasColumnType("character varying")
                 .HasColumnName("passord_hash");
-            entity.Property(e => e.Salt)
-                .HasColumnType("bytea")
-                .HasColumnName("salt");
-        });
+            entity.Property(e => e.Salt).HasColumnName("salt");
 
-        modelBuilder.Entity<BBilder>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("b_bilder_pkey");
-
-            entity.ToTable("b_bilder");
-
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
-            entity.Property(e => e.Silt).HasColumnName("silt");
-            entity.Property(e => e.Extension).HasColumnName("extension");
-            entity.Property(e => e.Datoregistrert)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("datoregistrert");
-            entity.Property(e => e.Posisjon)
-                .HasMaxLength(255)
-                .HasColumnName("posisjon");
-            entity.Property(e => e.Stasjonsid).HasColumnName("stasjonsid");
-
-            entity.HasOne(d => d.BStasjon).WithMany(p => p.BBilders)
-                .HasForeignKey(d => new { d.Prosjektid, d.Stasjonsid })
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_b_bilder_b_stasjon");
-        });
-
-        modelBuilder.Entity<BDyr>(entity =>
-        {
-            entity.HasKey(e => new { e.ProsjektId, e.StasjonsId }).HasName("b_dyr_pkey");
-
-            entity.ToTable("b_dyr");
-
-            entity.Property(e => e.ProsjektId).HasColumnName("prosjekt_id");
-            entity.Property(e => e.StasjonsId).HasColumnName("stasjons_id");
-            entity.Property(e => e.Antallborstemark).HasColumnName("antallborstemark");
-            entity.Property(e => e.Antallkrepsdyr).HasColumnName("antallkrepsdyr");
-            entity.Property(e => e.Antallpigghunder).HasColumnName("antallpigghunder");
-            entity.Property(e => e.Antallskjell).HasColumnName("antallskjell");
-            entity.Property(e => e.Beggiota).HasColumnName("beggiota");
-            entity.Property(e => e.Fekalier).HasColumnName("fekalier");
-            entity.Property(e => e.Foor).HasColumnName("foor");
-
-            entity.HasOne(d => d.BStasjon).WithOne(p => p.BDyr)
-                .HasForeignKey<BDyr>(d => new { d.ProsjektId, d.StasjonsId })
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_b_dyr_b_stasjon");
-        });
-
-        modelBuilder.Entity<BProsjekt>(entity =>
-        {
-            entity.HasKey(e => e.Prosjektid).HasName("b_prosjekt_pkey");
-
-            entity.ToTable("b_prosjekt");
-
-            entity.Property(e => e.Prosjektid)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("prosjektid");
-            entity.Property(e => e.PoId).HasColumnName("po_id");
-            entity.Property(e => e.Ansvarligansatt2id).HasColumnName("ansvarligansatt2id");
-            entity.Property(e => e.Ansvarligansatt3id).HasColumnName("ansvarligansatt3id");
-            entity.Property(e => e.Ansvarligansatt4id).HasColumnName("ansvarligansatt4id");
-            entity.Property(e => e.Ansvarligansatt5id).HasColumnName("ansvarligansatt5id");
-            entity.Property(e => e.Ansvarligansattid).HasColumnName("ansvarligansattid");
-            entity.Property(e => e.Antallstasjoner).HasColumnName("antallstasjoner");
-            entity.Property(e => e.Biomasse).HasColumnName("biomasse");
-            entity.Property(e => e.Datoregistrert)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("datoregistrert");
-            entity.Property(e => e.Kundeepost)
-                .HasMaxLength(45)
-                .HasColumnName("kundeepost");
-            entity.Property(e => e.Kundeid).HasColumnName("kundeid");
-            entity.Property(e => e.Kundekontaktpersons)
-                .HasMaxLength(45)
-                .HasColumnName("kundekontaktpersons");
-            entity.Property(e => e.Kundetlf).HasColumnName("kundetlf");
-            entity.Property(e => e.Lokalitet)
-                .HasMaxLength(45)
-                .HasColumnName("lokalitet");
-            entity.Property(e => e.Lokalitetid).HasColumnName("lokalitetid");
-            entity.Property(e => e.Merknad)
-                .HasMaxLength(200)
-                .HasColumnName("merknad");
-            entity.Property(e => e.Mtbtillatelse).HasColumnName("mtbtillatelse");
-            entity.Property(e => e.Planlagtfeltdato).HasColumnName("planlagtfeltdato");
-            entity.Property(e => e.Status)
-                .HasMaxLength(45)
-                .HasColumnName("status");
-
-            entity.HasOne(d => d.Ansvarligansatt2).WithMany(p => p.BProsjektAnsvarligansatt2s)
-                .HasForeignKey(d => d.Ansvarligansatt2id)
-                .HasConstraintName("fk_b_prosjekt_bruker2");
-
-            entity.HasOne(d => d.Ansvarligansatt3).WithMany(p => p.BProsjektAnsvarligansatt3s)
-                .HasForeignKey(d => d.Ansvarligansatt3id)
-                .HasConstraintName("fk_b_prosjekt_bruker3");
-
-            entity.HasOne(d => d.Ansvarligansatt4).WithMany(p => p.BProsjektAnsvarligansatt4s)
-                .HasForeignKey(d => d.Ansvarligansatt4id)
-                .HasConstraintName("fk_b_prosjekt_bruker4");
-
-            entity.HasOne(d => d.Ansvarligansatt5).WithMany(p => p.BProsjektAnsvarligansatt5s)
-                .HasForeignKey(d => d.Ansvarligansatt5id)
-                .HasConstraintName("fk_b_prosjekt_bruker5");
-
-            entity.HasOne(d => d.Ansvarligansatt).WithMany(p => p.BProsjektAnsvarligansatts)
-                .HasForeignKey(d => d.Ansvarligansattid)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_b_prosjekt_bruker1");
-
-            entity.HasOne(d => d.Kunde).WithMany(p => p.BProsjekts)
-                .HasForeignKey(d => d.Kundeid)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_b_prosjekt_kunde");
-        });
-
-        modelBuilder.Entity<BProsjektUtstyr>(entity =>
-        {
-            entity.HasKey(e => e.Prosjektid).HasName("b_prosjekt_utstyr_pkey");
-
-            entity.ToTable("b_prosjekt_utstyr");
-
-            entity.Property(e => e.Prosjektid)
-                .ValueGeneratedNever()
-                .HasColumnName("prosjektid");
-            entity.Property(e => e.Datokalibrert).HasColumnName("datokalibrert");
-            entity.Property(e => e.Datoregistrert)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("datoregistrert");
-            entity.Property(e => e.Grabbid).HasColumnName("grabbid");
-            entity.Property(e => e.Phehmeter).HasColumnName("phehmeter");
-            entity.Property(e => e.Silid).HasColumnName("silid");
-
-            entity.HasOne(d => d.Prosjekt).WithOne(p => p.BProsjektUtstyr)
-                .HasForeignKey<BProsjektUtstyr>(d => d.Prosjektid)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_b_prosjekt_utstyr_b_prosjekt");
-        });
-
-        modelBuilder.Entity<BProvetakingsplan>(entity =>
-        {
-            entity.HasKey(e => e.Prosjektid).HasName("b_provetakingsplan_pkey");
-
-            entity.ToTable("b_provetakingsplan");
-
-            entity.Property(e => e.Prosjektid)
-                .ValueGeneratedNever()
-                .HasColumnName("prosjektid");
-            entity.Property(e => e.Datoregistrert)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("datoregistrert");
-            entity.Property(e => e.Planlagtanalyser)
-                .HasMaxLength(45)
-                .HasDefaultValueSql("'Parameter I, II og III'::character varying")
-                .HasColumnName("planlagtanalyser");
-            entity.Property(e => e.Planlagtdybde).HasColumnName("planlagtdybde");
-            entity.Property(e => e.Planlagtfeltdato).HasColumnName("planlagtfeltdato");
-            entity.Property(e => e.Planlagtkordinatern).HasColumnName("planlagtkordinatern");
-            entity.Property(e => e.Planlagtkordinatero).HasColumnName("planlagtkordinatero");
-            entity.Property(e => e.Planlegger2id).HasColumnName("planlegger2id");
-            entity.Property(e => e.Planleggerid).HasColumnName("planleggerid");
-            entity.Property(e => e.Stasjonsid).HasColumnName("stasjonsid");
-
-            entity.HasOne(d => d.Planlegger2).WithMany(p => p.BProvetakingsplanPlanlegger2s)
-                .HasForeignKey(d => d.Planlegger2id)
-                .HasConstraintName("fk_b_provetakingsplan_bruker2");
-
-            entity.HasOne(d => d.Planlegger).WithMany(p => p.BProvetakingsplanPlanleggers)
-                .HasForeignKey(d => d.Planleggerid)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_b_provetakingsplan_bruker1");
-
-            entity.HasOne(d => d.Prosjekt).WithOne(p => p.BProvetakingsplan)
-                .HasForeignKey<BProvetakingsplan>(d => d.Prosjektid)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_b_provetakingsplan_b_prosjekt");
-        });
-
-        modelBuilder.Entity<BRapport>(entity =>
-        {
-            entity.HasKey(e => e.Rapportid).HasName("b_rapport_pkey");
-
-            entity.ToTable("b_rapport");
-
-            entity.Property(e => e.Rapportid)
-                .ValueGeneratedNever()
-                .HasColumnName("rapportid");
-            entity.Property(e => e.Datoregistrert)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("datoregistrert");
-            entity.Property(e => e.Generertavid).HasColumnName("generertavid");
-            entity.Property(e => e.Godkjentavid).HasColumnName("godkjentavid");
-            entity.Property(e => e.Prosjektid).HasColumnName("prosjektid");
-            entity.Property(e => e.Rapporttype).HasColumnName("rapporttype");
-
-            entity.HasOne(d => d.Generertav).WithMany(p => p.BRapportGenerertavs)
-                .HasForeignKey(d => d.Generertavid)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_b_rapport_ansattgenerert");
-
-            entity.HasOne(d => d.Godkjentav).WithMany(p => p.BRapportGodkjentavs)
-                .HasForeignKey(d => d.Godkjentavid)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_b_rapport_ansattgodkjent");
-
-            entity.HasOne(d => d.Prosjekt).WithMany(p => p.BRapports)
-                .HasForeignKey(d => d.Prosjektid)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_b_rapport_b_prosjekt");
-        });
-
-        modelBuilder.Entity<BSensorisk>(entity =>
-        {
-            entity.HasKey(e => new { e.Prosjektid, e.Stasjonsid }).HasName("b_sensorisk_pkey");
-
-            entity.ToTable("b_sensorisk");
-
-            entity.Property(e => e.Prosjektid).HasColumnName("prosjektid");
-            entity.Property(e => e.Stasjonsid).HasColumnName("stasjonsid");
-            entity.Property(e => e.Farge).HasColumnName("farge");
-            entity.Property(e => e.Gassbobler).HasColumnName("gassbobler");
-            entity.Property(e => e.Grabbvolum).HasColumnName("grabbvolum");
-            entity.Property(e => e.Konsistens).HasColumnName("konsistens");
-            entity.Property(e => e.Lukt).HasColumnName("lukt");
-            entity.Property(e => e.ProveEh).HasColumnName("prove_eh");
-            entity.Property(e => e.ProvePh).HasColumnName("prove_ph");
-            entity.Property(e => e.ProveTemperatur).HasColumnName("prove_temperatur");
-            entity.Property(e => e.Tykkelseslamlag).HasColumnName("tykkelseslamlag");
-
-            entity.HasOne(d => d.FargeNavigation).WithMany(p => p.BSensorisks)
-                .HasPrincipalKey(p => p.Verdi)
-                .HasForeignKey(d => d.Farge)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_b_sensorisk_sys_farge");
-
-            entity.HasOne(d => d.GassboblerNavigation).WithMany(p => p.BSensorisks)
-                .HasForeignKey(d => d.Gassbobler)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_b_sensorisk_sys_gassbobler");
-
-            entity.HasOne(d => d.GrabbvolumNavigation).WithMany(p => p.BSensorisks)
-                .HasPrincipalKey(p => p.Verdi)
-                .HasForeignKey(d => d.Grabbvolum)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_b_sensorisk_sys_grabbvolum");
-
-            entity.HasOne(d => d.KonsistensNavigation).WithMany(p => p.BSensorisks)
-                .HasPrincipalKey(p => p.Verdi)
-                .HasForeignKey(d => d.Konsistens)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_b_sensorisk_sys_konsistens");
-
-            entity.HasOne(d => d.LuktNavigation).WithMany(p => p.BSensorisks)
-                .HasPrincipalKey(p => p.Verdi)
-                .HasForeignKey(d => d.Lukt)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_b_sensorisk_sys_lukt");
-
-            entity.HasOne(d => d.TykkelseslamlagNavigation).WithMany(p => p.BSensorisks)
-                .HasPrincipalKey(p => p.Verdi)
-                .HasForeignKey(d => d.Tykkelseslamlag)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_b_sensorisk_sys_tykkelsepaslam");
-
-            entity.HasOne(d => d.BStasjon).WithOne(p => p.BSensorisk)
-                .HasForeignKey<BSensorisk>(d => new { d.Prosjektid, d.Stasjonsid })
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_b_sensorisk_b_stasjon");
-        });
-
-        modelBuilder.Entity<BStasjon>(entity =>
-        {
-            entity.HasKey(e => new { e.Prosjektid, e.Stasjonsid }).HasName("b_stasjon_pkey");
-
-            entity.ToTable("b_stasjon");
-
-            entity.Property(e => e.Prosjektid).HasColumnName("prosjektid");
-            entity.Property(e => e.Stasjonsid).HasColumnName("stasjonsid");
-            entity.Property(e => e.Nummer).HasColumnName("nummer");
-            entity.Property(e => e.Antallgrabbskudd).HasColumnName("antallgrabbskudd");
-            entity.Property(e => e.Arter)
-                .HasMaxLength(225)
-                .HasColumnName("arter");
-            entity.Property(e => e.Bunnsammensettningid).HasColumnName("bunnsammensettningid");
-            entity.Property(e => e.Bunntype).HasColumnName("bunntype");
-            entity.Property(e => e.Datokalibrert).HasColumnName("datokalibrert");
-            entity.Property(e => e.Datoregistrert)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("datoregistrert");
-            entity.Property(e => e.Dybde).HasColumnName("dybde");
-            entity.Property(e => e.Dyr).HasColumnName("dyr");
-            entity.Property(e => e.Grabbid).HasColumnName("grabbid");
-            entity.Property(e => e.Grabhastighetgodkjent).HasColumnName("grabhastighetgodkjent");
-            entity.Property(e => e.Kordinatern).HasColumnName("kordinatern");
-            entity.Property(e => e.Kordinatero).HasColumnName("kordinatero");
-            entity.Property(e => e.Korrigering)
-                .HasMaxLength(225)
-                .HasColumnName("korrigering");
-            entity.Property(e => e.Merknad)
-                .HasMaxLength(225)
-                .HasColumnName("merknad");
-            entity.Property(e => e.Phehmeter).HasColumnName("phehmeter");
-            entity.Property(e => e.Sensoriskutfort).HasColumnName("sensoriskutfort");
-            entity.Property(e => e.Silid).HasColumnName("silid");
-            entity.Property(e => e.SkjovannEh).HasColumnName("skjovann_eh");
-            entity.Property(e => e.SkjovannPh).HasColumnName("skjovann_ph");
-            entity.Property(e => e.SkjovannTemperatur).HasColumnName("skjovann_temperatur");
-            entity.Property(e => e.Status)
-                .HasMaxLength(45)
-                .HasColumnName("status");
-
-            entity.HasOne(d => d.Bunnsammensettning).WithMany(p => p.BStasjons)
-                .HasForeignKey(d => d.Bunnsammensettningid)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_b_stasjon_sys_bunsammensettning");
-
-            entity.HasOne(d => d.Prosjekt).WithMany(p => p.BStasjons)
-                .HasForeignKey(d => d.Prosjektid)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_b_stasjon_b_prosjekt");
-        });
-
-        modelBuilder.Entity<Endringslogg>(entity =>
-        {
-            entity.HasKey(e => e.Loggid).HasName("endringslogg_pkey");
-
-            entity.ToTable("endringslogg");
-
-            entity.Property(e => e.Loggid).HasColumnName("loggid");
-            entity.Property(e => e.Datoregistrert)
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("datoregistrert");
-            entity.Property(e => e.Endretavid).HasColumnName("endretavid");
-            entity.Property(e => e.Prosjektid).HasColumnName("prosjektid");
-            entity.Property(e => e.Stasjonsid).HasColumnName("stasjonsid");
-            entity.Property(e => e.Tabellendret)
-                .HasMaxLength(45)
-                .HasColumnName("tabellendret");
-            entity.Property(e => e.Typeending)
-                .HasMaxLength(45)
-                .HasColumnName("typeending");
-            entity.Property(e => e.Verdiendret)
-                .HasMaxLength(45)
-                .HasColumnName("verdiendret");
-            entity.Property(e => e.Verdiendretfra)
-                .HasMaxLength(45)
-                .HasColumnName("verdiendretfra");
-            entity.Property(e => e.Verdiendrettil)
-                .HasMaxLength(45)
-                .HasColumnName("verdiendrettil");
-
-            entity.HasOne(d => d.Endretav).WithMany(p => p.Endringsloggs)
-                .HasForeignKey(d => d.Endretavid)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_endringslogg_bruker");
+            entity.HasMany(d => d.Preinfos).WithMany(p => p.Provetakers)
+                .UsingEntity<Dictionary<string, object>>(
+                    "BpreinfoProvetaker",
+                    r => r.HasOne<BPreinfo>().WithMany()
+                        .HasForeignKey("PreinfoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_bpreinfo_provetaker_preinfo_id"),
+                    l => l.HasOne<Bruker>().WithMany()
+                        .HasForeignKey("ProvetakerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasConstraintName("fk_bpreinfo_provetaker_bruker_id"),
+                    j =>
+                    {
+                        j.HasKey("ProvetakerId", "PreinfoId").HasName("pk_provetaker_bpreinfo");
+                        j.ToTable("bpreinfo_provetaker");
+                        j.IndexerProperty<Guid>("ProvetakerId").HasColumnName("provetaker_id");
+                        j.IndexerProperty<Guid>("PreinfoId").HasColumnName("preinfo_id");
+                    });
         });
 
         modelBuilder.Entity<Kunde>(entity =>
         {
-            entity.HasKey(e => e.Kundeid).HasName("kunde_pkey");
+            entity.HasKey(e => e.Id).HasName("pk_kunde");
 
             entity.ToTable("kunde");
 
-            entity.Property(e => e.Kundeid).HasColumnName("kundeid");
-            entity.Property(e => e.Oppdragsgiver)
-                .HasMaxLength(45)
-                .HasColumnName("oppdragsgiver");
+            entity.HasIndex(e => e.Oppdragsgiver, "uq_kunde_oppdragsgiver").IsUnique();
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
             entity.Property(e => e.Kontaktperson)
                 .HasMaxLength(45)
                 .HasColumnName("kontaktperson");
-            entity.Property(e => e.Telefonnummer)
+            entity.Property(e => e.Oppdragsgiver)
                 .HasMaxLength(45)
-                .HasColumnName("telefonnummer");
+                .HasColumnName("oppdragsgiver");
+            entity.Property(e => e.Telefon)
+                .HasMaxLength(20)
+                .HasColumnName("telefon");
         });
 
-        modelBuilder.Entity<Revisjonslogg>(entity =>
+        modelBuilder.Entity<Lokalitet>(entity =>
         {
-            entity.HasKey(e => e.Revisjonsid).HasName("revisjonslogg_pkey");
+            entity.HasKey(e => e.Id).HasName("pk_lokalitet");
 
-            entity.ToTable("revisjonslogg");
+            entity.ToTable("lokalitet");
 
-            entity.Property(e => e.Revisjonsid)
+            entity.HasIndex(e => e.LokalitetsId, "uq_lokalitet_lokalitetsid").IsUnique();
+
+            entity.HasIndex(e => e.Lokalitetsnavn, "uq_lokalitet_lokalitetsnavn").IsUnique();
+
+            entity.Property(e => e.Id)
                 .ValueGeneratedNever()
-                .HasColumnName("revisjonsid");
-            entity.Property(e => e.Datoregistrert)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("datoregistrert");
-            entity.Property(e => e.Gjeldenderevisjon).HasColumnName("gjeldenderevisjon");
-            entity.Property(e => e.Revisjonskommentar)
-                .HasMaxLength(255)
-                .HasColumnName("revisjonskommentar");
+                .HasColumnName("id");
+            entity.Property(e => e.LokalitetsId)
+                .HasMaxLength(5)
+                .HasColumnName("lokalitetsID");
+            entity.Property(e => e.Lokalitetsnavn)
+                .HasMaxLength(50)
+                .HasColumnName("lokalitetsnavn");
         });
 
-        modelBuilder.Entity<SysArter>(entity =>
+        modelBuilder.Entity<Programversjon>(entity =>
         {
-            entity.HasKey(e => e.Artid).HasName("sys_arter_pkey");
+            entity.HasKey(e => e.Id).HasName("pk_programversjon");
 
-            entity.ToTable("sys_arter");
+            entity.ToTable("programversjon");
 
-            entity.Property(e => e.Artid).HasColumnName("artid");
-            entity.Property(e => e.Artsforkortelse)
-                .HasMaxLength(45)
-                .HasColumnName("artsforkortelse");
-            entity.Property(e => e.Artsnavn)
-                .HasMaxLength(45)
-                .HasColumnName("artsnavn");
-        });
-
-        modelBuilder.Entity<SysBunsammensettning>(entity =>
-        {
-            entity.HasKey(e => e.Bunnsammensettningid).HasName("sys_bunsammensettning_pkey");
-
-            entity.ToTable("sys_bunsammensettning");
-
-            entity.Property(e => e.Bunnsammensettningid).HasColumnName("bunnsammensettningid");
-            entity.Property(e => e.Fjellbunn).HasColumnName("fjellbunn");
-            entity.Property(e => e.Grus).HasColumnName("grus");
-            entity.Property(e => e.Leire).HasColumnName("leire");
-            entity.Property(e => e.Sand).HasColumnName("sand");
-            entity.Property(e => e.Silt).HasColumnName("silt");
-            entity.Property(e => e.Skjellsand).HasColumnName("skjellsand");
-            entity.Property(e => e.Steinbunn).HasColumnName("steinbunn");
-        });
-
-        modelBuilder.Entity<SysFarge>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("sys_farge_pkey");
-
-            entity.ToTable("sys_farge");
-
-            entity.HasIndex(e => e.Verdi, "sys_farge_verdi_key").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Beskrivelse)
-                .HasMaxLength(45)
-                .HasColumnName("beskrivelse");
-            entity.Property(e => e.Verdi).HasColumnName("verdi");
-        });
-
-        modelBuilder.Entity<SysGassbobler>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("sys_gassbobler_pkey");
-
-            entity.ToTable("sys_gassbobler");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Beskrivelse)
-                .HasMaxLength(45)
-                .HasColumnName("beskrivelse");
-            entity.Property(e => e.Verdi).HasColumnName("verdi");
-        });
-
-        modelBuilder.Entity<SysGrabbvolum>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("sys_grabbvolum_pkey");
-
-            entity.ToTable("sys_grabbvolum");
-
-            entity.HasIndex(e => e.Verdi, "sys_grabbvolum_verdi_key").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Beskrivelse)
-                .HasMaxLength(45)
-                .HasColumnName("beskrivelse");
-            entity.Property(e => e.Verdi).HasColumnName("verdi");
-        });
-
-        modelBuilder.Entity<SysKonsisten>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("sys_konsistens_pkey");
-
-            entity.ToTable("sys_konsistens");
-
-            entity.HasIndex(e => e.Verdi, "sys_konsistens_verdi_key").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Beskrivelse)
-                .HasMaxLength(45)
-                .HasColumnName("beskrivelse");
-            entity.Property(e => e.Verdi).HasColumnName("verdi");
-        });
-
-        modelBuilder.Entity<SysLukt>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("sys_lukt_pkey");
-
-            entity.ToTable("sys_lukt");
-
-            entity.HasIndex(e => e.Verdi, "sys_lukt_verdi_key").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Beskrivelse)
-                .HasMaxLength(45)
-                .HasColumnName("beskrivelse");
-            entity.Property(e => e.Verdi).HasColumnName("verdi");
-        });
-
-        modelBuilder.Entity<SysMerknad>(entity =>
-        {
-            entity.HasKey(e => e.Merknadid).HasName("sys_merknad_pkey");
-
-            entity.ToTable("sys_merknad");
-
-            entity.Property(e => e.Merknadid)
+            entity.Property(e => e.Id)
                 .ValueGeneratedNever()
-                .HasColumnName("merknadid");
-            entity.Property(e => e.Beskrivelse)
-                .HasMaxLength(255)
-                .HasColumnName("beskrivelse");
-            entity.Property(e => e.Forkortelse)
-                .HasMaxLength(45)
-                .HasColumnName("forkortelse");
-        });
-
-        modelBuilder.Entity<SysTykkelsepaslam>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("sys_tykkelsepaslam_pkey");
-
-            entity.ToTable("sys_tykkelsepaslam");
-
-            entity.HasIndex(e => e.Verdi, "sys_tykkelsepaslam_verdi_key").IsUnique();
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Beskrivelse)
-                .HasMaxLength(45)
-                .HasColumnName("beskrivelse");
-            entity.Property(e => e.Verdi).HasColumnName("verdi");
+                .HasColumnName("id");
+            entity.Property(e => e.ErAktiv).HasColumnName("er_aktiv");
+            entity.Property(e => e.Forbedringer).HasColumnName("forbedringer");
+            entity.Property(e => e.Utgivelsesdato).HasColumnName("utgivelsesdato");
+            entity.Property(e => e.Versjonsnummer)
+                .HasMaxLength(50)
+                .HasColumnName("versjonsnummer");
         });
 
         modelBuilder.Entity<Token>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("token_pkey");
+            entity.HasKey(e => e.Id).HasName("pk_token");
 
             entity.ToTable("token");
 
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
                 .HasColumnName("id");
+            entity.Property(e => e.BrukerId).HasColumnName("bruker_id");
             entity.Property(e => e.CreatedAt)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("created_at");
@@ -655,10 +613,10 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.UsedAt)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("used_at");
-            entity.Property(e => e.BrukerId).HasColumnName("bruker_id");
 
             entity.HasOne(d => d.Bruker).WithMany(p => p.Tokens)
                 .HasForeignKey(d => d.BrukerId)
+                .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("fk_token_bruker");
         });
 

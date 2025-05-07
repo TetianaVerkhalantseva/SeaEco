@@ -15,7 +15,7 @@ else
             <div class="d-flex justify-content-center">
                 @Resources.PageProjectPlanNoPlan
             </div>
-            <button class="btn btn-outline-secondary filter-button" type="button" @onclick="OnClickProjectPlan">
+            <button class="btn custom-btn filter-button" type="button" @onclick="OnClickProjectPlan">
                 @Resources.ButtonAddNewProjectPlan
             </button>
         </div>
@@ -23,10 +23,9 @@ else
     else
     {
         <div class="d-flex flex-column gap-3 mt-3">
-            <span>@Resources.InputTextUserProjectPlan</span>
-            <div class="d-flex flex-column gap-3">
-
-
+            <div class="d-flex flex-column gap-3  box-border p-4 ">
+                <span>@Resources.InputTextUserProjectPlan</span>
+                
                 <div class="d-flex form-floating">
                     <InputSelect @bind-Value="_selectedUser1" id="user1" class="form-control" disabled="@(!EditProjectPlanVar)">
                         <option value=""></option>
@@ -61,7 +60,7 @@ else
             
             @foreach (var station in _stationData)
             {
-                <div class="d-flex flex-column gap-3 mt-3">
+                <div class="d-flex flex-column gap-3 mt-3 box-border p-4">
                     <div class="d-flex">
                         <span>@Resources.InputTextStation @_stationData.IndexOf(station)</span>
                         <div class="flex-grow-1"></div>
@@ -102,15 +101,15 @@ else
                 else
                 {
                     <div class="d-flex gap-2 flex-column flex-xxl-row w-100 mt-4">
-                        <button class="btn btn-outline-secondary filter-button" type="button" @onclick="AddStation">
+                        <button class="btn custom-btn filter-button" type="button" @onclick="AddStation">
                             @Resources.ButtonAddStation
                         </button>
                         <div class="d-flex flex-grow-1"></div>
                         <div class="d-flex gap-2 justify-content-center">
-                            <button class="btn btn-outline-secondary filter-button" type="button" @onclick="CancelEditProjectPlan">
+                            <button class="btn custom-outline-secondary-btn filter-button" type="button" @onclick="CancelEditProjectPlan">
                                 @Resources.ButtonCancel
                             </button>
-                            <button class="btn btn-outline-secondary filter-button" type="button" @onclick="EditProjectPlan">
+                            <button class="btn custom-btn filter-button" type="button" @onclick="EditProjectPlan">
                                 @Resources.ButtonSave
                             </button>
                         </div>

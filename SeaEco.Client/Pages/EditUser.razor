@@ -7,46 +7,41 @@
 @inject NavigationManager Navigation
 
 
-
-
-<EditForm Model="userEdit" OnValidSubmit="UserEdit" >
+<EditForm Model="_userEdit" OnValidSubmit="UserEdit" >
     <DataAnnotationsValidator />
     <div class="d-flex flex-column align-items-center">
-        
-        
-
-        @if (isLoading)
+        @if (_isLoading)
         {
         }
-        else if (user == null)
+        else if (_user == null)
         {
             <div class="mb-3">
-                <h3>@Resources.PageEditUserEditUser</h3>
+                <h2>@Resources.PageEditUserEditUser</h2>
             </div>
             <p>@Resources.PageEditUserNoUserFound</p>
         }
         else
         {
             <div class="mb-3">
-                <h3>@Resources.PageEditUserEditUser</h3>
+                <h2>@Resources.PageEditUserEditUser</h2>
             </div>
             <div class="d-flex flex-column ">
                 <div class="d-flex flex-column gap-2">
                     <div class="d-flex justify-content-center gap-2">
-                            <InputText id="firstName" class="form-control" @bind-Value="userEdit.FirstName" placeholder="@Resources.InputTextFirstName" />
-                        <InputText id="lastName" class="form-control" @bind-Value="userEdit.LastName" placeholder="@Resources.InputTextLastName" />
+                        <InputText id="firstName" class="form-control" @bind-Value="_userEdit.FirstName" placeholder="@Resources.InputTextFirstName" />
+                        <InputText id="lastName" class="form-control" @bind-Value="_userEdit.LastName" placeholder="@Resources.InputTextLastName" />
                     </div>
-                    <InputText id="email" class="form-control" @bind-Value="userEdit.Email" placeholder="@Resources.InputTextMail" />
+                    <InputText id="email" class="form-control" @bind-Value="_userEdit.Email" placeholder="@Resources.InputTextMail" />
                     </div>
 
                 <div class="mt-2">
-                    <input type="checkbox" id="admin" @bind="userEdit.IsAdmin" />
+                    <input type="checkbox" class="form-check-input cursor" id="admin" @bind="_userEdit.IsAdmin" />
                     <label class="ms-1" title="@(Resources.TooltipAdmin + "\n" + Resources.TooltipAdminOne + "\n" + Resources.TooltipAdminTwo  + "\n" +Resources.TooltipAdminThree)">@Resources.CheckboksAdmin</label>
                 </div>
 
-                <div class="d-flex justify-content-center">
-                    <NavLink class="btn btn-secondary me-2" href="/user">@Resources.ButtonCancel</NavLink>
-                    <button typee = submit class="btn btn-secondary me-2">@Resources.ButtonSave</button>
+                <div class="d-flex justify-content-center mt-2">
+                    <NavLink class="btn custom-outline-secondary-btn me-2" href="/user">@Resources.ButtonCancel</NavLink>
+                    <button type = submit class="btn custom-btn me-2">@Resources.ButtonSave</button>
                 </div>
 
                 <div class="mt-3 text-center" style="height: 30px">
@@ -64,53 +59,51 @@
     </div>
 </EditForm>
 
+
 @code {
     [Parameter]
-    public Guid userId { get; set; }
-    private UserDto user;
-    private EditUserDto userEdit = new EditUserDto();
-    private bool isLoading = true;
+    public Guid UserId { get; set; }
+    private UserDto? _user;
+    private EditUserDto _userEdit = new ();
+    private bool _isLoading = true;
     private string?  _errorMessage;
     
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            user = await Http.GetFromJsonAsync<UserDto>($"api/users/{userId}");
-            if (user != null)
+            _user = await Http.GetFromJsonAsync<UserDto>($"api/users/{UserId}");
+            if (_user != null)
             {
-                userEdit = new EditUserDto
+                _userEdit = new EditUserDto
                 {
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Email = user.Email,
-                    IsAdmin = user.IsAdmin,
-                    IsActive = user.IsActive
+                    FirstName = _user.FirstName,
+                    LastName = _user.LastName,
+                    Email = _user.Email,
+                    IsAdmin = _user.IsAdmin
                 };
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Feil ved lasting av bruker: {ex.Message}");
+            Console.WriteLine($@"{Resources.ErrorMessageLoadingUsers} {ex.Message}");
         }
         finally
         {
-            isLoading = false;
+            _isLoading = false;
         }
     }
     
     private async Task UserEdit()
     {
-        var response = await Http.PutAsJsonAsync($"api/users/{user.Id:D}/update", userEdit);
+        var response = await Http.PutAsJsonAsync($"api/users/{_user.Id:D}/update", _userEdit);
         if (response.IsSuccessStatusCode)
         {    
             Navigation.NavigateTo("/user", forceLoad: true);
         }
         else
         {
-            _errorMessage = @Resources.ErrorMessageUnexpected;
+            _errorMessage = Resources.ErrorMessageUnexpected;
         }
     }
-    
-
 }

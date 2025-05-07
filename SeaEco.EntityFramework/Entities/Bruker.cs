@@ -5,7 +5,7 @@ namespace SeaEco.EntityFramework.Entities;
 
 public partial class Bruker
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid Id { get; set; }
 
     public string Fornavn { get; set; } = null!;
 
@@ -19,29 +19,19 @@ public partial class Bruker
 
     public bool Aktiv { get; set; }
 
-    public DateTime Datoregistrert { get; set; }
+    public byte[] Salt { get; set; } = null!;
 
-    public byte[] Salt { get; set; } = [];
+    public virtual ICollection<BPreinfo> BPreinfos { get; set; } = new List<BPreinfo>();
 
-    public virtual ICollection<BProsjekt> BProsjektAnsvarligansatt2s { get; set; } = new List<BProsjekt>();
+    public virtual ICollection<BProsjekt> BProsjekts { get; set; } = new List<BProsjekt>();
 
-    public virtual ICollection<BProsjekt> BProsjektAnsvarligansatt3s { get; set; } = new List<BProsjekt>();
+    public virtual ICollection<BProvetakningsplan> BProvetakningsplans { get; set; } = new List<BProvetakningsplan>();
 
-    public virtual ICollection<BProsjekt> BProsjektAnsvarligansatt4s { get; set; } = new List<BProsjekt>();
+    public virtual ICollection<BRapporter> BRapporters { get; set; } = new List<BRapporter>();
 
-    public virtual ICollection<BProsjekt> BProsjektAnsvarligansatt5s { get; set; } = new List<BProsjekt>();
-
-    public virtual ICollection<BProsjekt> BProsjektAnsvarligansatts { get; set; } = new List<BProsjekt>();
-
-    public virtual ICollection<BProvetakingsplan> BProvetakingsplanPlanlegger2s { get; set; } = new List<BProvetakingsplan>();
-
-    public virtual ICollection<BProvetakingsplan> BProvetakingsplanPlanleggers { get; set; } = new List<BProvetakingsplan>();
-
-    public virtual ICollection<BRapport> BRapportGenerertavs { get; set; } = new List<BRapport>();
-
-    public virtual ICollection<BRapport> BRapportGodkjentavs { get; set; } = new List<BRapport>();
-
-    public virtual ICollection<Endringslogg> Endringsloggs { get; set; } = new List<Endringslogg>();
+    public virtual ICollection<BUndersokelseslogg> BUndersokelsesloggs { get; set; } = new List<BUndersokelseslogg>();
 
     public virtual ICollection<Token> Tokens { get; set; } = new List<Token>();
+
+    public virtual ICollection<BPreinfo> Preinfos { get; set; } = new List<BPreinfo>();
 }

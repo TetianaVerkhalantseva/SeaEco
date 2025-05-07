@@ -21,31 +21,34 @@ public class CustomerService: ICustomerService
 
         return customers.Select(c => new CustomerNamesDto
         {
-            CustomerId = c.Kundeid,
+            Id = c.Id,
             CustomerName = c.Oppdragsgiver
         }).ToList();
     }
     
     // Get information except projects for a customer
-    public async Task<Kunde?> GetCustomerInfoById(int customerId)
+    public async Task<CustomerDto?> GetCustomerInfoById(Guid Id)
     {
         var customer = await _db.Kundes
-            .Where(c => c.Kundeid == customerId)
+            .Where(c => c.Id == Id)
             .FirstOrDefaultAsync();
 
-        if (customer == null || customerId == 0)
+        if (customer == null) return null;
+
+        return new CustomerDto
         {
-            return null;
-        }
-        
-        return customer;
+            Id = customer.Id,
+            Oppdragsgiver = customer.Oppdragsgiver,
+            Kontaktperson = customer.Kontaktperson,
+            Telefon = customer.Telefon
+        };
     }
 
     // Get all the project ids, statuses and dates for a customer
-    public async Task<Kunde?> GetAllProjectDetailsById(int customerId)
+    public async Task<Kunde?> GetAllProjectDetailsById(Guid Id)
     {
         var customer = await _db.Kundes
-            .Where(c=> c.Kundeid == customerId)
+            .Where(c=> c.Id == Id)
             .Include(c => c.BProsjekts)
             .FirstOrDefaultAsync();
 
@@ -54,10 +57,9 @@ public class CustomerService: ICustomerService
             customer.BProsjekts = customer.BProsjekts
                 .Select(p => new BProsjekt
                 {
-                    Prosjektid = p.Prosjektid,
+                    Id = p.Id,
                     PoId = p.PoId,
-                    Status = p.Status,
-                    Datoregistrert = p.Datoregistrert
+                    Prosjektstatus = p.Prosjektstatus
                 }).ToList();
         }
         
@@ -68,9 +70,10 @@ public class CustomerService: ICustomerService
     {
         var customer = new Kunde()
         {
+            Id = Guid.NewGuid(),
             Oppdragsgiver = customerDto.Oppdragsgiver,
             Kontaktperson = customerDto.Kontaktperson,
-            Telefonnummer = customerDto.Telefonnummer,
+            Telefon = customerDto.Telefon,
         };
 
         try
@@ -80,12 +83,12 @@ public class CustomerService: ICustomerService
             return new EditCustomerResult
             {
                 IsSuccess = true,
-                Message = $"Customer {customer.Kundeid}: {customer.Oppdragsgiver} was successfully added!"
+                Message = $"Customer {customer.Id}: {customer.Oppdragsgiver} was successfully added!"
             };
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Error: {e.Message}");
+            Console.WriteLine($@"Error: {e.Message}");
             return new EditCustomerResult
             {
                 IsSuccess = false,
@@ -94,22 +97,22 @@ public class CustomerService: ICustomerService
         }
     }
 
-    public async Task<EditCustomerResult> UpdateCustomer(EditCustomerDto customerDto, int customerId)
+    public async Task<EditCustomerResult> UpdateCustomer(EditCustomerDto customerDto, Guid Id)
     {
-        var customer = await _db.Kundes.FirstOrDefaultAsync(c => c.Kundeid == customerId);
+        var customer = await _db.Kundes.FirstOrDefaultAsync(c => c.Id == Id);
 
-        if (customer == null || customerId == 0)
+        if (customer == null)
         {
             return new EditCustomerResult
             {
                 IsSuccess = false,
-                Message = $"Customer with ID {customerId} does not exist."
+                Message = $"Customer with ID {Id} does not exist."
             };
         }
         
         customer.Oppdragsgiver = customerDto.Oppdragsgiver;
         customer.Kontaktperson = customerDto.Kontaktperson;
-        customer.Telefonnummer = customerDto.Telefonnummer;
+        customer.Telefon = customerDto.Telefon;
 
         try
         {
@@ -118,12 +121,12 @@ public class CustomerService: ICustomerService
             return new EditCustomerResult
             {
                 IsSuccess = true,
-                Message = $"Customer with ID {customer.Kundeid} was successfully updated!"
+                Message = $"Customer with ID {customer.Id} was successfully updated!"
             };
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Error: {e.Message}");
+            Console.WriteLine($@"Error: {e.Message}");
             return new EditCustomerResult
             {
                 IsSuccess = false,
@@ -132,15 +135,15 @@ public class CustomerService: ICustomerService
         }
     }
 
-    public async Task<EditCustomerResult> DeleteCustomer(int customerId)
+    public async Task<EditCustomerResult> DeleteCustomer(Guid Id)
     {
-        var customer = await _db.Kundes.FirstOrDefaultAsync(c => c.Kundeid == customerId);
-        if (customer == null || customerId == 0)
+        var customer = await _db.Kundes.FirstOrDefaultAsync(c => c.Id == Id);
+        if (customer == null)
         {
             return new EditCustomerResult
             {
                 IsSuccess = false,
-                Message = $"Customer with ID {customerId} does not exist."
+                Message = $"Customer with ID {Id} does not exist."
             };
         }
         
@@ -149,7 +152,7 @@ public class CustomerService: ICustomerService
         return new EditCustomerResult
         {
             IsSuccess = true,
-            Message = $"Customer {customerId} was successfully deleted!"
+            Message = $"Customer {Id} was successfully deleted!"
         };
     }
 }

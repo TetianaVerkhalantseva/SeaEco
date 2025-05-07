@@ -6,9 +6,9 @@ namespace SeaEco.Services.CustomerServices;
 public interface ICustomerService
 {
     Task<List<CustomerNamesDto>> GetCustomerNames();
-    Task<Kunde?> GetCustomerInfoById(int customerId);
-    Task<Kunde?> GetAllProjectDetailsById(int customerId);
+    Task<CustomerDto?> GetCustomerInfoById(Guid Id);
+    Task<Kunde?> GetAllProjectDetailsById(Guid Id);
     Task<EditCustomerResult> AddCustomer(EditCustomerDto customerDto);
-    Task<EditCustomerResult> UpdateCustomer(EditCustomerDto customerDto, int customerId);
-    Task<EditCustomerResult> DeleteCustomer(int customerId);
+    Task<EditCustomerResult> UpdateCustomer(EditCustomerDto customerDto, Guid Id);
+    Task<EditCustomerResult> DeleteCustomer(Guid Id);
 }
