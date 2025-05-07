@@ -97,13 +97,13 @@
             <div class="table-responsive  d-none d-xxl-block">
                 <table class="table table-hover fixed-width-table">
                     <colgroup>
-                        <col style="width: 190px;">
+                        <col style="width: 180px;">
                         <col style="width: 140px;">
-                        <col style="width: 80px;">
+                        <col style="width: 85px;">
                         <col style="width: 80px;">
                         <col style="width: 110px;">
                         <col style="width: 100px;">
-                        <col style="width: 160px;">
+                        <col style="width: 165px;">
                         <col style="width: 90px;">
                         <col style="width: 140px;">
                     </colgroup>
@@ -132,7 +132,7 @@
                             <td>@project.LokalitetsId</td>
                             <td>@project.PoId</td>
                             <td>@project.ProsjektIdSe</td>
-                            <td>@Dato</td>
+                            <td>@project.StationDatesString</td>
                             <td>@project.Produksjonsstatus.GetDescription()</td>
                             <td>@project.Tilstand</td>
                             <td>@project.Prosjektstatus.GetDescription()</td>
@@ -149,7 +149,7 @@
                         <div class="col mb-3 card-col">
                             <div class="card cursor" @onclick="() => OnRowClick(project.Id)">
                                 <div class="card-body text-center @GetStatus(project.Prosjektstatus.GetDescription())">
-                                    <h5 class="card-title">@project.PoId</h5>
+                                    <h5 class="card-title">@project.ProsjektIdSe</h5>
                                     <span class="corner-text">@project.Prosjektstatus.GetDescription()</span>
                                 </div>
                                 <ul class="list-group list-group-flush">
@@ -191,7 +191,6 @@
     private string? SelectedCustomer { get; set; }
     private string? SelectedLocation { get; set; }
     private List<string> SelectedStatuses { get; set; } = ["Nytt", "Påbegynt", "Ferdig"];
-    private DateOnly Dato;    
     
     private string? _currentSortColumn;
     private bool _sortAscending = true;
@@ -213,8 +212,6 @@
         {
             _isLoading = false;
         }
-
-        Dato = new DateOnly(2025, 3, 2);
         
         _allLocations = _projects?
             .Select(p => p.Lokalitetsnavn)
@@ -234,7 +231,7 @@
         Navigation.NavigateTo($"project/{prosjektId:D}");
     }
     
-    private string GetStatus(string? status)
+    private static string GetStatus(string? status)
     {
         return status switch
         {
@@ -252,16 +249,15 @@
         {
             if (_projects != null)
                 return _projects.Where(p =>
-                    ((SelectedStatuses == null || !SelectedStatuses.Any()) || SelectedStatuses.Contains(p.Prosjektstatus.GetDescription())) &&
-                    //(!SelectedYear.HasValue || (p.Dato.HasValue && p.Dato.Value.Year == SelectedYear.Value)) &&
-                    //(!SelectedMnd.HasValue || (p.Dato.HasValue && p.Dato.Value.Month == SelectedMnd.Value)) &&
+                    ((!SelectedStatuses.Any()) || SelectedStatuses.Contains(p.Prosjektstatus.GetDescription())) &&
+                    (!SelectedYear.HasValue || (p.Feltdatoer.Any(d => d.Year == SelectedYear.Value))) &&
+                    (!SelectedMnd.HasValue || (p.Feltdatoer.Any(d => d.Month == SelectedMnd.Value))) &&
                     (string.IsNullOrEmpty(SelectedLocation) || p.Lokalitetsnavn == SelectedLocation) &&
                     (string.IsNullOrEmpty(SelectedCustomer) || p.Oppdragsgiver == SelectedCustomer)
                 );
             return _projects;
         }
     }
-
     
     private IEnumerable<ProjectDto>? SortedProjects
     {
@@ -272,7 +268,7 @@
             
             //Default sorting by status and date
             if (string.IsNullOrEmpty(_currentSortColumn))
-                return FilterProjects?.OrderByDescending(projects => projects.Prosjektstatus).ThenByDescending(projects => Dato).ToList();
+                return FilterProjects?.OrderByDescending(projects => projects.Prosjektstatus).ThenByDescending(projects => projects.StationDatesString).ToList();
 
             
             var sorted = _currentSortColumn switch
@@ -284,8 +280,8 @@
                     ? FilterProjects.OrderBy(p => p.Lokalitetsnavn)
                     : FilterProjects.OrderByDescending(p => p.Lokalitetsnavn),
                 var col when col == Resources.TableHeaderDate => _sortAscending
-                    ? FilterProjects.OrderBy(p => Dato)
-                    : FilterProjects.OrderByDescending(p => Dato),
+                    ? FilterProjects.OrderBy(p => p.StationDatesString)
+                    : FilterProjects.OrderByDescending(p => p.StationDatesString),
                 var col when col == Resources.TableHeaderStatus => _sortAscending
                     ? FilterProjects.OrderBy(p => p.Tilstand)
                     : FilterProjects.OrderByDescending(p => p.Tilstand),
