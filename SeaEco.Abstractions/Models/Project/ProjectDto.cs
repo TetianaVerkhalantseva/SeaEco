@@ -28,11 +28,14 @@ public class ProjectDto
     [RegularExpression(@"^\d+$", ErrorMessageResourceName = "ErrorMessageLocalityIdNumber", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
     public string LokalitetsId { get; set; } = null!;
     [Required(ErrorMessageResourceName = "ErrorMessageProjectMtb", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+
+    [Range(1, 9999, ErrorMessageResourceName = "ErrorMessageProjectMtbNumber", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
     public int Mtbtillatelse { get; set; }
     [Required(ErrorMessageResourceName = "ErrorMessageProjectResponsible", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
     public Guid? ProsjektansvarligId { get; set; }
     public string? Merknad { get; set; }
     
+    [Required(ErrorMessageResourceName = "ErrorMessageProductionStatus", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
     public Produksjonsstatus Produksjonsstatus { get; set; }
 
     public int AntallStasjoner { get; set; } 
