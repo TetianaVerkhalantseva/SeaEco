@@ -22,7 +22,7 @@ public class BSurveyService: IBSurveyService
         _projectService = projectService;
     }
 
-    public async Task<SurveyDto?> GetSurveyById(Guid id)
+    public async Task<EditSurveyDto?> GetSurveyById(Guid id)
     {
         var survey = await _db.BUndersokelses
             .Include(s => s.Preinfo)
@@ -43,6 +43,9 @@ public class BSurveyService: IBSurveyService
     {
         try
         {
+            dto.Id = Guid.NewGuid();
+            dto.ProsjektId = projectId;
+            
             var targetDate = DateTime.Today;
 
             var preInfo = await _db.BPreinfos
@@ -65,16 +68,13 @@ public class BSurveyService: IBSurveyService
                 }
             }
             
-            dto.Id = Guid.NewGuid();
-            dto.ProsjektId = projectId;
-            
             dto.DatoRegistrert ??= DateTime.Now;
             dto.DatoEndret ??= DateTime.Now;
-            
-            foreach (var log in dto.BSurveyLogs)
-            {
-                log.Id = Guid.NewGuid();
-            }
+
+            // foreach (var log in dto.BSurveyLogs)
+            // {
+            //     log.Id = Guid.NewGuid();
+            // }
             
             var entity = dto.ToEntity();
             _db.BUndersokelses.Add(entity);
@@ -111,41 +111,12 @@ public class BSurveyService: IBSurveyService
     {
         try
         {
-            var targetDate = DateTime.Today;
-
-            var preInfo = await _db.BPreinfos
-                .FirstOrDefaultAsync(p =>
-                    p.ProsjektId == projectId &&
-                    p.Feltdato.Date == targetDate);
-            
-            if (preInfo != null)
-            {
-                dto.Feltdato = DateOnly.FromDateTime(DateTime.Today);
-                dto.PreinfoId = preInfo.Id;
-            }
-
             dto.DatoEndret ??= DateTime.Now;
             
-            if (dto.BStation != null)
-            {
-                dto.ProsjektId = projectId;
-                dto.BStation.Id = stationId;
-            }
-            
-            if (dto.BSoftBase != null)
-            {
-                dto.BHardBase = null;
-            }
-
-            if (dto.BHardBase != null)
-            {
-                dto.BSoftBase = null;
-            }
-
-            foreach (var log in dto.BSurveyLogs)
-            {
-                // How do I record user changes?
-            }
+            // TODO: How do I record user changes?
+            // foreach (var log in dto.BSurveyLogs)
+            // {
+            // }
             
             var entity = dto.ToEntity();
             _db.BUndersokelses.Update(entity);
