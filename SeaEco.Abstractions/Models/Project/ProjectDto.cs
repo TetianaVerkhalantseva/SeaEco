@@ -35,7 +35,7 @@ public class ProjectDto
     
     public Produksjonsstatus Produksjonsstatus { get; set; }
 
-    public int AntallStasjoner { get; set; } //Med ferdig BUndersøkelse
+    public int AntallStasjoner { get; set; } 
     
     public Prosjektstatus Prosjektstatus { get; set; }
     public Tilstand? Tilstand { get; set; }

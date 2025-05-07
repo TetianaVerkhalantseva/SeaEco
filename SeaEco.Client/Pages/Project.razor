@@ -153,7 +153,7 @@ else
 
                                     <div class="d-flex flex-column gap-3">
                                         <div class="d-flex form-floating">
-                                            <InputNumber class="form-control" id="date" @key="_numberInputKey" @bind-Value="_project.Mtbtillatelse"  disabled/>
+                                            <InputText class="form-control" id="newLocalityName" @bind-Value="_stationDatesString" disabled/>
                                             <label for="date">Feltdato(er)</label>
                                         </div>
                                     </div>
@@ -266,13 +266,14 @@ else
     private string _activeTab = "projectPlan";
     private string? _errorMessage;
     private bool _isNewLocality;
-    private EditContext _editContext; 
+    private EditContext _editContext;
     private string? _selectedLocationId;
+    private string? _stationDatesString;
 
 
     protected override async Task OnInitializedAsync()
     {
-        
+
         var usersList = await Http.GetFromJsonAsync<List<UserDto>>("api/users");
         _users = usersList?.OrderBy(user => user.FullName).ToList();
         _project = await Http.GetFromJsonAsync<ProjectDto>($"api/Project/{prosjektId:D}");
@@ -280,6 +281,8 @@ else
         _location = await Http.GetFromJsonAsync<List<LokalitetDto>>($"api/Lokalitet");
         _editContext = new EditContext(_project);
         _selectedLocationId = _project.LokalitetsId;
+        _stationDatesString = string.Join(", ",
+            _project.Feltdatoer.Select(d => d.ToString("yyyy-MM-dd")));
 
     }
 
@@ -343,7 +346,7 @@ else
             ProsjektansvarligId = source.ProsjektansvarligId
         };
     }
-    
+
     private void LocationChanged(string? id)
     {
         _selectedLocationId = id;
@@ -360,13 +363,14 @@ else
             _project.Lokalitetsnavn = string.Empty;
             _project.LokalitetsId = string.Empty;
         }
-        _editContext.Validate();  
+
+        _editContext.Validate();
     }
 
     private void ToggleLocalityButton()
     {
         _isNewLocality = !_isNewLocality;
-        
+
         if (_isNewLocality)
         {
             _project.LokalitetsId = string.Empty;
@@ -377,9 +381,7 @@ else
             _selectedLocationId = _projectCopy.LokalitetsId;
             LocationChanged(_selectedLocationId);
         }
-        
-        _editContext.Validate();  
+
+        _editContext.Validate();
     }
-
-
 }
