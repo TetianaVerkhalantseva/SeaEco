@@ -93,7 +93,7 @@ public class ProjectController : ControllerBase
         }
     }
     
-    [HttpPost("{projectId:guid}/merknad")]
+    [HttpPost("{projectId:guid}/merknad/add")]
     public async Task<IActionResult> AddMerknad(Guid projectId, [FromBody] MerknadDto dto)
     {
         if (!ModelState.IsValid)
@@ -109,8 +109,8 @@ public class ProjectController : ControllerBase
             return NotFound(knf.Message);
         }
     }
-    
-    [HttpPut("{projectId:guid}/merknad")]
+
+    [HttpPut("{projectId:guid}/merknad/edit")]
     public async Task<IActionResult> EditMerknad(Guid projectId, [FromBody] MerknadDto dto)
     {
         if (!ModelState.IsValid)

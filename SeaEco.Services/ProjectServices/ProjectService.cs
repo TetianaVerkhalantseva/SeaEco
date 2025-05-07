@@ -175,16 +175,6 @@ public class ProjectService : IProjectService
         
         await _context.SaveChangesAsync();
         
-        if (!string.IsNullOrWhiteSpace(dto.Merknad))
-        {
-            await AddMerknadAsync(id, dto.Merknad!);
-            prosjekt = await _context.BProsjekts
-                           .Include(p => p.Lokalitet)
-                           .Include(p => p.BTilstand)
-                           .FirstOrDefaultAsync(p => p.Id == id)
-                       ?? throw new InvalidOperationException("Kunne ikke laste prosjekt etter merknad.");
-        }
-        
         return new ProjectDto
         {
             Id                   = prosjekt.Id,
@@ -211,22 +201,24 @@ public class ProjectService : IProjectService
     public async Task AddMerknadAsync(Guid projectId, string merknad)
     {
         var prosjekt = await _context.BProsjekts.FindAsync(projectId);
-        if (prosjekt == null) throw new KeyNotFoundException($"Prosjekt {projectId} ikke funnet.");
+        if (prosjekt == null)
+            throw new KeyNotFoundException($"Prosjekt {projectId} ikke funnet.");
 
-        if (string.IsNullOrWhiteSpace(prosjekt.Merknad))
-            prosjekt.Merknad = merknad;
-        else
-            prosjekt.Merknad += "\n" + merknad;
+        prosjekt.Merknad = string.IsNullOrWhiteSpace(prosjekt.Merknad)
+            ? merknad
+            : $"{prosjekt.Merknad}\n{merknad}";
 
         await _context.SaveChangesAsync();
     }
-
+    
     public async Task EditMerknadAsync(Guid projectId, string merknad)
     {
         var prosjekt = await _context.BProsjekts.FindAsync(projectId);
-        if (prosjekt == null) throw new KeyNotFoundException($"Prosjekt {projectId} ikke funnet.");
+        if (prosjekt == null)
+            throw new KeyNotFoundException($"Prosjekt {projectId} ikke funnet.");
 
         prosjekt.Merknad = merknad;
+
         await _context.SaveChangesAsync();
     }
     
