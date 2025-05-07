@@ -246,7 +246,7 @@
 
     @* TODO: Picture usilt and tom grabb container *@
     <div class="picture-container">
-        <button class="picture-button" style="vertical-align:middle"><span>+ Usilt</span></button>
+        <button class="picture-button" style="vertical-align:middle"><span>Usilt bilde</span></button>
 
         <div class="tom-grabb-container" id="tomGrabb_1">
             <label class="custom-checkbox" for="tom-grabb-1">
@@ -262,7 +262,7 @@
 <div id="div3" class="content-div">
     @* TODO: Picture silt and tom grabb container *@
     <div class="picture-container">
-        <button class="picture-button" style="vertical-align:middle"><span>+ Silt</span></button>
+        <button class="picture-button" style="vertical-align:middle"><span>Silt bilde</span></button>
 
         <div class="tom-grabb-container" id="tomGrabb_2">
             <label class="custom-checkbox" for="tom-grabb-2">
@@ -325,16 +325,16 @@
     <div id="animalInfo" class="animalInfo-container">
         <div class="animalData">
             <div class="form-floating mb-3">
-                <InputText id="pigghunder" class="form-control"
+                <InputText id="pigghuder" class="form-control"
                            @bind-Value="_surveyDto.BAnimal.Pigghunder"
-                           placeholder="Pigghunder" />
-                <label for="pigghunder">Pigghunder</label>
+                           placeholder="Pigghuder" />
+                <label for="pigghuder">Pigghuder</label>
             </div>
             <div class="btn-group mb-3" role="group">
                 <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Pigghunder == "30+" ? "active" : "")"
-                        @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Pigghunder = v)'>30+</button>
+                        @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Pigghunder = v)'>Mer enn 30</button>
                 <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Pigghunder == "50+" ? "active" : "")"
-                        @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Pigghunder = v)'>50+</button>
+                        @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Pigghunder = v)'>Mer enn 50</button>
             </div>
 
             <div class="form-floating mb-3">
@@ -345,9 +345,9 @@
             </div>
             <div class="btn-group mb-3" role="group">
                 <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Krepsdyr == "30+" ? "active" : "")"
-                        @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Krepsdyr = v)'>30+</button>
+                        @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Krepsdyr = v)'>Mer enn 30</button>
                 <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Krepsdyr == "50+" ? "active" : "")"
-                        @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Krepsdyr = v)'>50+</button>
+                        @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Krepsdyr = v)'>Mer enn 50</button>
             </div>
 
             <div class="form-floating mb-3">                
@@ -358,9 +358,9 @@
             </div>
             <div class="btn-group mb-3" role="group">
                 <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Skjell == "30+" ? "active" : "")"
-                        @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Skjell = v)'>30+</button>
+                        @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Skjell = v)'>Mer enn 30</button>
                 <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Skjell == "50+" ? "active" : "")"
-                        @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Skjell = v)'>50+</button>
+                        @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Skjell = v)'>Mer enn 50</button>
             </div>
 
             <div class="form-floating mb-3">
@@ -371,9 +371,9 @@
             </div>
             <div class="btn-group mb-3" role="group">
                 <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Borstemark == "30+" ? "active" : "")"
-                        @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Borstemark = v)'>30+</button>
+                        @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Borstemark = v)'>Mer enn 30</button>
                 <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Borstemark == "50+" ? "active" : "")"
-                        @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Borstemark = v)'>50+</button>
+                        @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Borstemark = v)'>Mer enn 50</button>
             </div>
         </div>
     </div>

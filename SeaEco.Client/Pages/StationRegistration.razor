@@ -107,40 +107,40 @@
             }
             
             @if (_survey.BSensorisk != null)
-            { 
+            {
                 <div class="form-floating mb-3">
                     <input class="form-control" id="Farge"
-                           value="@_survey.BSensorisk.Farge.ToEnumDescription<Farge>()" />
+                           value="@(_survey.BSensorisk.Farge.ToEnumDescription<Farge>())" />
                     <label for="Farge">Farge</label>
                 </div>
 
                 <div class="form-floating mb-3">
                     <input class="form-control" id="Lukt"
-                           value="@_survey.BSensorisk.Lukt.ToEnumDescription<Lukt>()" />
+                           value="@(_survey.BSensorisk.Lukt.ToEnumDescription<Lukt>())" />
                     <label for="Lukt">Lukt</label>
                 </div>
 
                 <div class="form-floating mb-3">
                     <input class="form-control" id="Konsistens"
-                           value="@_survey.BSensorisk.Konsistens.ToEnumDescription<Konsistens>()" />
+                           value="@(_survey.BSensorisk.Konsistens.ToEnumDescription<Konsistens>())" />
                     <label for="Konsistens">Konsistens</label>
                 </div>
 
                 <div class="form-floating mb-3">
                     <input class="form-control" id="GrabbVolum"
-                           value="@_survey.BSensorisk.Grabbvolum.ToEnumDescription<Grabbvolum>()" />
+                           value="@(_survey.BSensorisk.Grabbvolum.ToEnumDescription<Grabbvolum>())" />
                     <label for="GrabbVolum">GrabbVolum</label>
                 </div>
 
                 <div class="form-floating mb-3">
                     <input class="form-control" id="Tykkelse"
-                           value="@_survey.BSensorisk.Tykkelseslamlag.ToEnumDescription<Tykkelseslamlag>()" />
+                           value="@(_survey.BSensorisk.Tykkelseslamlag.ToEnumDescription<Tykkelseslamlag>())" />
                     <label for="Tykkelse">Tykkelse</label>
                 </div>
 
                 <div class="form-floating mb-3">
                     <input class="form-control" id="Gassbobler"
-                           value="@_survey.BSensorisk.Gassbobler.ToEnumDescription<Gassbobler>()" />
+                           value="@(_survey.BSensorisk.Gassbobler.ToEnumDescription<Gassbobler>())" />
                     <label for="Gassbobler">Gassbobler</label>
                 </div>
             }
@@ -178,7 +178,7 @@
     
     @* TODO: Picture usilt and tom grabb container *@
     @* <div class="picture-container"> *@
-    @*     <button class="picture-button" style="vertical-align:middle"><span>+ Usilt</span></button> *@
+    @*     <button class="picture-button" style="vertical-align:middle"><span>Usilt bilde</span></button> *@
     @* *@
     @*     <div class="tom-grabb-container" id="tomGrabb_1"> *@
     @*         <label class="custom-checkbox" for="tom-grabb-1"> *@
@@ -193,7 +193,7 @@
 <div id="div3" class="content-div">
     @* TODO: Picture silt and tom grabb container *@
     @* <div class="picture-container"> *@
-    @*     <button class="picture-button" style="vertical-align:middle"><span>+ Silt</span></button> *@
+    @*     <button class="picture-button" style="vertical-align:middle"><span>Silt bilde</span></button> *@
     @* *@
     @*     <div class="tom-grabb-container" id="tomGrabb_2"> *@
     @*         <label class="custom-checkbox" for="tom-grabb-2"> *@
@@ -275,16 +275,16 @@
         </div>
     }
 
-    @if (_survey.Merknader != null)
+    @if (_survey.Merknader != null && Enum.TryParse<Merknader>(_survey.Merknader, out var parsed))
     {
-        Merknader? enumValue = Enum.TryParse<Merknader>(_survey?.Merknader, out var parsed) ? parsed : null;
-        string? description = enumValue?.GetDescription();
-        
+        var description = parsed.GetDescription();
+
         <div class="form-floating mb-3">
             <InputText class="form-control" id="merknader" Value="@description" />
             <label for="merknader">Merknader</label>
         </div>
     }
+
 </div>
 
 <div class="button-container">
@@ -294,47 +294,6 @@
     <button id="editBtn" class="custom-btn" @onclick="HandleEdit">Rediger</button>
 </div>
 
-
-@* Last and next button script *@
-@* <script> *@
-@*     let currentIndex = 1; *@
-@*     const totalDivs = 3; *@
-@* *@
-@*     function showDiv(index) { *@
-@*         for (let i = 1; i <= totalDivs; i++) { *@
-@*             document.getElementById('div' + i).classList.remove('active'); *@
-@*         } *@
-@*         document.getElementById('div' + index).classList.add('active'); *@
-@*         updateButtons(); *@
-@*     } *@
-@* *@
-@*     function showLast() { *@
-@*         if (currentIndex > 1) { *@
-@*             currentIndex--; *@
-@*             showDiv(currentIndex); *@
-@*         } *@
-@*     } *@
-@* *@
-@*     function showNext() { *@
-@*         if (currentIndex < totalDivs) { *@
-@*             currentIndex++; *@
-@*             showDiv(currentIndex); *@
-@*         } *@
-@*     } *@
-@* *@
-@*     function updateButtons() { *@
-@*         const lastBtn = document.getElementById('lastBtn'); *@
-@*         const nextBtn = document.getElementById('nextBtn'); *@
-@*         const editBtn = document.getElementById('editBtn'); *@
-@* *@
-@*         lastBtn.style.display = currentIndex === 1 ? 'none' : 'inline-block'; *@
-@*         nextBtn.style.display = currentIndex === totalDivs ? 'none' : 'inline-block'; *@
-@*         editBtn.style.display = currentIndex === totalDivs ? 'inline-block' : 'none'; *@
-@*     } *@
-@* *@
-@*     updateButtons(); *@
-@* *@
-@* </script> *@
 
 @code {
     [Parameter]
