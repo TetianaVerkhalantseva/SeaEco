@@ -21,7 +21,8 @@ else
             <p class="text-secondary mb-0">- Prosjektstatus: @_project.Prosjektstatus.GetDescription() </p>
             @if (_project.Tilstand != null)
             {
-                <p class="text-secondary mt-0">- Tilstand: @_project.Tilstand </p>
+                <p class=" mt-0" style="@($"color:{_project.Tilstand.GetDisplay()}")">- Tilstand: @((int)_project.Tilstand.Value)
+                </p> 
             }
         </div>
 
@@ -43,13 +44,13 @@ else
                                 <h6>Prosjektinformasjon</h6>
                                 <div class="d-flex form-floating flex-xxl-row flex-column gap-3">
                                     <div class="d-flex form-floating">
-                                        <InputText class="form-control" id="poid" @bind-Value="_project.PoId" disabled/>
-                                        <label for="poid">@Resources.InputTextPoId</label>
-                                    </div>
-                                    <div class="d-flex form-floating">
-                                        <InputText class="form-control" id="prosjektIdSe" @bind-Value="_project.PoId" disabled/>
+                                        <InputText class="form-control" id="prosjektIdSe" @bind-Value="_project.ProsjektIdSe" disabled/>
                                         <label for="prosjektIdSe">Prosjekt-Id</label>
                                     </div>
+                                    <div class="d-flex form-floating">
+                                        <InputText class="form-control" id="poid" @bind-Value="_project.PoId" disabled/>
+                                        <label for="poid">@Resources.InputTextPoId</label>
+                                    </div> 
                                     <div class="d-flex form-floating flex-fill">
                                         <InputSelect @bind-Value="_project.ProsjektansvarligId" id="user" class="form-select" @key="_numberInputKey" @oninput="() => _errorMessage = null" disabled="@(!_editProjectInfo)">
                                             <option value=""></option>
