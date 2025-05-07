@@ -3,6 +3,7 @@ using SeaEco.Abstractions.Enums;
 using SeaEco.Abstractions.Models.SamplingPlan;
 using SeaEco.EntityFramework.Contexts;
 using SeaEco.EntityFramework.Entities;
+using SeaEco.Services.ProjectServices;
 
 namespace SeaEco.Services.SamplingPlanServices;
 
@@ -10,10 +11,14 @@ namespace SeaEco.Services.SamplingPlanServices;
 public class SamplingPlanService: ISamplingPlanService
 {
     private readonly AppDbContext _db;
+    private readonly IProjectService _projectService;
 
-    public SamplingPlanService(AppDbContext db)
+    public SamplingPlanService(
+        AppDbContext db,
+        IProjectService projectService)
     {
         _db = db;
+        _projectService = projectService;
     }
 
     public async Task<SamplingPlanDto?> GetSamplingPlanById(Guid id)
@@ -69,6 +74,13 @@ public class SamplingPlanService: ISamplingPlanService
             await _db.BProvetakningsplans.AddAsync(newPlan);
             
             await _db.SaveChangesAsync();
+            
+            await _projectService.UpdateProjectStatusAsync(
+                samplingPlanDto.ProsjektId,
+                Prosjektstatus.Pabegynt,
+                merknad: null
+            );
+            
             return new EditSamplingPlanResult()
             {
                 IsSuccess = true,

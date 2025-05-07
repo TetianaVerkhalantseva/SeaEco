@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using SeaEco.Abstractions.Enums;
 using SeaEco.Abstractions.Models.BSurvey;
 using SeaEco.Abstractions.Models.Bundersokelse;
 using SeaEco.EntityFramework.Contexts;
 using SeaEco.Services.Mapping;
+using SeaEco.Services.ProjectServices;
 
 namespace SeaEco.Services.BSurveyService;
 
@@ -10,10 +12,14 @@ namespace SeaEco.Services.BSurveyService;
 public class BSurveyService: IBSurveyService
 {
     private readonly AppDbContext _db;
+    private readonly IProjectService _projectService;
 
-    public BSurveyService(AppDbContext db)
+    public BSurveyService(
+        AppDbContext db,
+        IProjectService projectService)
     {
         _db = db;
+        _projectService = projectService;
     }
 
     public async Task<SurveyDto?> GetSurveyById(Guid id)
@@ -61,47 +67,10 @@ public class BSurveyService: IBSurveyService
             
             dto.Id = Guid.NewGuid();
             dto.ProsjektId = projectId;
-            dto.BlotbunnId = Guid.NewGuid();
-            dto.HardbunnId = Guid.NewGuid();
-            dto.SedimentId = Guid.NewGuid();
-            dto.SensoriskId = Guid.NewGuid();
-            dto.DyrId = Guid.NewGuid();
+            
             dto.DatoRegistrert ??= DateTime.Now;
             dto.DatoEndret ??= DateTime.Now;
             
-            if (dto.BStation != null)
-            {
-                dto.ProsjektId = projectId;
-                dto.BStation.Id = stationId;
-            }
-            
-            if (dto.BSoftBase != null)
-            {
-                dto.BSoftBase.Id = Guid.NewGuid();
-                dto.BHardBase = null;
-            }
-
-            if (dto.BAnimal != null)
-            {
-                dto.BAnimal.Id = Guid.NewGuid();
-            }
-
-            if (dto.BHardBase != null)
-            {
-                dto.BHardBase.Id = Guid.NewGuid();
-                dto.BSoftBase = null;
-            }
-
-            if (dto.BSediment != null)
-            {
-                dto.BSediment.Id = Guid.NewGuid();
-            }
-
-            if (dto.BSensorisk != null)
-            {
-                dto.BSensorisk.Id = Guid.NewGuid();
-            }
-
             foreach (var log in dto.BSurveyLogs)
             {
                 log.Id = Guid.NewGuid();
@@ -110,6 +79,16 @@ public class BSurveyService: IBSurveyService
             var entity = dto.ToEntity();
             _db.BUndersokelses.Add(entity);
             await _db.SaveChangesAsync();
+            
+            var proj = await _projectService.GetProjectByIdAsync(projectId);
+            if (proj.Prosjektstatus == Prosjektstatus.Pabegynt)
+            {
+                await _projectService.UpdateProjectStatusAsync(
+                    projectId,
+                    Prosjektstatus.Pagar,
+                    merknad: null
+                );
+            }
             
             return new EditSurveyResult
             {
