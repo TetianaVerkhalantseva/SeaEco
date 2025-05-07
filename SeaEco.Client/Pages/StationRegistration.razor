@@ -2,6 +2,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using SeaEco.Abstractions.Enums.Bsensorisk
 @using SeaEco.Abstractions.Extensions
+@using SeaEco.Abstractions.Models.BSurvey
 @using SeaEco.Abstractions.Models.Bundersokelse
 @inject HttpClient Http
 @attribute [Authorize]
@@ -445,10 +446,12 @@
 @code {
     [Parameter]
     public Guid ProjectId { get; set; }
+    [Parameter]
     public Guid StationId { get; set; }
+    [Parameter]
     public Guid SurveyId { get; set; }
 
-    private SurveyDto? _survey = new();
+    private EditSurveyDto? _survey = new();
 
     private string? _selectedBunnType;
     private string? _selectedSensorisk;
@@ -463,10 +466,10 @@
     {
         try
         {
-            _survey = await Http.GetFromJsonAsync<SurveyDto>($"api/Project/{ProjectId:guid}/station/{StationId:guid}/survey/{SurveyId:guid}");
+            _survey = await Http.GetFromJsonAsync<EditSurveyDto>($"api/Project/{ProjectId:guid}/station/{StationId:guid}/survey/{SurveyId:guid}");
             
             // Test code
-            // _survey = new SurveyDto
+            // _survey = new EditSurveyDto
             // {
             //     Id = Guid.NewGuid(),
             //     ProsjektId = Guid.NewGuid(),
