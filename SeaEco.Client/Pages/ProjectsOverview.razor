@@ -134,7 +134,7 @@
                             <td>@project.ProsjektIdSe</td>
                             <td>@project.StationDatesString</td>
                             <td>@project.Produksjonsstatus.GetDescription()</td>
-                            <td>@project.Tilstand</td>
+                            <td class="text-center align-middle" style=";background-color:@(project.Tilstand?.GetDisplay() ?? "")">@(project.Tilstand.HasValue ? ((int)project.Tilstand.Value).ToString() : string.Empty)</td>
                             <td>@project.Prosjektstatus.GetDescription()</td>
                         </tr>
                     }
