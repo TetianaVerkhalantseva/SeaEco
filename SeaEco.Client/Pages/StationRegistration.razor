@@ -1,33 +1,36 @@
 @page "/project/{ProjectId:guid}/station/{StationId:guid}/survey/{SurveyId:guid}"
 @using Microsoft.AspNetCore.Authorization
-@using SeaEco.Abstractions.Enums
 @using SeaEco.Abstractions.Enums.Bsensorisk
 @using SeaEco.Abstractions.Extensions
 @using SeaEco.Abstractions.Models.Bundersokelse
 @inject HttpClient Http
 @attribute [Authorize]
 @inject NavigationManager Navigation
+@inject IJSRuntime Js
+@* @page "/project/survey" *@
+@* @using SeaEco.Abstractions.Enums *@
+@* @using SeaEco.Abstractions.Models.BSurvey *@
 
 
 <h4>Stasjonsregistrering</h4>
 
 
 <div id="div1" class="content-div active">
-    @if (_survey.BStation != null)
+    @if (_survey?.BStation != null)
     {
         <div class="position-depth-container">
             <div class="form-floating mb-3">
-                <InputText id="position_n" class="form-control" Value="@_survey.BStation.KoordinatNord" />
+                <input id="position_n" class="form-control" Value="@_survey.BStation.KoordinatNord" />
                 <label for="position_n">Posisjon nord</label>
             </div>
 
             <div class="form-floating mb-3">
-                <InputText id="position_o" class="form-control" Value="@_survey.BStation.KoordinatOst" />
+                <input id="position_o" class="form-control" Value="@_survey.BStation.KoordinatOst" />
                 <label for="position_o">Posisjon øst</label>
             </div>
 
             <div class="form-floating mb-3">
-                <InputNumber id="depth" class="form-control" Value="@_survey.BStation.Dybde" />
+                <input id="depth" class="form-control" Value="@_survey.BStation.Dybde" />
                 <label for="depth">Dybde</label>
             </div>
         </div>
@@ -35,14 +38,14 @@
 
     <div class="equipment-container">
         <div class="form-floating mb-3">
-            <input class="form-control" id="equip-1" value="@(_survey.AntallGrabbhugg?.ToString() ?? "Ingen")" />
+            <input class="form-control" id="equip-1" value="@(_survey?.AntallGrabbhugg?.ToString() ?? "Ingen")" />
             <label for="equip-1">Antall grabbhugg</label>
         </div>
 
         <div class="checkbox-3-container">
             <label class="custom-checkbox" for="equip-2">
                 <span class="custom-label">Gokjent grabbhastighet</span>
-                <input id="equip-2" type="checkbox" checked="@_survey.GrabbhastighetGodkjent" />
+                <input id="equip-2" type="checkbox" checked="@_survey?.GrabbhastighetGodkjent" />
                 <span class="custom-checkmark"></span>
             </label>
         </div>
@@ -54,15 +57,15 @@
         <h5>Bunntype: </h5>
 
         <div class="cntr">
-            <input type="radio" name="bunntype" id="cbx1" class="hidden-xs-up"
-                   @(_survey.BlotbunnId != null ? "checked" : "") >
+            <input type="radio" name="bunntype" id="cbx1" value="blot"
+                   checked="@("blot" == _selectedBunnType)" class="hidden-xs-up" />
             <label for="cbx1" class="cbx"></label>
             <label for="cbx1" class="lbl">Bløt</label>
         </div>
 
         <div class="cntr">
-            <input type="radio" name="bunntype" id="cbx2" class="hidden-xs-up"
-                   @(_survey.HardbunnId != null ? "checked" : "") >
+            <input type="radio" name="bunntype" id="cbx2" value="hard"
+                   checked="@("hard" == _selectedBunnType)" class="hidden-xs-up" />
             <label for="cbx2" class="cbx"></label>
             <label for="cbx2" class="lbl">Hard</label>
         </div>
@@ -73,14 +76,14 @@
 
         <div class="cntr">
             <input type="radio" name="sensorisk" id="cbx3" class="hidden-xs-up"
-                   @(_survey.SensoriskId != null ? "checked" : "")>
+                   value="ja" checked="@("ja" == _selectedSensorisk)" />
             <label for="cbx3" class="cbx"></label>
             <label for="cbx3" class="lbl">Ja</label>
         </div>
 
         <div class="cntr">
             <input type="radio" name="sensorisk" id="cbx4" class="hidden-xs-up"
-                   @(_survey.SensoriskId == null ? "checked" : "")>
+                   value="nei" checked="@("nei" == _selectedSensorisk)" />
             <label for="cbx4" class="cbx"></label>
             <label for="cbx4" class="lbl">Nei</label>
         </div>
@@ -88,59 +91,59 @@
 
     <div id="sensoryInfo" class="sensoryInfo-container">
         <div class="sensoryData">
-            @if (_survey.BSediment != null)
+            @if (_survey?.BSediment != null)
             {
                 <div class="form-floating mb-3" id="sensoryDataSoft_1">
-                    <InputNumber id="ProvePh" class="form-control" Value="@_survey.BSediment.Ph" />
+                    <input id="ProvePh" class="form-control" Value="@_survey.BSediment.Ph" />
                     <label for="ProvePh">pH</label>
                 </div>
 
                 <div class="form-floating mb-3" id="sensoryDataSoft_2">
-                    <InputNumber id="ProveEh" class="form-control" Value="@_survey.BSediment.Eh" />
+                    <input id="ProveEh" class="form-control" Value="@_survey.BSediment.Eh" />
                     <label for="ProveEh">EH</label>
                 </div>
 
                 <div class="form-floating mb-3" id="sensoryDataSoft_3">
-                    <InputNumber id="ProveTemp" class="form-control" Value="@_survey.BSediment.Temperatur" />
+                    <input id="ProveTemp" class="form-control" Value="@_survey.BSediment.Temperatur" />
                     <label for="ProveTemp">Temp</label>
                 </div>
             }
             
-            @if (_survey.BSensorisk != null)
-            { 
+            @if (_survey?.BSensorisk != null)
+            {
                 <div class="form-floating mb-3">
                     <input class="form-control" id="Farge"
-                           value="@_survey.BSensorisk.Farge.ToEnumDescription<Farge>()" />
+                           value="@(_survey.BSensorisk.Farge.ToEnumDescription<Farge>())" />
                     <label for="Farge">Farge</label>
                 </div>
 
                 <div class="form-floating mb-3">
                     <input class="form-control" id="Lukt"
-                           value="@_survey.BSensorisk.Lukt.ToEnumDescription<Lukt>()" />
+                           value="@(_survey.BSensorisk.Lukt.ToEnumDescription<Lukt>())" />
                     <label for="Lukt">Lukt</label>
                 </div>
 
                 <div class="form-floating mb-3">
                     <input class="form-control" id="Konsistens"
-                           value="@_survey.BSensorisk.Konsistens.ToEnumDescription<Konsistens>()" />
+                           value="@(_survey.BSensorisk.Konsistens.ToEnumDescription<Konsistens>())" />
                     <label for="Konsistens">Konsistens</label>
                 </div>
 
                 <div class="form-floating mb-3">
                     <input class="form-control" id="GrabbVolum"
-                           value="@_survey.BSensorisk.Grabbvolum.ToEnumDescription<Grabbvolum>()" />
+                           value="@(_survey.BSensorisk.Grabbvolum.ToEnumDescription<Grabbvolum>())" />
                     <label for="GrabbVolum">GrabbVolum</label>
                 </div>
 
                 <div class="form-floating mb-3">
                     <input class="form-control" id="Tykkelse"
-                           value="@_survey.BSensorisk.Tykkelseslamlag.ToEnumDescription<Tykkelseslamlag>()" />
+                           value="@(_survey.BSensorisk.Tykkelseslamlag.ToEnumDescription<Tykkelseslamlag>())" />
                     <label for="Tykkelse">Tykkelse</label>
                 </div>
 
                 <div class="form-floating mb-3">
                     <input class="form-control" id="Gassbobler"
-                           value="@_survey.BSensorisk.Gassbobler.ToEnumDescription<Gassbobler>()" />
+                           value="@(_survey.BSensorisk.Gassbobler.ToEnumDescription<Gassbobler>())" />
                     <label for="Gassbobler">Gassbobler</label>
                 </div>
             }
@@ -148,29 +151,45 @@
     </div>
 
     <div class="sedimentType-container" id="sedimentType">
-        @if (_survey.BHardBase != null)
+        @if (_survey?.BHardBase != null)
         {
             <div class="hardSediment-container" id="hardSediment">
                 <h5>Bunntype:</h5>
 
                 <div class="checkbox-container">
-                    <label><input type="checkbox" @(_survey.BHardBase.Steinbunn != 0 ? "checked" : "") /> Steinbunn</label>
-                    <label><input type="checkbox" @(_survey.BHardBase.Fjellbunn != 0 ? "checked" : "") /> Fjellbunn</label>
+                    <label>
+                        <input type="checkbox" checked="@(_survey.BHardBase.Steinbunn != 0)" />
+                        Steinbunn
+                    </label>
+                    <label>
+                        <input type="checkbox" checked="@(_survey.BHardBase.Fjellbunn != 0)" />
+                        Fjellbunn
+                    </label>
                 </div>
             </div>
         }
 
-        @if (_survey.BSoftBase != null)
+        @if (_survey?.BSoftBase != null)
         {
             <div class="softSediment-container" id="softSediment">
                 <h5>Sedimenttype:</h5>
 
                 <div class="checkbox-container">
-                    <label><input type="checkbox" @(_survey.BSoftBase.Sand != 0 ? "checked" : "") /> Sand</label>
-                    <label><input type="checkbox" @(_survey.BSoftBase.Leire != 0 ? "checked" : "") /> Leire</label>
-                    <label><input type="checkbox" @(_survey.BSoftBase.Silt != 0 ? "checked" : "") /> Silt</label>
-                    <label><input type="checkbox" @(_survey.BSoftBase.Grus != 0 ? "checked" : "") /> Grus</label>
-                    <label><input type="checkbox" @(_survey.BSoftBase.Skjellsand != 0 ? "checked" : "") /> Skjellsand</label>
+                    <label>
+                        <input type="checkbox" checked="@(_survey.BSoftBase.Sand != 0)" /> Sand
+                    </label>
+                    <label>
+                        <input type="checkbox" checked="@(_survey.BSoftBase.Leire != 0)" /> Leire
+                    </label>
+                    <label>
+                        <input type="checkbox" checked="@(_survey.BSoftBase.Silt != 0)" /> Silt
+                    </label>
+                    <label>
+                        <input type="checkbox" checked="@(_survey.BSoftBase.Grus != 0)" /> Grus
+                    </label>
+                    <label>
+                        <input type="checkbox" checked="@(_survey.BSoftBase.Skjellsand != 0)" /> Skjellsand
+                    </label>
                 </div>
             </div>
         }
@@ -178,7 +197,7 @@
     
     @* TODO: Picture usilt and tom grabb container *@
     @* <div class="picture-container"> *@
-    @*     <button class="picture-button" style="vertical-align:middle"><span>+ Usilt</span></button> *@
+    @*     <button class="picture-button" style="vertical-align:middle"><span>Usilt bilde</span></button> *@
     @* *@
     @*     <div class="tom-grabb-container" id="tomGrabb_1"> *@
     @*         <label class="custom-checkbox" for="tom-grabb-1"> *@
@@ -193,7 +212,7 @@
 <div id="div3" class="content-div">
     @* TODO: Picture silt and tom grabb container *@
     @* <div class="picture-container"> *@
-    @*     <button class="picture-button" style="vertical-align:middle"><span>+ Silt</span></button> *@
+    @*     <button class="picture-button" style="vertical-align:middle"><span>Silt bilde</span></button> *@
     @* *@
     @*     <div class="tom-grabb-container" id="tomGrabb_2"> *@
     @*         <label class="custom-checkbox" for="tom-grabb-2"> *@
@@ -207,19 +226,19 @@
     <div class="checkbox-1-container">
         <label class="custom-checkbox" for="beggiatoa">
             <span class="custom-label">Beggiatoa</span>
-            <input type="checkbox" id="beggiatoa" checked="@_survey.Beggiatoa" />
+            <input type="checkbox" id="beggiatoa" checked="@_survey?.Beggiatoa" />
             <span class="custom-checkmark"></span>
         </label>
 
         <label class="custom-checkbox" for="forrester">
             <span class="custom-label">Forrester</span>
-            <input type="checkbox" id="forrester" checked="@_survey.Forrester" />
+            <input type="checkbox" id="forrester" checked="@_survey?.Forrester" />
             <span class="custom-checkmark"></span>
         </label>
 
         <label class="custom-checkbox" for="fekalier">
             <span class="custom-label">Fekalier</span>
-            <input type="checkbox" id="fekalier" checked="@_survey.Fekalier" />
+            <input type="checkbox" id="fekalier" checked="@_survey?.Fekalier" />
             <span class="custom-checkmark"></span>
         </label>
     </div>
@@ -230,111 +249,198 @@
 
         <div class="cntr">
             <input type="radio" name="dyr" id="cbx5" class="hidden-xs-up"
-                   @(_survey.DyrId != null ? "checked" : "")>
+                   value="ja" checked="@("ja" == _selectedDyr)" />
             <label for="cbx5" class="cbx"></label>
             <label for="cbx5" class="lbl">Ja</label>
         </div>
 
         <div class="cntr">
             <input type="radio" name="dyr" id="cbx6" class="hidden-xs-up"
-                   @(_survey.DyrId == null ? "checked" : "")>
+                   value="nei" checked="@("nei" == _selectedDyr)" />
             <label for="cbx6" class="cbx"></label>
             <label for="cbx6" class="lbl">Nei</label>
         </div>
     </div>
 
-    @if (_survey.BAnimal != null)
+    @if (_selectedDyr == "ja" || _survey?.BAnimal != null)
     {
         <div id="animalInfo" class="animalInfo-container">
             <div class="animalData">
                 <div class="form-floating mb-3">
-                    <InputText id="pigghuder" class="form-control" Value="@_survey.BAnimal.Pigghunder" />
+                    <input id="pigghuder" class="form-control" Value="@_survey.BAnimal.Pigghunder" />
                     <label for="pigghuder">Pigghuder</label>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <InputText id="krepsdyr" class="form-control" Value="@_survey.BAnimal.Krepsdyr" />
+                    <input id="krepsdyr" class="form-control" Value="@_survey.BAnimal.Krepsdyr" />
                     <label for="krepsdyr">Krepsdyr</label>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <InputText id="skjell" class="form-control" Value="@_survey.BAnimal.Skjell" />
+                    <input id="skjell" class="form-control" Value="@_survey.BAnimal.Skjell" />
                     <label for="skjell">Skjell</label>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <InputText id="borstemark" class="form-control" Value="@_survey.BAnimal.Borstemark" />
+                    <input id="borstemark" class="form-control" Value="@_survey.BAnimal.Borstemark" />
                     <label for="borstemark">Børstemark</label>
                 </div>
             </div>
         </div>
 
         <div class="form-floating mb-3 user-input" id="arter-container">
-            <InputText class="form-control" id="arter" Value="@_survey.BAnimal.Arter"></InputText>
+            <input class="form-control" id="arter" Value="@_survey.BAnimal.Arter" />
             <label for="arter">Arter</label>
         </div>
     }
 
-    @if (_survey.Merknader != null)
+    @if (_survey?.Merknader != null)
     {
-        Merknader? enumValue = Enum.TryParse<Merknader>(_survey?.Merknader, out var parsed) ? parsed : null;
-        string? description = enumValue?.GetDescription();
-        
-        <div class="form-floating mb-3">
-            <InputText class="form-control" id="merknader" Value="@description" />
+        <div class="form-floating mb-3 user-input">
+            <input class="form-control" id="merknader" Value="@_survey.Merknader" />
             <label for="merknader">Merknader</label>
         </div>
     }
+
 </div>
 
 <div class="button-container">
-    @* <button id="lastBtn" onclick="showLast()" class="custom-btn">Forrige</button> *@
-    @* <button id="nextBtn" onclick="showNext()" class="custom-btn">Neste</button> *@
-    <button id="backBtn" class="custom-btn" @onclick="BackToStationPage">Tilbake</button>
-    <button id="editBtn" class="custom-btn" @onclick="HandleEdit">Rediger</button>
+    <button id="lastBtn" onclick="showLast()" class="custom-btn">Forrige</button>
+    <button id="nextBtn" onclick="showNext()" class="custom-btn">Neste</button>
+    <button id="editBtn" class="custom-btn" style="display: none;" @onclick="HandleEdit">Rediger</button>
 </div>
 
+<script>
+    let currentIndex = 1;
+    const totalDivs = 3;
 
-@* Last and next button script *@
-@* <script> *@
-@*     let currentIndex = 1; *@
-@*     const totalDivs = 3; *@
-@* *@
-@*     function showDiv(index) { *@
-@*         for (let i = 1; i <= totalDivs; i++) { *@
-@*             document.getElementById('div' + i).classList.remove('active'); *@
-@*         } *@
-@*         document.getElementById('div' + index).classList.add('active'); *@
-@*         updateButtons(); *@
-@*     } *@
-@* *@
-@*     function showLast() { *@
-@*         if (currentIndex > 1) { *@
-@*             currentIndex--; *@
-@*             showDiv(currentIndex); *@
-@*         } *@
-@*     } *@
-@* *@
-@*     function showNext() { *@
-@*         if (currentIndex < totalDivs) { *@
-@*             currentIndex++; *@
-@*             showDiv(currentIndex); *@
-@*         } *@
-@*     } *@
-@* *@
-@*     function updateButtons() { *@
-@*         const lastBtn = document.getElementById('lastBtn'); *@
-@*         const nextBtn = document.getElementById('nextBtn'); *@
-@*         const editBtn = document.getElementById('editBtn'); *@
-@* *@
-@*         lastBtn.style.display = currentIndex === 1 ? 'none' : 'inline-block'; *@
-@*         nextBtn.style.display = currentIndex === totalDivs ? 'none' : 'inline-block'; *@
-@*         editBtn.style.display = currentIndex === totalDivs ? 'inline-block' : 'none'; *@
-@*     } *@
-@* *@
-@*     updateButtons(); *@
-@* *@
-@* </script> *@
+    function showDiv(index) {
+        for (let i = 1; i <= totalDivs; i++) {
+            document.getElementById('div' + i).classList.remove('active');
+        }
+        document.getElementById('div' + index).classList.add('active');
+        updateButtons();
+    }
+
+    function showLast() {
+        if (currentIndex > 1) {
+            currentIndex--;
+            showDiv(currentIndex);
+        }
+    }
+
+    function showNext() {
+        if (currentIndex < totalDivs) {
+            currentIndex++;
+            showDiv(currentIndex);
+        }
+    }
+
+    function updateButtons() {
+        const lastBtn = document.getElementById('lastBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const editBtn = document.getElementById('editBtn');
+
+        lastBtn.style.display = currentIndex === 1 ? 'none' : 'inline-block';
+        nextBtn.style.display = currentIndex === totalDivs ? 'none' : 'inline-block';
+        editBtn.style.display = currentIndex === totalDivs ? 'inline-block' : 'none';
+    }
+
+    updateButtons();
+</script>
+
+<script>
+    const radioSoft = document.getElementById("cbx1");
+    const radioHard = document.getElementById("cbx2");
+    const sensoryQuestion = document.getElementById("sensoryRadio");
+
+    const radioYes = document.getElementById("cbx3");
+    const radioNo = document.getElementById("cbx4");
+    const sensoryInfo = document.getElementById("sensoryInfo");
+
+    const sedimentType = document.getElementById("sedimentType");
+    const hardSediment = document.getElementById("hardSediment");
+    const softSediment = document.getElementById("softSediment");
+
+    const tomGrabb_1 = document.getElementById("tomGrabb_1");
+    const tomGrabb_2 = document.getElementById("tomGrabb_2");
+
+    const animalYes = document.getElementById("cbx5");
+    const animalNo = document.getElementById("cbx6");
+    const animalInfo = document.getElementById("animalInfo");
+    const arterContainer = document.getElementById("arter-container")
+
+    function updateDisplay() {
+        if (radioHard.checked) {
+            sensoryQuestion.style.display = "flex";
+
+            sedimentType.style.display = "flex";
+            hardSediment.style.display = "flex";
+            softSediment.style.display = "none";
+
+            tomGrabb_1.style.display = "flex";
+            tomGrabb_2.style.display = "flex";
+
+            if (radioYes.checked) {
+                sensoryInfo.style.display = "flex";
+
+                document.getElementById("ProvePh").disabled = true;
+                document.getElementById("ProveEh").disabled = true;
+                document.getElementById("ProveTemp").disabled = true;
+                sensoryDataSoft_1.style.opacity = "0.5";
+                sensoryDataSoft_2.style.opacity = "0.5";
+                sensoryDataSoft_3.style.opacity = "0.5";
+            }
+            else {
+                sensoryInfo.style.display = "none";
+            }
+        }
+        else if (radioSoft.checked) {
+            sensoryQuestion.style.display = "none";
+            sensoryInfo.style.display = "flex";
+
+            sedimentType.style.display = "flex";
+            softSediment.style.display = "flex";
+            hardSediment.style.display = "none";
+
+            document.getElementById("ProvePh").disabled = false;
+            document.getElementById("ProveEh").disabled = false;
+            document.getElementById("ProveTemp").disabled = false;
+            sensoryDataSoft_1.style.opacity = "1";
+            sensoryDataSoft_2.style.opacity = "1";
+            sensoryDataSoft_3.style.opacity = "1";
+
+            tomGrabb_1.style.display = "none";
+            tomGrabb_2.style.display = "none";
+        }
+        else {
+            sensoryQuestion.style.display = "none";
+            sensoryInfo.style.display = "none";
+        }
+    }
+
+    function updateDisplay_2() {
+        if (animalYes.checked) {
+            animalInfo.style.display = "flex";
+            arterContainer.style.display = "flex";
+        }
+        else {
+            animalInfo.style.display = "none";
+            arterContainer.style.display = "none";
+        }
+    }
+
+    radioSoft.addEventListener("change", updateDisplay);
+    radioHard.addEventListener("change", updateDisplay);
+    radioYes.addEventListener("change", updateDisplay);
+    radioNo.addEventListener("change", updateDisplay);
+
+    animalYes.addEventListener("change", updateDisplay_2);
+    animalNo.addEventListener("change", updateDisplay_2);
+
+    updateDisplay();
+    updateDisplay_2();
+</script>
 
 @code {
     [Parameter]
@@ -343,6 +449,10 @@
     public Guid SurveyId { get; set; }
 
     private SurveyDto? _survey = new();
+
+    private string? _selectedBunnType;
+    private string? _selectedSensorisk;
+    private string? _selectedDyr;
     
     protected override async Task OnInitializedAsync()
     {
@@ -354,6 +464,88 @@
         try
         {
             _survey = await Http.GetFromJsonAsync<SurveyDto>($"api/Project/{ProjectId:guid}/station/{StationId:guid}/survey/{SurveyId:guid}");
+            
+            // Test code
+            // _survey = new SurveyDto
+            // {
+            //     Id = Guid.NewGuid(),
+            //     ProsjektId = Guid.NewGuid(),
+            //     PreinfoId = Guid.NewGuid(),
+            //     Feltdato = DateOnly.FromDateTime(DateTime.Now),
+            //     AntallGrabbhugg = 5,
+            //     GrabbhastighetGodkjent = true,
+            //     BlotbunnId = Guid.NewGuid(),
+            //     HardbunnId = null,
+            //     SedimentId = Guid.NewGuid(),
+            //     SensoriskId = Guid.NewGuid(),
+            //     Beggiatoa = true,
+            //     Forrester = false,
+            //     Fekalier = true,
+            //     DyrId = Guid.NewGuid(),
+            //     Merknader = "Simulated survey with some remarks.",
+            //     DatoRegistrert = DateTime.Now,
+            //     DatoEndret = DateTime.Now.AddDays(-1),
+            //     IndeksGr2Gr3 = 2.5f,
+            //     TilstandGr2Gr3 = 3,
+            //
+            //     // DTO properties
+            //     BStation = new BStationDto
+            //     {
+            //         Id = Guid.NewGuid(),
+            //         KoordinatNord = "66",
+            //         KoordinatOst = "10",
+            //         Dybde = 100
+            //         
+            //     },
+            //
+            //     BSoftBase = new BSoftBaseDto
+            //     {
+            //         Id = Guid.NewGuid(),
+            //         Leire = 1,
+            //         Sand = 1,
+            //         Skjellsand = 0
+            //     },
+            //     BAnimal = new BAnimalDto
+            //     {
+            //         Id = Guid.NewGuid(),
+            //         Pigghunder = "14",
+            //         Krepsdyr = "26",
+            //         Arter = "CC, OP"
+            //     },
+            //     
+            //     BHardBase = null,
+            //     
+            //     BPreInfo = new BPreInfoDto
+            //     {
+            //         Id = Guid.NewGuid(),
+            //     },
+            //     BSediment = new BSedimentDto
+            //     {
+            //         Id = Guid.NewGuid(),
+            //         Ph = 6,
+            //         Eh = 2,
+            //         Temperatur = 3
+            //     },
+            //     BSensorisk = new BSensoriskDto
+            //     {
+            //         Id = Guid.NewGuid(),
+            //         Farge = 0,
+            //         Lukt = 0,
+            //         Konsistens = 2,
+            //         Grabbvolum = 1,
+            //         Tykkelseslamlag = 1,
+            //         Gassbobler = 0
+            //     }
+            // };
+
+            if (_survey?.BlotbunnId != null)
+                _selectedBunnType = "blot";
+            else if (_survey?.HardbunnId != null)
+                _selectedBunnType = "hard";
+
+            _selectedSensorisk = _survey?.SensoriskId != null ? "ja" : "nei";
+            
+            _selectedDyr = _survey?.DyrId != null ? "ja" : "nei";
         }
         catch (Exception ex)
         {
@@ -361,9 +553,12 @@
         }
     }
 
-    private void BackToStationPage()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        Navigation.NavigateTo("");
+        if (firstRender)
+        {
+            await Js.InvokeVoidAsync("updateDisplay_2");
+        }
     }
     
     private void HandleEdit()
