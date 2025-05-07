@@ -66,6 +66,7 @@
                     <option value="all">Alle</option>
                     <option value="status-started">Påbegynt</option>
                     <option value="status-new">Nytt</option>
+                    <option value="status-ongoing">Pågår</option>
                     <option value="status-done">Ferdig</option>
                     <option value="name-asc">Sorter etter navn: A-Z</option>
                     <option value="name-desc">Sorter etter navn: Z-A</option>
@@ -168,6 +169,13 @@
                     PoId = "1006",
                     Prosjektstatus = 1,
                     Datoregistrert = DateTime.Now
+                },
+                new BProsjekt
+                {
+                Id = new Guid(),
+                PoId = "1007",
+                Prosjektstatus = 5,
+                Datoregistrert = DateTime.MinValue 
                 }
             };
             _allProjects = _customer.BProsjekts.ToList();
@@ -203,6 +211,11 @@
             case "status-new":
                 _customer.BProsjekts = _customer.BProsjekts
                     .Where(p => (Prosjektstatus)p.Prosjektstatus == Prosjektstatus.Nytt)
+                    .ToList();
+                break;
+            case "status-ongoing":
+                _customer.BProsjekts = _customer.BProsjekts
+                    .Where(p => (Prosjektstatus)p.Prosjektstatus == Prosjektstatus.Pagar)
                     .ToList();
                 break;
             case "status-done":

@@ -6,7 +6,7 @@ namespace SeaEco.Services.BSurveyService;
 
 public interface IBSurveyService
 {
-    Task<SurveyDto?> GetSurveyById(Guid id);
+    Task<EditSurveyDto?> GetSurveyById(Guid id);
     
     Task<EditSurveyResult> CreateSurvey(Guid projectId, Guid stationId, EditSurveyDto dto);
     

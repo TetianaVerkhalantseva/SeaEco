@@ -294,20 +294,6 @@ else
 
     private async Task EditProjectInformation()
     {
-        if (_project.Merknad != _projectCopy.Merknad)
-        {
-            var merknadDto = new MerknadDto { Merknad = _project.Merknad ?? string.Empty };
-            var merknadResponse = await Http.PostAsJsonAsync(
-                $"api/Project/{_project.Id:D}/merknad",
-                merknadDto
-            );
-
-            if (!merknadResponse.IsSuccessStatusCode)
-            {
-                _errorMessage = "error";
-                return;
-            }
-        }
         var response = await Http.PutAsJsonAsync($"api/Project/{_project.Id:D}", _project);
         if (response.IsSuccessStatusCode)
         {
