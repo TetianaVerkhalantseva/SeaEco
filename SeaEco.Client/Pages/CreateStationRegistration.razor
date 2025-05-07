@@ -1,5 +1,4 @@
 @page "/project/{ProjectId:guid}/station/{StationId:guid}/survey"
-@* @page "/project/survey" *@
 @using Microsoft.AspNetCore.Authorization
 @using SeaEco.Abstractions.Enums
 @using SeaEco.Abstractions.Enums.Bsensorisk
@@ -225,8 +224,17 @@
             <h5>Bunntype:</h5>
             
             <div class="checkbox-container">
-                <label><input type="checkbox" @bind="_surveyDto.BHardBase.Steinbunn"/> Steinbunn</label>
-                <label><input type="checkbox" @bind="_surveyDto.BHardBase.Fjellbunn"/> Fjellbunn</label>
+                <button class="toggle-btn" data-level="@(_surveyDto.BHardBase?.Steinbunn.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
+                        @onclick="() => CycleValue(_surveyDto.BHardBase, nameof(_surveyDto.BHardBase.Steinbunn))"
+                        disabled="@(_surveyDto.BHardBase == null)">
+                    Steinbunn (@_surveyDto.BHardBase?.Steinbunn ?? 0)
+                </button>
+                
+                <button class="toggle-btn" data-level="@(_surveyDto.BHardBase?.Fjellbunn.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
+                        @onclick="() => CycleValue(_surveyDto.BHardBase, nameof(_surveyDto.BHardBase.Fjellbunn))"
+                        disabled="@(_surveyDto.BHardBase == null)">
+                    Fjellbunn (@_surveyDto.BHardBase?.Fjellbunn ?? 0)
+                </button>
             </div>
         </div>
 
@@ -234,11 +242,31 @@
             <h5>Sedimenttype:</h5>
             
             <div class="checkbox-container">
-                <label><input type="checkbox" @bind="_surveyDto.BSoftBase.Sand"/> Sand</label>
-                <label><input type="checkbox" @bind="_surveyDto.BSoftBase.Leire"/> Leire</label>
-                <label><input type="checkbox" @bind="_surveyDto.BSoftBase.Silt"/> Silt</label>
-                <label><input type="checkbox" @bind="_surveyDto.BSoftBase.Grus"/> Grus</label>
-                <label><input type="checkbox" @bind="_surveyDto.BSoftBase.Skjellsand"/> Skjellsand</label>
+                <button class="toggle-btn" data-level="@(_surveyDto.BSoftBase?.Sand.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
+                        @onclick="() => CycleValue(_surveyDto.BSoftBase, nameof(_surveyDto.BSoftBase.Sand))"
+                        disabled="@(_surveyDto.BSoftBase == null)">
+                    Sand (@_surveyDto.BSoftBase?.Sand ?? 0)
+                </button>
+                <button class="toggle-btn" data-level="@(_surveyDto.BSoftBase?.Leire.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
+                        @onclick="() => CycleValue(_surveyDto.BSoftBase, nameof(_surveyDto.BSoftBase.Leire))"
+                        disabled="@(_surveyDto.BSoftBase == null)">
+                    Leire (@_surveyDto.BSoftBase?.Leire ?? 0)
+                </button>
+                <button class="toggle-btn" data-level="@(_surveyDto.BSoftBase?.Silt.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
+                        @onclick="() => CycleValue(_surveyDto.BSoftBase, nameof(_surveyDto.BSoftBase.Silt))"
+                        disabled="@(_surveyDto.BSoftBase == null)">
+                    Silt (@_surveyDto.BSoftBase?.Silt ?? 0)
+                </button>
+                <button class="toggle-btn" data-level="@(_surveyDto.BSoftBase?.Grus.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
+                        @onclick="() => CycleValue(_surveyDto.BSoftBase, nameof(_surveyDto.BSoftBase.Grus))"
+                        disabled="@(_surveyDto.BSoftBase == null)">
+                    Grus (@_surveyDto.BSoftBase?.Grus ?? 0)
+                </button>
+                <button class="toggle-btn" data-level="@(_surveyDto.BSoftBase?.Skjellsand.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
+                        @onclick="() => CycleValue(_surveyDto.BSoftBase, nameof(_surveyDto.BSoftBase.Skjellsand))"
+                        disabled="@(_surveyDto?.BSoftBase == null)">
+                    Skjellsand (@_surveyDto.BSoftBase?.Skjellsand ?? 0)
+                </button>
             </div>
         </div>
     </div>
@@ -332,9 +360,9 @@
             </div>
             <div class="btn-group mb-3" role="group">
                 <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Pigghunder == "30+" ? "active" : "")"
-                        @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Pigghunder = v)'>Mer enn 30</button>
+                        @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Pigghunder = v)'>30+</button>
                 <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Pigghunder == "50+" ? "active" : "")"
-                        @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Pigghunder = v)'>Mer enn 50</button>
+                        @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Pigghunder = v)'>50+</button>
             </div>
 
             <div class="form-floating mb-3">
@@ -345,9 +373,9 @@
             </div>
             <div class="btn-group mb-3" role="group">
                 <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Krepsdyr == "30+" ? "active" : "")"
-                        @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Krepsdyr = v)'>Mer enn 30</button>
+                        @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Krepsdyr = v)'>30+</button>
                 <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Krepsdyr == "50+" ? "active" : "")"
-                        @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Krepsdyr = v)'>Mer enn 50</button>
+                        @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Krepsdyr = v)'>50+</button>
             </div>
 
             <div class="form-floating mb-3">                
@@ -358,9 +386,9 @@
             </div>
             <div class="btn-group mb-3" role="group">
                 <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Skjell == "30+" ? "active" : "")"
-                        @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Skjell = v)'>Mer enn 30</button>
+                        @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Skjell = v)'>30+</button>
                 <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Skjell == "50+" ? "active" : "")"
-                        @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Skjell = v)'>Mer enn 50</button>
+                        @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Skjell = v)'>50+</button>
             </div>
 
             <div class="form-floating mb-3">
@@ -371,9 +399,9 @@
             </div>
             <div class="btn-group mb-3" role="group">
                 <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Borstemark == "30+" ? "active" : "")"
-                        @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Borstemark = v)'>Mer enn 30</button>
+                        @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Borstemark = v)'>30+</button>
                 <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Borstemark == "50+" ? "active" : "")"
-                        @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Borstemark = v)'>Mer enn 50</button>
+                        @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Borstemark = v)'>50+</button>
             </div>
         </div>
     </div>
@@ -586,6 +614,24 @@
             _surveyDto.BStation.KoordinatNord = "Annen posisjon";
             _surveyDto.BStation.KoordinatOst = "Annen posisjon";
             _surveyDto.BStation.Dybde = value;
+        }
+    }
+
+    private void CycleValue(object target, string propertyName)
+    {
+        if (target == null) return;
+        
+        var property = target.GetType().GetProperty(propertyName);
+        if (property != null)
+        {
+            var currentValue = (float)(property.GetValue(target) ?? 0f);
+            
+            if (currentValue == 0)
+                property.SetValue(target, 0.5f);
+            else if (currentValue == 0.5f)
+                property.SetValue(target, 1f);
+            else
+                property.SetValue(target, 0f);
         }
     }
     
