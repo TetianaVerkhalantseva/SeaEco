@@ -173,6 +173,11 @@ public class ProjectService : IProjectService
         prosjekt.ProsjektansvarligId = dto.ProsjektansvarligId;
         prosjekt.Produksjonsstatus   = (int)dto.Produksjonsstatus;
         
+        if (dto.Merknad != null)
+        {
+            prosjekt.Merknad = dto.Merknad;
+        }
+
         await _context.SaveChangesAsync();
         
         return new ProjectDto
@@ -207,17 +212,6 @@ public class ProjectService : IProjectService
         prosjekt.Merknad = string.IsNullOrWhiteSpace(prosjekt.Merknad)
             ? merknad
             : $"{prosjekt.Merknad}\n{merknad}";
-
-        await _context.SaveChangesAsync();
-    }
-    
-    public async Task EditMerknadAsync(Guid projectId, string merknad)
-    {
-        var prosjekt = await _context.BProsjekts.FindAsync(projectId);
-        if (prosjekt == null)
-            throw new KeyNotFoundException($"Prosjekt {projectId} ikke funnet.");
-
-        prosjekt.Merknad = merknad;
 
         await _context.SaveChangesAsync();
     }

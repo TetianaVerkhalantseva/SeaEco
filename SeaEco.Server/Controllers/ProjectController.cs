@@ -109,23 +109,6 @@ public class ProjectController : ControllerBase
             return NotFound(knf.Message);
         }
     }
-
-    [HttpPut("{projectId:guid}/merknad/edit")]
-    public async Task<IActionResult> EditMerknad(Guid projectId, [FromBody] MerknadDto dto)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
-        try
-        {
-            await _projectService.EditMerknadAsync(projectId, dto.Merknad);
-            return Ok();
-        }
-        catch (KeyNotFoundException knf)
-        {
-            return NotFound(knf.Message);
-        }
-    }
     
     [HttpPut("{projectId:guid}/status")]
     public async Task<IActionResult> UpdateStatus(Guid projectId, [FromBody] UpdateStatusDto dto)
@@ -143,7 +126,6 @@ public class ProjectController : ControllerBase
             return NotFound(knf.Message);
         }
     }
-    
     
     
     // Operasjoner for prøvtakningsplan
