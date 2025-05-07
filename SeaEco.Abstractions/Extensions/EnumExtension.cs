@@ -36,6 +36,11 @@ public static class EnumExtension
     
     public static string ToEnumDescription<TEnum>(this int value) where TEnum : Enum
     {
+        if (!Enum.IsDefined(typeof(TEnum), value))
+        {
+            return value.ToString();
+        }
+        
         var enumValue = (TEnum)(object)value;
         var field = enumValue.GetType().GetField(enumValue.ToString());
         var attribute = field?.GetCustomAttribute<DescriptionAttribute>();

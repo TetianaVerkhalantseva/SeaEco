@@ -27,4 +27,14 @@ public class ReportController(IReportService reportService) : ApiControllerBase
             ? AsBadRequest(response.ErrorMessage)
             : AsOk(response.Value);
     }
+
+    [HttpPost("generate/b2")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GenerateB2([FromBody] Guid projectId)
+    {
+        Response<string> response = await reportService.GenerateB2Report(projectId);
+        return response.IsError
+            ? AsBadRequest(response.ErrorMessage)
+            : AsOk(response.Value);
+    }
 }

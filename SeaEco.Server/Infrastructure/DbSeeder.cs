@@ -133,7 +133,7 @@ public sealed class DbSeeder
                 Merknad = "Kommentar",
                 Prosjektstatus = 0,
                 Mtbtillatelse = 100,
-                Produksjonsstatus = 0,
+                Produksjonsstatus = 2,
                 KundeId = kundeId1,
                 LokalitetId = lokalitetId1,
                 PoId = "406",
@@ -150,7 +150,7 @@ public sealed class DbSeeder
                 Merknad = "Kommentar",
                 Prosjektstatus = 0,
                 Mtbtillatelse = 200,
-                Produksjonsstatus = 2,
+                Produksjonsstatus = 1,
                 KundeId = kundeId2,
                 LokalitetId = lokalitetId2,
                 PoId = "407",
@@ -225,7 +225,6 @@ public sealed class DbSeeder
                 await context.SaveChangesAsync();
             }
         }
-
         
         // Seed BUndersokelse
         Guid undersokelseId1 = Guid.Parse("3f7e477f-a26e-4b5b-93f3-546b6be693d1");
@@ -275,5 +274,117 @@ public sealed class DbSeeder
                 await context.SaveChangesAsync();
             }
         }
+        
+                
+        // Seed BStasjon
+        Guid stasjonId1 = Guid.Parse("03db101b-581b-46da-8bc8-726c1d9d31aa");
+
+        List<BStasjon> stasjoner =
+        [
+            new BStasjon
+            {
+                Id = stasjonId1,
+                ProsjektId = prosjektId1,
+                Nummer = 11,
+                KoordinatNord = "68°46.851",
+                KoordinatOst = "17°17.036",
+                Dybde = 105,
+                Analyser = "B",
+                ProvetakingsplanId = null, 
+                UndersokelseId = undersokelseId1
+            }
+        ];
+
+        List<BStasjon> stasjonRecords = await context.BStasjons.Where(x => x.Id == stasjonId1).ToListAsync();
+        foreach (BStasjon s in stasjoner)
+        {
+            if (!stasjonRecords.Any(x => x.Id == s.Id))
+            {
+                await context.BStasjons.AddAsync(s);
+                await context.SaveChangesAsync();
+            }
+        }
+
+        // Seed BBlotbunn
+        Guid blotbunnId1 = Guid.Parse("830eebc8-6d86-40ad-88ed-3cbe3e43e0bc");
+        var blotbunn = new BBlotbunn
+        {
+            Id = blotbunnId1,
+            Leire = 0,
+            Silt = 1,
+            Sand = 0,
+            Grus = 1,
+            Skjellsand = 0
+        };
+        if (!await context.BBlotbunns.AnyAsync(x => x.Id == blotbunnId1))
+        {
+            await context.BBlotbunns.AddAsync(blotbunn);
+            await context.SaveChangesAsync();
+        }
+
+        // Seed BHardbunn
+        Guid hardbunnId1 = Guid.Parse("51042d7a-4b05-425c-a4b7-f373ba21a0be");
+        var hardbunn = new BHardbunn
+        {
+            Id = hardbunnId1,
+            Steinbunn = 0,
+            Fjellbunn = 1
+        };
+        if (!await context.BHardbunns.AnyAsync(x => x.Id == hardbunnId1))
+        {
+            await context.BHardbunns.AddAsync(hardbunn);
+            await context.SaveChangesAsync();
+        }
+
+        // Seed BSensorisk
+        Guid sensoriskId1 = Guid.Parse("02843db6-6a65-4f45-85c2-4537096686e6");
+        var sensorisk = new BSensorisk
+        {
+            Id = sensoriskId1,
+            Gassbobler = 1,
+            Farge = 2,
+            Lukt = 2,
+            Konsistens = 2,
+            Grabbvolum = 5,
+            Tykkelseslamlag = 3,
+            IndeksGr3 = 0.5f,
+            TilstandGr3 = 2
+        };
+        if (!await context.BSensorisks.AnyAsync(x => x.Id == sensoriskId1))
+        {
+            await context.BSensorisks.AddAsync(sensorisk);
+            await context.SaveChangesAsync();
+        }
+
+        // Seed BDyr
+        Guid dyrId1 = Guid.Parse("ffcf1a63-5530-4163-a38b-b34df2406979");
+        var dyr = new BDyr
+        {
+            Id = dyrId1,
+            Pigghunder = "1",
+            Krepsdyr = "3",
+            Skjell = "50+",
+            Borstemark = "50+",
+            Arter = "Andre arter: 2"
+        };
+        if (!await context.BDyrs.AnyAsync(x => x.Id == dyrId1))
+        {
+            await context.BDyrs.AddAsync(dyr);
+            await context.SaveChangesAsync();
+        }
+
+        // Обновление BUndersokelse связями
+        var undersokelse = await context.BUndersokelses.FirstOrDefaultAsync(x => x.Id == undersokelseId1);
+        if (undersokelse != null)
+        {
+            undersokelse.BlotbunnId = blotbunnId1;
+            undersokelse.HardbunnId = hardbunnId1;
+            undersokelse.SensoriskId = sensoriskId1;
+            undersokelse.DyrId = dyrId1;
+            undersokelse.Merknader = "Rester av anleggsmateriale";
+            context.BUndersokelses.Update(undersokelse);
+            await context.SaveChangesAsync();
+        }
+
     }
 }
