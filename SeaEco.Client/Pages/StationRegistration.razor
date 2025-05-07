@@ -33,29 +33,6 @@
         </div>
     }
 
-    @* <div class="sampler-container"> *@
-    @*     <div class="form-floating mb-3"> *@
-    @*         <InputSelect id="sampler-1" class="form-select" @bind-Value="_user1.Id"> *@
-    @*             <option value="" disabled>Velg prøvetaker</option> *@
-    @*             <option value="">Rikke</option> *@
-    @*             <option value="">Sara</option> *@
-    @*             <option value="">Tor</option> *@
-    @*         </InputSelect> *@
-    @*         <label for="sampler-1">Prøvetaker nr 1</label> *@
-    @*     </div> *@
-    @* *@
-    @*     <div class="form-floating mb-3"> *@
-    @*         <InputSelect id="sampler-2" class="form-select" @bind-Value="_user2.Id"> *@
-    @*             <option value="" disabled>Velg prøvetaker</option> *@
-    @*             <option value="">Ingen</option> *@
-    @*             <option value="">Rikke</option> *@
-    @*             <option value="">Sara</option> *@
-    @*             <option value="">Tor</option> *@
-    @*         </InputSelect> *@
-    @*         <label for="sampler-2">Prøvetaker nr 2</label> *@
-    @*     </div> *@
-    @* </div> *@
-
     <div class="equipment-container">
         <div class="form-floating mb-3">
             <input class="form-control" id="equip-1" value="@(_survey.AntallGrabbhugg?.ToString() ?? "Ingen")" />
@@ -228,9 +205,9 @@
     @* </div> *@
 
     <div class="checkbox-1-container">
-        <label class="custom-checkbox" for="beggiota">
-            <span class="custom-label">Beggiota</span>
-            <input type="checkbox" id="beggiota" checked="@_survey.Beggiatoa" />
+        <label class="custom-checkbox" for="beggiatoa">
+            <span class="custom-label">Beggiatoa</span>
+            <input type="checkbox" id="beggiatoa" checked="@_survey.Beggiatoa" />
             <span class="custom-checkmark"></span>
         </label>
 

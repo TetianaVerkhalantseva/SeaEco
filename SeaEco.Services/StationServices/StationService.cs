@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SeaEco.Abstractions.Models.BSurvey;
 using SeaEco.Abstractions.Models.Stations;
 using SeaEco.Abstractions.ValueObjects;
 using SeaEco.EntityFramework.Contexts;
@@ -71,6 +72,26 @@ public class StationService : IStationService
                 Dybde = s.Dybde,
                 Analyser = s.Analyser
             }
+        };
+    }
+
+    public async Task<BStationDto?> GetBStationDtoByStationId(Guid projectId, Guid stationId)
+    {
+        var station = await _db.BStasjons.FirstOrDefaultAsync(s => s.ProsjektId == projectId && s.Id == stationId);
+        if (station == null)
+        {
+            return null;
+        }
+
+        return new BStationDto
+        {
+            Id = station.Id,
+            ProsjektId = station.ProsjektId,
+            Nummer = station.Nummer,
+            KoordinatNord = station.KoordinatNord,
+            KoordinatOst = station.KoordinatOst,
+            Dybde = station.Dybde,
+            Analyser = station.Analyser
         };
     }
 

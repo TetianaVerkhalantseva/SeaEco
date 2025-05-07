@@ -61,47 +61,10 @@ public class BSurveyService: IBSurveyService
             
             dto.Id = Guid.NewGuid();
             dto.ProsjektId = projectId;
-            dto.BlotbunnId = Guid.NewGuid();
-            dto.HardbunnId = Guid.NewGuid();
-            dto.SedimentId = Guid.NewGuid();
-            dto.SensoriskId = Guid.NewGuid();
-            dto.DyrId = Guid.NewGuid();
+            
             dto.DatoRegistrert ??= DateTime.Now;
             dto.DatoEndret ??= DateTime.Now;
             
-            if (dto.BStation != null)
-            {
-                dto.ProsjektId = projectId;
-                dto.BStation.Id = stationId;
-            }
-            
-            if (dto.BSoftBase != null)
-            {
-                dto.BSoftBase.Id = Guid.NewGuid();
-                dto.BHardBase = null;
-            }
-
-            if (dto.BAnimal != null)
-            {
-                dto.BAnimal.Id = Guid.NewGuid();
-            }
-
-            if (dto.BHardBase != null)
-            {
-                dto.BHardBase.Id = Guid.NewGuid();
-                dto.BSoftBase = null;
-            }
-
-            if (dto.BSediment != null)
-            {
-                dto.BSediment.Id = Guid.NewGuid();
-            }
-
-            if (dto.BSensorisk != null)
-            {
-                dto.BSensorisk.Id = Guid.NewGuid();
-            }
-
             foreach (var log in dto.BSurveyLogs)
             {
                 log.Id = Guid.NewGuid();
