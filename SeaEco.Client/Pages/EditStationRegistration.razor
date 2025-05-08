@@ -19,20 +19,43 @@
     {
         <div class="position-depth-container">
             <div class="form-floating mb-3">
-                <InputText id="position_n" class="form-control" @bind-Value="_surveyDto.BStation.KoordinatNord" placeholder="N"/>
-                <label for="position_n">Posisjon nord</label>
+                <InputText id="position_n_deg" class="form-control"
+                           @bind-Value="_coordinateNorthGrade"
+                           @oninput='e => { _coordinateNorthGrade = e.Value?.ToString() ?? ""; UpdateCoordinateNorth(); }'
+                           placeholder="Grader"/>
+                <label for="position_n_deg">nord – grader</label>
             </div>
-    
+
             <div class="form-floating mb-3">
-                <InputText id="position_o" class="form-control" @bind-Value="_surveyDto.BStation.KoordinatOst" placeholder="O"/>
-                <label for="position_o">Posisjon øst</label>
+                <InputText id="position_n_min" class="form-control"
+                           @bind-Value="_coordinateNorthMinute"
+                           @oninput='e => { _coordinateNorthMinute = e.Value?.ToString() ?? ""; UpdateCoordinateNorth(); }'
+                           placeholder="Minutter"/>
+                <label for="position_n_min">nord – minutter</label>
             </div>
-    
+
+
+            <div class="form-floating mb-3">
+                <InputText id="position_e_deg" class="form-control"
+                           @bind-Value="_coordinateEastGrade"
+                           @oninput='e => { _coordinateEastGrade = e.Value?.ToString() ?? ""; UpdateCoordinateEast(); }'
+                           placeholder="Grader"/>
+                <label for="position_o">øst - grader</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <InputText id="position_e_min" class="form-control"
+                           @bind-Value="_coordinateEastMinute"
+                           @oninput='e => { _coordinateEastMinute = e.Value?.ToString() ?? ""; UpdateCoordinateEast(); }'
+                           placeholder="Minutter"/>
+                <label for="position_o">øst - minutter</label>
+            </div>
+
             <div class="form-floating mb-3">
                 <InputNumber id="depth" class="form-control" @bind-Value="_surveyDto.BStation.Dybde" placeholder="M"/>
                 <label for="depth">Dybde</label>
             </div>
-    
+
             <div class="position-depth-button-container">
                 <button class="btn btn-outline-primary clear-data @(_surveyDto.BStation.Dybde == 0 ? "active" : "")"
                         @onclick="() => ClearPositionAndDepth(0)">
@@ -577,6 +600,11 @@
     private EditSurveyDto _surveyDto = new();
     private BStationDto? _station = new();
 
+    private string _coordinateNorthGrade = "";
+    private string _coordinateNorthMinute = "";
+    private string _coordinateEastGrade = "";
+    private string _coordinateEastMinute = "";
+
     private string? _selectBunnType;
     private string? _selectSensorisk;
     private string? _selectDyr;
@@ -601,6 +629,71 @@
         // Create mode
         _station = await Http.GetFromJsonAsync<BStationDto>($"api/Project/{ProjectId}/station/{StationId}");
         _surveyDto.BStation = _station;
+
+        // Split the value
+        if (_surveyDto.BStation != null)
+        {
+            ParseCoordinateNorth();
+            ParseCoordinateEast();
+        }
+    }
+
+    // Split the value
+    private void ParseCoordinateNorth()
+    {
+        if (!string.IsNullOrEmpty(_surveyDto.BStation.KoordinatNord))
+        {
+            var parts = _surveyDto.BStation.KoordinatNord.Split('°');
+            if (parts.Length == 2)
+            {
+                _coordinateNorthGrade = parts[0];
+                _coordinateNorthMinute = parts[1];
+            }
+        }
+    }
+    
+    private void ParseCoordinateEast()
+    {
+        if (!string.IsNullOrEmpty(_surveyDto.BStation.KoordinatOst))
+        {
+            var parts = _surveyDto.BStation.KoordinatOst.Split('°');
+            if (parts.Length == 2)
+            {
+                _coordinateEastGrade = parts[0];
+                _coordinateEastMinute = parts[1];
+            }
+        }
+    }
+    
+    // Merge the value
+    private void UpdateCoordinateNorth()
+    {
+        if (!string.IsNullOrWhiteSpace(_coordinateNorthGrade) && !string.IsNullOrWhiteSpace(_coordinateNorthMinute))
+        {
+            if (double.TryParse(_coordinateNorthMinute, out var minute))
+            {
+                _surveyDto.BStation.KoordinatNord = $"{_coordinateNorthGrade}°{minute:F3}";
+            }
+            else
+            {
+                _surveyDto.BStation.KoordinatNord = $"{_coordinateNorthGrade}°{_coordinateNorthMinute}";
+            }
+        }
+    }
+    
+    private void UpdateCoordinateEast()
+    {
+        if (!string.IsNullOrWhiteSpace(_coordinateEastGrade) && !string.IsNullOrWhiteSpace(_coordinateEastMinute))
+        {
+            if (double.TryParse(_coordinateEastMinute, out var minute))
+            {
+                _surveyDto.BStation.KoordinatOst = $"{_coordinateEastGrade}°{minute:F3}";
+            }
+            else
+            {
+                _surveyDto.BStation.KoordinatOst = $"{_coordinateEastGrade}°{_coordinateEastMinute}";
+            }
+        }
     }
     
     private void ClearPositionAndDepth(int value)
