@@ -415,7 +415,7 @@
     <div class="form-floating mb-3 user-input" id="arter-container">
         @foreach (Arter art in Enum.GetValues(typeof(Arter)))
         {
-            <button type="button" class="btn btn-outline-primary btn-sm me-1 mb-1" style="color: #6c757d; border-color: #6c757d"
+            <button type="button" class="btn btn-outline-secondary btn-sm me-1 mb-1"
                     @onclick="() => AddArter(art)">
                 @art.GetDescription()
             </button>
