@@ -6,9 +6,9 @@ namespace SeaEco.Services.Mapping;
 
 public static class SurveyMappings
 {
-    public static SurveyDto ToSurveyDto(this BUndersokelse entity)
+    public static EditSurveyDto ToSurveyDto(this BUndersokelse entity)
     {
-        return new SurveyDto
+        return new EditSurveyDto
         {
             Id = entity.Id,
             ProsjektId = entity.ProsjektId,
@@ -120,7 +120,6 @@ public static class SurveyMappings
                 EndretAv = l.EndretAv,
                 UndersokelseId = l.UndersokelseId
             }).ToList()
-
         };
     }
 

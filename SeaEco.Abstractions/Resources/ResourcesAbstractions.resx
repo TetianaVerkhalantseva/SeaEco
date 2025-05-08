@@ -56,7 +56,7 @@
         <value>Prosjektansvarlig påkrevd</value>
     </data>
     <data name="ErrorMessageProjectMtb" xml:space="preserve">
-        <value>MTB-tilatelse påkrevd</value>
+        <value>MTB-tillatelse påkrevd</value>
     </data>
     <data name="ErrorMessageCustomer" xml:space="preserve">
         <value>Kontaktperson er påkrevd</value>
@@ -81,5 +81,8 @@
     </data>
     <data name="ErrorMessagePoIdIdNumber" xml:space="preserve">
         <value>PO-ID skal kun inneholde siffer</value>
+    </data>
+    <data name="ErrorMessageProjectMtbNumber" xml:space="preserve">
+        <value>MTB-tillatelse må være et siffer</value>
     </data>
 </root>

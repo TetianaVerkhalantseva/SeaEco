@@ -170,5 +170,11 @@ namespace SeaEco.Abstractions.Resources {
                 return ResourceManager.GetString("ErrorMessagePoIdIdNumber", resourceCulture);
             }
         }
+        
+        internal static string ErrorMessageProjectMtbNumber {
+            get {
+                return ResourceManager.GetString("ErrorMessageProjectMtbNumber", resourceCulture);
+            }
+        }
     }
 }

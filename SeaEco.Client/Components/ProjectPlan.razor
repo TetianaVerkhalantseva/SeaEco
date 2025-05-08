@@ -71,14 +71,24 @@ else
                         }
                     </div>
 
-                    <div class="d-flex flex-row gap-3">
+                    <div class="d-flex flex-xxl-row flex-column gap-3">
                         <div class="d-flex form-floating">
                             <InputText class="form-control" id=@($"positionN_{station}")  @bind-Value="station.PositionN" disabled="@(!EditProjectPlanVar)"/>
-                            <label for="positionN_@station">@Resources.InputTextPositionN</label>
+                            <label for="positionN_@station">Nordlig grader °</label>
                         </div>
                         <div class="d-flex form-floating">
                             <InputText class="form-control" id=@($"positionS_{station}") @bind-Value="station.PositionS" disabled="@(!EditProjectPlanVar)"/>
-                            <label for="positionS_@station">@Resources.InputTextPositionS</label>
+                            <label for="positionS_@station">Nordlig minutter '</label>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-xxl-row flex-column gap-3">
+                        <div class="d-flex form-floating">
+                            <InputText class="form-control" id=@($"positionN_{station}")  @bind-Value="station.PositionN" disabled="@(!EditProjectPlanVar)"/>
+                            <label for="positionN_@station">Østlig grader °</label>
+                        </div>
+                        <div class="d-flex form-floating">
+                            <InputText class="form-control" id=@($"positionS_{station}") @bind-Value="station.PositionS" disabled="@(!EditProjectPlanVar)"/>
+                            <label for="positionS_@station">Østlig minutter '</label>
                         </div>
                     </div>
                     <div class="d-flex form-floating">

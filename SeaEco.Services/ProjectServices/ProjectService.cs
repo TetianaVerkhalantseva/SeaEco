@@ -18,7 +18,7 @@ public class ProjectService : IProjectService
     public async Task<Guid> CreateProjectAsync(NewProjectDto dto)
     {
         
-        // Sjekk om lokalitet finnes, ellers opprett
+        // Sjekk om lokalitet finnes, ellers opprettes
         var lokalitet = await _context.Lokalitets
             .FirstOrDefaultAsync(l => l.Lokalitetsnavn == dto.Lokalitetsnavn || l.LokalitetsId == dto.LokalitetsId);
 
@@ -113,6 +113,7 @@ public class ProjectService : IProjectService
         {
             Id = p.Id,
             PoId = p.PoId,
+            ProsjektIdSe = p.ProsjektIdSe,
             KundeId = p.KundeId,
             Oppdragsgiver = p.Kunde.Oppdragsgiver,
             Kundekontaktperson = p.Kundekontaktperson,
@@ -175,16 +176,11 @@ public class ProjectService : IProjectService
         prosjekt.ProsjektansvarligId = dto.ProsjektansvarligId;
         prosjekt.Produksjonsstatus   = (int)dto.Produksjonsstatus;
         
-        if (!string.IsNullOrWhiteSpace(dto.Merknad))
+        if (dto.Merknad != null)
         {
-            var nyKommentar = $"{dto.Merknad}";
-
-            if (string.IsNullOrWhiteSpace(prosjekt.Merknad))
-                prosjekt.Merknad = nyKommentar;
-            else
-                prosjekt.Merknad += $"\n{nyKommentar}";
+            prosjekt.Merknad = dto.Merknad;
         }
-    
+
         await _context.SaveChangesAsync();
         
         return new ProjectDto
@@ -208,6 +204,19 @@ public class ProjectService : IProjectService
                 : null,
             ProsjektIdSe         = prosjekt.ProsjektIdSe
         };
+    }
+    
+    public async Task AddMerknadAsync(Guid projectId, string merknad)
+    {
+        var prosjekt = await _context.BProsjekts.FindAsync(projectId);
+        if (prosjekt == null)
+            throw new KeyNotFoundException($"Prosjekt {projectId} ikke funnet.");
+
+        prosjekt.Merknad = string.IsNullOrWhiteSpace(prosjekt.Merknad)
+            ? merknad
+            : $"{prosjekt.Merknad}\n{merknad}";
+
+        await _context.SaveChangesAsync();
     }
     
     public async Task<string> GenerateAndSetProsjektIdSeAsync(Guid prosjektId, DateTime feltdato)
@@ -234,12 +243,30 @@ public class ProjectService : IProjectService
 
         // Formater: SE-25-BU-1
         var idSe = $"SE-{yearSuffix}-BU-{løpenummer}";
-
-        // Sett og lagre:
+        
         prosjekt.ProsjektIdSe = idSe;
         _context.BProsjekts.Update(prosjekt);
         await _context.SaveChangesAsync();
 
         return idSe;
+    }
+    
+    public async Task UpdateProjectStatusAsync(Guid projectId, Prosjektstatus nyStatus, string? merknad = null)
+    {
+        var prosjekt = await _context.BProsjekts.FindAsync(projectId);
+        if (prosjekt == null) throw new KeyNotFoundException($"Prosjekt {projectId} ikke funnet.");
+
+        prosjekt.Prosjektstatus = (int)nyStatus;
+        
+        if (merknad != null &&
+            (nyStatus == Prosjektstatus.Ferdig || nyStatus == Prosjektstatus.Deaktivert))
+        {
+            if (string.IsNullOrWhiteSpace(prosjekt.Merknad))
+                prosjekt.Merknad = merknad;
+            else
+                prosjekt.Merknad += "\n" + merknad;
+        }
+
+        await _context.SaveChangesAsync();
     }
 }

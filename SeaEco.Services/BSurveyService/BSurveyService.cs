@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using SeaEco.Abstractions.Enums;
 using SeaEco.Abstractions.Models.BSurvey;
 using SeaEco.Abstractions.Models.Bundersokelse;
 using SeaEco.EntityFramework.Contexts;
 using SeaEco.Services.Mapping;
+using SeaEco.Services.ProjectServices;
 
 namespace SeaEco.Services.BSurveyService;
 
@@ -10,13 +12,17 @@ namespace SeaEco.Services.BSurveyService;
 public class BSurveyService: IBSurveyService
 {
     private readonly AppDbContext _db;
+    private readonly IProjectService _projectService;
 
-    public BSurveyService(AppDbContext db)
+    public BSurveyService(
+        AppDbContext db,
+        IProjectService projectService)
     {
         _db = db;
+        _projectService = projectService;
     }
 
-    public async Task<SurveyDto?> GetSurveyById(Guid id)
+    public async Task<EditSurveyDto?> GetSurveyById(Guid id)
     {
         var survey = await _db.BUndersokelses
             .Include(s => s.Preinfo)
@@ -37,6 +43,9 @@ public class BSurveyService: IBSurveyService
     {
         try
         {
+            dto.Id = Guid.NewGuid();
+            dto.ProsjektId = projectId;
+            
             var targetDate = DateTime.Today;
 
             var preInfo = await _db.BPreinfos
@@ -59,57 +68,27 @@ public class BSurveyService: IBSurveyService
                 }
             }
             
-            dto.Id = Guid.NewGuid();
-            dto.ProsjektId = projectId;
-            dto.BlotbunnId = Guid.NewGuid();
-            dto.HardbunnId = Guid.NewGuid();
-            dto.SedimentId = Guid.NewGuid();
-            dto.SensoriskId = Guid.NewGuid();
-            dto.DyrId = Guid.NewGuid();
             dto.DatoRegistrert ??= DateTime.Now;
             dto.DatoEndret ??= DateTime.Now;
-            
-            if (dto.BStation != null)
-            {
-                dto.ProsjektId = projectId;
-                dto.BStation.Id = stationId;
-            }
-            
-            if (dto.BSoftBase != null)
-            {
-                dto.BSoftBase.Id = Guid.NewGuid();
-                dto.BHardBase = null;
-            }
 
-            if (dto.BAnimal != null)
-            {
-                dto.BAnimal.Id = Guid.NewGuid();
-            }
-
-            if (dto.BHardBase != null)
-            {
-                dto.BHardBase.Id = Guid.NewGuid();
-                dto.BSoftBase = null;
-            }
-
-            if (dto.BSediment != null)
-            {
-                dto.BSediment.Id = Guid.NewGuid();
-            }
-
-            if (dto.BSensorisk != null)
-            {
-                dto.BSensorisk.Id = Guid.NewGuid();
-            }
-
-            foreach (var log in dto.BSurveyLogs)
-            {
-                log.Id = Guid.NewGuid();
-            }
+            // foreach (var log in dto.BSurveyLogs)
+            // {
+            //     log.Id = Guid.NewGuid();
+            // }
             
             var entity = dto.ToEntity();
             _db.BUndersokelses.Add(entity);
             await _db.SaveChangesAsync();
+            
+            var proj = await _projectService.GetProjectByIdAsync(projectId);
+            if (proj?.Prosjektstatus == Prosjektstatus.Pabegynt)
+            {
+                await _projectService.UpdateProjectStatusAsync(
+                    projectId,
+                    Prosjektstatus.Pagar,
+                    merknad: null
+                );
+            }
             
             return new EditSurveyResult
             {
@@ -132,41 +111,12 @@ public class BSurveyService: IBSurveyService
     {
         try
         {
-            var targetDate = DateTime.Today;
-
-            var preInfo = await _db.BPreinfos
-                .FirstOrDefaultAsync(p =>
-                    p.ProsjektId == projectId &&
-                    p.Feltdato.Date == targetDate);
-            
-            if (preInfo != null)
-            {
-                dto.Feltdato = DateOnly.FromDateTime(DateTime.Today);
-                dto.PreinfoId = preInfo.Id;
-            }
-
             dto.DatoEndret ??= DateTime.Now;
             
-            if (dto.BStation != null)
-            {
-                dto.ProsjektId = projectId;
-                dto.BStation.Id = stationId;
-            }
-            
-            if (dto.BSoftBase != null)
-            {
-                dto.BHardBase = null;
-            }
-
-            if (dto.BHardBase != null)
-            {
-                dto.BSoftBase = null;
-            }
-
-            foreach (var log in dto.BSurveyLogs)
-            {
-                // How do I record user changes?
-            }
+            // TODO: How do I record user changes?
+            // foreach (var log in dto.BSurveyLogs)
+            // {
+            // }
             
             var entity = dto.ToEntity();
             _db.BUndersokelses.Update(entity);

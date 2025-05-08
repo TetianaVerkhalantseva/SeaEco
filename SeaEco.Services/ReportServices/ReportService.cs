@@ -2,11 +2,13 @@ using Microsoft.EntityFrameworkCore;
 using SeaEco.Abstractions.Enums;
 using SeaEco.Abstractions.Enums.Bsensorisk;
 using SeaEco.Abstractions.ResponseService;
+using SeaEco.Abstractions.ValueObjects.Bunnsubstrat;
 using SeaEco.EntityFramework.Entities;
 using SeaEco.EntityFramework.GenericRepository;
 using SeaEco.Reporter;
 using SeaEco.Reporter.Models;
 using SeaEco.Reporter.Models.B1;
+using SeaEco.Reporter.Models.B2;
 using SeaEco.Reporter.Models.Info;
 
 namespace SeaEco.Services.ReportServices;
@@ -161,6 +163,76 @@ public sealed class ReportService(Report report, IGenericRepository<BProsjekt> p
         
         report.FillB1(copyResult.Value, columns, header, tilstand, sjovann);
         
+        return Response<string>.Ok(copyResult.Value);
+    }
+
+    public async Task<Response<string>> GenerateB2Report(Guid projectId)
+    {
+        BProsjekt? dbRecord = await projectRepository.GetAll()
+            .Include(project => project.Kunde)
+            .Include(project => project.BPreinfos)
+            .Include(project => project.Lokalitet)
+            .Include(project => project.BUndersokelses)
+                .ThenInclude(_ => _.Blotbunn)
+            .Include(project => project.BUndersokelses)
+                .ThenInclude(_ => _.BStasjon)
+            .Include(project => project.BUndersokelses)
+                .ThenInclude(_ => _.Hardbunn)
+            .Include(project => project.BUndersokelses)
+                .ThenInclude(_ => _.Sensorisk)
+            .Include(project => project.BUndersokelses)
+                .ThenInclude(_ => _.Dyr)
+            .FirstOrDefaultAsync(_ => _.Id == projectId);
+
+        if (dbRecord is null)
+        {
+            return Response<string>.Error(ProjectNotFoundError);
+        }
+        
+        Response<string> copyResult = report.CopyDocument(SheetName.B2);
+        if (copyResult.IsError)
+        {
+            return copyResult;
+        }
+
+        IEnumerable<ColumnB2> columns = dbRecord.BUndersokelses.Select(_ => new ColumnB2()
+        {
+            KoordinatNord = _.BStasjon.KoordinatNord,
+            KoordinatOst = _.BStasjon.KoordinatOst,
+            Dyp = _.BStasjon.Dybde,
+            AntallGrabbhugg = _.AntallGrabbhugg ?? 0,
+            Bobling = (Gassbobler)(_.Sensorisk?.Gassbobler ?? 0) == Gassbobler.Ja,
+            
+            Leire = new BunnsubstratValue(_.Blotbunn?.Leire ?? 0),
+            Silt = new BunnsubstratValue(_.Blotbunn?.Silt ?? 0),
+            Sand = new BunnsubstratValue(_.Blotbunn?.Sand ?? 0),
+            Grus = new BunnsubstratValue(_.Blotbunn?.Grus ?? 0),
+            Skjellsand = new BunnsubstratValue(_.Blotbunn?.Skjellsand ?? 0),
+            Steinbunn = new BunnsubstratValue(_.Hardbunn?.Steinbunn ?? 0),
+            Fjellbunn = new BunnsubstratValue(_.Hardbunn?.Fjellbunn ?? 0),
+                
+            Pigghuder = string.IsNullOrEmpty(_.Dyr?.Pigghunder) ? string.Empty : _.Dyr.Pigghunder,
+            Krepsdyr = string.IsNullOrEmpty(_.Dyr?.Krepsdyr) ? string.Empty : _.Dyr.Krepsdyr,
+            Skjell = string.IsNullOrEmpty(_.Dyr?.Skjell) ? string.Empty : _.Dyr.Skjell,
+            Børstemark = string.IsNullOrEmpty(_.Dyr?.Borstemark) ? string.Empty : _.Dyr.Borstemark,
+            
+            Beggiota = _.Beggiatoa,
+            Fôr = _.Forrester,
+            Fekalier = _.Fekalier,
+            
+            Kommentarer = string.IsNullOrEmpty(_.Merknader) ? string.Empty : _.Merknader,
+        });
+        
+        BHeader header = new BHeader()
+        {
+            Oppdragsgiver = dbRecord.Kunde.Oppdragsgiver,
+            FeltDatoer = dbRecord.BPreinfos.Select(_ => _.Feltdato),
+            Lokalitetsnavn = dbRecord.Lokalitet.Lokalitetsnavn,
+            LokalitetsID = dbRecord.Lokalitet.LokalitetsId
+        };
+        
+        report.FillB2(copyResult.Value, columns, header);
+
         return Response<string>.Ok(copyResult.Value);
     }
 }

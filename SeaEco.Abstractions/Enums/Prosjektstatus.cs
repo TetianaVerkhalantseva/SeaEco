@@ -14,5 +14,8 @@ public enum Prosjektstatus
     Ferdig = 3,
 
     [Description("Deaktivert")]
-    Deaktivert = 4
+    Deaktivert = 4,
+    
+    [Description("Pågår")]
+    Pagar = 5
 }

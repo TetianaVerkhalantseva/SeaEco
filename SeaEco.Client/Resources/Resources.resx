@@ -361,6 +361,57 @@
     <data name="ErrorMessageLoadingUsers" xml:space="preserve">
         <value>Feil ved lasting av brukere:</value>
     </data>
+    <data name="InputTextResponsibleUser" xml:space="preserve">
+        <value>Ansvarlig ansatt</value>
+    </data>
+    <data name="InputTextCustomerUser" xml:space="preserve">
+        <value>Kontaktperson</value>
+    </data>
+    <data name="InputTextCustomerUserTlf" xml:space="preserve">
+        <value>Telefonnummer</value>
+    </data>
+    <data name="InputTextCustomerUserEmail" xml:space="preserve">
+        <value>Epost-adresse</value>
+    </data>
+    <data name="InputTextFullLocation" xml:space="preserve">
+        <value>Lokalitetsnavn (Id)</value>
+    </data>
+    <data name="InputTextProductionStatus" xml:space="preserve">
+        <value>Produksjonsstatus</value>
+    </data>
+    <data name="TextLocationInfo" xml:space="preserve">
+        <value>Lokalitetsinformasjon</value>
+    </data>
+    <data name="TextCusomerInfo" xml:space="preserve">
+        <value>Kundeinformasjon</value>
+    </data>
+    <data name="TextProjectInfo" xml:space="preserve">
+        <value>Prosjektinformasjon</value>
+    </data>
+    <data name="PageNewProjectNewProject" xml:space="preserve">
+        <value>Nytt prosjekt</value>
+    </data>
+    <data name="ButtonExistingLocation" xml:space="preserve">
+        <value>Eksisterende</value>
+    </data>
+    <data name="ButtonNewLocation" xml:space="preserve">
+        <value>Ny lokalitet</value>
+    </data>
+    <data name="InputTextStationDates" xml:space="preserve">
+        <value>Feltdato(er)</value>
+    </data>
+    <data name="InputTextCustomer" xml:space="preserve">
+        <value>Oppdragsgiver</value>
+    </data>
+    <data name="InputTextProjectIdSe" xml:space="preserve">
+        <value>Prosjekt-Id</value>
+    </data>
+    <data name="ErrorMessageLoadingCustomer" xml:space="preserve">
+        <value>Feil ved lasting av kunde:</value>
+    </data>
+    <data name="ErrorMessageLoadingProject" xml:space="preserve">
+        <value>Feil ved lasting av prosjekt:</value>
+    </data>
     <data name="ButtonAddNewProjectPlan" xml:space="preserve">
         <value>+ Ny prøvetakingsplan</value>
     </data>
