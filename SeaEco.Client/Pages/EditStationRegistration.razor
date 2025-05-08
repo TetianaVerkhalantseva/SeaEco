@@ -1,7 +1,9 @@
-@page "/project/{ProjectId:guid}/station/{StationId:guid}/create-survey"
-@page "/project/{ProjectId:guid}/station/{StationId:guid}/edit-survey/{SurveyId:guid?}"
+@* @page "/project/{ProjectId:guid}/station/{StationId:guid}/create-survey" *@
+@* @page "/project/{ProjectId:guid}/station/{StationId:guid}/edit-survey/{SurveyId:guid?}" *@
 
-@using Microsoft.AspNetCore.Authorization
+@page "/project/create-survey"
+
+@* @using Microsoft.AspNetCore.Authorization *@
 @using SeaEco.Abstractions.Enums
 @using SeaEco.Abstractions.Enums.Bsensorisk
 @using SeaEco.Abstractions.Extensions
@@ -9,13 +11,15 @@
 @using SeaEco.Abstractions.Models.Bundersokelse
 @using SeaEco.Abstractions.ValueObjects
 @inject HttpClient Http
-@attribute [Authorize(Roles = "admin")]
+@inject IJSRuntime Js
+@* @attribute [Authorize] *@
+@* @attribute [Authorize(Roles = "admin")] *@
 
 
 <h4>Stasjonsredigering</h4>
 
 <div id="div1" class="content-div active">
-    @if (_surveyDto.BStation != null)
+    @if (_surveyDto?.BStation != null)
     {
         <div class="position-depth-container">
             <div class="form-floating mb-3">
@@ -23,39 +27,39 @@
                            @bind-Value="_coordinateNorthGrade"
                            @oninput='e => { _coordinateNorthGrade = e.Value?.ToString() ?? ""; UpdateCoordinateNorth(); }'
                            placeholder="Grader"/>
-                <label for="position_n_deg">nord – grader</label>
+                <label for="position_n_deg">Nordlig grader</label>
             </div>
-
+    
             <div class="form-floating mb-3">
                 <InputText id="position_n_min" class="form-control"
                            @bind-Value="_coordinateNorthMinute"
                            @oninput='e => { _coordinateNorthMinute = e.Value?.ToString() ?? ""; UpdateCoordinateNorth(); }'
                            placeholder="Minutter"/>
-                <label for="position_n_min">nord – minutter</label>
+                <label for="position_n_min">Nordlig minutter</label>
             </div>
-
-
+    
+    
             <div class="form-floating mb-3">
                 <InputText id="position_e_deg" class="form-control"
                            @bind-Value="_coordinateEastGrade"
                            @oninput='e => { _coordinateEastGrade = e.Value?.ToString() ?? ""; UpdateCoordinateEast(); }'
                            placeholder="Grader"/>
-                <label for="position_o">øst - grader</label>
+                <label for="position_o">Østlig grader</label>
             </div>
-
+    
             <div class="form-floating mb-3">
                 <InputText id="position_e_min" class="form-control"
                            @bind-Value="_coordinateEastMinute"
                            @oninput='e => { _coordinateEastMinute = e.Value?.ToString() ?? ""; UpdateCoordinateEast(); }'
                            placeholder="Minutter"/>
-                <label for="position_o">øst - minutter</label>
+                <label for="position_o">Østlig minutter</label>
             </div>
-
+    
             <div class="form-floating mb-3">
                 <InputNumber id="depth" class="form-control" @bind-Value="_surveyDto.BStation.Dybde" placeholder="M"/>
                 <label for="depth">Dybde</label>
             </div>
-
+    
             <div class="position-depth-button-container">
                 <button class="btn btn-outline-primary clear-data @(_surveyDto.BStation.Dybde == 0 ? "active" : "")"
                         @onclick="() => ClearPositionAndDepth(0)">
@@ -107,7 +111,6 @@
             <label for="cbx2" class="lbl">Hard</label>
         </div>
     </div>
-
 
     <div id="sensoryRadio" class="sensoryRadio-container">
         <h5>Er sensorisk utført?</h5>
@@ -231,13 +234,13 @@
                 <button class="toggle-btn" data-level="@(_surveyDto.BHardBase?.Steinbunn.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
                         @onclick="() => CycleValue(_surveyDto.BHardBase, nameof(_surveyDto.BHardBase.Steinbunn))"
                         disabled="@(_surveyDto.BHardBase == null)">
-                    Steinbunn (@_surveyDto.BHardBase?.Steinbunn ?? 0)
+                    Steinbunn
                 </button>
                 
                 <button class="toggle-btn" data-level="@(_surveyDto.BHardBase?.Fjellbunn.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
                         @onclick="() => CycleValue(_surveyDto.BHardBase, nameof(_surveyDto.BHardBase.Fjellbunn))"
                         disabled="@(_surveyDto.BHardBase == null)">
-                    Fjellbunn (@_surveyDto.BHardBase?.Fjellbunn ?? 0)
+                    Fjellbunn
                 </button>
             </div>
         </div>
@@ -249,27 +252,27 @@
                 <button class="toggle-btn" data-level="@(_surveyDto.BSoftBase?.Sand.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
                         @onclick="() => CycleValue(_surveyDto.BSoftBase, nameof(_surveyDto.BSoftBase.Sand))"
                         disabled="@(_surveyDto.BSoftBase == null)">
-                    Sand (@_surveyDto.BSoftBase?.Sand ?? 0)
+                    Sand
                 </button>
                 <button class="toggle-btn" data-level="@(_surveyDto.BSoftBase?.Leire.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
                         @onclick="() => CycleValue(_surveyDto.BSoftBase, nameof(_surveyDto.BSoftBase.Leire))"
                         disabled="@(_surveyDto.BSoftBase == null)">
-                    Leire (@_surveyDto.BSoftBase?.Leire ?? 0)
+                    Leire
                 </button>
                 <button class="toggle-btn" data-level="@(_surveyDto.BSoftBase?.Silt.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
                         @onclick="() => CycleValue(_surveyDto.BSoftBase, nameof(_surveyDto.BSoftBase.Silt))"
                         disabled="@(_surveyDto.BSoftBase == null)">
-                    Silt (@_surveyDto.BSoftBase?.Silt ?? 0)
+                    Silt
                 </button>
                 <button class="toggle-btn" data-level="@(_surveyDto.BSoftBase?.Grus.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
                         @onclick="() => CycleValue(_surveyDto.BSoftBase, nameof(_surveyDto.BSoftBase.Grus))"
                         disabled="@(_surveyDto.BSoftBase == null)">
-                    Grus (@_surveyDto.BSoftBase?.Grus ?? 0)
+                    Grus
                 </button>
                 <button class="toggle-btn" data-level="@(_surveyDto.BSoftBase?.Skjellsand.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
                         @onclick="() => CycleValue(_surveyDto.BSoftBase, nameof(_surveyDto.BSoftBase.Skjellsand))"
-                        disabled="@(_surveyDto?.BSoftBase == null)">
-                    Skjellsand (@_surveyDto.BSoftBase?.Skjellsand ?? 0)
+                        disabled="@(_surveyDto.BSoftBase == null)">
+                    Skjellsand
                 </button>
             </div>
         </div>
@@ -277,7 +280,7 @@
 
     @* TODO: Picture usilt and tom grabb container *@
     <div class="picture-container">
-        <button class="picture-button" style="vertical-align:middle"><span>Usilt bilde</span></button>
+        <button class="picture-button" style="vertical-align:middle"><span>Usilt</span></button>
 
         <div class="tom-grabb-container" id="tomGrabb_1">
             <label class="custom-checkbox" for="tom-grabb-1">
@@ -293,7 +296,7 @@
 <div id="div3" class="content-div">
     @* TODO: Picture silt and tom grabb container *@
     <div class="picture-container">
-        <button class="picture-button" style="vertical-align:middle"><span>Silt bilde</span></button>
+        <button class="picture-button" style="vertical-align:middle"><span>Silt</span></button>
 
         <div class="tom-grabb-container" id="tomGrabb_2">
             <label class="custom-checkbox" for="tom-grabb-2">
@@ -412,17 +415,16 @@
     <div class="form-floating mb-3 user-input" id="arter-container">
         @foreach (Arter art in Enum.GetValues(typeof(Arter)))
         {
-            <button type="button" class="btn btn-outline-primary btn-sm me-1 mb-1"
+            <button type="button" class="btn btn-outline-primary btn-sm me-1 mb-1" style="color: #6c757d; border-color: #6c757d"
                     @onclick="() => AddArter(art)">
                 @art.GetDescription()
             </button>
         }
-        
-        <InputText class="form-control" id="arter" placeholder="Arter" @bind-Value="_surveyDto.BAnimal.Arter" />
-        <label for="arter">Arter</label>
+
+        <InputText class="form-control" id="arter" placeholder="Arter" @bind-Value="_surveyDto.BAnimal.Arter"/>
     </div>
 
-    <div class="form-floating mb-3 user-input">
+    <div class="form-floating mb-3 user-input" id="merknader-container">
         @foreach (Merknader note in Enum.GetValues(typeof(Merknader)))
         {
             <button type="button" class="btn btn-outline-secondary btn-sm me-1 mb-1"
@@ -432,7 +434,6 @@
         }
         
         <InputText class="form-control" id="merknader" placeholder="Merknader" @bind-Value="_surveyDto.Merknader"/>
-        <label for="merknader">Merknader</label>
     </div>
 
     @switch (_result)
@@ -614,27 +615,125 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if (SurveyId.HasValue && SurveyId.Value != Guid.Empty)
-        {
-            // Edit mode
-            var existingSurvey = await Http.GetFromJsonAsync<EditSurveyDto>
-                ($"api/Project/{ProjectId}/station/{StationId}/survey/{SurveyId}");
-            if (existingSurvey != null)
-            {
-                _surveyDto = existingSurvey;
-                return;
-            }
-        }
+        // if (SurveyId.HasValue && SurveyId.Value != Guid.Empty)
+        // {
+        //     // Edit mode
+        //     var existingSurvey = await Http.GetFromJsonAsync<EditSurveyDto>
+        //         ($"api/Project/{ProjectId}/station/{StationId}/survey/{SurveyId}");
+        //     if (existingSurvey != null)
+        //     {
+        //         _surveyDto = existingSurvey;
+        //         ParseCoordinateNorth();
+        //         ParseCoordinateEast();
+        //         return;
+        //     }
+        // }
+        //
+        // // Create mode
+        // _station = await Http.GetFromJsonAsync<BStationDto>($"api/Project/{ProjectId}/station/{StationId}");
+        // _surveyDto.BStation = _station;
+        //
+        // if (_surveyDto.BStation != null)
+        // {
+        //     ParseCoordinateNorth();
+        //     ParseCoordinateEast();
+        // }
+        // else
+        // {
+        //     _surveyDto.BStation = new BStationDto();
+        // }
         
-        // Create mode
-        _station = await Http.GetFromJsonAsync<BStationDto>($"api/Project/{ProjectId}/station/{StationId}");
-        _surveyDto.BStation = _station;
-
-        // Split the value
-        if (_surveyDto.BStation != null)
+        
+        // Test code for editing survey
+        _surveyDto = new EditSurveyDto
         {
-            ParseCoordinateNorth();
-            ParseCoordinateEast();
+            Id = Guid.NewGuid(),
+            ProsjektId = Guid.NewGuid(),
+            PreinfoId = Guid.NewGuid(),
+            Feltdato = DateOnly.FromDateTime(DateTime.Now),
+            AntallGrabbhugg = 5,
+            GrabbhastighetGodkjent = true,
+            BlotbunnId = Guid.NewGuid(),
+            HardbunnId = null,
+            SedimentId = Guid.NewGuid(),
+            SensoriskId = Guid.NewGuid(),
+            Beggiatoa = true,
+            Forrester = false,
+            Fekalier = true,
+            DyrId = Guid.NewGuid(),
+            Merknader = "TM, D, RAR",
+            DatoRegistrert = DateTime.Now,
+            DatoEndret = DateTime.Now.AddDays(-1),
+            IndeksGr2Gr3 = 2.5f,
+            TilstandGr2Gr3 = 3,
+        
+            // DTO properties
+            BStation = new BStationDto
+            {
+                Id = Guid.NewGuid(),
+                KoordinatNord = "66°22",
+                KoordinatOst = "10°58",
+                Dybde = 100
+            },
+        
+            BSoftBase = new BSoftBaseDto
+            {
+                Id = Guid.NewGuid(),
+                Leire = 1,
+                Sand = 1,
+                Skjellsand = 0
+            },
+            BAnimal = new BAnimalDto
+            {
+                Id = Guid.NewGuid(),
+                Pigghunder = "14",
+                Krepsdyr = "26",
+                Arter = "CC, OP"
+            },
+            
+            BHardBase = null,
+            
+            BPreInfo = new BPreInfoDto
+            {
+                Id = Guid.NewGuid(),
+            },
+            BSediment = new BSedimentDto
+            {
+                Id = Guid.NewGuid(),
+                Ph = 6,
+                Eh = 2,
+                Temperatur = 3
+            },
+            BSensorisk = new BSensoriskDto
+            {
+                Id = Guid.NewGuid(),
+                Farge = 0,
+                Lukt = 0,
+                Konsistens = 2,
+                Grabbvolum = 1,
+                Tykkelseslamlag = 1,
+                Gassbobler = 0
+            }
+        };
+        ParseCoordinateNorth();
+        ParseCoordinateEast();
+        
+        
+        if (_surveyDto.BlotbunnId != null)
+            _selectBunnType = "blot";
+        else if (_surveyDto.HardbunnId != null)
+            _selectBunnType = "hard";
+        
+        _selectSensorisk = _surveyDto.SensoriskId != null ? "ja" : "nei";
+        
+        _selectDyr = _surveyDto.DyrId != null ? "ja" : "nei";
+    }
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await Js.InvokeVoidAsync("updateDisplay_2");
         }
     }
 
@@ -698,13 +797,17 @@
     
     private void ClearPositionAndDepth(int value)
     {
-        if (value != 0) return;
-        
         if (_surveyDto.BStation != null)
         {
-            _surveyDto.BStation.KoordinatNord = "Annen posisjon";
-            _surveyDto.BStation.KoordinatOst = "Annen posisjon";
-            _surveyDto.BStation.Dybde = value;
+            _coordinateNorthGrade = "0";
+            _coordinateNorthMinute = "0";
+            _coordinateEastGrade = "0";
+            _coordinateEastMinute = "0";
+            
+            UpdateCoordinateNorth();
+            UpdateCoordinateEast();
+
+            _surveyDto.BStation.Dybde = 0;
         }
     }
 
@@ -741,7 +844,7 @@
     
     private void AddArter(Arter arter)
     {
-        var newValue = arter.GetDescription();
+        var newValue = arter.ToString();
 
         if (string.IsNullOrWhiteSpace(_surveyDto.BAnimal.Arter))
         {
@@ -755,7 +858,7 @@
     
     private void AddMerknad(Merknader merknad)
     {
-        var newValue = merknad.GetDescription();
+        var newValue = merknad.ToString();
 
         if (string.IsNullOrWhiteSpace(_surveyDto.Merknader))
         {
@@ -779,7 +882,7 @@
             
             _surveyDto.HardbunnId = null;
             _surveyDto.BHardBase = null;
-
+        
             _surveyDto.SedimentId = Guid.NewGuid();
             _surveyDto.BSediment = new BSedimentDto
             {
@@ -797,7 +900,7 @@
             _surveyDto.BlotbunnId = null;
             _surveyDto.BSoftBase = null;
         }
-
+        
         if (_selectSensorisk == "ja")
         {
             _surveyDto.SensoriskId = Guid.NewGuid();
@@ -811,7 +914,7 @@
             _surveyDto.SensoriskId = null;
             _surveyDto.BSensorisk = null;
         }
-
+        
         if (_selectDyr == "ja")
         {
             _surveyDto.DyrId = Guid.NewGuid();
@@ -839,7 +942,7 @@
                 $"api/Project/{ProjectId}/station/{StationId}/survey",
                 _surveyDto);
         }
-
+        
         if (response.IsSuccessStatusCode)
         {
             _result = true;

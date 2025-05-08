@@ -41,17 +41,6 @@
     transition: all 0.3s ease-in-out;
 }
 
-.sampler-container {
-    display: flex;
-    width: 80%;
-    margin: 1rem auto;
-    gap: 2rem;
-}
-
-.sampler-container.form-floating>.form-select {
-    padding: .375rem 10rem .375rem .75rem;
-}
-
 .equipment-container {
     display: flex;
     width: 80%;

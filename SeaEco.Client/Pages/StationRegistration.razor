@@ -1,4 +1,7 @@
+@* if testing, comment out this line *@
 @page "/project/{ProjectId:guid}/station/{StationId:guid}/survey/{SurveyId:guid}"
+@* if testing, comment out this line *@
+
 @using Microsoft.AspNetCore.Authorization
 @using SeaEco.Abstractions.Enums.Bsensorisk
 @using SeaEco.Abstractions.Extensions
@@ -8,6 +11,8 @@
 @attribute [Authorize]
 @inject NavigationManager Navigation
 @inject IJSRuntime Js
+
+@* For testing *@
 @* @page "/project/survey" *@
 @* @using SeaEco.Abstractions.Enums *@
 @* @using SeaEco.Abstractions.Models.BSurvey *@
@@ -198,7 +203,7 @@
     
     @* TODO: Picture usilt and tom grabb container *@
     @* <div class="picture-container"> *@
-    @*     <button class="picture-button" style="vertical-align:middle"><span>Usilt bilde</span></button> *@
+    @*     <button class="picture-button" style="vertical-align:middle"><span>Usilt</span></button> *@
     @* *@
     @*     <div class="tom-grabb-container" id="tomGrabb_1"> *@
     @*         <label class="custom-checkbox" for="tom-grabb-1"> *@
@@ -213,7 +218,7 @@
 <div id="div3" class="content-div">
     @* TODO: Picture silt and tom grabb container *@
     @* <div class="picture-container"> *@
-    @*     <button class="picture-button" style="vertical-align:middle"><span>Silt bilde</span></button> *@
+    @*     <button class="picture-button" style="vertical-align:middle"><span>Silt</span></button> *@
     @* *@
     @*     <div class="tom-grabb-container" id="tomGrabb_2"> *@
     @*         <label class="custom-checkbox" for="tom-grabb-2"> *@
@@ -468,7 +473,7 @@
         {
             _survey = await Http.GetFromJsonAsync<EditSurveyDto>($"api/Project/{ProjectId:guid}/station/{StationId:guid}/survey/{SurveyId:guid}");
             
-            // Test code
+            // For testing
             // _survey = new EditSurveyDto
             // {
             //     Id = Guid.NewGuid(),
