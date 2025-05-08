@@ -21,17 +21,17 @@
     {
         <div class="position-depth-container">
             <div class="form-floating mb-3">
-                <input id="position_n" class="form-control" Value="@_survey.BStation.KoordinatNord" />
+                <input id="position_n" class="form-control" value="@_survey.BStation.KoordinatNord" />
                 <label for="position_n">Posisjon nord</label>
             </div>
 
             <div class="form-floating mb-3">
-                <input id="position_o" class="form-control" Value="@_survey.BStation.KoordinatOst" />
+                <input id="position_o" class="form-control" value="@_survey.BStation.KoordinatOst" />
                 <label for="position_o">Posisjon øst</label>
             </div>
 
             <div class="form-floating mb-3">
-                <input id="depth" class="form-control" Value="@_survey.BStation.Dybde" />
+                <input id="depth" class="form-control" value="@_survey.BStation.Dybde" />
                 <label for="depth">Dybde</label>
             </div>
         </div>
@@ -95,17 +95,17 @@
             @if (_survey?.BSediment != null)
             {
                 <div class="form-floating mb-3" id="sensoryDataSoft_1">
-                    <input id="ProvePh" class="form-control" Value="@_survey.BSediment.Ph" />
+                    <input id="ProvePh" class="form-control" value="@_survey.BSediment.Ph" />
                     <label for="ProvePh">pH</label>
                 </div>
 
                 <div class="form-floating mb-3" id="sensoryDataSoft_2">
-                    <input id="ProveEh" class="form-control" Value="@_survey.BSediment.Eh" />
+                    <input id="ProveEh" class="form-control" value="@_survey.BSediment.Eh" />
                     <label for="ProveEh">EH</label>
                 </div>
 
                 <div class="form-floating mb-3" id="sensoryDataSoft_3">
-                    <input id="ProveTemp" class="form-control" Value="@_survey.BSediment.Temperatur" />
+                    <input id="ProveTemp" class="form-control" value="@_survey.BSediment.Temperatur" />
                     <label for="ProveTemp">Temp</label>
                 </div>
             }
@@ -268,29 +268,29 @@
         <div id="animalInfo" class="animalInfo-container">
             <div class="animalData">
                 <div class="form-floating mb-3">
-                    <input id="pigghuder" class="form-control" Value="@_survey.BAnimal.Pigghunder" />
+                    <input id="pigghuder" class="form-control" value="@_survey.BAnimal.Pigghunder" />
                     <label for="pigghuder">Pigghuder</label>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <input id="krepsdyr" class="form-control" Value="@_survey.BAnimal.Krepsdyr" />
+                    <input id="krepsdyr" class="form-control" value="@_survey.BAnimal.Krepsdyr" />
                     <label for="krepsdyr">Krepsdyr</label>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <input id="skjell" class="form-control" Value="@_survey.BAnimal.Skjell" />
+                    <input id="skjell" class="form-control" value="@_survey.BAnimal.Skjell" />
                     <label for="skjell">Skjell</label>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <input id="borstemark" class="form-control" Value="@_survey.BAnimal.Borstemark" />
+                    <input id="borstemark" class="form-control" value="@_survey.BAnimal.Borstemark" />
                     <label for="borstemark">Børstemark</label>
                 </div>
             </div>
         </div>
 
         <div class="form-floating mb-3 user-input" id="arter-container">
-            <input class="form-control" id="arter" Value="@_survey.BAnimal.Arter" />
+            <input class="form-control" id="arter" value="@_survey.BAnimal.Arter" />
             <label for="arter">Arter</label>
         </div>
     }
@@ -298,7 +298,7 @@
     @if (_survey?.Merknader != null)
     {
         <div class="form-floating mb-3 user-input">
-            <input class="form-control" id="merknader" Value="@_survey.Merknader" />
+            <input class="form-control" id="merknader" value="@_survey.Merknader" />
             <label for="merknader">Merknader</label>
         </div>
     }
