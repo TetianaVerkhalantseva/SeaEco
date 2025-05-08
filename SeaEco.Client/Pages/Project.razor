@@ -69,12 +69,12 @@ else
                                 <div class="d-flex form-floating gap-3 flex-column p-4 box-border">
                                     <h6>Kundeinformasjon</h6>
                                     <div class="d-flex form-floating">
-                                        <InputText class="form-control" id="customer" @bind-Value="_project.Oppdragsgiver" @key="_numberInputKey" @oninput="() => _errorMessage = null" disabled/>
+                                        <InputText class="form-control" id="customer" @bind-Value="_project.Oppdragsgiver" @oninput="() => _errorMessage = null" disabled/>
                                         <label for="customer">Oppdragsgiver</label>
                                     </div>
                                     <div class="d-flex form-floating">
-                                        <InputText class="form-control" id="customer" @bind-Value="_project.Kundekontaktperson" @key="_numberInputKey" @oninput="() => _errorMessage = null" disabled="@(!_editProjectInfo)"/>
-                                        <label for="customer">Kontaktperson</label>
+                                        <InputText class="form-control" id="customerUser" @bind-Value="_project.Kundekontaktperson" @key="_numberInputKey" @oninput="() => _errorMessage = null" disabled="@(!_editProjectInfo)"/>
+                                        <label for="customerUser">Kontaktperson</label>
                                     </div>
                                     <div class="d-flex flex-xxl-row flex-column form-floating gap-3">
                                         <div class="d-flex form-floating">
@@ -101,18 +101,18 @@ else
                                                             <option value="@loc.LokalitetKode">@loc.Navn (@loc.LokalitetKode)</option>
                                                         }
                                                     </InputSelect>
-                                                    <label for="locality">Lokalitet</label>
+                                                    <label for="locality">Lokalitetsnavn(id)</label>
                                                 </div>
                                             }
                                             else
                                             {
                                                 <div class="form-floating flex-fill">
                                                     <InputText class="form-control" id="newLocalityName" @bind-Value="_project.Lokalitetsnavn" @key="_numberInputKey" @oninput="() => _errorMessage = null" disabled="@(!_editProjectInfo)"/>
-                                                    <label for="newLocalityName">Lokalitetsnavn</label>
+                                                    <label for="newLocalityName">@Resources.InputTextLocation</label>
                                                 </div>
                                                 <div class="form-floating">
                                                     <InputText class="form-control" id="newLocalityId" @bind-Value="_project.LokalitetsId" @key="_numberInputKey" @oninput="() => _errorMessage = null" disabled="@(!_editProjectInfo)"/>
-                                                    <label for="newLocalityId">Lokalitets-Id</label>
+                                                    <label for="newLocalityId">@Resources.InputTextLocationId</label>
                                                 </div>
                                             }
                                         </div>
@@ -141,7 +141,7 @@ else
 
                                     <div class="d-flex flex-column gap-3">
                                         <div class="d-flex form-floating">
-                                            <InputSelect @bind-Value="_project.Produksjonsstatus" id="productionStatus" class="form-select no-arrow-when-disabled" @key="_numberInputKey" @oninput="() => _errorMessage = null" disabled="@(!_editProjectInfo)">
+                                            <InputSelect @bind-Value="_project.Produksjonsstatus"  id="productionStatus" class="form-select no-arrow-when-disabled" @key="_numberInputKey" @oninput="() => _errorMessage = null" disabled="@(!_editProjectInfo)">
                                                 <option value=""></option>
                                                 @foreach (var status in Enum.GetValues<Produksjonsstatus>())
                                                 {
@@ -270,6 +270,8 @@ else
     private EditContext _editContext;
     private string? _selectedLocationId;
     private string? _stationDatesString;
+    
+    
 
 
     protected override async Task OnInitializedAsync()
@@ -282,15 +284,12 @@ else
         _location = await Http.GetFromJsonAsync<List<LokalitetDto>>($"api/Lokalitet");
         _editContext = new EditContext(_project);
         _selectedLocationId = _project.LokalitetsId;
-        _stationDatesString = string.Join(", ",
-            _project.Feltdatoer.Select(d => d.ToString("yyyy-MM-dd")));
-
+        _stationDatesString = string.Join(", ", _project.Feltdatoer.Select(d => d.ToString("yyyy-MM-dd")));
     }
 
     private void OnClickProjectInformation()
     {
         _editProjectInfo = true;
-
     }
 
     private async Task EditProjectInformation()
@@ -299,7 +298,11 @@ else
         if (response.IsSuccessStatusCode)
         {
             var updated = await response.Content.ReadFromJsonAsync<ProjectDto>();
-            _projectCopy = BackupProject(updated);
+            if (updated != null) _projectCopy = BackupProject(updated);
+            //add the values not returned from updated. They can not be edited
+            _projectCopy.Oppdragsgiver = _project.Oppdragsgiver;
+            _projectCopy.AntallStasjoner = _project.AntallStasjoner;
+            
             _selectedLocationId = _projectCopy.LokalitetsId;
             _editProjectInfo = false;
             if (_isNewLocality)
@@ -335,7 +338,9 @@ else
     {
         return new ProjectDto
         {
+            Id = source.Id,
             PoId = source.PoId,
+            ProsjektIdSe = source.ProsjektIdSe,
             Oppdragsgiver = source.Oppdragsgiver,
             Lokalitetsnavn = source.Lokalitetsnavn,
             LokalitetsId = source.LokalitetsId,
@@ -346,7 +351,8 @@ else
             Kundekontaktperson = source.Kundekontaktperson,
             Kundeepost = source.Kundeepost,
             Produksjonsstatus = source.Produksjonsstatus,
-            ProsjektansvarligId = source.ProsjektansvarligId
+            ProsjektansvarligId = source.ProsjektansvarligId,
+            AntallStasjoner = source.AntallStasjoner
         };
     }
 
@@ -387,4 +393,5 @@ else
 
         _editContext.Validate();
     }
+    
 }

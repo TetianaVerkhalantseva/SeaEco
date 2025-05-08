@@ -29,13 +29,14 @@ public class ProjectDto
     public string LokalitetsId { get; set; } = null!;
     [Required(ErrorMessageResourceName = "ErrorMessageProjectMtb", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
 
-    [Range(1, 9999, ErrorMessageResourceName = "ErrorMessageProjectMtbNumber", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    [Range(1, int.MaxValue, ErrorMessageResourceName = "ErrorMessageProjectMtb", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
     public int Mtbtillatelse { get; set; }
     [Required(ErrorMessageResourceName = "ErrorMessageProjectResponsible", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
     public Guid? ProsjektansvarligId { get; set; }
     public string? Merknad { get; set; }
     
     [Required(ErrorMessageResourceName = "ErrorMessageProductionStatus", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    [Range(1,  int.MaxValue, ErrorMessageResourceName = "ErrorMessageProductionStatus", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
     public Produksjonsstatus Produksjonsstatus { get; set; }
 
     public int AntallStasjoner { get; set; } 
