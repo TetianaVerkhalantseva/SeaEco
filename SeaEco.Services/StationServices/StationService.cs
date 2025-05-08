@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SeaEco.Abstractions.Models.BSurvey;
 using SeaEco.Abstractions.Models.Stations;
+using SeaEco.Abstractions.ValueObjects;
 using SeaEco.EntityFramework.Contexts;
 using SeaEco.EntityFramework.Entities;
 
@@ -7,152 +9,211 @@ namespace SeaEco.Services.StationServices;
 
 public class StationService : IStationService
 {
-    
-    private readonly AppDbContext _context;
+    private readonly AppDbContext _db;
 
-    public StationService(AppDbContext context)
+    public StationService(AppDbContext db)
     {
-        _context = context;
+        _db = db;
     }
     
-    public async Task<List<StationDto>> GetStationsAsync(Guid prosjektId)
+    private async Task<int> GetNextStationNumberAsync(Guid prosjektId)
     {
-        return await _context.BStasjons
-            .Where(s => s.Prosjektid == prosjektId)
-            .Select(s => new StationDto
-            {
-                ProsjektId = s.Prosjektid,
-                Stasjonsid = s.Stasjonsid,
-                Datoregistrert = s.Datoregistrert,
-                Dybde = s.Dybde,
-                Kordinatern = s.Kordinatern,
-                Kordinatero = s.Kordinatero,
-                SkjovannPh = s.SkjovannPh,
-                SkjovannEh = s.SkjovannEh,
-                SkjovannTemperatur = s.SkjovannTemperatur,
-                Bunntype = s.Bunntype,
-                Dyr = s.Dyr,
-                Antallgrabbskudd = s.Antallgrabbskudd,
-                Grabhastighetgodkjent = s.Grabhastighetgodkjent,
-                Sensoriskutfort = s.Sensoriskutfort,
-                Bunnsammensettningid = s.Bunnsammensettningid,
-                Arter = s.Arter,
-                Merknad = s.Merknad,
-                Korrigering = s.Korrigering,
-                Grabbid = s.Grabbid,
-                Phehmeter = s.Phehmeter,
-                Datokalibrert = s.Datokalibrert,
-                Silid = s.Silid,
-                Status = s.Status
-            })
-            .ToListAsync();
-    }
-
-    public async Task<StationDto?> GetStationByIdAsync(Guid prosjektId, Guid stasjonsid)
-    {
-        var s = await _context.BStasjons
-            .FirstOrDefaultAsync(s => s.Prosjektid == prosjektId && s.Stasjonsid == stasjonsid);
-        if (s == null)
-            return null;
-        return new StationDto
-        {
-            ProsjektId = s.Prosjektid,
-            Stasjonsid = s.Stasjonsid,
-            Datoregistrert = s.Datoregistrert,
-            Dybde = s.Dybde,
-            Kordinatern = s.Kordinatern,
-            Kordinatero = s.Kordinatero,
-            SkjovannPh = s.SkjovannPh,
-            SkjovannEh = s.SkjovannEh,
-            SkjovannTemperatur = s.SkjovannTemperatur,
-            Bunntype = s.Bunntype,
-            Dyr = s.Dyr,
-            Antallgrabbskudd = s.Antallgrabbskudd,
-            Grabhastighetgodkjent = s.Grabhastighetgodkjent,
-            Sensoriskutfort = s.Sensoriskutfort,
-            Bunnsammensettningid = s.Bunnsammensettningid,
-            Arter = s.Arter,
-            Merknad = s.Merknad,
-            Korrigering = s.Korrigering,
-            Grabbid = s.Grabbid,
-            Phehmeter = s.Phehmeter,
-            Datokalibrert = s.Datokalibrert,
-            Silid = s.Silid,
-            Status = s.Status
-        };
-    }
-
-    public async Task UpdateStationAsync(Guid prosjektId, Guid stasjonsid, UpdateStationDto dto)
-    {
-        var station = await _context.BStasjons
-            .FirstOrDefaultAsync(s => s.Prosjektid == prosjektId && s.Stasjonsid == stasjonsid);
-        if (station == null)
-            throw new Exception("Stasjon ikke funnet.");
-        
-        station.Dybde = dto.Dybde;
-        station.Kordinatern = dto.Kordinatern;
-        station.Kordinatero = dto.Kordinatero;
-        station.SkjovannPh = dto.SkjovannPh;
-        station.SkjovannEh = dto.SkjovannEh;
-        station.SkjovannTemperatur = dto.SkjovannTemperatur;
-        station.Bunntype = dto.Bunntype;
-        station.Dyr = dto.Dyr;
-        station.Antallgrabbskudd = dto.Antallgrabbskudd;
-        station.Grabhastighetgodkjent = dto.Grabhastighetgodkjent;
-        station.Sensoriskutfort = dto.Sensoriskutfort;
-        station.Bunnsammensettningid = dto.Bunnsammensettningid;
-        station.Arter = dto.Arter;
-        station.Merknad = dto.Merknad;
-        station.Korrigering = dto.Korrigering;
-        station.Grabbid = dto.Grabbid;
-        station.Phehmeter = dto.Phehmeter;
-        station.Datokalibrert = dto.Datokalibrert;
-        station.Silid = dto.Silid;
-        station.Status = dto.Status;
-
-        _context.BStasjons.Update(station);
-        await _context.SaveChangesAsync();
-    }
-    
-    public async Task<int> AddExtraStationAsync(Guid prosjektId, NewStationDto dto)
-    {
-        var maxNummer = await _context.BStasjons
-            .Where(s => s.Prosjektid == prosjektId)
+        var max = await _db.BStasjons
+            .Where(s => s.ProsjektId == prosjektId)
             .MaxAsync(s => (int?)s.Nummer) ?? 0;
 
-        int newNummer = maxNummer + 1;
+        return max + 1;
+    }
 
-        var newStation = new BStasjon
+    public async Task<StationResult> GetStationsByProvetakningsplanIdAsync(Guid samplingPlanId)
+    {
+        var stations = await _db.BStasjons
+            .Where(s => s.ProvetakingsplanId == samplingPlanId)
+            .Select(s => new StationDto
+            {
+                Id = s.Id,
+                Nummer = s.Nummer,
+                KoordinatNord = s.KoordinatNord,
+                KoordinatOst = s.KoordinatOst,
+                Dybde = s.Dybde,
+                Analyser = s.Analyser
+            })
+            .ToListAsync();
+
+        return new StationResult
         {
-            Prosjektid = prosjektId,
-            Stasjonsid = Guid.NewGuid(),
-            Nummer = newNummer,
-            Dybde = dto.Dybde ?? 0,
-            Kordinatern = dto.Kordinatern ?? 0,
-            Kordinatero = dto.Kordinatero ?? 0,
-            SkjovannPh = dto.SkjovannPh ?? 0,
-            SkjovannEh = dto.SkjovannEh ?? 0,
-            SkjovannTemperatur = dto.SkjovannTemperatur ?? 0,
-            Bunntype = dto.Bunntype ?? false,
-            Dyr = dto.Dyr ?? false,
-            Antallgrabbskudd = dto.Antallgrabbskudd ?? 0,
-            Grabhastighetgodkjent = dto.Grabhastighetgodkjent ?? false,
-            Sensoriskutfort = dto.Sensoriskutfort,
-            Bunnsammensettningid = dto.Bunnsammensettningid ?? 0,
-            Arter = dto.Arter,
-            Merknad = dto.Merknad,
-            Korrigering = dto.Korrigering,
-            Grabbid = dto.Grabbid,
-            Phehmeter = dto.Phehmeter,
-            Datokalibrert = dto.Datokalibrert,
-            Silid = dto.Silid,
-            Status = dto.Status ?? "Ikke registrert",
-            Datoregistrert = DateTime.UtcNow
+            IsSuccess = stations.Any(),
+            Message = stations.Any() ? null : "Ingen stasjoner funnet for denne prøvetakingsplanen.",
+            Stations = stations
+        };
+    }
+    
+    public async Task<StationResult> GetStationByIdAsync(Guid projectId, Guid stationId)
+    {
+        var s = await _db.BStasjons.FirstOrDefaultAsync(s => s.ProsjektId == projectId && s.Id == stationId);
+        if (s == null)
+        {
+            return new StationResult
+            {
+                IsSuccess = false,
+                Message = "Stasjon ikke funnet."
+            };
+        }
+
+        return new StationResult
+        {
+            IsSuccess = true,
+            Station = new StationDto
+            {
+                Id = s.Id,
+                Nummer = s.Nummer,
+                KoordinatNord = s.KoordinatNord,
+                KoordinatOst = s.KoordinatOst,
+                Dybde = s.Dybde,
+                Analyser = s.Analyser
+            }
+        };
+    }
+
+    public async Task<BStationDto?> GetBStationDtoByStationId(Guid projectId, Guid stationId)
+    {
+        var station = await _db.BStasjons.FirstOrDefaultAsync(s => s.ProsjektId == projectId && s.Id == stationId);
+        if (station == null)
+        {
+            return null;
+        }
+
+        return new BStationDto
+        {
+            Id = station.Id,
+            ProsjektId = station.ProsjektId,
+            Nummer = station.Nummer,
+            KoordinatNord = station.KoordinatNord,
+            KoordinatOst = station.KoordinatOst,
+            Dybde = station.Dybde,
+            Analyser = station.Analyser
+        };
+    }
+
+    public async Task<StationResult> AddStationToPlanAsync(Guid samplingPlanId, NewStationDto dto)
+    {
+        var plan = await _db.BProvetakningsplans
+            .FirstOrDefaultAsync(p => p.ProsjektId == dto.ProsjektId && p.Id == samplingPlanId);
+
+        if (plan == null)
+        {
+            return new StationResult
+            {
+                IsSuccess = false,
+                Message = "Prøvetakningsplan finnes ikke for prosjektet."
+            };
+        }
+
+        var nummer = await GetNextStationNumberAsync(dto.ProsjektId);
+
+        Coordinate coordinate = new Coordinate(dto.NorthDegree, dto.NorthMinutes, dto.EastDegree, dto.EastMinutes);
+        
+        var stasjon = new BStasjon
+        {
+            Id = Guid.NewGuid(),
+            ProsjektId = dto.ProsjektId,
+            ProvetakingsplanId = samplingPlanId,
+            Nummer = nummer,
+            KoordinatNord = coordinate.North,
+            KoordinatOst = coordinate.East,
+            Dybde = dto.Dybde,
+            Analyser = dto.Analyser,
+            UndersokelseId = null
         };
 
-        _context.BStasjons.Add(newStation);
-        await _context.SaveChangesAsync();
+        await _db.BStasjons.AddAsync(stasjon);
+        await _db.SaveChangesAsync();
 
-        return newNummer;
+        return new StationResult
+        {
+            IsSuccess = true,
+            Message = "Stasjon opprettet",
+            Station = new StationDto
+            {
+                Id = stasjon.Id,
+                Nummer = stasjon.Nummer,
+                KoordinatNord = stasjon.KoordinatNord,
+                KoordinatOst = stasjon.KoordinatOst,
+                Dybde = stasjon.Dybde,
+                Analyser = stasjon.Analyser
+            }
+        };
+    }
+    
+    public async Task<StationResult> AddStationToProjectAsync(Guid projectId, NewStationDto dto)
+    {
+        var nummer = await GetNextStationNumberAsync(dto.ProsjektId);
+
+        Coordinate coordinate = new Coordinate(dto.NorthDegree, dto.NorthMinutes, dto.EastDegree, dto.EastMinutes);
+        
+        var stasjon = new BStasjon
+        {
+            Id = Guid.NewGuid(),
+            ProsjektId = dto.ProsjektId,
+            ProvetakingsplanId = null,
+            Nummer = nummer,
+            KoordinatNord = coordinate.North,
+            KoordinatOst = coordinate.East,
+            Dybde = dto.Dybde,
+            Analyser = dto.Analyser
+        };
+
+        await _db.BStasjons.AddAsync(stasjon);
+        await _db.SaveChangesAsync();
+
+        return new StationResult
+        {
+            IsSuccess = true,
+            Message = "Stasjon lagt til i prosjekt",
+            Station = new StationDto
+            {
+                Id = stasjon.Id,
+                Nummer = stasjon.Nummer,
+                KoordinatNord = stasjon.KoordinatNord,
+                KoordinatOst = stasjon.KoordinatOst,
+                Dybde = stasjon.Dybde,
+                Analyser = stasjon.Analyser
+            }
+        };
+    }
+
+    public async Task<StationResult> UpdateStationAsync(Guid stationId, UpdateStationDto dto)
+    {
+        var stasjon = await _db.BStasjons.FirstOrDefaultAsync(s => s.Id == stationId);
+        if (stasjon == null)
+        {
+            return new StationResult { IsSuccess = false, Message = "Stasjon ikke funnet." };
+        }
+        
+        Coordinate coordinate = new Coordinate(dto.NorthDegree, dto.NorthMinutes, dto.EastDegree, dto.EastMinutes);
+
+        stasjon.KoordinatNord = coordinate.North;
+        stasjon.KoordinatOst = coordinate.East;
+        stasjon.Dybde = dto.Dybde;
+        stasjon.Analyser = dto.Analyser;
+
+        await _db.SaveChangesAsync();
+
+        return new StationResult { IsSuccess = true, Message = "Stasjon oppdatert." };
+    }
+
+    public async Task<StationResult> DeleteStationAsync(Guid stationId)
+    {
+        var station = await _db.BStasjons.FirstOrDefaultAsync(s => s.Id == stationId);
+        if (station == null)
+            return new StationResult { IsSuccess = false, Message = "Stasjon ikke funnet." };
+
+        if (station.UndersokelseId != null)
+            return new StationResult { IsSuccess = false, Message = "Kan ikke slette stasjon med tilknyttet undersøkelse." };
+
+        _db.BStasjons.Remove(station);
+        await _db.SaveChangesAsync();
+
+        return new StationResult { IsSuccess = true, Message = "Stasjon slettet." };
     }
 }

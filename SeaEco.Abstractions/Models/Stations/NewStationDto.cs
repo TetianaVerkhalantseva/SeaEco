@@ -2,25 +2,11 @@
 
 public class NewStationDto
 {
-    public int? Dybde { get; set; } = 0;
-    public int? Kordinatern { get; set; }
-    public int? Kordinatero { get; set; }
-    public int? SkjovannPh { get; set; }
-    public int? SkjovannEh { get; set; }
-    public int? SkjovannTemperatur { get; set; }
-    public bool? Bunntype { get; set; }
-    public bool? Dyr { get; set; }
-    public int? Antallgrabbskudd { get; set; }
-    public bool? Grabhastighetgodkjent { get; set; }
-    public bool? Sensoriskutfort { get; set; }
-        
-    public int? Bunnsammensettningid { get; set; }
-    public string? Arter { get; set; }
-    public string? Merknad { get; set; }
-    public string? Korrigering { get; set; }
-    public int? Grabbid { get; set; }
-    public int? Phehmeter { get; set; }
-    public DateOnly? Datokalibrert { get; set; }
-    public int? Silid { get; set; }
-    public string? Status { get; set; } = "Ikke registrert";
+    public Guid ProsjektId { get; set; }
+    public int NorthDegree { get; }
+    public float NorthMinutes { get; }
+    public int EastDegree { get; }
+    public float EastMinutes { get; }
+    public int Dybde { get; set; }
+    public string Analyser { get; set; } = "Parameter I, II og III";
 }

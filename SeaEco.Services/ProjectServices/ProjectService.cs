@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SeaEco.Abstractions.Enums;
 using SeaEco.Abstractions.Models.Project;
-using SeaEco.Abstractions.Models.Stations;
 using SeaEco.EntityFramework.Contexts;
 using SeaEco.EntityFramework.Entities;
 
@@ -18,86 +18,255 @@ public class ProjectService : IProjectService
     public async Task<Guid> CreateProjectAsync(NewProjectDto dto)
     {
         
-        var customer = await _context.Kundes.FindAsync(dto.KundeId);
-        if (customer == null)
-            throw new KeyNotFoundException("Kunde ikke funnet.");
+        // Sjekk om lokalitet finnes, ellers opprettes
+        var lokalitet = await _context.Lokalitets
+            .FirstOrDefaultAsync(l => l.Lokalitetsnavn == dto.Lokalitetsnavn || l.LokalitetsId == dto.LokalitetsId);
+
+        if (lokalitet == null)
+        {
+            lokalitet = new Lokalitet
+            {
+                Id = Guid.NewGuid(),
+                Lokalitetsnavn = dto.Lokalitetsnavn,
+                LokalitetsId = dto.LokalitetsId
+            };
+            _context.Lokalitets.Add(lokalitet);
+            await _context.SaveChangesAsync();
+        }
+        
+        if (!dto.ProsjektansvarligId.HasValue)
+            throw new ArgumentException("ProsjektansvarligId må oppgis.");
+        
+        var ansvarligId = dto.ProsjektansvarligId.Value;
         
         var prosjekt = new BProsjekt
         {
+            Id = Guid.NewGuid(),
             PoId = dto.PoId,
-            Kundeid = dto.KundeId,
-            Kundekontaktpersons = dto.Kundekontaktpersons,
+            KundeId = dto.KundeId,
+            Kundekontaktperson = dto.Kundekontaktperson,
             Kundetlf = dto.Kundetlf,
             Kundeepost = dto.Kundeepost,
-            Lokalitetid = dto.Lokalitetid,
-            Lokalitet = dto.Lokalitet,
-            Antallstasjoner = dto.Antallstasjoner,
+            LokalitetId = lokalitet.Id,
             Mtbtillatelse = dto.Mtbtillatelse,
-            Biomasse = dto.Biomasse,
-            Ansvarligansattid = dto.Ansvarligansattid,
-            Ansvarligansatt2id = dto.Ansvarligansatt2id,
-            Ansvarligansatt3id = dto.Ansvarligansatt3id,
-            Ansvarligansatt4id = dto.Ansvarligansatt4id,
-            Ansvarligansatt5id = dto.Ansvarligansatt5id,
-            Planlagtfeltdato = dto.Planlagtfeltdato,
+            ProsjektansvarligId = ansvarligId,
             Merknad = dto.Merknad,
-            Status = dto.Status,
-            Datoregistrert = DateTime.UtcNow
+            Produksjonsstatus = (int)dto.Produksjonsstatus,
+            Prosjektstatus      = (int)Prosjektstatus.Nytt,
+            Datoregistrert = DateTime.Now
         };
 
         _context.BProsjekts.Add(prosjekt);
         await _context.SaveChangesAsync();
 
-        return prosjekt.Prosjektid;
+        return prosjekt.Id;
     }
     
     public async Task<List<ProjectDto>> GetAllProjectsAsync()
     {
         return await _context.BProsjekts
+            .Include(p => p.Kunde)  
+            .Include(p => p.Lokalitet)
+            .Include(p => p.BTilstand)
+            .Include(p => p.BPreinfos)  
             .Select(p => new ProjectDto
             {
-                ProsjektId = p.Prosjektid,
+                Id = p.Id,
                 PoId = p.PoId,
-                KundeId = p.Kundeid,
-                Kundekontaktpersons = p.Kundekontaktpersons,
+                KundeId = p.KundeId,
+                Oppdragsgiver = p.Kunde.Oppdragsgiver, 
+                Kundekontaktperson = p.Kundekontaktperson,
                 Kundetlf = p.Kundetlf,
                 Kundeepost = p.Kundeepost,
-                Lokalitetid = p.Lokalitetid,
-                Lokalitet = p.Lokalitet,
-                Antallstasjoner = p.Antallstasjoner,
+                LokalitetId = p.LokalitetId,
+                Lokalitetsnavn = p.Lokalitet.Lokalitetsnavn,
+                LokalitetsId = p.Lokalitet.LokalitetsId,
                 Mtbtillatelse = p.Mtbtillatelse,
-                Biomasse = p.Biomasse,
-                Planlagtfeltdato = p.Planlagtfeltdato,
+                ProsjektansvarligId = p.ProsjektansvarligId,
                 Merknad = p.Merknad,
-                Status = p.Status,
-                Datoregistrert = p.Datoregistrert
+                Produksjonsstatus = (Produksjonsstatus)p.Produksjonsstatus,
+                Prosjektstatus = (Prosjektstatus)p.Prosjektstatus,
+                Tilstand = p.BTilstand != null
+                    ? (Tilstand?)p.BTilstand.TilstandLokalitet
+                    : null,
+                Feltdatoer = p.BPreinfos
+                    .Select(pi => pi.Feltdato)
+                    .OrderBy(d => d)
+                    .ToList()
             })
             .ToListAsync();
     }
 
-    public async Task<ProjectDto?> GetProjectByIdAsync(Guid prosjektId)
+    public async Task<ProjectDto?> GetProjectByIdAsync(Guid id)
     {
-        var p = await _context.BProsjekts.FirstOrDefaultAsync(p => p.Prosjektid == prosjektId);
+        var p = await _context.BProsjekts
+            .Include(p => p.Kunde)
+            .Include(p => p.Lokalitet)
+            .Include(p => p.BTilstand)
+            .Include(p => p.BPreinfos) 
+            .FirstOrDefaultAsync(p => p.Id == id);
+
         if (p == null)
             return null;
 
         return new ProjectDto
         {
-            ProsjektId = p.Prosjektid,
+            Id = p.Id,
             PoId = p.PoId,
-            KundeId = p.Kundeid,
-            Kundekontaktpersons = p.Kundekontaktpersons,
+            ProsjektIdSe = p.ProsjektIdSe,
+            KundeId = p.KundeId,
+            Oppdragsgiver = p.Kunde.Oppdragsgiver,
+            Kundekontaktperson = p.Kundekontaktperson,
             Kundetlf = p.Kundetlf,
             Kundeepost = p.Kundeepost,
-            Lokalitetid = p.Lokalitetid,
-            Lokalitet = p.Lokalitet,
-            Antallstasjoner = p.Antallstasjoner,
+            LokalitetId = p.LokalitetId,
+            Lokalitetsnavn = p.Lokalitet.Lokalitetsnavn,
+            LokalitetsId = p.Lokalitet.LokalitetsId,
             Mtbtillatelse = p.Mtbtillatelse,
-            Biomasse = p.Biomasse,
-            Planlagtfeltdato = p.Planlagtfeltdato,
+            ProsjektansvarligId = p.ProsjektansvarligId,
             Merknad = p.Merknad,
-            Status = p.Status,
-            Datoregistrert = p.Datoregistrert
+            Produksjonsstatus = (Produksjonsstatus)p.Produksjonsstatus,
+            Prosjektstatus = (Prosjektstatus)p.Prosjektstatus,
+            Tilstand = p.BTilstand != null
+                ? (Tilstand?)p.BTilstand.TilstandLokalitet
+                : null,
+            Feltdatoer = p.BPreinfos
+                .Select(pi => pi.Feltdato)
+                .OrderBy(d => d)
+                .ToList(), 
+            AntallStasjoner = await _context.BUndersokelses
+                .CountAsync(u => u.ProsjektId == p.Id)
         };
+    }
+    
+    public async Task<ProjectDto> UpdateProjectAsync(Guid id, EditProjectDto dto)
+    {
+        var prosjekt = await _context.BProsjekts
+            .Include(p => p.Lokalitet)
+            .Include(p => p.BTilstand)
+            .FirstOrDefaultAsync(p => p.Id == id);
+
+        if (prosjekt == null)
+            throw new KeyNotFoundException("Prosjekt ikke funnet.");
+
+        if (dto.Lokalitetsnavn != prosjekt.Lokalitet.Lokalitetsnavn
+            || dto.LokalitetsId   != prosjekt.Lokalitet.LokalitetsId)
+        {
+            var lokalitet = await _context.Lokalitets
+                .FirstOrDefaultAsync(l => l.Lokalitetsnavn == dto.Lokalitetsnavn
+                                          || l.LokalitetsId    == dto.LokalitetsId);
+            if (lokalitet == null)
+            {
+                lokalitet = new Lokalitet
+                {
+                    Id             = Guid.NewGuid(),
+                    Lokalitetsnavn = dto.Lokalitetsnavn,
+                    LokalitetsId   = dto.LokalitetsId
+                };
+                _context.Lokalitets.Add(lokalitet);
+                await _context.SaveChangesAsync();
+            }
+            prosjekt.LokalitetId = lokalitet.Id;
+        }
+        
+        prosjekt.Kundekontaktperson = dto.Kundekontaktperson;
+        prosjekt.Kundetlf = dto.Kundetlf;
+        prosjekt.Kundeepost = dto.Kundeepost;
+        prosjekt.Mtbtillatelse = dto.Mtbtillatelse;
+        prosjekt.ProsjektansvarligId = dto.ProsjektansvarligId;
+        prosjekt.Produksjonsstatus   = (int)dto.Produksjonsstatus;
+        
+        if (dto.Merknad != null)
+        {
+            prosjekt.Merknad = dto.Merknad;
+        }
+
+        await _context.SaveChangesAsync();
+        
+        return new ProjectDto
+        {
+            Id                   = prosjekt.Id,
+            PoId                 = prosjekt.PoId,
+            KundeId              = prosjekt.KundeId,
+            Kundekontaktperson   = prosjekt.Kundekontaktperson,
+            Kundetlf             = prosjekt.Kundetlf,
+            Kundeepost           = prosjekt.Kundeepost,
+            LokalitetId          = prosjekt.LokalitetId,
+            Lokalitetsnavn       = prosjekt.Lokalitet.Lokalitetsnavn,
+            LokalitetsId         = prosjekt.Lokalitet.LokalitetsId,
+            Mtbtillatelse        = prosjekt.Mtbtillatelse,
+            ProsjektansvarligId  = prosjekt.ProsjektansvarligId,
+            Merknad              = prosjekt.Merknad,
+            Produksjonsstatus    = (Produksjonsstatus)prosjekt.Produksjonsstatus,
+            Prosjektstatus       = (Prosjektstatus)prosjekt.Prosjektstatus,
+            Tilstand             = prosjekt.BTilstand != null 
+                ? (Tilstand?)prosjekt.BTilstand.TilstandLokalitet
+                : null,
+            ProsjektIdSe         = prosjekt.ProsjektIdSe
+        };
+    }
+    
+    public async Task AddMerknadAsync(Guid projectId, string merknad)
+    {
+        var prosjekt = await _context.BProsjekts.FindAsync(projectId);
+        if (prosjekt == null)
+            throw new KeyNotFoundException($"Prosjekt {projectId} ikke funnet.");
+
+        prosjekt.Merknad = string.IsNullOrWhiteSpace(prosjekt.Merknad)
+            ? merknad
+            : $"{prosjekt.Merknad}\n{merknad}";
+
+        await _context.SaveChangesAsync();
+    }
+    
+    public async Task<string> GenerateAndSetProsjektIdSeAsync(Guid prosjektId, DateTime feltdato)
+    {
+        var prosjekt = await _context.BProsjekts.FindAsync(prosjektId)
+                       ?? throw new InvalidOperationException("Prosjekt ikke funnet");
+
+        // Hvis allerede satt, returner eksisterende:
+        if (!string.IsNullOrEmpty(prosjekt.ProsjektIdSe))
+            return prosjekt.ProsjektIdSe;
+
+        // Hent år (to siste siffer) fra feltdato:
+        var yearSuffix = feltdato.ToString("yy");
+
+        // Finn antall andre prosjekter for samme år som har minst én preinfo:
+        var countThisYear = await _context.BPreinfos
+            .Where(p => p.Feltdato.Year == feltdato.Year)
+            .Select(p => p.ProsjektId)
+            .Distinct()
+            .CountAsync();
+
+        // Løpenummer = antall + 1
+        var løpenummer = countThisYear + 1;
+
+        // Formater: SE-25-BU-1
+        var idSe = $"SE-{yearSuffix}-BU-{løpenummer}";
+        
+        prosjekt.ProsjektIdSe = idSe;
+        _context.BProsjekts.Update(prosjekt);
+        await _context.SaveChangesAsync();
+
+        return idSe;
+    }
+    
+    public async Task UpdateProjectStatusAsync(Guid projectId, Prosjektstatus nyStatus, string? merknad = null)
+    {
+        var prosjekt = await _context.BProsjekts.FindAsync(projectId);
+        if (prosjekt == null) throw new KeyNotFoundException($"Prosjekt {projectId} ikke funnet.");
+
+        prosjekt.Prosjektstatus = (int)nyStatus;
+        
+        if (merknad != null &&
+            (nyStatus == Prosjektstatus.Ferdig || nyStatus == Prosjektstatus.Deaktivert))
+        {
+            if (string.IsNullOrWhiteSpace(prosjekt.Merknad))
+                prosjekt.Merknad = merknad;
+            else
+                prosjekt.Merknad += "\n" + merknad;
+        }
+
+        await _context.SaveChangesAsync();
     }
 }

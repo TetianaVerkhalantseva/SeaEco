@@ -1,5 +1,6 @@
 
 
+using SeaEco.Abstractions.Models.Image;
 using SeaEco.Abstractions.ResponseService;
 using SeaEco.Services.ImageServices.Models;
 
@@ -9,4 +10,5 @@ public interface IImageService
 {
     Task<Response> AddImage(AddImageDto dto);
     Task<Response> DeleteImage(Guid id);
+    Task<Response<ImageDto>> GetImage(Guid id);
 }

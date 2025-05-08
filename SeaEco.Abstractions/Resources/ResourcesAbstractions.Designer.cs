@@ -110,5 +110,71 @@ namespace SeaEco.Abstractions.Resources {
                 return ResourceManager.GetString("ErrorMessagePasswordContain", resourceCulture);
             }
         }
+        
+        internal static string ErrorMessageProjectResponsible {
+            get {
+                return ResourceManager.GetString("ErrorMessageProjectResponsible", resourceCulture);
+            }
+        }
+        
+        internal static string ErrorMessageProjectMtb {
+            get {
+                return ResourceManager.GetString("ErrorMessageProjectMtb", resourceCulture);
+            }
+        }
+        
+        internal static string ErrorMessageCustomer {
+            get {
+                return ResourceManager.GetString("ErrorMessageCustomer", resourceCulture);
+            }
+        }
+        
+        internal static string ErrorMessagePoId {
+            get {
+                return ResourceManager.GetString("ErrorMessagePoId", resourceCulture);
+            }
+        }
+        
+        internal static string ErrorMessageLocalityName {
+            get {
+                return ResourceManager.GetString("ErrorMessageLocalityName", resourceCulture);
+            }
+        }
+        
+        internal static string ErrorMessageLocalityId {
+            get {
+                return ResourceManager.GetString("ErrorMessageLocalityId", resourceCulture);
+            }
+        }
+        
+        internal static string ErrorMessageProductionStatus {
+            get {
+                return ResourceManager.GetString("ErrorMessageProductionStatus", resourceCulture);
+            }
+        }
+        
+        internal static string ErrorMessageLocalityIdLength {
+            get {
+                return ResourceManager.GetString("ErrorMessageLocalityIdLength", resourceCulture);
+            }
+        }
+        
+        internal static string ErrorMessageLocalityIdNumber {
+            get {
+                return ResourceManager.GetString("ErrorMessageLocalityIdNumber", resourceCulture);
+            }
+        }
+        
+        internal static string ErrorMessagePoIdIdNumber {
+            get {
+                return ResourceManager.GetString("ErrorMessagePoIdIdNumber", resourceCulture);
+            }
+        }
+        
+        internal static string ErrorMessageProjectMtbNumber {
+            get {
+                return ResourceManager.GetString("ErrorMessageProjectMtbNumber", resourceCulture);
+            }
+        }
     }
 }

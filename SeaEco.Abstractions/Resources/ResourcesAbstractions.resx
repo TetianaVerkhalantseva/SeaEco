@@ -20,14 +20,14 @@
     </resheader>
 
     <data name="ErrorMessageFirstNameRequired" xml:space="preserve">
-        <value>Fornavn er påkrevd</value>
-      </data>
+        <value>Fornavn påkrevd</value>
+    </data>
     <data name="ErrorMessageFirstNameMinLength" xml:space="preserve">
         <value>Fornavn må være minst 3 tegn langt</value>
     </data>
     <data name="ErrorMessageLastNameRequired" xml:space="preserve">
-        <value>Etternavn er påkrevd</value>
-      </data>
+        <value>Etternavn påkrevd</value>
+    </data>
     <data name="ErrorMessageMailError" xml:space="preserve">
         <value>Ugyldig epost-adresse</value>
     </data>
@@ -51,5 +51,38 @@
     </data>
     <data name="ErrorMessagePasswordContain" xml:space="preserve">
         <value>Passordet krever én stor bokstav og ett spesialtegn</value>
+    </data>
+    <data name="ErrorMessageProjectResponsible" xml:space="preserve">
+        <value>Prosjektansvarlig påkrevd</value>
+    </data>
+    <data name="ErrorMessageProjectMtb" xml:space="preserve">
+        <value>MTB-tillatelse påkrevd</value>
+    </data>
+    <data name="ErrorMessageCustomer" xml:space="preserve">
+        <value>Kontaktperson er påkrevd</value>
+    </data>
+    <data name="ErrorMessagePoId" xml:space="preserve">
+        <value>PO-ID er påkrevd</value>
+    </data>
+    <data name="ErrorMessageLocalityName" xml:space="preserve">
+        <value>Lokalitetsnavn påkrevd</value>
+    </data>
+    <data name="ErrorMessageLocalityId" xml:space="preserve">
+        <value>Lokalitets-id påkrevd</value>
+    </data>
+    <data name="ErrorMessageProductionStatus" xml:space="preserve">
+        <value>Produksjonsstatus er påkrevd</value>
+    </data>
+    <data name="ErrorMessageLocalityIdLength" xml:space="preserve">
+        <value>Lokalitets-id skal innehole 5 siffer</value>
+    </data>
+    <data name="ErrorMessageLocalityIdNumber" xml:space="preserve">
+        <value>Lokalitets-id skal kun inneholde siffer</value>
+    </data>
+    <data name="ErrorMessagePoIdIdNumber" xml:space="preserve">
+        <value>PO-ID skal kun inneholde siffer</value>
+    </data>
+    <data name="ErrorMessageProjectMtbNumber" xml:space="preserve">
+        <value>MTB-tillatelse må være et siffer</value>
     </data>
 </root>
