@@ -93,7 +93,7 @@ public class ProjectController : ControllerBase
         }
     }
     
-    [HttpPost("{projectId:guid}/merknad")]
+    [HttpPost("{projectId:guid}/merknad/add")]
     public async Task<IActionResult> AddMerknad(Guid projectId, [FromBody] MerknadDto dto)
     {
         if (!ModelState.IsValid)
@@ -102,23 +102,6 @@ public class ProjectController : ControllerBase
         try
         {
             await _projectService.AddMerknadAsync(projectId, dto.Merknad);
-            return Ok();
-        }
-        catch (KeyNotFoundException knf)
-        {
-            return NotFound(knf.Message);
-        }
-    }
-    
-    [HttpPut("{projectId:guid}/merknad")]
-    public async Task<IActionResult> EditMerknad(Guid projectId, [FromBody] MerknadDto dto)
-    {
-        if (!ModelState.IsValid)
-            return BadRequest(ModelState);
-
-        try
-        {
-            await _projectService.EditMerknadAsync(projectId, dto.Merknad);
             return Ok();
         }
         catch (KeyNotFoundException knf)
@@ -143,7 +126,6 @@ public class ProjectController : ControllerBase
             return NotFound(knf.Message);
         }
     }
-    
     
     
     // Operasjoner for prøvtakningsplan
