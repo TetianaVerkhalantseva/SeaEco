@@ -262,6 +262,8 @@ public sealed class Report
         
         worksheet.Cells[24, 2].Value = information.Tilstand4.Item1 == 0 ? "-" : information.Tilstand4.Item1;
         worksheet.Cells[24, 3].Value = information.Tilstand4.Item2 == 0 ? "-" : information.Tilstand4.Item2;
+        
+        sourcePackage.Save();
     }
 
     public void FillPositions(string path, IEnumerable<RowPosition> positions)
