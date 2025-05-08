@@ -43,9 +43,6 @@ public class BSurveyService: IBSurveyService
     {
         try
         {
-            dto.Id = Guid.NewGuid();
-            dto.ProsjektId = projectId;
-            
             var targetDate = DateTime.Today;
 
             var preInfo = await _db.BPreinfos

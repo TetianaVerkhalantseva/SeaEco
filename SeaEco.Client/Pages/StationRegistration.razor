@@ -1,6 +1,5 @@
 @* if testing, comment out this line *@
 @page "/project/{ProjectId:guid}/station/{StationId:guid}/survey/{SurveyId:guid}"
-@* if testing, comment out this line *@
 
 @using Microsoft.AspNetCore.Authorization
 @using SeaEco.Abstractions.Enums.Bsensorisk
@@ -12,7 +11,7 @@
 @inject NavigationManager Navigation
 @inject IJSRuntime Js
 
-@* For testing *@
+@* If testing, uncomment these lines *@
 @* @page "/project/survey" *@
 @* @using SeaEco.Abstractions.Enums *@
 @* @using SeaEco.Abstractions.Models.BSurvey *@
@@ -471,9 +470,10 @@
     {
         try
         {
+            // If testing, comment out this line
             _survey = await Http.GetFromJsonAsync<EditSurveyDto>($"api/Project/{ProjectId:guid}/station/{StationId:guid}/survey/{SurveyId:guid}");
             
-            // For testing
+            // If testing, uncomment these lines
             // _survey = new EditSurveyDto
             // {
             //     Id = Guid.NewGuid(),
@@ -546,6 +546,7 @@
             //     }
             // };
 
+            
             if (_survey?.BlotbunnId != null)
                 _selectedBunnType = "blot";
             else if (_survey?.HardbunnId != null)
