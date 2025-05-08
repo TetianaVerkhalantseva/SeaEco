@@ -37,4 +37,13 @@ public class ReportController(IReportService reportService) : ApiControllerBase
             ? AsBadRequest(response.ErrorMessage)
             : AsOk(response.Value);
     }
+
+    [HttpPost("generate/positions")]
+    public async Task<IActionResult> GeneratePositions([FromBody] Guid projectId)
+    {
+        Response<string> response = await reportService.GeneratePositionsReport(projectId);
+        return response.IsError
+            ? AsBadRequest(response.ErrorMessage)
+            : AsOk(response.Value);
+    }
 }
