@@ -302,7 +302,8 @@ else
             //add the values not returned from updated. They can not be edited
             _projectCopy.Oppdragsgiver = _project.Oppdragsgiver;
             _projectCopy.AntallStasjoner = _project.AntallStasjoner;
-            
+            _projectCopy.Tilstand = _project.Tilstand;
+                
             _selectedLocationId = _projectCopy.LokalitetsId;
             _editProjectInfo = false;
             if (_isNewLocality)
@@ -352,7 +353,8 @@ else
             Kundeepost = source.Kundeepost,
             Produksjonsstatus = source.Produksjonsstatus,
             ProsjektansvarligId = source.ProsjektansvarligId,
-            AntallStasjoner = source.AntallStasjoner
+            AntallStasjoner = source.AntallStasjoner,
+            Tilstand = _project.Tilstand
         };
     }
 
