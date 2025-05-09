@@ -45,7 +45,7 @@
                            @bind-Value="_coordinateEastGrade"
                            @oninput='e => { _coordinateEastGrade = e.Value?.ToString() ?? ""; UpdateCoordinateEast(); }'
                            placeholder="Grader"/>
-                <label for="position_o">Østlig grader</label>
+                <label for="position_e_deg">Østlig grader</label>
             </div>
     
             <div class="form-floating mb-3">
@@ -53,7 +53,7 @@
                            @bind-Value="_coordinateEastMinute"
                            @oninput='e => { _coordinateEastMinute = e.Value?.ToString() ?? ""; UpdateCoordinateEast(); }'
                            placeholder="Minutter"/>
-                <label for="position_o">Østlig minutter</label>
+                <label for="position_e_min">Østlig minutter</label>
             </div>
     
             <div class="form-floating mb-3">
@@ -596,12 +596,14 @@
 </script>
 
 @code {
+    // Remeber to uncomment this part when not testing
     // [Parameter] 
     // public Guid ProjectId { get; set; }
     // [Parameter]
     // public Guid StationId { get; set; }
 
     private EditSurveyDto _surveyDto = new();
+    private BStationDto _station = new();
 
     private string _coordinateNorthGrade = "";
     private string _coordinateNorthMinute = "";
@@ -615,14 +617,33 @@
     private bool? _result;
     private string? _resultMessage;
 
+    // Remember to add word "async" when not testing
     protected override Task OnInitializedAsync()
     {
         // Create mode
-        // _station = await Http.GetFromJsonAsync<BStationDto>($"api/Project/{ProjectId}/station/{StationId}");
-        // _surveyDto.BStation = _station;
-        //
-        // if (_surveyDto.BStation != null)
+        // _surveyDto = new EditSurveyDto
         // {
+        //     Id = Guid.NewGuid(),
+        //     ProsjektId = ProjectId,
+        //     BlotbunnId = Guid.NewGuid(),
+        //     HardbunnId = Guid.NewGuid(),
+        //     SedimentId = Guid.NewGuid(),
+        //     SensoriskId = Guid.NewGuid(),
+        //     DyrId = Guid.NewGuid(),
+        //     
+        //     BSoftBase = new BSoftBaseDto(),
+        //     BHardBase = new BHardBaseDto(),
+        //     BSediment = new BSedimentDto(),
+        //     BAnimal = new BAnimalDto(),
+        //     BSensorisk = new BSensoriskDto(),
+        // };
+        //
+        // _station = await Http.GetFromJsonAsync<BStationDto>($"api/Project/{ProjectId}/station/{StationId}");
+        //
+        // if (_station != null)
+        // {
+        //     _surveyDto.BStation = _station;
+        //     
         //     ParseCoordinateNorth();
         //     ParseCoordinateEast();
         // }
@@ -642,13 +663,8 @@
             SedimentId = Guid.NewGuid(),
             SensoriskId = Guid.NewGuid(),
             DyrId = Guid.NewGuid(),
-            BStation = new BStationDto
-            {
-                Id = Guid.NewGuid(),
-                KoordinatNord = "59°55.123",
-                KoordinatOst = "10°45.789",
-                Dybde = 100
-            },
+            
+            BStation = new BStationDto(),
             BSoftBase = new BSoftBaseDto(),
             BAnimal = new BAnimalDto(),
             BHardBase = new BHardBaseDto(),
@@ -825,27 +841,27 @@
         if (_selectBunnType == "blot")
         {
             _surveyDto.BlotbunnId = Guid.NewGuid();
-            _surveyDto.BSoftBase = new BSoftBaseDto
+            if (_surveyDto.BSoftBase != null)
             {
-                Id = _surveyDto.BlotbunnId.Value
-            };
+                _surveyDto.BSoftBase.Id = _surveyDto.BlotbunnId.Value;
+            }
             
             _surveyDto.HardbunnId = null;
             _surveyDto.BHardBase = null;
         
             _surveyDto.SedimentId = Guid.NewGuid();
-            _surveyDto.BSediment = new BSedimentDto
+            if (_surveyDto.BSediment != null)
             {
-                Id = _surveyDto.SedimentId.Value
-            };
+                _surveyDto.BSediment.Id = _surveyDto.SedimentId.Value;
+            }
         }
         else if (_selectBunnType == "hard")
         {
             _surveyDto.HardbunnId = Guid.NewGuid();
-            _surveyDto.BHardBase = new BHardBaseDto
+            if (_surveyDto.BHardBase != null)
             {
-                Id = _surveyDto.HardbunnId.Value
-            };
+                _surveyDto.BHardBase.Id = _surveyDto.HardbunnId.Value;
+            }
             
             _surveyDto.BlotbunnId = null;
             _surveyDto.BSoftBase = null;
@@ -854,9 +870,9 @@
         if (_selectSensorisk == "ja")
         {
             _surveyDto.SensoriskId = Guid.NewGuid();
-            _surveyDto.BSensorisk = new BSensoriskDto
+            if (_surveyDto.BSensorisk != null)
             {
-                Id = _surveyDto.SensoriskId.Value
+                _surveyDto.BSensorisk.Id = _surveyDto.SensoriskId.Value;
             };
         }
         else
@@ -868,9 +884,9 @@
         if (_selectDyr == "ja")
         {
             _surveyDto.DyrId = Guid.NewGuid();
-            _surveyDto.BAnimal = new BAnimalDto
+            if (_surveyDto.BAnimal != null)
             {
-                Id = _surveyDto.DyrId.Value
+                _surveyDto.BAnimal.Id = _surveyDto.DyrId.Value;
             };
         }
         else
@@ -878,6 +894,9 @@
             _surveyDto.DyrId = null;
             _surveyDto.BAnimal = null;
         }
+        
+        _surveyDto.DatoRegistrert = DateTime.Now;
+        _surveyDto.DatoEndret = DateTime.Now;
         
         
         // var response = await Http.PostAsJsonAsync(

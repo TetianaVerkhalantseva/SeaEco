@@ -19,7 +19,7 @@
 <h4>Stasjonsredigering</h4>
 
 <div id="div1" class="content-div active">
-    @if (_surveyDto?.BStation != null)
+    @if (_surveyDto.BStation != null)
     {
         <div class="position-depth-container">
             <div class="form-floating mb-3">
@@ -44,7 +44,7 @@
                            @bind-Value="_coordinateEastGrade"
                            @oninput='e => { _coordinateEastGrade = e.Value?.ToString() ?? ""; UpdateCoordinateEast(); }'
                            placeholder="Grader"/>
-                <label for="position_o">Østlig grader</label>
+                <label for="position_e_deg">Østlig grader</label>
             </div>
     
             <div class="form-floating mb-3">
@@ -52,7 +52,7 @@
                            @bind-Value="_coordinateEastMinute"
                            @oninput='e => { _coordinateEastMinute = e.Value?.ToString() ?? ""; UpdateCoordinateEast(); }'
                            placeholder="Minutter"/>
-                <label for="position_o">Østlig minutter</label>
+                <label for="position_e_min">Østlig minutter</label>
             </div>
     
             <div class="form-floating mb-3">
@@ -615,6 +615,8 @@
 
     protected override async Task OnInitializedAsync()
     {
+        
+        // Remember to uncomment this part when not testing !!!
         // if (SurveyId.HasValue && SurveyId.Value != Guid.Empty)
         // {
         //     // Edit mode
@@ -861,27 +863,27 @@
     {
         if (_selectBunnType == "blot")
         {
-            _surveyDto.BlotbunnId = Guid.NewGuid();
-            _surveyDto.BSoftBase = new BSoftBaseDto
+            _surveyDto.BlotbunnId ??= Guid.NewGuid();
+            if (_surveyDto.BSoftBase != null)
             {
-                Id = _surveyDto.BlotbunnId.Value
+                _surveyDto.BSoftBase.Id = _surveyDto.BlotbunnId.Value;
             };
             
             _surveyDto.HardbunnId = null;
             _surveyDto.BHardBase = null;
         
-            _surveyDto.SedimentId = Guid.NewGuid();
-            _surveyDto.BSediment = new BSedimentDto
+            _surveyDto.SedimentId ??= Guid.NewGuid();
+            if (_surveyDto.BSediment != null)
             {
-                Id = _surveyDto.SedimentId.Value
+                _surveyDto.BSediment.Id = _surveyDto.SedimentId.Value;
             };
         }
         else if (_selectBunnType == "hard")
         {
-            _surveyDto.HardbunnId = Guid.NewGuid();
-            _surveyDto.BHardBase = new BHardBaseDto
+            _surveyDto.HardbunnId ??= Guid.NewGuid();
+            if (_surveyDto.BHardBase != null)
             {
-                Id = _surveyDto.HardbunnId.Value
+                _surveyDto.BHardBase.Id = _surveyDto.HardbunnId.Value;
             };
             
             _surveyDto.BlotbunnId = null;
@@ -890,10 +892,10 @@
         
         if (_selectSensorisk == "ja")
         {
-            _surveyDto.SensoriskId = Guid.NewGuid();
-            _surveyDto.BSensorisk = new BSensoriskDto
+            _surveyDto.SensoriskId ??= Guid.NewGuid();
+            if (_surveyDto.BSensorisk != null)
             {
-                Id = _surveyDto.SensoriskId.Value
+                _surveyDto.BSensorisk.Id = _surveyDto.SensoriskId.Value;
             };
         }
         else
@@ -904,10 +906,10 @@
         
         if (_selectDyr == "ja")
         {
-            _surveyDto.DyrId = Guid.NewGuid();
-            _surveyDto.BAnimal = new BAnimalDto
+            _surveyDto.DyrId ??= Guid.NewGuid();
+            if (_surveyDto.BAnimal != null)
             {
-                Id = _surveyDto.DyrId.Value
+                _surveyDto.BAnimal.Id = _surveyDto.DyrId.Value;
             };
         }
         else

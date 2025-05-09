@@ -64,9 +64,6 @@ public class BSurveyService: IBSurveyService
                     dto.PreinfoId = newPreInfo.Id;
                 }
             }
-            
-            dto.DatoRegistrert ??= DateTime.Now;
-            dto.DatoEndret ??= DateTime.Now;
 
             // foreach (var log in dto.BSurveyLogs)
             // {
