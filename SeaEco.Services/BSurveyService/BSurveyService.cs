@@ -57,12 +57,11 @@ public class BSurveyService: IBSurveyService
             }
             else
             {
-                var newPreInfo = await _db.BPreinfos
-                    .FirstOrDefaultAsync(p => p.ProsjektId == projectId);
-                if (newPreInfo != null)
+                return new EditSurveyResult()
                 {
-                    dto.PreinfoId = newPreInfo.Id;
-                }
+                    IsSuccess = false,
+                    Message = "Cannot find the preinfo with the same date"
+                };
             }
 
             // foreach (var log in dto.BSurveyLogs)
@@ -107,7 +106,6 @@ public class BSurveyService: IBSurveyService
         {
             dto.DatoEndret ??= DateTime.Now;
             
-            // TODO: How do I record user changes?
             // foreach (var log in dto.BSurveyLogs)
             // {
             // }

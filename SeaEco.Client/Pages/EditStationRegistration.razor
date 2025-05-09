@@ -12,6 +12,7 @@
 @using SeaEco.Abstractions.ValueObjects
 @inject HttpClient Http
 @inject IJSRuntime Js
+@inject NavigationManager Navigation
 @* @attribute [Authorize] *@
 @* @attribute [Authorize(Roles = "admin")] *@
 
@@ -927,6 +928,11 @@
         {
             _result = true;
             _resultMessage = await response.Content.ReadAsStringAsync();
+            
+            StateHasChanged();
+            await Task.Delay(2000);
+            // remember to add address
+            Navigation.NavigateTo("");
         }
         else
         {

@@ -12,6 +12,7 @@
 @using SeaEco.Abstractions.ValueObjects
 @inject HttpClient Http
 @inject IJSRuntime Js
+@inject NavigationManager Navigation
 @* @attribute [Authorize] *@
 @* @attribute [Authorize(Roles = "admin")] *@
 
@@ -456,7 +457,7 @@
     <button id="lastBtn" onclick="showLast()" class="custom-btn">Forrige</button>
     <button id="nextBtn" onclick="showNext()" class="custom-btn">Neste</button>
     <button id="submitBtn" class="custom-btn" style="display: none;" @onclick="SubmitSurvey">
-        "Registrer"
+        Registrer
     </button>
 </div>
 
@@ -650,6 +651,7 @@
         // else
         // {
         //     _surveyDto.BStation = new BStationDto();
+        //     _surveyDto.BStation.Id = Guid.NewGuid();
         // }
         
         
@@ -658,11 +660,11 @@
         {
             Id = Guid.NewGuid(),
             ProsjektId = Guid.NewGuid(),
-            BlotbunnId = Guid.NewGuid(),
-            HardbunnId = Guid.NewGuid(),
-            SedimentId = Guid.NewGuid(),
-            SensoriskId = Guid.NewGuid(),
-            DyrId = Guid.NewGuid(),
+            BlotbunnId = null,
+            HardbunnId = null,
+            SedimentId = null,
+            SensoriskId = null,
+            DyrId = null,
             
             BStation = new BStationDto(),
             BSoftBase = new BSoftBaseDto(),
@@ -678,16 +680,11 @@
             ParseCoordinateEast();
         }
         // Test code
+        
 
-        
-        if (_surveyDto.BlotbunnId != null)
-            _selectBunnType = "blot";
-        else if (_surveyDto.HardbunnId != null)
-            _selectBunnType = "hard";
-        
-        _selectSensorisk = _surveyDto.SensoriskId != null ? "ja" : "nei";
-        
-        _selectDyr = _surveyDto.DyrId != null ? "ja" : "nei";
+        _selectBunnType = null;
+        _selectSensorisk = null;
+        _selectDyr = null;
 
         return Task.CompletedTask;
     }
@@ -907,6 +904,12 @@
         // {
         //     _result = true;
         //     _resultMessage = await response.Content.ReadAsStringAsync();
+        //     
+        //     StateHasChanged();
+        //     await Task.Delay(2000);
+        //     
+        //     // remember to add address
+        //     Navigation.NavigateTo($"");
         // }
         // else
         // {
