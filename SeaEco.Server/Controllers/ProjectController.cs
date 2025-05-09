@@ -229,7 +229,15 @@ public class ProjectController : ControllerBase
 
         dto.ProsjektId = projectId;
         var result = await _stationService.AddStationToPlanAsync(samplingPlanId, dto);
-        return result.IsSuccess ? Ok(new { id = result.StationId }) : BadRequest(result.Message);
+        
+        if (!result.IsSuccess)
+            return BadRequest(result.Message);
+        
+        return CreatedAtAction(
+            nameof(GetAStation),
+            new { projectId, samplingPlanId, stationId = result.Station.Id },
+            result.Station
+        );
     }
     
     // Legg til ekstra stasjon direkte på prosjekt
