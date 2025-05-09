@@ -241,7 +241,7 @@ else
 
         @if (_activeTab=="projectPlan")
         {
-             <ProjectPlan Project="_projectCopy" EditProjectPlanVar="_editProjectPlan" EditProjectPlanChanged="@OnEditChanged"></ProjectPlan> 
+             <ProjectPlan Project="_projectCopy" EditProjectPlanVar="_editProjectPlan" EditProjectPlanChanged="@OnEditPlanChanged" EditProjectStationPlanChanged="@OnEditStationPlanChanged" EditProjectStationPlanVar="_editProjectStationPlan"></ProjectPlan> 
         }
         else if (_activeTab == "b_stations")
         {
@@ -285,6 +285,7 @@ else
     private int _numberInputKey = 0;
     private string _activeTab = "projectPlan";
     private bool _editProjectPlan;
+    private bool _editProjectStationPlan;
     private string? _errorMessage;
     private bool _isNewLocality;
     private EditContext _editContext;
@@ -451,7 +452,7 @@ else
 
     private async Task SelectedTabWithModal(string tab)
     {
-        if (_editProjectPlan)
+        if (_editProjectPlan )
         {
             await Js.InvokeVoidAsync("showModal", "#EditPlanMode");
         }
@@ -462,9 +463,15 @@ else
 
     }
 
-    private void OnEditChanged(bool value)
+    private void OnEditPlanChanged(bool value)
     {
         _editProjectPlan = value;
+        StateHasChanged();
+    }
+    
+    private void OnEditStationPlanChanged(bool value)
+    {
+        _editProjectStationPlan = value;
         StateHasChanged();
     }
 

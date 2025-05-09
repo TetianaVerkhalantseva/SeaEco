@@ -129,13 +129,13 @@ public class ProjectController : ControllerBase
     
     
     // Operasjoner for prøvtakningsplan
-    [HttpGet("{projectId:guid}/sampling-plan/{samplingPlanId:guid}")]
-    public async Task<IActionResult> GetProjectSamplingPlan(Guid projectId, Guid samplingPlanId)
+    [HttpGet("{projectId:guid}/sampling-plan")]
+    public async Task<IActionResult> GetProjectSamplingPlan(Guid projectId)
     {
-        var samplingPlan = await _samplingPlanService.GetSamplingPlanById(samplingPlanId);
+        var samplingPlan = await _samplingPlanService.GetSamplingPlanById(projectId);
         if (samplingPlan == null)
         {
-            return NotFound($"No sampling plan found with id {samplingPlanId}");
+            return NotFound($"No sampling plan found with id {projectId}");
         }
 
         if (samplingPlan.ProsjektId != projectId)

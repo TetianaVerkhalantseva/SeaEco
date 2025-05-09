@@ -25,7 +25,7 @@ public class SamplingPlanService: ISamplingPlanService
     {
         var samplingPlan = await _db.BProvetakningsplans
             .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == id);
+            .FirstOrDefaultAsync(x => x.ProsjektId == id);
         
         if (samplingPlan == null)
             return null;

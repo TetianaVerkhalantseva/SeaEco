@@ -203,8 +203,7 @@ else
         }
         else if (response.IsSuccessStatusCode)
         {
-            var created = await response.Content
-                .ReadFromJsonAsync<CreateProjectResponse>();
+            var created = await response.Content.ReadFromJsonAsync<CreateProjectResponse>();
 
             if (created is not null)
             {
