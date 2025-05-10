@@ -16,7 +16,7 @@ else
         <EditForm EditContext="_editContext" OnValidSubmit="EditProjectPlan">
             <DataAnnotationsValidator />
             <div class="d-flex flex-column gap-3  box-border p-4 ">
-                <span>@Resources.InputTextUserProjectPlan</span>
+                <span>Generell plan-informasjon</span>
                 <div class="d-flex form-floating">
                     <InputSelect @bind-Value="_newPlan.PlanleggerId" id="user1" class="form-control" disabled="@(!EditProjectPlanVar)">
                         <option value=""></option>
@@ -25,7 +25,7 @@ else
                             <option value="@user.Id">@user.FullName</option>
                         }
                     </InputSelect>
-                    <label for="user1">@Resources.InputTextUser1ProjectPlan</label>
+                    <label for="user1">@Resources.InputTextUserProjectPlan</label>
                 </div>
                 <div class="d-flex form-floating">
                     <InputDate @bind-Value="_newPlan.Planlagtfeltdato" id="date" class="form-control" disabled="@(!EditProjectPlanVar)">
@@ -59,9 +59,9 @@ else
                     <div class="custom-validation-summary">
                         <ValidationSummary/>
                     </div>
-                    @if (!string.IsNullOrEmpty(_errorMessage))
+                    @if (!string.IsNullOrEmpty(_errorMessageProjectPlan))
                     {
-                        <p class="text-danger">@_errorMessage</p>
+                        <p class="text-danger">@_errorMessageProjectPlan</p>
                     }
                 </div>
             </div>
@@ -283,6 +283,7 @@ else
     private EditContext _editStationPlanContext;
     private EditContext _newStationPlanContext;
     private string? _errorMessage;
+    private string? _errorMessageProjectPlan;
     private bool _isExistingPlan;
     private bool _isExistingStationPlan;
     private NewStationDto _newStation = new (); 
@@ -330,7 +331,6 @@ else
 
     private async Task EditProjectPlan()
     {
-        
             if (!_isExistingPlan)
             {
                 var response = await Http.PostAsJsonAsync($"/api/Project/{Project.Id:D}/sampling-plan", _newPlan);
@@ -341,7 +341,8 @@ else
                 }
                 else
                 {
-                    _errorMessage = Resources.ErrorMessageUnexpected;
+                    var serverMessage = await response.Content.ReadAsStringAsync();
+                    _errorMessageProjectPlan = !string.IsNullOrWhiteSpace(serverMessage)? serverMessage : Resources.ErrorMessageUnexpected;
                 }
             }
             else
@@ -353,7 +354,8 @@ else
                 }
                 else
                 {
-                    _errorMessage = Resources.ErrorMessageUnexpected;
+                    var serverMessage = await response.Content.ReadAsStringAsync();
+                    _errorMessageProjectPlan = !string.IsNullOrWhiteSpace(serverMessage)? serverMessage : Resources.ErrorMessageUnexpected;
                 }
             }
             

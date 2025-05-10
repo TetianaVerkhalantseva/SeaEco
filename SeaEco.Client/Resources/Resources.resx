@@ -286,15 +286,6 @@
     <data name="ButtonSubmit" xml:space="preserve">
         <value>Send inn</value>
     </data>
-    <data name="InputTextUser1ProjectPlan" xml:space="preserve">
-        <value>Planlegger 1</value>
-    </data>
-    <data name="InputTextUser2ProjectPlan" xml:space="preserve">
-        <value>Planlegger 2</value>
-    </data>
-    <data name="InputTextUser3ProjectPlan" xml:space="preserve">
-        <value>Planlegger 3</value>
-    </data>
     <data name="InputTextPositionN" xml:space="preserve">
         <value>Koordinater Nord</value>
     </data>

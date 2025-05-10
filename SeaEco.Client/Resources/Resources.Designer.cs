@@ -501,24 +501,6 @@ namespace SeaEco.Client.Resources {
             }
         }
         
-        internal static string InputTextUser1ProjectPlan {
-            get {
-                return ResourceManager.GetString("InputTextUser1ProjectPlan", resourceCulture);
-            }
-        }
-        
-        internal static string InputTextUser2ProjectPlan {
-            get {
-                return ResourceManager.GetString("InputTextUser2ProjectPlan", resourceCulture);
-            }
-        }
-        
-        internal static string InputTextUser3ProjectPlan {
-            get {
-                return ResourceManager.GetString("InputTextUser3ProjectPlan", resourceCulture);
-            }
-        }
-        
         internal static string InputTextPositionN {
             get {
                 return ResourceManager.GetString("InputTextPositionN", resourceCulture);
