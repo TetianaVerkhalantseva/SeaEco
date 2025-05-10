@@ -11,8 +11,10 @@ using SeaEco.Reporter;
 using SeaEco.Reporter.Models;
 using SeaEco.Reporter.Models.B1;
 using SeaEco.Reporter.Models.B2;
+using SeaEco.Reporter.Models.Headers;
 using SeaEco.Reporter.Models.Info;
 using SeaEco.Reporter.Models.Positions;
+using SeaEco.Reporter.Models.PTP;
 
 namespace SeaEco.Services.ReportServices;
 
@@ -91,7 +93,7 @@ public sealed class ReportService(Report report,
         
         return Response<string>.Ok(copyResult.Value);
     }
-
+    
     public async Task<Response<string>> GenerateB1Report(Guid projectId)
     {
         BProsjekt? dbRecord = await projectRepository.GetAll()
@@ -306,26 +308,80 @@ public sealed class ReportService(Report report,
         return Response<string>.Ok(copyResult.Value);
     }
 
+    public async Task<Response<string>> GeneratePtpReport(Guid projectId)
+    {
+        BProsjekt? dbRecord = await projectRepository.GetAll()
+            .Include(_ => _.Lokalitet)
+            .Include(_ => _.Kunde)
+            .Include(_ => _.BProvetakningsplan)
+                .ThenInclude(_ => _.BStasjons)
+            .Include(_ => _.BProvetakningsplan)
+                .ThenInclude(_ => _.Planlegger)
+            .FirstOrDefaultAsync(_ => _.Id == projectId);
+
+        if (dbRecord is null)
+        {
+            return Response<string>.Error(ProjectNotFoundError);
+        }
+        
+        Response<string> copyResult = report.CopyDocument(dbRecord.ProsjektIdSe, SheetName.PTP);
+        if (copyResult.IsError)
+        {
+            return copyResult;
+        }
+
+        PtpHeader header = new PtpHeader()
+        {
+            Oppdragsgiver = dbRecord.Kunde.Oppdragsgiver,
+            Lokalitetsnavn = dbRecord.Lokalitet.Lokalitetsnavn,
+            Planlagtfeltdato = dbRecord.BProvetakningsplan.Planlagtfeltdato,
+            Planlegger = $"{dbRecord.BProvetakningsplan.Planlegger.Etternavn} {dbRecord.BProvetakningsplan.Planlegger.Fornavn}"
+        };
+        
+        IEnumerable<RowPtp> rows = dbRecord.BProvetakningsplan.BStasjons
+            .OrderBy(_ => _.Nummer)
+            .Select(_ => new RowPtp()
+        {
+            Planlagtfeltdato = dbRecord.BProvetakningsplan.Planlagtfeltdato,
+            Nummer = _.Nummer,
+            KoordinatNord = _.KoordinatNord,
+            KoordinatOst = _.KoordinatOst,
+            Dybde = _.Dybde,
+            Analyser = _.Analyser,
+        });
+        
+        report.FillPtp(copyResult.Value, rows, header);
+        
+        Response saveResult = await CheckAndReplaceReport(projectId, SheetName.PTP);
+        if (saveResult.IsError)
+        {
+            return Response<string>.Error(saveResult.ErrorMessage);
+        }
+        
+        return Response<string>.Ok(copyResult.Value);
+    }
+
     public async Task<IEnumerable<Response<string>>> GenerateAllReports(Guid projectId) =>
     [
+        await GenerateInfoReport(projectId),
+        await GeneratePositionsReport(projectId),
         await GenerateB1Report(projectId),
         await GenerateB2Report(projectId),
-        await GenerateInfoReport(projectId),
-        await GeneratePositionsReport(projectId)
     ];
 
-    public async Task<IEnumerable<ReportDto>> GetAllReports(Guid projectId)
+    public async Task<GetReportsDto> GetAllReports(Guid projectId)
     {
         List<BRapporter> dbRecords = await reportRepository.GetAll()
             .Where(_ => _.ProsjektId == projectId)
             .ToListAsync();
 
-        return dbRecords.Select(_ => new ReportDto()
+        ReportDto plan = MapReport(dbRecords.FirstOrDefault(_ => (SheetName)_.ArkNavn == SheetName.PTP));
+
+        return new GetReportsDto()
         {
-            Id = _.Id,
-            SheetName = ((SheetName)_.ArkNavn).GetDescription(),
-            DateCreated = _.Datogenerert
-        });
+            Plan = plan,
+            Reports = dbRecords.Where(_ => (SheetName)_.ArkNavn != SheetName.PTP).OrderBy(_ => _.ArkNavn).Select(MapReport)
+        };
     }
 
     public async Task<Response<FileModel>> DownloadReportById(Guid peportId)
@@ -362,4 +418,11 @@ public sealed class ReportService(Report report,
             return await reportRepository.Update(dbRecord);
         }
     }
+
+    private ReportDto MapReport(BRapporter dbRecord) => new ReportDto()
+    {
+        Id = dbRecord.Id,
+        SheetName = ((SheetName)dbRecord.ArkNavn).GetDescription(),
+        DateCreated = dbRecord.Datogenerert
+    };
 }
