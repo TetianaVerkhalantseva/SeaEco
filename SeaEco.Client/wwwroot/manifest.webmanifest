@@ -1,8 +1,8 @@
 {
   "name": "SeaEco.Client",
   "short_name": "SeaEco.Client",
-  "id": "./",
-  "start_url": "./",
+  "id": "./projectsOverview",
+  "start_url": "./projectsOverview",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#03173d",

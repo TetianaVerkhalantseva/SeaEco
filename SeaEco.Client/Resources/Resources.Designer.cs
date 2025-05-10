@@ -651,6 +651,12 @@ namespace SeaEco.Client.Resources {
             }
         }
         
+        internal static string PageProjectsOverviewFilter {
+            get {
+                return ResourceManager.GetString("PageProjectsOverviewFilter", resourceCulture);
+            }
+        }
+        
         internal static string InputTextResponsibleUser {
             get {
                 return ResourceManager.GetString("InputTextResponsibleUser", resourceCulture);

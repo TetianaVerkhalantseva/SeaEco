@@ -187,24 +187,18 @@ else
         var usersList = await Http.GetFromJsonAsync<List<UserDto>>("api/users");
         _users = usersList?.OrderBy(user => user.FullName).ToList();
         
-        _location = await Http.GetFromJsonAsync<List<LokalitetDto>>($"api/Lokalitet");
+        _location = await Http.GetFromJsonAsync<List<LokalitetDto>>("api/Lokalitet");
         
         _editContext = new EditContext(_newProject);
     }
 
     private async Task AddNewProject()
     {
-        
         var response = await Http.PostAsJsonAsync("/api/Project", _newProject);
-        
-        if (response.StatusCode == HttpStatusCode.Conflict)
+
+        if (response.IsSuccessStatusCode)
         {
-            _errorMessage = await response.Content.ReadAsStringAsync();
-        }
-        else if (response.IsSuccessStatusCode)
-        {
-            var created = await response.Content
-                .ReadFromJsonAsync<CreateProjectResponse>();
+            var created = await response.Content.ReadFromJsonAsync<ResponseId>();
 
             if (created is not null)
             {
@@ -215,6 +209,10 @@ else
                 _errorMessage = Resources.ErrorMessageUnexpected;
             }
         }
+        else if (response.StatusCode == HttpStatusCode.Conflict)
+            {
+                _errorMessage = await response.Content.ReadAsStringAsync();
+            }
         else
         {
             _errorMessage = Resources.ErrorMessageUnexpected;
@@ -260,7 +258,7 @@ else
         _editContext.Validate();  
     }
     
-    public class CreateProjectResponse
+    public class ResponseId
     {
         public Guid Id { get; init; }
     }
