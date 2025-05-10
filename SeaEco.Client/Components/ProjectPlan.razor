@@ -467,6 +467,7 @@ else
         var response = await Http.DeleteAsync($"/api/Project/{Project.Id:D}/sampling-plan/station/{stationId:D}");
         if (response.IsSuccessStatusCode)
         {
+            _editStationPlan.RemoveAll(s => s.Id == stationId);
             _editingStationId = null;
             EditProjectStationPlanVar = false;
             await EditProjectStationPlanChanged.InvokeAsync(EditProjectStationPlanVar);
