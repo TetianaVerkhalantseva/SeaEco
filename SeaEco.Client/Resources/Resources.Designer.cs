@@ -135,12 +135,6 @@ namespace SeaEco.Client.Resources {
             }
         }
         
-        internal static string ButtonEdit {
-            get {
-                return ResourceManager.GetString("ButtonEdit", resourceCulture);
-            }
-        }
-        
         internal static string ButtonDelete {
             get {
                 return ResourceManager.GetString("ButtonDelete", resourceCulture);
@@ -507,9 +501,261 @@ namespace SeaEco.Client.Resources {
             }
         }
         
+        internal static string InputTextUser1ProjectPlan {
+            get {
+                return ResourceManager.GetString("InputTextUser1ProjectPlan", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextUser2ProjectPlan {
+            get {
+                return ResourceManager.GetString("InputTextUser2ProjectPlan", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextUser3ProjectPlan {
+            get {
+                return ResourceManager.GetString("InputTextUser3ProjectPlan", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextPositionN {
+            get {
+                return ResourceManager.GetString("InputTextPositionN", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextPositionS {
+            get {
+                return ResourceManager.GetString("InputTextPositionS", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextDepth {
+            get {
+                return ResourceManager.GetString("InputTextDepth", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextMethod {
+            get {
+                return ResourceManager.GetString("InputTextMethod", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonAddStation {
+            get {
+                return ResourceManager.GetString("ButtonAddStation", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonEdit {
+            get {
+                return ResourceManager.GetString("ButtonEdit", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextUserProjectPlan {
+            get {
+                return ResourceManager.GetString("InputTextUserProjectPlan", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextStation {
+            get {
+                return ResourceManager.GetString("InputTextStation", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonProjectInfoView {
+            get {
+                return ResourceManager.GetString("ButtonProjectInfoView", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonProjectLog {
+            get {
+                return ResourceManager.GetString("ButtonProjectLog", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextLocation {
+            get {
+                return ResourceManager.GetString("InputTextLocation", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextLocationId {
+            get {
+                return ResourceManager.GetString("InputTextLocationId", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextComment {
+            get {
+                return ResourceManager.GetString("InputTextComment", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextMtb {
+            get {
+                return ResourceManager.GetString("InputTextMtb", resourceCulture);
+            }
+        }
+        
+        internal static string TabProjectPlan {
+            get {
+                return ResourceManager.GetString("TabProjectPlan", resourceCulture);
+            }
+        }
+        
+        internal static string TabProjectReport {
+            get {
+                return ResourceManager.GetString("TabProjectReport", resourceCulture);
+            }
+        }
+        
+        internal static string TabBStation {
+            get {
+                return ResourceManager.GetString("TabBStation", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextNumberOfStations {
+            get {
+                return ResourceManager.GetString("InputTextNumberOfStations", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextPlanedDate {
+            get {
+                return ResourceManager.GetString("InputTextPlanedDate", resourceCulture);
+            }
+        }
+        
+        internal static string PageProjectProject {
+            get {
+                return ResourceManager.GetString("PageProjectProject", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextPoId {
+            get {
+                return ResourceManager.GetString("InputTextPoId", resourceCulture);
+            }
+        }
+        
         internal static string ErrorMessageLoadingUsers {
             get {
                 return ResourceManager.GetString("ErrorMessageLoadingUsers", resourceCulture);
+            }
+        }
+        
+        internal static string PageProjectsOverviewFilter {
+            get {
+                return ResourceManager.GetString("PageProjectsOverviewFilter", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextResponsibleUser {
+            get {
+                return ResourceManager.GetString("InputTextResponsibleUser", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextCustomerUser {
+            get {
+                return ResourceManager.GetString("InputTextCustomerUser", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextCustomerUserTlf {
+            get {
+                return ResourceManager.GetString("InputTextCustomerUserTlf", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextCustomerUserEmail {
+            get {
+                return ResourceManager.GetString("InputTextCustomerUserEmail", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextFullLocation {
+            get {
+                return ResourceManager.GetString("InputTextFullLocation", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextProductionStatus {
+            get {
+                return ResourceManager.GetString("InputTextProductionStatus", resourceCulture);
+            }
+        }
+        
+        internal static string TextLocationInfo {
+            get {
+                return ResourceManager.GetString("TextLocationInfo", resourceCulture);
+            }
+        }
+        
+        internal static string TextCusomerInfo {
+            get {
+                return ResourceManager.GetString("TextCusomerInfo", resourceCulture);
+            }
+        }
+        
+        internal static string TextProjectInfo {
+            get {
+                return ResourceManager.GetString("TextProjectInfo", resourceCulture);
+            }
+        }
+        
+        internal static string PageNewProjectNewProject {
+            get {
+                return ResourceManager.GetString("PageNewProjectNewProject", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonExistingLocation {
+            get {
+                return ResourceManager.GetString("ButtonExistingLocation", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonNewLocation {
+            get {
+                return ResourceManager.GetString("ButtonNewLocation", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextStationDates {
+            get {
+                return ResourceManager.GetString("InputTextStationDates", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextCustomer {
+            get {
+                return ResourceManager.GetString("InputTextCustomer", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextProjectIdSe {
+            get {
+                return ResourceManager.GetString("InputTextProjectIdSe", resourceCulture);
+            }
+        }
+        
+        internal static string ErrorMessageLoadingCustomer {
+            get {
+                return ResourceManager.GetString("ErrorMessageLoadingCustomer", resourceCulture);
+            }
+        }
+        
+        internal static string ErrorMessageLoadingProject {
+            get {
+                return ResourceManager.GetString("ErrorMessageLoadingProject", resourceCulture);
             }
         }
     }

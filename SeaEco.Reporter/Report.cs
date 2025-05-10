@@ -10,6 +10,7 @@ using SeaEco.Reporter.Models.B1;
 using SeaEco.Reporter.Models.B2;
 using SeaEco.Reporter.Models.Info;
 using System.Drawing;
+using SeaEco.Reporter.Models.Positions;
 
 namespace SeaEco.Reporter;
 
@@ -261,5 +262,39 @@ public sealed class Report
         
         worksheet.Cells[24, 2].Value = information.Tilstand4.Item1 == 0 ? "-" : information.Tilstand4.Item1;
         worksheet.Cells[24, 3].Value = information.Tilstand4.Item2 == 0 ? "-" : information.Tilstand4.Item2;
+        
+        sourcePackage.Save();
+    }
+
+    public void FillPositions(string path, IEnumerable<RowPosition> positions)
+    {
+        ExcelPackage.License.SetNonCommercialPersonal(_options.NonCommercialPersonalName);
+
+        using ExcelPackage sourcePackage = new ExcelPackage(Path.Combine(_options.DestinationPath, path));
+        using ExcelWorksheet worksheet = sourcePackage.Workbook.Worksheets.First();
+
+        int index = 2;
+        foreach (RowPosition position in positions)
+        {
+            worksheet.Cells[index, 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            worksheet.Cells[index, 1].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(1, 205, 221, 225));
+            worksheet.Cells[index, 1].Value = position.Nummer;
+            
+            worksheet.Cells[index, 2].Value = position.KoordinatNord;
+            worksheet.Cells[index, 3].Value = position.KoordinatOst;
+            worksheet.Cells[index, 4].Value = position.Dybde;
+            worksheet.Cells[index, 5].Value = position.AntallGrabbhugg;
+            worksheet.Cells[index, 6].Value = position.Bunntype.GetDisplay();
+
+            Border border = worksheet.Cells[index, 1, index, 6].Style.Border;
+            border.Top.Style = ExcelBorderStyle.Thin;
+            border.Right.Style = ExcelBorderStyle.Thin;
+            border.Bottom.Style = ExcelBorderStyle.Thin;
+            border.Left.Style = ExcelBorderStyle.Thin;
+
+            index++;
+        }
+
+        sourcePackage.Save();
     }
 }

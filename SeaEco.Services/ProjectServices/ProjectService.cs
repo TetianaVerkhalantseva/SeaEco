@@ -18,7 +18,7 @@ public class ProjectService : IProjectService
     public async Task<Guid> CreateProjectAsync(NewProjectDto dto)
     {
         
-        // Sjekk om lokalitet finnes, ellers opprettes
+        // Check if Lokalitet exists, Add if not
         var lokalitet = await _context.Lokalitets
             .FirstOrDefaultAsync(l => l.Lokalitetsnavn == dto.Lokalitetsnavn || l.LokalitetsId == dto.LokalitetsId);
 
@@ -73,6 +73,7 @@ public class ProjectService : IProjectService
             {
                 Id = p.Id,
                 PoId = p.PoId,
+                ProsjektIdSe = p.ProsjektIdSe,
                 KundeId = p.KundeId,
                 Oppdragsgiver = p.Kunde.Oppdragsgiver, 
                 Kundekontaktperson = p.Kundekontaktperson,
@@ -100,6 +101,7 @@ public class ProjectService : IProjectService
     public async Task<ProjectDto?> GetProjectByIdAsync(Guid id)
     {
         var p = await _context.BProsjekts
+            .Include(p => p.Kunde)
             .Include(p => p.Lokalitet)
             .Include(p => p.BTilstand)
             .Include(p => p.BPreinfos) 
@@ -107,12 +109,30 @@ public class ProjectService : IProjectService
 
         if (p == null)
             return null;
-
+        
+        var status = (Prosjektstatus)p.Prosjektstatus; 
+        
+        // Count Stations based on Project Status
+        int antallStasjoner;
+        if (status == Prosjektstatus.Ferdig || status == Prosjektstatus.Deaktivert)
+        {
+            // Finish -> Count stations with BSurveyID
+            antallStasjoner = await _context.BUndersokelses
+                .CountAsync(u => u.ProsjektId == p.Id);
+        }
+        else
+        {
+            // New, started or ongoing -> count all stations in project
+            antallStasjoner = await _context.BStasjons
+                .CountAsync(s => s.ProsjektId == p.Id);
+        }
+        
         return new ProjectDto
         {
             Id = p.Id,
             PoId = p.PoId,
             KundeId = p.KundeId,
+            Oppdragsgiver = p.Kunde.Oppdragsgiver,
             Kundekontaktperson = p.Kundekontaktperson,
             Kundetlf = p.Kundetlf,
             Kundeepost = p.Kundeepost,
@@ -122,8 +142,9 @@ public class ProjectService : IProjectService
             Mtbtillatelse = p.Mtbtillatelse,
             ProsjektansvarligId = p.ProsjektansvarligId,
             Merknad = p.Merknad,
+            ProsjektIdSe = p.ProsjektIdSe,
             Produksjonsstatus = (Produksjonsstatus)p.Produksjonsstatus,
-            Prosjektstatus = (Prosjektstatus)p.Prosjektstatus,
+            Prosjektstatus = status,
             Tilstand = p.BTilstand != null
                 ? (Tilstand?)p.BTilstand.TilstandLokalitet
                 : null,
@@ -131,8 +152,7 @@ public class ProjectService : IProjectService
                 .Select(pi => pi.Feltdato)
                 .OrderBy(d => d)
                 .ToList(),
-            AntallStasjoner = await _context.BUndersokelses
-                .CountAsync(u => u.ProsjektId == p.Id)
+            AntallStasjoner = antallStasjoner
         };
     }
     
@@ -173,17 +193,12 @@ public class ProjectService : IProjectService
         prosjekt.ProsjektansvarligId = dto.ProsjektansvarligId;
         prosjekt.Produksjonsstatus   = (int)dto.Produksjonsstatus;
         
-        await _context.SaveChangesAsync();
-        
-        if (!string.IsNullOrWhiteSpace(dto.Merknad))
+        if (dto.Merknad != null)
         {
-            await AddMerknadAsync(id, dto.Merknad!);
-            prosjekt = await _context.BProsjekts
-                           .Include(p => p.Lokalitet)
-                           .Include(p => p.BTilstand)
-                           .FirstOrDefaultAsync(p => p.Id == id)
-                       ?? throw new InvalidOperationException("Kunne ikke laste prosjekt etter merknad.");
+            prosjekt.Merknad = dto.Merknad;
         }
+
+        await _context.SaveChangesAsync();
         
         return new ProjectDto
         {
@@ -211,22 +226,13 @@ public class ProjectService : IProjectService
     public async Task AddMerknadAsync(Guid projectId, string merknad)
     {
         var prosjekt = await _context.BProsjekts.FindAsync(projectId);
-        if (prosjekt == null) throw new KeyNotFoundException($"Prosjekt {projectId} ikke funnet.");
+        if (prosjekt == null)
+            throw new KeyNotFoundException($"Prosjekt {projectId} ikke funnet.");
 
-        if (string.IsNullOrWhiteSpace(prosjekt.Merknad))
-            prosjekt.Merknad = merknad;
-        else
-            prosjekt.Merknad += "\n" + merknad;
+        prosjekt.Merknad = string.IsNullOrWhiteSpace(prosjekt.Merknad)
+            ? merknad
+            : $"{prosjekt.Merknad}\n{merknad}";
 
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task EditMerknadAsync(Guid projectId, string merknad)
-    {
-        var prosjekt = await _context.BProsjekts.FindAsync(projectId);
-        if (prosjekt == null) throw new KeyNotFoundException($"Prosjekt {projectId} ikke funnet.");
-
-        prosjekt.Merknad = merknad;
         await _context.SaveChangesAsync();
     }
     

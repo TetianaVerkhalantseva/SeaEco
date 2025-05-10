@@ -1,0 +1,19 @@
+@if (Edit)
+{
+    <InputText @bind-Value="Value"
+               class="@CssClass"
+               @attributes="AdditionalAttributes" />
+}
+else
+{
+    <span class="@CssClass">@Value</span>
+}
+
+@code {
+    [Parameter] public bool Edit { get; set; }
+    [Parameter] public string? Value { get; set; }
+    [Parameter] public EventCallback<string?> ValueChanged { get; set; }
+    [Parameter] public string? CssClass { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+}

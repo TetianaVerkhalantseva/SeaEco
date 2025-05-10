@@ -10,6 +10,7 @@ using SeaEco.Reporter.Models;
 using SeaEco.Reporter.Models.B1;
 using SeaEco.Reporter.Models.B2;
 using SeaEco.Reporter.Models.Info;
+using SeaEco.Reporter.Models.Positions;
 
 namespace SeaEco.Services.ReportServices;
 
@@ -232,6 +233,39 @@ public sealed class ReportService(Report report, IGenericRepository<BProsjekt> p
         };
         
         report.FillB2(copyResult.Value, columns, header);
+
+        return Response<string>.Ok(copyResult.Value);
+    }
+
+    public async Task<Response<string>> GeneratePositionsReport(Guid projectId)
+    {
+        BProsjekt? dbRecord = await projectRepository.GetAll()
+            .Include(_ => _.BStasjons)
+                .ThenInclude(_ => _.Undersokelse)
+            .FirstOrDefaultAsync(_ => _.Id == projectId);
+
+        if (dbRecord is null)
+        {
+            return Response<string>.Error(ProjectNotFoundError);
+        }
+        
+        Response<string> copyResult = report.CopyDocument(SheetName.Position);
+        if (copyResult.IsError)
+        {
+            return copyResult;
+        }
+
+        IEnumerable<RowPosition> positions = dbRecord.BStasjons.OrderBy(_ => _.Nummer).Select(_ => new RowPosition()
+        {
+            Nummer = _.Nummer,
+            KoordinatNord = _.KoordinatNord,
+            KoordinatOst = _.KoordinatOst,
+            Dybde = _.Dybde,
+            AntallGrabbhugg = _.Undersokelse?.AntallGrabbhugg ?? 0,
+            Bunntype = _.Undersokelse?.BlotbunnId is null ? Bunntype.Hardbunn : Bunntype.Blotbunn,
+        });
+        
+        report.FillPositions(copyResult.Value, positions);
 
         return Response<string>.Ok(copyResult.Value);
     }

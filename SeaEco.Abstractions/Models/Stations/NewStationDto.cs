@@ -8,5 +8,5 @@ public class NewStationDto
     public int EastDegree { get; }
     public float EastMinutes { get; }
     public int Dybde { get; set; }
-    public string Analyser { get; set; } = string.Empty;
+    public string Analyser { get; set; } = "Parameter I, II og III";
 }
