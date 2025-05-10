@@ -36,7 +36,7 @@ else
                     @if (!EditProjectPlanVar)
                     {
                         <button class="btn custom-btn filter-button" type="button" @onclick="OnClickProjectPlan">
-                            @Resources.ButtonEdit
+                            @(_isExistingPlan ? Resources.ButtonEdit : "Opprett")
                         </button>
                     }
                     else
@@ -66,20 +66,8 @@ else
                 </div>
             </div>
         </EditForm>
-        @if (!_isExistingPlan && !EditProjectPlanVar) 
+        @if (_isExistingPlan) 
         { 
-            <div class="d-flex flex-column gap-3 mt-3">
-                <div class="d-flex justify-content-center">
-                    @Resources.PageProjectPlanNoPlan
-                </div>
-                <button class="btn custom-btn filter-button" type="button" @onclick="OnClickProjectPlan">
-                    @Resources.ButtonAddStation
-                </button>
-            </div>
-            
-        }
-        else
-        {
             foreach (var station in _newStationPlan.Select((s, i) => (s, i)))
             {
                 var dto = station.s;
@@ -153,6 +141,8 @@ else
                 }
             }
 
+            if(_isExistingStationPlan)
+            {
             foreach (var station2 in _existingStationPlan)
                 {
                     <div class="d-flex flex-column gap-3 mt-3 box-border p-4">
@@ -190,6 +180,8 @@ else
                     </div>
 
                 }
+                
+            }
 
                 if (_isNewStation)
                 {
@@ -254,19 +246,16 @@ else
                 }
 
 
-                <div class="d-flex flex-row align-self-end justify-content-end w-100 mb-3">
-
-                @if (!_isLoading)
-                {
-                    <div class="d-flex gap-2 flex-column flex-xxl-row w-100 mt-4">
-                        <button class="btn custom-btn filter-button" type="button" disabled="@(EditProjectStationPlanVar)" @onclick="AddStation">
-                            @Resources.ButtonAddStation
-                        </button>
-                        <div class="d-flex flex-grow-1"></div>
-                    </div>
-                }
-            </div>
+                
         }
+        <div class="d-flex flex-row align-self-end justify-content-end w-100 mb-3">
+            <div class="d-flex gap-2 flex-column flex-xxl-row w-100 mt-4">
+                <button class="btn custom-btn filter-button" type="button" disabled="@(EditProjectStationPlanVar && EditProjectPlanVar && !_isExistingPlan)" @onclick="AddStation">
+                    @Resources.ButtonAddStation
+                </button>
+                <div class="d-flex flex-grow-1"></div>
+            </div>
+        </div>
     </div>
 }
 
@@ -410,6 +399,7 @@ else
                     EditProjectStationPlanVar = false;
                     _isExistingStationPlan = true;
                     _isNewStation = false;
+                    _1newPlan = new NewStationDto();
                 }
                 else
                 {
