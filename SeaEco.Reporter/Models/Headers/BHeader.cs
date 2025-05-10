@@ -1,4 +1,4 @@
-namespace SeaEco.Reporter.Models;
+namespace SeaEco.Reporter.Models.Headers;
 
 public sealed class BHeader
 {
