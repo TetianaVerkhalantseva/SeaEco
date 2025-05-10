@@ -1,0 +1,74 @@
+.preInfo-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    justify-content: center;
+}
+
+@media (max-width: 1024px) {
+    .preInfo-container {
+        grid-template-columns: 1fr;
+        width: 80%;
+        padding-left: 6.5rem;
+    }
+    
+    .form-check {
+        width: 76%;
+    }
+    
+    .sampler-container{
+        margin-left: 6.5rem;
+    }
+}
+
+.provetaker-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 1025px) {
+    .provetaker-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.form-check {
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    background-color: #f8f9fa;
+}
+
+.form-check-input {
+    width: 1.3rem;
+    height: 1.3rem;
+    margin-top: 0.5rem;
+    margin-left: 0.1rem;
+}
+
+.form-check-label {
+    font-size: 1rem;
+    vertical-align: middle;
+    margin: 0.5rem 1rem;
+}
+
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7rem;
+    margin: 4rem auto 1rem auto;
+}
+
+.custom-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
