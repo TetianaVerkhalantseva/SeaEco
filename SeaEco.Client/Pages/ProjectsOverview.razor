@@ -1,7 +1,5 @@
 @page "/projectsOverview"
 @using Microsoft.AspNetCore.Authorization
-@using Microsoft.EntityFrameworkCore
-@using SeaEco.Abstractions.Enums
 @using SeaEco.Abstractions.Extensions
 @using SeaEco.Abstractions.Models.Project
 @using SeaEco.Client.Resources
@@ -202,7 +200,6 @@
         try
         {
             _projects = await Http.GetFromJsonAsync<List<ProjectDto>>("/api/Project");
-            
         }
         catch (Exception ex)
         {
@@ -222,13 +219,12 @@
             .Select(p => p.Oppdragsgiver)
             .Distinct()
             .ToList();
-        
     }
 
 
-    private void OnRowClick(Guid prosjektId)
+    private void OnRowClick(Guid projectId)
     {
-        Navigation.NavigateTo($"project/{prosjektId:D}");
+        Navigation.NavigateTo($"project/{projectId:D}");
     }
     
     private static string GetStatus(string? status)

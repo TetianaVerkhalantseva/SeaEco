@@ -1,4 +1,6 @@
-@page "/project/{ProjectId:guid}/station/{StationId:guid}/survey"
+@page "/project/{ProjectId:guid}/station/{StationId:guid}/create-survey"
+@page "/project/{ProjectId:guid}/station/{StationId:guid}/edit-survey/{SurveyId:guid?}"
+
 @using Microsoft.AspNetCore.Authorization
 @using SeaEco.Abstractions.Enums
 @using SeaEco.Abstractions.Enums.Bsensorisk
@@ -13,56 +15,36 @@
 <h4>Stasjonsredigering</h4>
 
 <div id="div1" class="content-div active">
-    <div class="position-depth-container">
-        <div class="form-floating mb-3">
-            <InputText id="position_n" class="form-control" @bind-Value="_surveyDto.BStation.KoordinatNord" placeholder="N"/>
-            <label for="position_n">Posisjon nord</label>
-        </div>
-
-        <div class="form-floating mb-3">
-            <InputText id="position_o" class="form-control" @bind-Value="_surveyDto.BStation.KoordinatOst" placeholder="O"/>
-            <label for="position_o">Posisjon øst</label>
-        </div>
-
-        <div class="form-floating mb-3">
-            <InputNumber id="depth" class="form-control" @bind-Value="_surveyDto.BStation.Dybde" placeholder="M"/>
-            <label for="depth">Dybde</label>
-        </div>
-
-        <div class="position-depth-button-container">
-            <button class="btn btn-outline-primary clear-data @(_surveyDto.BStation.Dybde == 0 ? "active" : "")"
-                    @onclick="() => ClearPositionAndDepth(0)">
-                Annen posisjon og dybde
-            </button>
-        </div>
-    </div>
+    @if (_surveyDto.BStation != null)
+    {
+        <div class="position-depth-container">
+            <div class="form-floating mb-3">
+                <InputText id="position_n" class="form-control" @bind-Value="_surveyDto.BStation.KoordinatNord" placeholder="N"/>
+                <label for="position_n">Posisjon nord</label>
+            </div>
     
-    @* <div class="sampler-container"> *@
-    @*     <div class="form-floating mb-3"> *@
-    @*         <InputSelect id="sampler-1" class="form-select" @bind-Value="_user1.Id"> *@
-    @*             <option value="" disabled>Velg prøvetaker</option> *@
-    @*             <option value="">Rikke</option> *@
-    @*             <option value="">Sara</option> *@
-    @*             <option value="">Tor</option> *@
-    @*         </InputSelect> *@
-    @*         <label for="sampler-1">Prøvetaker nr 1</label> *@
-    @*     </div> *@
-    @* *@
-    @*     <div class="form-floating mb-3"> *@
-    @*         <InputSelect id="sampler-2" class="form-select" @bind-Value="_user2.Id"> *@
-    @*             <option value="" disabled>Velg prøvetaker</option> *@
-    @*             <option value="">Ingen</option> *@
-    @*             <option value="">Rikke</option> *@
-    @*             <option value="">Sara</option> *@
-    @*             <option value="">Tor</option> *@
-    @*         </InputSelect> *@
-    @*         <label for="sampler-2">Prøvetaker nr 2</label> *@
-    @*     </div> *@
-    @* </div> *@
+            <div class="form-floating mb-3">
+                <InputText id="position_o" class="form-control" @bind-Value="_surveyDto.BStation.KoordinatOst" placeholder="O"/>
+                <label for="position_o">Posisjon øst</label>
+            </div>
+    
+            <div class="form-floating mb-3">
+                <InputNumber id="depth" class="form-control" @bind-Value="_surveyDto.BStation.Dybde" placeholder="M"/>
+                <label for="depth">Dybde</label>
+            </div>
+    
+            <div class="position-depth-button-container">
+                <button class="btn btn-outline-primary clear-data @(_surveyDto.BStation.Dybde == 0 ? "active" : "")"
+                        @onclick="() => ClearPositionAndDepth(0)">
+                    Annen posisjon og dybde
+                </button>
+            </div>
+        </div>
+    }
 
     <div class="equipment-container">
         <div class="form-floating mb-3">
-            <InputNumber id="equip-1" class="form-control" @bind-Value="_surveyDto.AntallGrabbhugg" placeholder="Grabbhugg" />
+            <InputNumber id="equip-1" class="form-control" @bind-Value="_surveyDto.AntallGrabbhugg" placeholder="Grabbhugg"/>
             <label for="equip-1">Antall grabbhugg</label>
         </div>
 
@@ -218,7 +200,6 @@
         </div>
     </div>
 
-    @* TODO *@
     <div class="sedimentType-container" id="sedimentType">
         <div class="hardSediment-container" id="hardSediment">
             <h5>Bunntype:</h5>
@@ -270,7 +251,6 @@
             </div>
         </div>
     </div>
-    @* TODO *@
 
     @* TODO: Picture usilt and tom grabb container *@
     <div class="picture-container">
@@ -446,7 +426,9 @@
 <div class="button-container">
     <button id="lastBtn" onclick="showLast()" class="custom-btn">Forrige</button>
     <button id="nextBtn" onclick="showNext()" class="custom-btn">Neste</button>
-    <button id="submitBtn" class="custom-btn" style="display: none;" @onclick="SurveyRegistration">Lagre</button>
+    <button id="submitBtn" class="custom-btn" style="display: none;" @onclick="SubmitSurvey">
+        @(SurveyId.HasValue && SurveyId.Value != Guid.Empty ? "Oppdater" : "Registrer")
+    </button>
 </div>
 
 
@@ -587,7 +569,10 @@
 @code {
     [Parameter] 
     public Guid ProjectId { get; set; }
-    public Guid StationId { get; }
+    [Parameter]
+    public Guid StationId { get; set; }
+    [Parameter]
+    public Guid? SurveyId { get; set; }
 
     private EditSurveyDto _surveyDto = new();
     private BStationDto? _station = new();
@@ -601,6 +586,19 @@
 
     protected override async Task OnInitializedAsync()
     {
+        if (SurveyId.HasValue && SurveyId.Value != Guid.Empty)
+        {
+            // Edit mode
+            var existingSurvey = await Http.GetFromJsonAsync<EditSurveyDto>
+                ($"api/Project/{ProjectId}/station/{StationId}/survey/{SurveyId}");
+            if (existingSurvey != null)
+            {
+                _surveyDto = existingSurvey;
+                return;
+            }
+        }
+        
+        // Create mode
         _station = await Http.GetFromJsonAsync<BStationDto>($"api/Project/{ProjectId}/station/{StationId}");
         _surveyDto.BStation = _station;
     }
@@ -676,7 +674,7 @@
         }
     }
 
-    private async Task SurveyRegistration()
+    private async Task SubmitSurvey()
     {
         if (_selectBunnType == "blot")
         {
@@ -687,6 +685,7 @@
             };
             
             _surveyDto.HardbunnId = null;
+            _surveyDto.BHardBase = null;
 
             _surveyDto.SedimentId = Guid.NewGuid();
             _surveyDto.BSediment = new BSedimentDto
@@ -703,6 +702,7 @@
             };
             
             _surveyDto.BlotbunnId = null;
+            _surveyDto.BSoftBase = null;
         }
 
         if (_selectSensorisk == "ja")
@@ -716,6 +716,7 @@
         else
         {
             _surveyDto.SensoriskId = null;
+            _surveyDto.BSensorisk = null;
         }
 
         if (_selectDyr == "ja")
@@ -729,18 +730,32 @@
         else
         {
             _surveyDto.DyrId = null;
+            _surveyDto.BAnimal = null;
         }
         
-        var response = await Http.PostAsJsonAsync($"api/Project/{ProjectId}/station/{StationId}/survey", _surveyDto);
-        if (response.IsSuccessStatusCode)
+        HttpResponseMessage response;
+        if (SurveyId.HasValue && SurveyId.Value != Guid.Empty)
         {
-            _resultMessage = await response.Content.ReadAsStringAsync();
-            _result = true;
+            response = await Http.PutAsJsonAsync(
+                $"api/Project/{ProjectId}/station/{StationId}/survey/{SurveyId}",
+                _surveyDto);
         }
         else
         {
+            response = await Http.PostAsJsonAsync(
+                $"api/Project/{ProjectId}/station/{StationId}/survey",
+                _surveyDto);
+        }
+
+        if (response.IsSuccessStatusCode)
+        {
+            _result = true;
             _resultMessage = await response.Content.ReadAsStringAsync();
+        }
+        else
+        {
             _result = false;
+            _resultMessage = await response.Content.ReadAsStringAsync();
         }
     }
 }
