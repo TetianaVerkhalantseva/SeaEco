@@ -73,6 +73,7 @@ public class ProjectService : IProjectService
             {
                 Id = p.Id,
                 PoId = p.PoId,
+                ProsjektIdSe = p.ProsjektIdSe,
                 KundeId = p.KundeId,
                 Oppdragsgiver = p.Kunde.Oppdragsgiver, 
                 Kundekontaktperson = p.Kundekontaktperson,
@@ -139,6 +140,7 @@ public class ProjectService : IProjectService
             Mtbtillatelse = p.Mtbtillatelse,
             ProsjektansvarligId = p.ProsjektansvarligId,
             Merknad = p.Merknad,
+            ProsjektIdSe = p.ProsjektIdSe,
             Produksjonsstatus = (Produksjonsstatus)p.Produksjonsstatus,
             Prosjektstatus = status,
             Tilstand = p.BTilstand != null

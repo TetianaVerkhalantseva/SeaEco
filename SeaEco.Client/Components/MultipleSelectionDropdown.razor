@@ -2,11 +2,11 @@
 @inject IJSRuntime JsRuntime
 
 
-<div class="dropdown" @ref="dropdownRef" >
-    <div class="form-control cursor flex-wrap align-items-center fixed-dropdown" @onclick="ToggleDropdown">
+<div class="dropdown" @ref="_dropdownRef" >
+    <div class="form-select cursor flex-wrap align-items-center fixed-dropdown" @onclick="ToggleDropdown">
         @if (SelectedOptions.Any())
         {
-            @foreach (var option in SelectedOptions)
+            foreach (var option in SelectedOptions)
             {
                 <span class="badge bg-secondary me-1 mb-1">
                     @option
@@ -43,15 +43,15 @@
 
 
 @code {
-    [Parameter] public List<string> Options { get; set; } = new List<string>();
+    [Parameter] public List<string> Options { get; set; } = new ();
 
-    [Parameter] public List<string> SelectedOptions { get; set; } = new List<string>();
+    [Parameter] public List<string> SelectedOptions { get; set; } = new ();
 
     [Parameter] public EventCallback<List<string>> SelectedOptionsChanged { get; set; }
 
-    private ElementReference dropdownRef;
-    private DotNetObjectReference<MultipleSelectionDropdown>? dotNetRef;
-    private object? jsClickHandler;
+    private ElementReference _dropdownRef;
+    private DotNetObjectReference<MultipleSelectionDropdown>? _dotNetRef;
+    private object? _jsClickHandler;
 
     private bool DropdownOpen { get; set; } = false;
 
@@ -61,11 +61,11 @@
     {
         if (firstRender)
         {
-            dotNetRef = DotNetObjectReference.Create(this);
-            jsClickHandler = await JsRuntime.InvokeAsync<object>(
+            _dotNetRef = DotNetObjectReference.Create(this);
+            _jsClickHandler = await JsRuntime.InvokeAsync<object>(
                 "clickOutsideHelper.addClickOutsideListener",
                 CancellationToken.None,
-                new object?[] { dropdownRef, dotNetRef });
+                new object?[] { _dropdownRef, _dotNetRef });
         }
     }
 
