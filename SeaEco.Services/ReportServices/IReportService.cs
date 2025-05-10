@@ -1,4 +1,5 @@
 using SeaEco.Abstractions.ResponseService;
+using SeaEco.EntityFramework.Entities;
 
 namespace SeaEco.Services.ReportServices;
 

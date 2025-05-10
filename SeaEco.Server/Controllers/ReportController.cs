@@ -9,7 +9,6 @@ namespace SeaEco.Server.Controllers;
 public class ReportController(IReportService reportService) : ApiControllerBase
 {
     [HttpPost("generate/info")]
-    [AllowAnonymous]
     public async Task<IActionResult> GenerateInfo([FromBody] Guid projectId)
     {
         Response<string> response = await reportService.GenerateInfoReport(projectId);
@@ -19,7 +18,6 @@ public class ReportController(IReportService reportService) : ApiControllerBase
     }
     
     [HttpPost("generate/b1")]
-    [AllowAnonymous]
     public async Task<IActionResult> GenerateB1([FromBody] Guid projectId)
     {
         Response<string> response = await reportService.GenerateB1Report(projectId);
@@ -29,7 +27,6 @@ public class ReportController(IReportService reportService) : ApiControllerBase
     }
 
     [HttpPost("generate/b2")]
-    [AllowAnonymous]
     public async Task<IActionResult> GenerateB2([FromBody] Guid projectId)
     {
         Response<string> response = await reportService.GenerateB2Report(projectId);

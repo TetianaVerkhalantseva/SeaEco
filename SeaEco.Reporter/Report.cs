@@ -25,7 +25,7 @@ public sealed class Report
         _options = optionsMonitor.CurrentValue;
     }
 
-    public Response<string> CopyDocument(SheetName name)
+    public Response<string> CopyDocument(string projectIdSe, SheetName name)
     {
         ExcelPackage.License.SetNonCommercialPersonal(_options.NonCommercialPersonalName);
 
@@ -37,13 +37,18 @@ public sealed class Report
             return Response<string>.Error(DocumentNotFoundError);
         }
 
-        string newPeportName = $"{name.GetDescription()}-{Guid.NewGuid()}.xlsx";
+        string newPeportName = $"{projectIdSe}-{name.GetDescription()}.xlsx";
 
         using var destinationPackage = new ExcelPackage();
         destinationPackage.Workbook.Worksheets.Add(sourceSheet.Name, sourceSheet);
 
         try
         {
+            if (File.Exists(Path.Combine(_options.DestinationPath, newPeportName)))
+            {
+                File.Delete(Path.Combine(_options.DestinationPath, newPeportName));
+            }
+            
             destinationPackage.SaveAs(new FileInfo(Path.Combine(_options.DestinationPath, newPeportName)));
         }
         catch (Exception ex)
@@ -59,16 +64,25 @@ public sealed class Report
 
         using ExcelPackage sourcePackage = new ExcelPackage(Path.Combine(_options.DestinationPath, path));
         using ExcelWorksheet worksheet = sourcePackage.Workbook.Worksheets.First();
+        
+        if (int.TryParse(header.LokalitetsID, out int lokalitetsID))
+        {
+            worksheet.Cells[2, 11].Value = lokalitetsID;
+            worksheet.Cells[2, 26].Value = lokalitetsID;
+        }
+        else
+        {
+            worksheet.Cells[2, 11].Value = header.LokalitetsID;
+            worksheet.Cells[2, 26].Value = header.LokalitetsID;
+        }
 
         worksheet.Cells[1, 6].Value = header.Oppdragsgiver;
-        worksheet.Cells[1, 11].Value = string.Join(',', header.FeltDatoer.Select(date => date.ToString("dd.MM.yy"))); 
+        worksheet.Cells[1, 11].Value = string.Join(", ", header.FeltDatoer.Select(date => date.ToString("dd.MM.yy"))); 
         worksheet.Cells[2, 6].Value = header.Lokalitetsnavn;
-        worksheet.Cells[2, 11].Value = header.LokalitetsID;
 
         worksheet.Cells[1, 21].Value = header.Oppdragsgiver;
-        worksheet.Cells[1, 26].Value = string.Join(',', header.FeltDatoer.Select(date => date.ToString("dd.MM.yy")));
+        worksheet.Cells[1, 26].Value = string.Join(", ", header.FeltDatoer.Select(date => date.ToString("dd.MM.yy")));
         worksheet.Cells[2, 21].Value = header.Lokalitetsnavn;
-        worksheet.Cells[2, 26].Value = header.LokalitetsID;
 
         worksheet.Cells["H14"].Value = sjovann.SjoTemperatur;
         worksheet.Cells["J14"].Value = sjovann.SjoTemperatur;
@@ -80,6 +94,8 @@ public sealed class Report
         int index = 4;
         foreach (ColumnB1 column in columns)
         {
+            worksheet.Cells[4, index].Value = column.Nummer;
+            
             worksheet.Cells[5, index].Value = column.Bunntype.GetDisplay();
             worksheet.Cells[7, index].Value = (int)column.Dyr;
 
@@ -156,22 +172,34 @@ public sealed class Report
         }
 
         worksheet.Cells["AC11"].Value = tilstand.IndeksGr2;
-        
-        worksheet.Cells["S13"].Value = (int)tilstand.TilstandGr2;
-        worksheet.Cells["S13"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-        worksheet.Cells["S13"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(tilstand.TilstandGr2.GetDisplay()));
+
+        int til2 = (int)tilstand.TilstandGr2;
+        if (til2 != 0)
+        {
+            worksheet.Cells["S13"].Value = til2;
+            worksheet.Cells["S13"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            worksheet.Cells["S13"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(tilstand.TilstandGr2.GetDisplay()));
+        }
         
         worksheet.Cells["AC34"].Value = tilstand.IndeksGr3;
-        
-        worksheet.Cells["S36"].Value = (int)tilstand.TilstandGr3;
-        worksheet.Cells["S36"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-        worksheet.Cells["S36"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(tilstand.TilstandGr3.GetDisplay()));
+
+        int til3 = (int)tilstand.TilstandGr3;
+        if (til3 != 0)
+        {
+            worksheet.Cells["S36"].Value = til3;
+            worksheet.Cells["S36"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            worksheet.Cells["S36"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(tilstand.TilstandGr3.GetDisplay()));
+        }
 
         worksheet.Cells["AC38"].Value = tilstand.LokalitetsIndeks;
-        
-        worksheet.Cells["Z41"].Value = (int)tilstand.LokalitetsTilstand;
-        worksheet.Cells["Z41"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-        worksheet.Cells["Z41"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(tilstand.LokalitetsTilstand.GetDisplay()));
+
+        int tilLok = (int)tilstand.LokalitetsTilstand;
+        if (tilLok != 0)
+        {
+            worksheet.Cells["Z41"].Value = tilLok;
+            worksheet.Cells["Z41"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            worksheet.Cells["Z41"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(tilstand.LokalitetsTilstand.GetDisplay()));
+        }
 
         sourcePackage.Save();
     }
@@ -185,18 +213,29 @@ public sealed class Report
 
         int index = 3;
 
+        if (int.TryParse(header.LokalitetsID, out int lokalitetsID))
+        {
+            worksheet.Cells[2, 9].Value = lokalitetsID;
+            worksheet.Cells[2, 22].Value = lokalitetsID;
+        }
+        else
+        {
+            worksheet.Cells[2, 9].Value = header.LokalitetsID;
+            worksheet.Cells[2, 22].Value = header.LokalitetsID;
+        }
+        
         worksheet.Cells[1, 4].Value = header.Oppdragsgiver;
-        worksheet.Cells[1, 9].Value = string.Join(',', header.FeltDatoer.Select(date => date.ToString("dd.MM.yy")));
+        worksheet.Cells[1, 9].Value = string.Join(", ", header.FeltDatoer.Select(date => date.ToString("dd.MM.yy")));
         worksheet.Cells[2, 4].Value = header.Lokalitetsnavn;
-        worksheet.Cells[2, 9].Value = header.LokalitetsID;
 
         worksheet.Cells[1, 17].Value = header.Oppdragsgiver;
-        worksheet.Cells[1, 22].Value = string.Join(',', header.FeltDatoer.Select(date => date.ToString("dd.MM.yy")));
+        worksheet.Cells[1, 22].Value = string.Join(", ", header.FeltDatoer.Select(date => date.ToString("dd.MM.yy")));
         worksheet.Cells[2, 17].Value = header.Lokalitetsnavn;
-        worksheet.Cells[2, 22].Value = header.LokalitetsID;
 
         foreach (ColumnB2 column in columns)
         {
+            worksheet.Cells[4, index].Value = column.Nummer;
+            
             worksheet.Cells[5, index].Value = column.KoordinatNord;
             worksheet.Cells[6, index].Value = column.KoordinatOst;
             worksheet.Cells[7, index].Value = column.Dyp;
@@ -222,6 +261,8 @@ public sealed class Report
             worksheet.Cells[26, index].Value = column.Fekalier ? "x" : string.Empty;
 
             worksheet.Cells[27, index].Value = column.Kommentarer;
+
+            index++;
         }
         
         sourcePackage.Save();
@@ -235,7 +276,7 @@ public sealed class Report
         using ExcelWorksheet worksheet = sourcePackage.Workbook.Worksheets.First();
 
         worksheet.Cells[1, 2].Value = information.ProsjektIdSe;
-        worksheet.Cells[2, 2].Value = information.FeltDatoer;
+        worksheet.Cells[2, 2].Value = string.Join(", ", information.FeltDatoer.Select(_ => _.ToString("dd.MM.yy")));
 
         worksheet.Cells[5, 2].Value = information.TotalStasjoner;
         worksheet.Cells[6, 2].Value = information.TotalGrabbhugg;
@@ -243,13 +284,13 @@ public sealed class Report
         worksheet.Cells[8, 2].Value = information.MedDyr;
         worksheet.Cells[9, 2].Value = information.MedPhEh;
 
-        worksheet.Cells[12, 2].Value = $"{information.Leire:F1}";
-        worksheet.Cells[13, 2].Value = $"{information.Silt:F1}";
-        worksheet.Cells[14, 2].Value = $"{information.Sand:F1}";
-        worksheet.Cells[15, 2].Value = $"{information.Grus:F1}";
-        worksheet.Cells[16, 2].Value = $"{information.Skjellsand:F1}";
-        worksheet.Cells[17, 2].Value = $"{information.Steinbunn:F1}";
-        worksheet.Cells[18, 2].Value = $"{information.Fjellbunn:F1}";
+        worksheet.Cells[12, 2].Value = information.Leire;
+        worksheet.Cells[13, 2].Value = information.Silt;
+        worksheet.Cells[14, 2].Value = information.Sand;
+        worksheet.Cells[15, 2].Value = information.Grus;
+        worksheet.Cells[16, 2].Value = information.Skjellsand;
+        worksheet.Cells[17, 2].Value = information.Steinbunn;
+        worksheet.Cells[18, 2].Value = information.Fjellbunn;
 
         worksheet.Cells[21, 2].Value = information.Tilstand1.Item1 == 0 ? "-" : information.Tilstand1.Item1;
         worksheet.Cells[21, 3].Value = information.Tilstand1.Item2 == 0 ? "-" : information.Tilstand1.Item2;

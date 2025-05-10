@@ -5,6 +5,7 @@ namespace SeaEco.Reporter.Models.B2;
 
 public class ColumnB2
 {
+    public int Nummer { get; set; }
     public string KoordinatNord { get; set; }
     public string KoordinatOst { get; set; }
     public int Dyp { get; set; }
