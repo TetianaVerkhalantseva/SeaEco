@@ -1,11 +1,18 @@
 
+.box-border {
+    border: 1px solid lightgray;
+    border-radius: 4px;
+}
 
+.p-custom {
+    padding: 2rem 6rem !important;
+}
 
 .nav-tabs .nav-link {
     background-color: #eef2f4;
     color: #333;
     position: relative;
-    transition: background-color 0.3s ease;
+    transition: background-color .3s ease;
     border-top: none !important;
     border-right: none !important;
     border-left: none !important;
@@ -22,7 +29,7 @@
     width: 100%;
     height: 3px;
     background-color: #6497B1;
-    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    transition: transform .3s ease-out, opacity .3s ease-out;
     opacity: 0;
 }
 
@@ -40,7 +47,6 @@
     }
 }
 
-
 .main-content {
     position: relative;  
 }
@@ -56,9 +62,8 @@
     background-color: rgba(0, 0, 0, 0.2);
 }
 
-
-
 .filter-panel {
+    z-index: 1000;
     overflow: hidden;
     border-radius: .5rem;
     background-color: transparent;
@@ -76,8 +81,6 @@
     list-style: none;
     transition: background 0.2s ease;
 }
-
-
 
 .filter-panel[open] summary {
     border-bottom-left-radius: 0;
@@ -102,19 +105,10 @@
 }
 
 .filter-panel[open] .filter-options  {
-    max-height: 1000px;
     opacity: 1;
     padding: 1rem;
     background-color: #eef2f4;
 }
 
 
-.box-border {
-    border: 1px solid lightgray;
-    border-radius: 4px;
-}
-
-.p-custom {
-    padding: 2rem 6rem !important;
-}
 

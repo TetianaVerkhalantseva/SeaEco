@@ -656,5 +656,107 @@ namespace SeaEco.Client.Resources {
                 return ResourceManager.GetString("PageProjectsOverviewFilter", resourceCulture);
             }
         }
+        
+        internal static string InputTextResponsibleUser {
+            get {
+                return ResourceManager.GetString("InputTextResponsibleUser", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextCustomerUser {
+            get {
+                return ResourceManager.GetString("InputTextCustomerUser", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextCustomerUserTlf {
+            get {
+                return ResourceManager.GetString("InputTextCustomerUserTlf", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextCustomerUserEmail {
+            get {
+                return ResourceManager.GetString("InputTextCustomerUserEmail", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextFullLocation {
+            get {
+                return ResourceManager.GetString("InputTextFullLocation", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextProductionStatus {
+            get {
+                return ResourceManager.GetString("InputTextProductionStatus", resourceCulture);
+            }
+        }
+        
+        internal static string TextLocationInfo {
+            get {
+                return ResourceManager.GetString("TextLocationInfo", resourceCulture);
+            }
+        }
+        
+        internal static string TextCusomerInfo {
+            get {
+                return ResourceManager.GetString("TextCusomerInfo", resourceCulture);
+            }
+        }
+        
+        internal static string TextProjectInfo {
+            get {
+                return ResourceManager.GetString("TextProjectInfo", resourceCulture);
+            }
+        }
+        
+        internal static string PageNewProjectNewProject {
+            get {
+                return ResourceManager.GetString("PageNewProjectNewProject", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonExistingLocation {
+            get {
+                return ResourceManager.GetString("ButtonExistingLocation", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonNewLocation {
+            get {
+                return ResourceManager.GetString("ButtonNewLocation", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextStationDates {
+            get {
+                return ResourceManager.GetString("InputTextStationDates", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextCustomer {
+            get {
+                return ResourceManager.GetString("InputTextCustomer", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextProjectIdSe {
+            get {
+                return ResourceManager.GetString("InputTextProjectIdSe", resourceCulture);
+            }
+        }
+        
+        internal static string ErrorMessageLoadingCustomer {
+            get {
+                return ResourceManager.GetString("ErrorMessageLoadingCustomer", resourceCulture);
+            }
+        }
+        
+        internal static string ErrorMessageLoadingProject {
+            get {
+                return ResourceManager.GetString("ErrorMessageLoadingProject", resourceCulture);
+            }
+        }
     }
 }

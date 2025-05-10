@@ -101,6 +101,7 @@ public class ProjectService : IProjectService
     public async Task<ProjectDto?> GetProjectByIdAsync(Guid id)
     {
         var p = await _context.BProsjekts
+            .Include(p => p.Kunde)
             .Include(p => p.Lokalitet)
             .Include(p => p.BTilstand)
             .Include(p => p.BPreinfos) 
@@ -131,6 +132,7 @@ public class ProjectService : IProjectService
             Id = p.Id,
             PoId = p.PoId,
             KundeId = p.KundeId,
+            Oppdragsgiver = p.Kunde.Oppdragsgiver,
             Kundekontaktperson = p.Kundekontaktperson,
             Kundetlf = p.Kundetlf,
             Kundeepost = p.Kundeepost,
