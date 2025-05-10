@@ -3,16 +3,18 @@
 <Router AppAssembly="@typeof(App).Assembly">
     <Found Context="routeData">
         <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
-        <NotAuthorized>
-            @if (!context.User.Identity.IsAuthenticated)
-            {
-                <p>You are not authorized to view this page. Please <a href="/login">login</a>.</p>
-            }
-            else
-            {
-                <p>You are not allowed to view this page.</p>
-            }
-        </NotAuthorized>
+            <NotAuthorized>
+                @if (!context.User.Identity.IsAuthenticated)
+                {
+                    <p>You are not authorized to view this page. Please <a href="/login">login</a>.</p>
+                }
+                else
+                {
+                    <p>You are not allowed to view this page.</p>
+                }
+            </NotAuthorized>
+            <Authorizing>
+            </Authorizing>
         </AuthorizeRouteView>
         <FocusOnNavigate RouteData="@routeData" Selector="h1" />
     </Found>

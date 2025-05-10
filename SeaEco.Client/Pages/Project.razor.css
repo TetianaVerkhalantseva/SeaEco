@@ -105,7 +105,6 @@
 }
 
 .filter-panel[open] .filter-options  {
-    max-height: 1000px;
     opacity: 1;
     padding: 1rem;
     background-color: #eef2f4;

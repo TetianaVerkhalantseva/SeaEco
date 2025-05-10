@@ -200,7 +200,7 @@ else
         {
             var created = await response.Content.ReadFromJsonAsync<ResponseId>();
 
-            if (created is not null)
+            if (created != null)
             {
                 Navigation.NavigateTo($"project/{created.Id:D}", forceLoad: true);
             }
@@ -209,25 +209,20 @@ else
                 _errorMessage = Resources.ErrorMessageUnexpected;
             }
         }
-        else if (response.StatusCode == HttpStatusCode.Conflict)
-            {
-                _errorMessage = await response.Content.ReadAsStringAsync();
-            }
         else
         {
-            _errorMessage = Resources.ErrorMessageUnexpected;
+            _errorMessage = response.StatusCode == HttpStatusCode.Conflict ? await response.Content.ReadAsStringAsync() : Resources.ErrorMessageUnexpected;
         }
     }
     
     
-
     private void LocationChanged(string? id)
     {
         _selectedLocationId = id;
 
         var selected = _location.FirstOrDefault(l => l.LokalitetKode == id);
 
-        if (selected is not null)
+        if (selected != null)
         {
             _newProject.Lokalitetsnavn = selected.Navn;
             _newProject.LokalitetsId = selected.LokalitetKode;

@@ -18,10 +18,10 @@ else
     <div class="d-flex flex-column align-items-center gap-3 p-1">
         <div class="mb-3">
             <h2>@_projectCopy.Lokalitetsnavn</h2>
-            <p class="text-secondary mb-0">- Prosjektstatus: @_project.Prosjektstatus.GetDescription()</p>
+            <p class="text-secondary mb-0">- @Resources.TableHeaderProjectStatus: @_project.Prosjektstatus.GetDescription()</p>
             @if (_project.Tilstand != null)
             {
-                <p class=" mt-0" style="@($"color:{_project.Tilstand.GetDisplay()}")">- Tilstand: @((int)_project.Tilstand.Value)</p> 
+                <p class=" mt-0" style="@($"color:{_project.Tilstand.GetDisplay()}")">- @Resources.TableHeaderStatus: @((int)_project.Tilstand.Value)</p> 
             }
         </div>
         
@@ -295,7 +295,7 @@ else
 
     private async Task EditProjectInformation()
     {
-        if (_project is not null)
+        if (_project != null)
         {
             var response = await Http.PutAsJsonAsync($"api/Project/{_project.Id:D}", _project);
             if (response.IsSuccessStatusCode)
@@ -372,9 +372,9 @@ else
 
         var selected = _location.FirstOrDefault(l => l.LokalitetKode == id);
 
-        if (_project is not null)
+        if (_project != null)
         {
-            if (selected is not null)
+            if (selected != null)
             {
                 _project.Lokalitetsnavn = selected.Navn;
                 _project.LokalitetsId = selected.LokalitetKode;
@@ -393,7 +393,7 @@ else
     {
         _isNewLocality = !_isNewLocality;
 
-        if (_project is not null)
+        if (_project != null)
         {
 
             if (_isNewLocality)
