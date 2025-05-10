@@ -17,6 +17,7 @@ namespace SeaEco.Reporter;
 public sealed class Report
 {
     private const string DocumentNotFoundError = "Document not found";
+    private const string ErrorWhileDownloadingDocument = "Error while downloading document";
 
     private readonly ReportOptions _options;
 
@@ -58,6 +59,33 @@ public sealed class Report
         return Response<string>.Ok(newPeportName);
     }
 
+    public Response<FileModel> DownloadReport(string projectIdSe, SheetName name)
+    {
+        string reportName = $"{projectIdSe}-{name.GetDescription()}.xlsx";
+        if (!File.Exists(Path.Combine(_options.DestinationPath, reportName)))
+        {
+            return Response<FileModel>.Error(DocumentNotFoundError);
+        }
+        
+        using FileStream fileStream = new FileStream(Path.Combine(_options.DestinationPath, reportName), FileMode.Open, FileAccess.Read);
+        using MemoryStream memory = new MemoryStream();
+        
+        try
+        {
+            fileStream.CopyTo(memory);
+        }
+        catch
+        {
+            return Response<FileModel>.Error(ErrorWhileDownloadingDocument);
+        }
+
+        return Response<FileModel>.Ok(new FileModel()
+        {
+            Content = memory.ToArray(),
+            DownloadName = reportName
+        });
+    }
+    
     public void FillB1(string path, IEnumerable<ColumnB1> columns, BHeader header, TilstandB1 tilstand, SjovannB1 sjovann)
     {
         ExcelPackage.License.SetNonCommercialPersonal(_options.NonCommercialPersonalName);
