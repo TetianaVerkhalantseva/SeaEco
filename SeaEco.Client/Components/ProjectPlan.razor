@@ -15,7 +15,7 @@ else
     <div class="d-flex flex-column gap-3 mt-3">
         <EditForm EditContext="_editContext" OnValidSubmit="EditProjectPlan">
             <DataAnnotationsValidator />
-            <div class="d-flex flex-column gap-3  box-border p-4 ">
+            <div class="d-flex flex-column gap-3  box-border p-4 min-width-plan">
                 <span>Generell plan-informasjon</span>
                 <div class="d-flex form-floating">
                     <InputSelect @bind-Value="_newPlan.PlanleggerId" id="user1" class="form-control" disabled="@(!EditProjectPlanVar)">
@@ -35,7 +35,7 @@ else
                 <div class="d-flex flex-row align-self-end justify-content-end w-100">
                     @if (!EditProjectPlanVar)
                     {
-                        <button class="btn custom-btn filter-button" type="button" @onclick="OnClickProjectPlan">
+                        <button class="btn custom-btn" type="button" @onclick="OnClickProjectPlan">
                             @(_isExistingPlan ? Resources.ButtonEdit : "Opprett")
                         </button>
                     }
@@ -44,10 +44,10 @@ else
                         <div class="d-flex gap-2 flex-column flex-xxl-row w-100 ">
                             <div class="d-flex flex-grow-1"></div>
                             <div class="d-flex gap-2 justify-content-center">
-                                <button class="btn custom-outline-secondary-btn filter-button" type="button" @onclick="CancelEditProjectPlan">
+                                <button class="btn custom-outline-secondary-btn" type="button" @onclick="CancelEditProjectPlan">
                                     @Resources.ButtonCancel
                                 </button>
-                                <button class="btn custom-btn filter-button" type="submit" @onclick="EditProjectPlan">
+                                <button class="btn custom-btn" type="submit">
                                     @Resources.ButtonSave
                                 </button>
                             </div>
@@ -118,10 +118,10 @@ else
                             <div class="d-flex gap-2 flex-column flex-xxl-row w-100 mt-4">
                                 <div class="d-flex flex-grow-1"></div>
                                 <div class="d-flex gap-2 justify-content-center">
-                                    <button class="btn custom-outline-secondary-btn filter-button" type="button" @onclick="CancelEditProjectStationPlan">
+                                    <button class="btn custom-outline-secondary-btn" type="button" @onclick="CancelEditProjectStationPlan">
                                         @Resources.ButtonCancel
                                     </button>
-                                    <button class="btn custom-btn filter-button" type="submit">
+                                    <button class="btn custom-btn" type="submit">
                                         @Resources.ButtonSave
                                     </button>
                                 </div>
@@ -172,7 +172,7 @@ else
                         {
                             <div class="d-flex gap-2 flex-column flex-xxl-row w-100 mt-4">
                                 <div class="d-flex flex-grow-1"></div>
-                                <button class="btn custom-btn filter-button" type="button" @onclick="() => OnClickProjectStationPlan(station2.Nummer)">
+                                <button class="btn custom-btn" type="button" @onclick="() => OnClickProjectStationPlan(station2.Nummer)">
                                     @Resources.ButtonEdit
                                 </button>
                             </div>
@@ -223,10 +223,10 @@ else
                         <div class="d-flex gap-2 flex-column flex-xxl-row w-100 mt-4">
                             <div class="d-flex flex-grow-1"></div>
                             <div class="d-flex gap-2 justify-content-center">
-                                <button class="btn custom-outline-secondary-btn filter-button" type="button" @onclick="CancelNewProjectStationPlan">
+                                <button class="btn custom-outline-secondary-btn" type="button" @onclick="CancelNewProjectStationPlan">
                                     @Resources.ButtonCancel
                                 </button>
-                                <button class="btn custom-btn filter-button" type="submit">
+                                <button class="btn custom-btn" type="submit">
                                     @Resources.ButtonSave
                                 </button>
                             </div>
@@ -250,7 +250,7 @@ else
         }
         <div class="d-flex flex-row align-self-end justify-content-end w-100 mb-3">
             <div class="d-flex gap-2 flex-column flex-xxl-row w-100 mt-4">
-                <button class="btn custom-btn filter-button" type="button" disabled="@(EditProjectStationPlanVar && EditProjectPlanVar && !_isExistingPlan)" @onclick="AddStation">
+                <button class="btn custom-btn" type="button" disabled="@(EditProjectStationPlanVar && EditProjectPlanVar && !_isExistingPlan)" @onclick="AddStation">
                     @Resources.ButtonAddStation
                 </button>
                 <div class="d-flex flex-grow-1"></div>
@@ -273,6 +273,7 @@ else
     private List<UserDto> _users = new List<UserDto>();
     private string? _selectedUser1;
     private EditSamplingPlanDto _newPlan = new();
+    private EditSamplingPlanDto _newPlanBackup = new();
     private NewStationDto _1newPlan = new();
     private List<NewStationDto> _newStationPlan = new List<NewStationDto> ();
     private SamplingPlanDto _existingPlan = new();
@@ -304,6 +305,7 @@ else
             _existingPlan = await response.Content.ReadFromJsonAsync<SamplingPlanDto>();
             var existingPlanJason = JsonSerializer.Serialize(_existingPlan);
             _newPlan = JsonSerializer.Deserialize<EditSamplingPlanDto>(existingPlanJason)!;
+            _newPlanBackup = BackUp(_newPlan);
             _isExistingPlan = true;
             
             var response2 = await Http.GetAsync($"/api/Project/{Project.Id:D}/sampling-plan/{_existingPlan.Id:D}/stations");
@@ -327,6 +329,11 @@ else
     {
         EditProjectPlanVar = true;
         await EditProjectPlanChanged.InvokeAsync(EditProjectPlanVar);
+        if (!_isExistingPlan)
+        {
+            _newPlan.Planlagtfeltdato = DateOnly.FromDateTime(DateTime.Now);
+        }
+
     }
 
     private async Task EditProjectPlan()
@@ -338,6 +345,9 @@ else
                 {
                     EditProjectPlanVar = false;
                     _isExistingPlan = false;
+                    _newPlan = BackUp(_newPlanBackup);
+                    _editContext = new EditContext(_newPlan);
+                    StateHasChanged();
                 }
                 else
                 {
@@ -351,6 +361,8 @@ else
                 if (response.IsSuccessStatusCode)
                 {
                     EditProjectPlanVar = false;
+                    _newPlanBackup = BackUp(_newPlan);
+                    
                 }
                 else
                 {
@@ -358,8 +370,71 @@ else
                     _errorMessageProjectPlan = !string.IsNullOrWhiteSpace(serverMessage)? serverMessage : Resources.ErrorMessageUnexpected;
                 }
             }
-            
     }
+    
+    private async Task CancelEditProjectPlan()
+    {
+        _newPlan = BackUp(_newPlanBackup);
+        _editContext = new EditContext(_newPlan);
+        StateHasChanged();
+        EditProjectPlanVar = false;
+        await EditProjectPlanChanged.InvokeAsync(EditProjectPlanVar);
+    }
+    
+       
+    
+    private async Task OnClickProjectStationPlan(int idx)
+    {
+        EditProjectStationPlanVar = true;
+        await EditProjectStationPlanChanged.InvokeAsync(EditProjectStationPlanVar);
+        
+        _editingStationIndex = idx;
+        
+        _stationBackup = new NewStationDto
+        {
+            NorthDegree  = _newStationPlan[idx].NorthDegree,
+            NorthMinutes = _newStationPlan[idx].NorthMinutes,
+            EastDegree   = _newStationPlan[idx].EastDegree,
+            EastMinutes  = _newStationPlan[idx].EastMinutes,
+            Dybde        = _newStationPlan[idx].Dybde,
+            Analyser     = _newStationPlan[idx].Analyser
+        };
+        
+    }
+    
+    private async Task SaveNewStation()
+    {
+        
+        var response = await Http.PostAsJsonAsync($"/api/Project/{Project.Id:D}/sampling-plan/{_existingPlan.Id:D}/station", _1newPlan);
+        if (response.IsSuccessStatusCode)
+        {
+                
+            var newStationPlan = await response.Content.ReadFromJsonAsync<StationDto>();
+            if (newStationPlan is not null)
+            {
+                _existingStationPlan.Add(newStationPlan);
+                    
+                EditProjectStationPlanVar = false;
+                _isExistingStationPlan = true;
+                _isNewStation = false;
+                _1newPlan = new NewStationDto();
+            }
+            else
+            {
+                _errorMessage = "Noe gikk galt, refrech siden for å se oppdatering";
+            }
+        }
+        else
+        {
+            _errorMessage = Resources.ErrorMessageUnexpected;
+        } 
+    }
+
+    private void CancelNewProjectStationPlan()
+    {
+        _isNewStation = false;
+    }
+    
     
     private async Task SaveEditedStation(int idx)
     {
@@ -386,64 +461,6 @@ else
     
     
     
-    private async Task SaveNewStation()
-    {
-        
-            var response = await Http.PostAsJsonAsync($"/api/Project/{Project.Id:D}/sampling-plan/{_existingPlan.Id:D}/station", _1newPlan);
-            if (response.IsSuccessStatusCode)
-            {
-                
-                var newStationPlan = await response.Content.ReadFromJsonAsync<StationDto>();
-                if (newStationPlan is not null)
-                {
-                    _existingStationPlan.Add(newStationPlan);
-                    
-                    EditProjectStationPlanVar = false;
-                    _isExistingStationPlan = true;
-                    _isNewStation = false;
-                    _1newPlan = new NewStationDto();
-                }
-                else
-                {
-                    _errorMessage = "Noe gikk galt, refrech siden for å se oppdatering";
-                }
-            }
-            else
-            {
-                _errorMessage = Resources.ErrorMessageUnexpected;
-            } 
-    }
-    
-    
-
-    private async Task OnClickProjectStationPlan(int idx)
-    {
-        EditProjectStationPlanVar = true;
-        await EditProjectStationPlanChanged.InvokeAsync(EditProjectStationPlanVar);
-        
-        _editingStationIndex = idx;
-        
-        _stationBackup = new NewStationDto
-        {
-            NorthDegree  = _newStationPlan[idx].NorthDegree,
-            NorthMinutes = _newStationPlan[idx].NorthMinutes,
-            EastDegree   = _newStationPlan[idx].EastDegree,
-            EastMinutes  = _newStationPlan[idx].EastMinutes,
-            Dybde        = _newStationPlan[idx].Dybde,
-            Analyser     = _newStationPlan[idx].Analyser
-        };
-        
-    }
-
-    
-
-    private async Task CancelEditProjectPlan()
-    {
-        EditProjectPlanVar = false;
-        await EditProjectPlanChanged.InvokeAsync(EditProjectPlanVar);
-        
-    }
-    
     private async Task CancelEditProjectStationPlan()
     {
         _editingStationIndex = null;
@@ -451,10 +468,7 @@ else
         await EditProjectStationPlanChanged.InvokeAsync(EditProjectStationPlanVar);
     }
 
-    private void CancelNewProjectStationPlan()
-    {
-        _isNewStation = false;
-    }
+   
 
     
 
@@ -470,7 +484,11 @@ else
         _newStationPlan.RemoveAt(index);
     }
 
-    
+    private static T BackUp<T>(T source)
+    {
+        var json = JsonSerializer.Serialize(source);
+        return JsonSerializer.Deserialize<T>(json)!;
+    }
 
 }
 
