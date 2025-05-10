@@ -18,7 +18,7 @@ public class ProjectService : IProjectService
     public async Task<Guid> CreateProjectAsync(NewProjectDto dto)
     {
         
-        // Sjekk om lokalitet finnes, ellers opprettes
+        // Check if Lokalitet exists, Add if not
         var lokalitet = await _context.Lokalitets
             .FirstOrDefaultAsync(l => l.Lokalitetsnavn == dto.Lokalitetsnavn || l.LokalitetsId == dto.LokalitetsId);
 
