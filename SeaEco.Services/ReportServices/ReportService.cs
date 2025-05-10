@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using SeaEco.Abstractions.Enums;
 using SeaEco.Abstractions.Enums.Bsensorisk;
+using SeaEco.Abstractions.Extensions;
+using SeaEco.Abstractions.Models.Report;
 using SeaEco.Abstractions.ResponseService;
 using SeaEco.Abstractions.ValueObjects.Bunnsubstrat;
 using SeaEco.EntityFramework.Entities;
@@ -20,6 +22,7 @@ public sealed class ReportService(Report report,
     : IReportService
 {
     private const string ProjectNotFoundError = "Project not found";
+    private const string ReportNotFoundError = "Report not found";
 
     public async Task<Response<string>> GenerateInfoReport(Guid projectId)
     {
@@ -303,6 +306,42 @@ public sealed class ReportService(Report report,
         return Response<string>.Ok(copyResult.Value);
     }
 
+    public async Task<IEnumerable<Response<string>>> GenerateAllReports(Guid projectId) =>
+    [
+        await GenerateB1Report(projectId),
+        await GenerateB2Report(projectId),
+        await GenerateInfoReport(projectId),
+        await GeneratePositionsReport(projectId)
+    ];
+
+    public async Task<IEnumerable<ReportDto>> GetAllReports(Guid projectId)
+    {
+        List<BRapporter> dbRecords = await reportRepository.GetAll()
+            .Where(_ => _.ProsjektId == projectId)
+            .ToListAsync();
+
+        return dbRecords.Select(_ => new ReportDto()
+        {
+            Id = _.Id,
+            SheetName = ((SheetName)_.ArkNavn).GetDescription(),
+            DateCreated = _.Datogenerert
+        });
+    }
+
+    public async Task<Response<FileModel>> DownloadReportById(Guid peportId)
+    {
+        BRapporter? dbRecord = await reportRepository.GetAll()
+            .Include(_ => _.Prosjekt)
+            .FirstOrDefaultAsync(_ => _.Id == peportId);
+
+        if (dbRecord is null)
+        {
+            return Response<FileModel>.Error(ReportNotFoundError);
+        }
+
+        return report.DownloadReport(dbRecord.Prosjekt.ProsjektIdSe, (SheetName)dbRecord.ArkNavn);
+    }
+    
     private async Task<Response> CheckAndReplaceReport(Guid projectId, SheetName sheetName)
     {
         BRapporter? dbRecord = await reportRepository.GetBy(_ => _.ProsjektId == projectId && _.ArkNavn == (int)sheetName);
