@@ -361,4 +361,7 @@
     <data name="ErrorMessageLoadingUsers" xml:space="preserve">
         <value>Feil ved lasting av brukere:</value>
     </data>
+    <data name="PageProjectsOverviewFilter" xml:space="preserve">
+        <value>Filter</value>
+    </data>
 </root>

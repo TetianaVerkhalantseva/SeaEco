@@ -1,3 +1,11 @@
+
+/*  table  */
+.fixed-width-table {
+    min-width: 1200px;
+    max-width: 1200px;
+    table-layout: fixed;
+}
+
 .bi {
     display: inline-block;
     vertical-align: middle;
@@ -15,6 +23,8 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='black' class='bi bi-arrow-up-short' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d= ' M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5 ' /%3E%3C/svg%3E");
 }
 
+
+/*  card  */ 
 .card-status-new {
     background: linear-gradient(to bottom, #8CBFD9, #6497B1);
     color: white;
@@ -66,13 +76,12 @@
     overflow: hidden;
 }
 
-
 .card-body {
     position: relative;
 }
 
 .card-bottom{
-    padding: 0.3rem;
+    padding: .3rem;
     background-color: white;
     border: 1px solid #ccc;
     border-bottom-left-radius: .3rem;
@@ -86,7 +95,7 @@
     bottom: 0;
     right: 0;
     padding: 8px;
-    font-size: 0.7rem;
+    font-size: .7rem;
 }
 
 .card-col {
@@ -107,25 +116,7 @@
     flex-grow: 1;
 }
 
-
-
-.sort-icon {
-    display: inline-block;
-    width: 1em;
-    text-align: center;
-}
-
-.fixed-width-table {
-    min-width: 1200px;
-    max-width: 1200px;
-    table-layout: fixed;
-}
-
-.custom-colour-card {
-    background-color: #EFF4F7;
-}
-
-
+/*  filter  */
 .filter-panel {
     overflow: visible; 
     border-radius: .5rem;
@@ -144,8 +135,6 @@
     list-style: none;
     transition: background 0.2s ease;
 }
-
-
 
 .filter-panel[open] summary {
     border-bottom-left-radius: 0;
@@ -176,5 +165,4 @@
     background-color: #eef2f4;
     border-bottom-left-radius: .5rem;
     border-bottom-right-radius: .5rem;
-    
 }
