@@ -14,18 +14,15 @@ using SeaEco.Reporter.Models.Positions;
 
 namespace SeaEco.Services.ReportServices;
 
-public sealed class ReportService(Report report, IGenericRepository<BProsjekt> projectRepository) : IReportService
+public sealed class ReportService(Report report,
+    IGenericRepository<BProsjekt> projectRepository,
+    IGenericRepository<BRapporter> reportRepository)
+    : IReportService
 {
     private const string ProjectNotFoundError = "Project not found";
 
     public async Task<Response<string>> GenerateInfoReport(Guid projectId)
     {
-        Response<string> copyResult = report.CopyDocument(SheetName.Info);
-        if (copyResult.IsError)
-        {
-            return copyResult;
-        }
-
         BProsjekt? dbRecord = await projectRepository.GetAll()
             .Include(project => project.BTilstand)
             .Include(project => project.BPreinfos)
@@ -43,12 +40,18 @@ public sealed class ReportService(Report report, IGenericRepository<BProsjekt> p
             return Response<string>.Error(ProjectNotFoundError);
         }
         
+        Response<string> copyResult = report.CopyDocument(dbRecord.ProsjektIdSe, SheetName.Info);
+        if (copyResult.IsError)
+        {
+            return copyResult;
+        }
+        
         IEnumerable<BUndersokelse> undersokelses = dbRecord.BUndersokelses;
 
         report.FillInfo(copyResult.Value, new CommonInformation()
         {
             ProsjektIdSe = dbRecord.ProsjektIdSe ?? string.Empty,
-            FeltDatoer = dbRecord.BPreinfos.Select(_ => _.Feltdato),
+            FeltDatoer = dbRecord.BPreinfos.OrderBy(_ => _.Feltdato).Select(_ => _.Feltdato),
 
             TotalStasjoner = dbRecord.BStasjons.Count(_ => _.UndersokelseId is not null),
             TotalGrabbhugg = undersokelses.Sum(_ => _.AntallGrabbhugg ?? 0),
@@ -77,17 +80,17 @@ public sealed class ReportService(Report report, IGenericRepository<BProsjekt> p
             LokalitetsTilstand = (Tilstand)(dbRecord.BTilstand?.TilstandLokalitet ?? 0)
         });
 
+        Response saveResult = await CheckAndReplaceReport(projectId, SheetName.Info);
+        if (saveResult.IsError)
+        {
+            return Response<string>.Error(saveResult.ErrorMessage);
+        }
+        
         return Response<string>.Ok(copyResult.Value);
     }
 
     public async Task<Response<string>> GenerateB1Report(Guid projectId)
     {
-        Response<string> copyResult = report.CopyDocument(SheetName.B1);
-        if (copyResult.IsError)
-        {
-            return copyResult;
-        }
-        
         BProsjekt? dbRecord = await projectRepository.GetAll()
             .Include(project => project.Kunde)
             .Include(project => project.BPreinfos)
@@ -97,6 +100,8 @@ public sealed class ReportService(Report report, IGenericRepository<BProsjekt> p
                 .ThenInclude(undersokelses => undersokelses.Sediment)
             .Include(project => project.BUndersokelses)
                 .ThenInclude(undersokelses => undersokelses.Sensorisk)
+            .Include(project => project.BUndersokelses)
+                .ThenInclude(undersokelses => undersokelses.BStasjon)
             .FirstOrDefaultAsync(_ => _.Id == projectId);
 
         if (dbRecord is null)
@@ -104,8 +109,16 @@ public sealed class ReportService(Report report, IGenericRepository<BProsjekt> p
             return Response<string>.Error(ProjectNotFoundError);
         }
         
-        IEnumerable<ColumnB1> columns = dbRecord.BUndersokelses.Select(_ => new ColumnB1()
+        Response<string> copyResult = report.CopyDocument(dbRecord.ProsjektIdSe, SheetName.B1);
+        if (copyResult.IsError)
         {
+            return copyResult;
+        }
+        
+        IEnumerable<ColumnB1> columns = dbRecord.BUndersokelses.OrderBy(_ => _.BStasjon!.Nummer).Select(_ => new ColumnB1()
+        {
+            Nummer = _.BStasjon.Nummer,
+            
             Bunntype = _.HardbunnId is null ? Bunntype.Blotbunn : Bunntype.Hardbunn,
             Dyr = _.DyrId is null ? Dyr.Nei : Dyr.Ja,
             
@@ -136,7 +149,7 @@ public sealed class ReportService(Report report, IGenericRepository<BProsjekt> p
         BHeader header = new BHeader()
         {
             Oppdragsgiver = dbRecord.Kunde.Oppdragsgiver,
-            FeltDatoer = dbRecord.BPreinfos.Select(_ => _.Feltdato),
+            FeltDatoer = dbRecord.BPreinfos.OrderBy(_ => _.Feltdato).Select(_ => _.Feltdato),
             Lokalitetsnavn = dbRecord.Lokalitet.Lokalitetsnavn,
             LokalitetsID = dbRecord.Lokalitet.LokalitetsId
         };
@@ -164,6 +177,12 @@ public sealed class ReportService(Report report, IGenericRepository<BProsjekt> p
         
         report.FillB1(copyResult.Value, columns, header, tilstand, sjovann);
         
+        Response saveResult = await CheckAndReplaceReport(projectId, SheetName.B1);
+        if (saveResult.IsError)
+        {
+            return Response<string>.Error(saveResult.ErrorMessage);
+        }
+        
         return Response<string>.Ok(copyResult.Value);
     }
 
@@ -190,14 +209,16 @@ public sealed class ReportService(Report report, IGenericRepository<BProsjekt> p
             return Response<string>.Error(ProjectNotFoundError);
         }
         
-        Response<string> copyResult = report.CopyDocument(SheetName.B2);
+        Response<string> copyResult = report.CopyDocument(dbRecord.ProsjektIdSe, SheetName.B2);
         if (copyResult.IsError)
         {
             return copyResult;
         }
 
-        IEnumerable<ColumnB2> columns = dbRecord.BUndersokelses.Select(_ => new ColumnB2()
+        IEnumerable<ColumnB2> columns = dbRecord.BUndersokelses.OrderBy(_ => _.BStasjon!.Nummer).Select(_ => new ColumnB2()
         {
+            Nummer = _.BStasjon.Nummer,
+            
             KoordinatNord = _.BStasjon.KoordinatNord,
             KoordinatOst = _.BStasjon.KoordinatOst,
             Dyp = _.BStasjon.Dybde,
@@ -227,13 +248,19 @@ public sealed class ReportService(Report report, IGenericRepository<BProsjekt> p
         BHeader header = new BHeader()
         {
             Oppdragsgiver = dbRecord.Kunde.Oppdragsgiver,
-            FeltDatoer = dbRecord.BPreinfos.Select(_ => _.Feltdato),
+            FeltDatoer = dbRecord.BPreinfos.OrderBy(_ => _.Feltdato).Select(_ => _.Feltdato),
             Lokalitetsnavn = dbRecord.Lokalitet.Lokalitetsnavn,
             LokalitetsID = dbRecord.Lokalitet.LokalitetsId
         };
         
         report.FillB2(copyResult.Value, columns, header);
 
+        Response saveResult = await CheckAndReplaceReport(projectId, SheetName.B2);
+        if (saveResult.IsError)
+        {
+            return Response<string>.Error(saveResult.ErrorMessage);
+        }
+        
         return Response<string>.Ok(copyResult.Value);
     }
 
@@ -249,7 +276,7 @@ public sealed class ReportService(Report report, IGenericRepository<BProsjekt> p
             return Response<string>.Error(ProjectNotFoundError);
         }
         
-        Response<string> copyResult = report.CopyDocument(SheetName.Position);
+        Response<string> copyResult = report.CopyDocument(dbRecord.ProsjektIdSe, SheetName.Position);
         if (copyResult.IsError)
         {
             return copyResult;
@@ -267,6 +294,33 @@ public sealed class ReportService(Report report, IGenericRepository<BProsjekt> p
         
         report.FillPositions(copyResult.Value, positions);
 
+        Response saveResult = await CheckAndReplaceReport(projectId, SheetName.Position);
+        if (saveResult.IsError)
+        {
+            return Response<string>.Error(saveResult.ErrorMessage);
+        }
+        
         return Response<string>.Ok(copyResult.Value);
+    }
+
+    private async Task<Response> CheckAndReplaceReport(Guid projectId, SheetName sheetName)
+    {
+        BRapporter? dbRecord = await reportRepository.GetBy(_ => _.ProsjektId == projectId && _.ArkNavn == (int)sheetName);
+        if (dbRecord is null)
+        {
+            return await reportRepository.Add(new BRapporter()
+            {
+                Id = Guid.NewGuid(),
+                Datogenerert = DateTime.Now,
+                ArkNavn = (int)sheetName,
+                ProsjektId = projectId,
+            });
+        }
+        else
+        {
+            dbRecord.Datogenerert = DateTime.Now;
+            
+            return await reportRepository.Update(dbRecord);
+        }
     }
 }

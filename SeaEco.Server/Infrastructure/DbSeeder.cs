@@ -8,9 +8,12 @@ namespace SeaEco.Server.Infrastructure;
 
 public sealed class DbSeeder
 {
-    public async Task SeedData(AppDbContext context)
+    public async Task SeedData(AppDbContext context, bool regenerate)
     {
-        context.TruncateAllTablesPostgres();
+        if (regenerate)
+        {
+            context.TruncateAllTablesPostgres();
+        }
         
         // Seed Bruker
         Guid adminId = Guid.Parse("8fffdaa4-7dfe-4d78-a28b-b80558d542b6");
@@ -109,36 +112,36 @@ public sealed class DbSeeder
             new BProsjekt()
             {
                 Id = prosjektId1,
-                Datoregistrert = DateTime.Now,
-                Kundeepost = "test@seaeco.no",
+                ProsjektIdSe = "SE-25-BU-1",
+                PoId = "406",
+                KundeId = kundeId1,
                 Kundekontaktperson = "Lars Johansen",
                 Kundetlf = "11111111",
+                Kundeepost = "test@seaeco.no",
+                LokalitetId = lokalitetId1,
+                Mtbtillatelse = 100,
+                ProsjektansvarligId = Guid.Parse("8fffdaa4-7dfe-4d78-a28b-b80558d542b6"),
+                Produksjonsstatus = 2,
                 Merknad = "Kommentar",
                 Prosjektstatus = 3,
-                Mtbtillatelse = 100,
-                Produksjonsstatus = 2,
-                KundeId = kundeId1,
-                LokalitetId = lokalitetId1,
-                PoId = "406",
-                ProsjektIdSe = "SE-25-BU-1",
-                ProsjektansvarligId = Guid.Parse("8fffdaa4-7dfe-4d78-a28b-b80558d542b6")
+                Datoregistrert = DateTime.Now
             },
             new BProsjekt()
             {
                 Id = prosjektId2,
-                Datoregistrert = DateTime.Now,
-                Kundeepost = "test@test.no",
+                ProsjektIdSe = "SE-25-BU-2",
+                PoId = "407",
+                KundeId = kundeId2,
                 Kundekontaktperson = "Ole Kristiansen",
                 Kundetlf = "11111111",
+                Kundeepost = "test@test.no",
+                LokalitetId = lokalitetId2,
+                Mtbtillatelse = 200,
+                ProsjektansvarligId = Guid.Parse("8fffdaa4-7dfe-4d78-a28b-b80558d542b6"),
+                Produksjonsstatus = 2,
                 Merknad = "Kommentar",
                 Prosjektstatus = 1,
-                Mtbtillatelse = 200,
-                Produksjonsstatus = 2,
-                KundeId = kundeId2,
-                LokalitetId = lokalitetId2,
-                PoId = "407",
-                ProsjektIdSe = "SE-25-BU-2",
-                ProsjektansvarligId = Guid.Parse("8fffdaa4-7dfe-4d78-a28b-b80558d542b6")
+                Datoregistrert = DateTime.Now
             }
         ];
         
@@ -166,6 +169,7 @@ public sealed class DbSeeder
         // Seed BPreinfo
         Guid preinfoId1 = Guid.Parse("cc2642ba-0cd4-49a6-92cb-cb7eb2f15e7d");
         Guid preinfoId2 = Guid.Parse("a7ad11e6-edb4-40bf-b7af-51fefb215788");
+        Guid preinfoId3 = Guid.Parse("b7b68448-06b7-4ac3-ab0d-87706cf1a1f8");
 
 
         Guid feltansvarligId = Guid.Parse("8fffdaa4-7dfe-4d78-a28b-b80558d542b6");
@@ -190,6 +194,21 @@ public sealed class DbSeeder
             new BPreinfo()
             {
                 Id = preinfoId2,
+                ProsjektId = prosjektId1,
+                Feltdato = new DateTime(2025, 4, 25, 10, 0, 0),
+                FeltansvarligId = feltansvarligId,
+                PhSjo = 6.94f,
+                EhSjo = 182.0f,
+                SjoTemperatur = 11.1f,
+                RefElektrode = 0,
+                Grabb = "2",
+                Sil = "3",
+                PhMeter = "2",
+                Kalibreringsdato = new DateOnly(2025, 4, 24)
+            },
+            new BPreinfo()
+            {
+                Id = preinfoId3,
                 ProsjektId = prosjektId2,
                 Feltdato = new DateTime(2025, 4, 25, 10, 0, 0),
                 FeltansvarligId = feltansvarligId,
@@ -219,7 +238,7 @@ public sealed class DbSeeder
             new BBlotbunn
             {
                 Id = blotbunnId1,
-                Leire = 0,
+                Leire = 0.5f,
                 Silt = 1,
                 Sand = 0,
                 Grus = 1,
@@ -230,7 +249,7 @@ public sealed class DbSeeder
                 Id = blotbunnId2,
                 Leire = 0,
                 Silt = 1,
-                Sand = 0,
+                Sand = 0.5f,
                 Grus = 1,
                 Skjellsand = 0
             },
@@ -238,7 +257,7 @@ public sealed class DbSeeder
             {
                 Id = blotbunnId3,
                 Leire = 0,
-                Silt = 1,
+                Silt = 0.5f,
                 Sand = 0,
                 Grus = 1,
                 Skjellsand = 0
@@ -334,15 +353,19 @@ public sealed class DbSeeder
                 Feltdato = DateOnly.FromDateTime(DateTime.Now),
                 AntallGrabbhugg = 5,
                 GrabbhastighetGodkjent = true,
+                BlotbunnId = blotbunnId1,
+                HardbunnId = null,
+                SedimentId = null, 
+                SensoriskId = sensoriskId1,
                 Beggiatoa = false,
                 Forrester = true,
                 Fekalier = false,
+                DyrId = dyrId1,
+                Merknader = "Rester av anleggsmateriale",
                 DatoRegistrert = DateTime.Now,
                 DatoEndret = DateTime.Now,
-                BlotbunnId = blotbunnId1,
-                SensoriskId = sensoriskId1,
-                DyrId = dyrId1,
-                Merknader = "Rester av anleggsmateriale"
+                IndeksGr2Gr3 = 0,
+                TilstandGr2Gr3 = 1
             },
             new BUndersokelse()
             {
@@ -352,12 +375,19 @@ public sealed class DbSeeder
                 Feltdato = DateOnly.FromDateTime(DateTime.Now),
                 AntallGrabbhugg = 8,
                 GrabbhastighetGodkjent = true,
+                BlotbunnId = blotbunnId2,
+                HardbunnId = null,
+                SedimentId = null, 
+                SensoriskId = null,
                 Beggiatoa = true,
                 Forrester = false,
                 Fekalier = false,
+                DyrId = null,
+                Merknader = "Rester 2",
                 DatoRegistrert = DateTime.Now,
                 DatoEndret = DateTime.Now,
-                BlotbunnId = blotbunnId2
+                IndeksGr2Gr3 = 0,
+                TilstandGr2Gr3 = 1
             },
             new BUndersokelse()
             {
@@ -367,56 +397,85 @@ public sealed class DbSeeder
                 Feltdato = DateOnly.FromDateTime(DateTime.Now),
                 AntallGrabbhugg = 8,
                 GrabbhastighetGodkjent = true,
+                BlotbunnId = blotbunnId3,
+                HardbunnId = null,
+                SedimentId = null, 
+                SensoriskId = null,
                 Beggiatoa = true,
                 Forrester = false,
                 Fekalier = false,
+                DyrId = null,
+                Merknader = "Rester av 3",
                 DatoRegistrert = DateTime.Now,
                 DatoEndret = DateTime.Now,
-                BlotbunnId = blotbunnId3
+                IndeksGr2Gr3 = 0,
+                TilstandGr2Gr3 = 1
             },
             new BUndersokelse()
             {
                 Id = undersokelseId4,
                 ProsjektId = prosjektId1,
-                PreinfoId = preinfoId1,
+                PreinfoId = preinfoId2,
                 Feltdato = DateOnly.FromDateTime(DateTime.Now),
                 AntallGrabbhugg = 8,
                 GrabbhastighetGodkjent = true,
+                BlotbunnId = null,
+                HardbunnId = hardbunnId1,
+                SedimentId = null, 
+                SensoriskId = null,
                 Beggiatoa = true,
                 Forrester = false,
                 Fekalier = false,
+                Dyr = null,
+                Merknader = "Rester 4",
                 DatoRegistrert = DateTime.Now,
                 DatoEndret = DateTime.Now,
-                HardbunnId = hardbunnId1
+                IndeksGr2Gr3 = 0,
+                TilstandGr2Gr3 = 1
             },
             new BUndersokelse()
             {
                 Id = undersokelseId5,
                 ProsjektId = prosjektId1,
-                PreinfoId = preinfoId1,
+                PreinfoId = preinfoId2,
                 Feltdato = DateOnly.FromDateTime(DateTime.Now),
                 AntallGrabbhugg = 8,
                 GrabbhastighetGodkjent = true,
+                BlotbunnId = null,
+                HardbunnId = hardbunnId2,
+                SedimentId = null, 
+                SensoriskId = null,
                 Beggiatoa = true,
                 Forrester = false,
                 Fekalier = false,
+                DyrId = null,
+                Merknader = "Rester 5",
                 DatoRegistrert = DateTime.Now,
                 DatoEndret = DateTime.Now,
-                HardbunnId = hardbunnId2
+                IndeksGr2Gr3 = 0,
+                TilstandGr2Gr3 = 1
             },
             new BUndersokelse()
             {
                 Id = undersokelseId6,
                 ProsjektId = prosjektId2,
-                PreinfoId = preinfoId2,
+                PreinfoId = preinfoId3,
                 Feltdato = DateOnly.FromDateTime(DateTime.Now),
                 AntallGrabbhugg = 8,
                 GrabbhastighetGodkjent = true,
+                BlotbunnId = null,
+                HardbunnId = null,
+                SedimentId = null, 
+                SensoriskId = null,
                 Beggiatoa = true,
                 Forrester = false,
                 Fekalier = false,
+                Dyr = null,
+                Merknader = "Rester222",
                 DatoRegistrert = DateTime.Now,
-                DatoEndret = DateTime.Now
+                DatoEndret = DateTime.Now,
+                IndeksGr2Gr3 = 0,
+                TilstandGr2Gr3 = 1
             }
         ];
         

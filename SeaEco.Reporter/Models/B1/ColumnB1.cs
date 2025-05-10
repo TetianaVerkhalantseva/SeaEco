@@ -5,6 +5,8 @@ namespace SeaEco.Reporter.Models.B1;
 
 public sealed class ColumnB1
 {
+    public int Nummer { get; set; }
+    
     public Bunntype Bunntype { get; set; }
     public Dyr Dyr { get; set; }
 
