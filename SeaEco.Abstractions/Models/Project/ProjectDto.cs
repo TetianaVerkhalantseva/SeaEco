@@ -17,15 +17,20 @@ public class ProjectDto
     public string LokalitetsId { get; set; } = null!;
     public int? Mtbtillatelse { get; set; }
     
-    public Guid ProsjektansvarligId { get; set; }
+    public Guid? ProsjektansvarligId { get; set; }
     public string? Merknad { get; set; }
     
     public Produksjonsstatus Produksjonsstatus { get; set; }
     
-    public int AntallStasjoner { get; set; } //Med ferdig BUndersøkelse
+    public int AntallStasjoner { get; set; }
     
     public Prosjektstatus Prosjektstatus { get; set; }
     public Tilstand? Tilstand { get; set; }
     public string? ProsjektIdSe { get; set; }
     public List<DateTime> Feltdatoer { get; set; } = new();
+    
+    public string StationDatesString 
+        => string.Join(", ",
+            Feltdatoer
+                .Select(d => d.ToString("yyyy-MM-dd")));
 }

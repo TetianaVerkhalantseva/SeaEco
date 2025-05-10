@@ -79,9 +79,6 @@
     <data name="ButtonSave" xml:space="preserve">
         <value>Lagre</value>
     </data>
-    <data name="ButtonEdit" xml:space="preserve">
-        <value>Rediger</value>
-    </data>
     <data name="ButtonDelete" xml:space="preserve">
         <value>Slett</value>
     </data>
@@ -128,7 +125,7 @@
         <value>Lokalitet</value>
     </data>
     <data name="TableHeaderLocalityId" xml:space="preserve">
-        <value>lok. ID</value>
+        <value>Lok. ID</value>
     </data>
     <data name="TableHeaderPoId" xml:space="preserve">
         <value>PO-ID</value>
@@ -146,7 +143,7 @@
         <value>Tilstand</value>
     </data>
     <data name="TableHeaderProductionStatus" xml:space="preserve">
-        <value>Produksjnsstatus</value>
+        <value>Produksjonsstatus</value>
     </data>
 
     <!-- PageUser -->
@@ -289,7 +286,82 @@
     <data name="ButtonSubmit" xml:space="preserve">
         <value>Send inn</value>
     </data>
+    <data name="InputTextUser1ProjectPlan" xml:space="preserve">
+        <value>Planlegger 1</value>
+    </data>
+    <data name="InputTextUser2ProjectPlan" xml:space="preserve">
+        <value>Planlegger 2</value>
+    </data>
+    <data name="InputTextUser3ProjectPlan" xml:space="preserve">
+        <value>Planlegger 3</value>
+    </data>
+    <data name="InputTextPositionN" xml:space="preserve">
+        <value>Koordinater Nord</value>
+    </data>
+    <data name="InputTextPositionS" xml:space="preserve">
+        <value>Koordinater Sør</value>
+    </data>
+    <data name="InputTextDepth" xml:space="preserve">
+        <value>Dybde</value>
+    </data>
+    <data name="InputTextMethod" xml:space="preserve">
+        <value>Analyse</value>
+    </data>
+    <data name="ButtonAddStation" xml:space="preserve">
+        <value>+ Legg til en stasjon</value>
+    </data>
+    <data name="ButtonEdit" xml:space="preserve">
+        <value>Rediger</value>
+    </data>
+    <data name="InputTextUserProjectPlan" xml:space="preserve">
+        <value>Planlegger</value>
+    </data>
+    <data name="InputTextStation" xml:space="preserve">
+        <value>Stasjon</value>
+    </data>
+    <data name="ButtonProjectInfoView" xml:space="preserve">
+        <value>Vis prosjektinformasjon</value>
+    </data>
+    <data name="ButtonProjectLog" xml:space="preserve">
+        <value>Prosjektlogg</value>
+    </data>
+    <data name="InputTextLocation" xml:space="preserve">
+        <value>Lokalitet</value>
+    </data>
+    <data name="InputTextLocationId" xml:space="preserve">
+        <value>Lokalitet-ID</value>
+    </data>
+    <data name="InputTextComment" xml:space="preserve">
+        <value>Merknad</value>
+    </data>
+    <data name="InputTextMtb" xml:space="preserve">
+        <value>MTB-tilatelse (tonn)</value>
+    </data>
+    <data name="TabProjectPlan" xml:space="preserve">
+        <value>Prøvetakingsplan</value>
+    </data>
+    <data name="TabProjectReport" xml:space="preserve">
+        <value>Rapport</value>
+    </data>
+    <data name="TabBStation" xml:space="preserve">
+        <value>Stasjoner</value>
+    </data>
+    <data name="InputTextNumberOfStations" xml:space="preserve">
+        <value>Antall stasjoner</value>
+    </data>
+    <data name="InputTextPlanedDate" xml:space="preserve">
+        <value>Feltdato</value>
+    </data>
+    <data name="PageProjectProject" xml:space="preserve">
+        <value>Prosjekt</value>
+    </data>
+    <data name="InputTextPoId" xml:space="preserve">
+        <value>PO-ID</value>
+    </data>
     <data name="ErrorMessageLoadingUsers" xml:space="preserve">
         <value>Feil ved lasting av brukere:</value>
+    </data>
+    <data name="PageProjectsOverviewFilter" xml:space="preserve">
+        <value>Filter</value>
     </data>
 </root>
