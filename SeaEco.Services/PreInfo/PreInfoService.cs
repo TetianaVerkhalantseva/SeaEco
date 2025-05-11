@@ -130,14 +130,14 @@ public class PreInfoService : IPreInfoService
         return entity.Id;
     }
 
-    public async Task<bool> EditPreInfoAsync(Guid preInfoId, EditPreInfoDto dto)
+    public async Task<PreInfoDto?> EditPreInfoAsync(Guid preInfoId, EditPreInfoDto dto)
     {
         var existing = await _db.BPreinfos
             .Include(x => x.Provetakers)
             .FirstOrDefaultAsync(x => x.Id == preInfoId);
 
         if (existing == null)
-            return false;
+            return null;
 
         existing.Feltdato         = dto.Feltdato;
         existing.FeltansvarligId  = dto.FeltansvarligId;
@@ -164,7 +164,21 @@ public class PreInfoService : IPreInfoService
         }
 
         await _db.SaveChangesAsync();
-        return true;
+        return new PreInfoDto
+        {
+            Id               = existing.Id,
+            Feltdato         = existing.Feltdato,
+            FeltansvarligId  = existing.FeltansvarligId,
+            ProvetakerIds    = existing.Provetakers.Select(u => u.Id).ToList(),
+            Ph               = existing.PhSjo,
+            Eh               = existing.EhSjo,
+            Temperatur       = existing.SjoTemperatur,
+            RefElektrode     = existing.RefElektrode,
+            Grabb            = existing.Grabb,
+            Sil              = existing.Sil,
+            PhMeter          = existing.PhMeter,
+            Kalibreringsdato = existing.Kalibreringsdato
+        };
     }
 
     public async Task<bool> DeletePreInfoAsync(Guid preInfoId)
