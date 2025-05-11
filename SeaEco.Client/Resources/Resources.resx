@@ -418,4 +418,31 @@
     <data name="ModalTextEditingProjectPlan" xml:space="preserve">
         <value>Du holder på å redigere en plan. Du må enten lagre planen eller avbryte redigeringen for å bytte fane.</value>
     </data>
+    <data name="InputTextNorthDegree" xml:space="preserve">
+        <value>Nordlige grader °</value>
+    </data>
+    <data name="InputTextNorthMinutes" xml:space="preserve">
+        <value>Nordlige minutter'</value>
+    </data>
+    <data name="InputTextEsthDegree" xml:space="preserve">
+        <value>Østlige grader °</value>
+    </data>
+    <data name="InputTextEsthMinutes" xml:space="preserve">
+        <value>Østlige minutter '</value>
+    </data>
+    <data name="InputTextNorthCoordinates" xml:space="preserve">
+        <value>Nordlige koordinater</value>
+    </data>
+    <data name="InputTextEsthCoordinates" xml:space="preserve">
+        <value>Østlige koordinater</value>
+    </data>
+    <data name="ButtonCreat" xml:space="preserve">
+        <value>Opprett</value>
+    </data>
+    <data name="HeaderGeneralPlanInfo" xml:space="preserve">
+        <value>Generell informasjon</value>
+    </data>
+    <data name="HeaderNewStation" xml:space="preserve">
+        <value>Ny stasjon</value>
+    </data>
 </root>
