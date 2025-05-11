@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -17,8 +18,7 @@ namespace SeaEco.Client.Components
             
             result = default!;
 
-            var fieldName = FieldIdentifier.FieldName;
-            validationErrorMessage = $"{fieldName} påkrevd";
+            validationErrorMessage = $"{FieldIdentifier.FieldName} påkrevd";
             return false;
         }
     }
