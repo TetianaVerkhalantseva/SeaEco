@@ -141,7 +141,14 @@ public sealed class Report
                 worksheet.Cells[12, index].Style.Fill.PatternType = ExcelFillStyle.Solid;
                 worksheet.Cells[12, index].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(column.TilstandProveGr2.GetDisplay()));
             }
-            
+            else if (column.TilstandProveGr2 == 0)
+            {
+                Tilstand gr2 = Tilstand.Blue;
+
+                worksheet.Cells[12, index].Value = (int)gr2;
+                worksheet.Cells[12, index].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[12, index].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(gr2.GetDisplay()));
+            }
             
             worksheet.Cells[column.Gassbobler == Gassbobler.Ja ? 17 : 18, index].Value = (int)column.Gassbobler;
             worksheet.Cells[column.Farge == Farge.LysGrå ? 19 : 20, index].Value = (int)column.Farge;
@@ -188,16 +195,31 @@ public sealed class Report
                 worksheet.Cells[35, index].Style.Fill.PatternType = ExcelFillStyle.Solid;
                 worksheet.Cells[35, index].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(column.TilstandProveGr3.GetDisplay()));
             }
+            else if (column.KorrigertSum == 0)
+            {
+                Tilstand gr3 = Tilstand.Blue;
+
+                worksheet.Cells[35, index].Value = (int)gr3;
+                worksheet.Cells[35, index].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[35, index].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(gr3.GetDisplay()));
+            }
 
             worksheet.Cells[38, index].Value = column.MiddelVerdiGr2Gr3 > 0 ? $"{column.MiddelVerdiGr2Gr3:F2}" : 0;
-
             
             
-            if (Enum.IsDefined(typeof(Tilstand), column.TilstandProveGr2Gr3))
+            if (Enum.IsDefined(typeof(Tilstand), column.TilstandProveGr2Gr3)) 
             {
                 worksheet.Cells[39, index].Value = (int)column.TilstandProveGr2Gr3;
                 worksheet.Cells[39, index].Style.Fill.PatternType = ExcelFillStyle.Solid;
                 worksheet.Cells[39, index].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(column.TilstandProveGr2Gr3.GetDisplay()));
+            }
+            else if (column.MiddelVerdiGr2Gr3 == 0)
+            {
+                Tilstand gr2_3 = Tilstand.Blue;
+                
+                worksheet.Cells[39, index].Value = (int)gr2_3;
+                worksheet.Cells[39, index].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[39, index].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(gr2_3.GetDisplay()));
             }
 
             index = index % 13 == 0 ? 19 : index + 1;

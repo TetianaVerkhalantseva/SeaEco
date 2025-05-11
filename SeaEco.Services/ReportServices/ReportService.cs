@@ -133,7 +133,7 @@ public sealed class ReportService(Report report,
             pH = _.Sediment?.Ph ?? 0,
             Eh = _.Sediment?.Eh ?? 0,
             phEh = _.Sediment?.KlasseGr2 ?? 0,
-            TilstandProveGr2 = (Tilstand)(_.Sediment?.TilstandGr2 ?? 0),
+            TilstandProveGr2 = (Tilstand)(_.Sediment?.TilstandGr2 ?? 1),
             
             Gassbobler = (Gassbobler)(_.Sensorisk?.Gassbobler ?? 0),
             Farge = (Farge)(_.Sensorisk?.Farge ?? 0),
@@ -149,9 +149,9 @@ public sealed class ReportService(Report report,
                   _.Sensorisk.Grabbvolum +
                   _.Sensorisk.Tykkelseslamlag,
             KorrigertSum = _.Sensorisk?.IndeksGr3 ?? 0,
-            TilstandProveGr3 = (Tilstand)(_.Sensorisk?.TilstandGr3 ?? 0),
+            TilstandProveGr3 = (Tilstand)(_.Sensorisk?.TilstandGr3 ?? 1),
             MiddelVerdiGr2Gr3 = _.IndeksGr2Gr3 ?? 0,
-            TilstandProveGr2Gr3 = (Tilstand)(_.TilstandGr2Gr3 ?? 0)
+            TilstandProveGr2Gr3 = (Tilstand)(_.TilstandGr2Gr3 ?? 1)
         });
 
         BHeader header = new BHeader()
