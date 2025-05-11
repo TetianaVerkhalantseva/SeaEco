@@ -272,7 +272,17 @@ public class ProjectController : ControllerBase
 
         dto.ProsjektId = projectId;
         var result = await _stationService.AddStationToProjectAsync(projectId, dto);
-        return result.IsSuccess ? Ok(new { id = result.StationId }) : BadRequest(result.Message);
+
+        if (!result.IsSuccess)
+            return BadRequest(result.Message);
+
+        var stationDto = result.Station!;
+        
+        return CreatedAtAction(
+            nameof(GetStationById),
+            new { projectId = projectId, stationId = stationDto.Id },
+            stationDto
+        );
     }
     
     [RoleAccessor(true)]
