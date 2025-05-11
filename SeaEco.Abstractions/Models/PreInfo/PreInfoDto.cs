@@ -20,15 +20,15 @@ public class PreInfoDto
     public List<Guid> ProvetakerIds { get; set; } = new();
     
     [Required(ErrorMessage = "pH er påkrevd")]
-    [Range(0, 14, ErrorMessage = "pH må være mellom 0 og 14")]
+    [Range(6, 8.3, ErrorMessage = "pH må være mellom 6 og 8.3")]
     public float Ph { get; set; }
     
     [Required(ErrorMessage = "Eh er påkrevd")]
-    [Range(-300, 800, ErrorMessage = "Eh må være mellom -300 og 800 mV")]
+    [Range(-400, 400, ErrorMessage = "Eh må være mellom -400 og 400 mV")]
     public float Eh { get; set; }
     
     [Required(ErrorMessage = "Temperatur er påkrevd")]
-    [Range(-30, 50, ErrorMessage = "Temperatur må være mellom -30 og 50")]
+    [Range(-1.8, 25, ErrorMessage = "Temperatur må være mellom -1.8 og 25")]
     public float Temperatur { get; set; }
     
     
