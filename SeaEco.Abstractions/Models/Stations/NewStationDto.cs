@@ -1,4 +1,6 @@
-﻿namespace SeaEco.Abstractions.Models.Stations;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace SeaEco.Abstractions.Models.Stations;
 
 public class NewStationDto
 {
