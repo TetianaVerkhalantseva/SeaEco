@@ -12,6 +12,8 @@ public interface IReportService
     Task<Response<string>> GeneratePositionsReport(Guid projectId);
     Task<Response<string>> GenerateB1Report(Guid projectId);
     Task<Response<string>> GenerateB2Report(Guid projectId);
+    
+    Task<Response<string>> GenerateImagesReport(Guid projectId);
     Task<IEnumerable<Response<string>>> GenerateAllReports(Guid projectId);
     
     Task<GetReportsDto> GetAllReports(Guid projectId);
