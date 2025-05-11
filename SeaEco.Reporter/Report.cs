@@ -10,7 +10,9 @@ using SeaEco.Reporter.Models.B1;
 using SeaEco.Reporter.Models.B2;
 using SeaEco.Reporter.Models.Info;
 using System.Drawing;
+using OfficeOpenXml.Drawing;
 using SeaEco.Reporter.Models.Headers;
+using SeaEco.Reporter.Models.Images;
 using SeaEco.Reporter.Models.Positions;
 using SeaEco.Reporter.Models.PTP;
 
@@ -395,6 +397,57 @@ public sealed class Report
             worksheet.Cells[index, 8].Value = ptp.Analyser;
 
             Border border = worksheet.Cells[index, 1, index, 8].Style.Border;
+            border.Top.Style = ExcelBorderStyle.Thin;
+            border.Right.Style = ExcelBorderStyle.Thin;
+            border.Bottom.Style = ExcelBorderStyle.Thin;
+            border.Left.Style = ExcelBorderStyle.Thin;
+
+            index++;
+        }
+
+        sourcePackage.Save();
+    }
+    
+    public void FillImages(string path, IEnumerable<RowImage> images)
+    {
+        ExcelPackage.License.SetNonCommercialPersonal(_options.NonCommercialPersonalName);
+
+        using ExcelPackage sourcePackage = new ExcelPackage(Path.Combine(_options.DestinationPath, path));
+        using ExcelWorksheet worksheet = sourcePackage.Workbook.Worksheets.First();
+
+        int index = 6;
+        foreach (RowImage image in images)
+        {
+            worksheet.Cells[index, 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            worksheet.Cells[index, 1].Style.Fill.BackgroundColor.SetColor(Color.FromArgb(1, 218, 237, 243));
+            worksheet.Cells[index, 1].Value = image.Nummer;
+
+            int pixelHeight = (int)(281 * 1.33);
+            int pixelWidth = (int)(35.5 * 7 + 5);
+            
+            if (image.UsiltImage is not null && image.UsiltImage.Length > 0)
+            {
+                ExcelPicture usiltImage = worksheet.Drawings.AddPicture($"Usilt_{Guid.NewGuid()}", new MemoryStream(image.UsiltImage));
+                usiltImage.SetPosition(index - 1, 0, 2 - 1, 0);
+                usiltImage.SetSize(pixelWidth, pixelHeight);
+            }
+            else
+            {
+                worksheet.Cells[index, 2].Value = "Tom grabb";
+            }
+
+            if (image.SiltImage is not null && image.SiltImage.Length > 0)
+            {
+                ExcelPicture siltImage = worksheet.Drawings.AddPicture($"Silt_{Guid.NewGuid()}", new MemoryStream(image.SiltImage));
+                siltImage.SetPosition(index - 1, 0, 3 - 1, 0);
+                siltImage.SetSize(pixelWidth, pixelHeight);
+            }
+            else
+            {
+                worksheet.Cells[index, 3].Value = "For lite sediment – prøve ikke silt";
+            }
+
+            Border border = worksheet.Cells[index, 1, index, 3].Style.Border;
             border.Top.Style = ExcelBorderStyle.Thin;
             border.Right.Style = ExcelBorderStyle.Thin;
             border.Bottom.Style = ExcelBorderStyle.Thin;

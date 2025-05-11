@@ -45,7 +45,16 @@ public class ReportController(IReportService reportService) : ApiControllerBase
             : AsOk(response.Value);
     }
     
-    [HttpPost("generate/provetakningsplan")]
+    [HttpPost("generate/images")]
+    public async Task<IActionResult> GenerateImages([FromBody] Guid projectId)
+    {
+        Response<string> response = await reportService.GenerateImagesReport(projectId);
+        return response.IsError
+            ? AsBadRequest(response.ErrorMessage)
+            : AsOk(response.Value);
+    }
+    
+    [HttpPost("generate/pt-plan")]
     public async Task<IActionResult> GeneratePtp([FromBody] Guid projectId)
     {
         Response<string> response = await reportService.GeneratePtpReport(projectId);

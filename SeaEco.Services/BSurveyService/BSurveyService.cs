@@ -5,6 +5,7 @@ using SeaEco.Abstractions.Models.Bundersokelse;
 using SeaEco.EntityFramework.Contexts;
 using SeaEco.Services.Mapping;
 using SeaEco.Services.ProjectServices;
+using SeaEco.Services.ReportServices;
 
 namespace SeaEco.Services.BSurveyService;
 
@@ -13,13 +14,16 @@ public class BSurveyService: IBSurveyService
 {
     private readonly AppDbContext _db;
     private readonly IProjectService _projectService;
+    private readonly IReportService  _reportService;
 
     public BSurveyService(
         AppDbContext db,
-        IProjectService projectService)
+        IProjectService projectService,
+        IReportService reportService)
     {
         _db = db;
         _projectService = projectService;
+        _reportService  = reportService;
     }
 
     public async Task<EditSurveyDto?> GetSurveyById(Guid id)
@@ -88,6 +92,12 @@ public class BSurveyService: IBSurveyService
                     Prosjektstatus.Pagar,
                     merknad: null
                 );
+                
+                var rpt = await _reportService.GeneratePtpReport(projectId);
+                if (rpt.IsError)
+                {
+                    Console.Error.WriteLine($"PTP‐generering feilet for prosjekt {projectId}: {rpt.ErrorMessage}");
+                }
             }
             
             return new EditSurveyResult

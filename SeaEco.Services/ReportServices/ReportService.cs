@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using SeaEco.Abstractions.Enums;
 using SeaEco.Abstractions.Enums.Bsensorisk;
@@ -12,6 +13,7 @@ using SeaEco.Reporter.Models;
 using SeaEco.Reporter.Models.B1;
 using SeaEco.Reporter.Models.B2;
 using SeaEco.Reporter.Models.Headers;
+using SeaEco.Reporter.Models.Images;
 using SeaEco.Reporter.Models.Info;
 using SeaEco.Reporter.Models.Positions;
 using SeaEco.Reporter.Models.PTP;
@@ -20,7 +22,8 @@ namespace SeaEco.Services.ReportServices;
 
 public sealed class ReportService(Report report,
     IGenericRepository<BProsjekt> projectRepository,
-    IGenericRepository<BRapporter> reportRepository)
+    IGenericRepository<BRapporter> reportRepository,
+    IWebHostEnvironment webHostEnvironment)
     : IReportService
 {
     private const string ProjectNotFoundError = "Project not found";
@@ -307,6 +310,91 @@ public sealed class ReportService(Report report,
         
         return Response<string>.Ok(copyResult.Value);
     }
+    
+    public async Task<Response<string>> GenerateImagesReport(Guid projectId)
+    {
+        BProsjekt? dbRecord = await projectRepository.GetAll()
+            .Include(_ => _.BStasjons)
+                .ThenInclude(_ => _.Undersokelse)
+                    .ThenInclude(_ => _.BBilders)
+            .FirstOrDefaultAsync(_ => _.Id == projectId);
+
+        if (dbRecord is null)
+        {
+            return Response<string>.Error(ProjectNotFoundError);
+        }
+        
+        Response<string> copyResult = report.CopyDocument(dbRecord.ProsjektIdSe, SheetName.Image);
+        if (copyResult.IsError)
+        {
+            return copyResult;
+        }
+
+        List<BStasjon> stations = dbRecord.BStasjons.OrderBy(_ => _.Nummer).ToList();
+        List<RowImage> rows = [];
+        
+        foreach (BStasjon station in stations)
+        {
+            IEnumerable<BBilder> images = station.Undersokelse.BBilders;
+            if (!images.Any())
+            {
+                rows.Add(new RowImage()
+                {
+                    Nummer = station.Nummer,
+                    SiltImage = null,
+                    UsiltImage = null,
+                });
+            }
+            else
+            {
+                foreach (BBilder img in images)
+                {
+                    string path = Path.Combine(
+                        webHostEnvironment.WebRootPath,
+                        "images",
+                        $"{img.Id.ToString()}.{img.Extension}");
+                    
+                    using FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read);
+                    using MemoryStream memory = new MemoryStream();
+                    
+                    stream.CopyTo(memory);
+                    byte[] content = memory.ToArray();
+
+                    RowImage? rowImage = rows.FirstOrDefault(r => r.Nummer == station.Nummer);
+                    if (rowImage is null)
+                    {
+                        rows.Add(new RowImage()
+                        {
+                            Nummer = station.Nummer,
+                            SiltImage = img.Silt is true ? content : null,
+                            UsiltImage = img.Silt is false ? content : null,
+                        });
+                    }
+                    else
+                    {
+                        if (img.Silt)
+                        {
+                            rowImage.SiltImage = content;
+                        }
+                        else
+                        {
+                            rowImage.UsiltImage = content;
+                        }
+                    }
+                }
+            }
+        }
+        
+        report.FillImages(copyResult.Value, rows);
+        
+        Response saveResult = await CheckAndReplaceReport(projectId, SheetName.Image);
+        if (saveResult.IsError)
+        {
+            return Response<string>.Error(saveResult.ErrorMessage);
+        }
+        
+        return Response<string>.Ok(copyResult.Value);
+    }
 
     public async Task<Response<string>> GeneratePtpReport(Guid projectId)
     {
@@ -367,6 +455,7 @@ public sealed class ReportService(Report report,
         await GeneratePositionsReport(projectId),
         await GenerateB1Report(projectId),
         await GenerateB2Report(projectId),
+        await GenerateImagesReport(projectId),
     ];
 
     public async Task<GetReportsDto> GetAllReports(Guid projectId)
