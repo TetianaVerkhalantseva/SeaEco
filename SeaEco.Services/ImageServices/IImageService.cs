@@ -1,5 +1,3 @@
-
-
 using SeaEco.Abstractions.Models.Image;
 using SeaEco.Abstractions.ResponseService;
 using SeaEco.Services.ImageServices.Models;
