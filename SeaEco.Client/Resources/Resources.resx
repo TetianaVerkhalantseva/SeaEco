@@ -286,15 +286,6 @@
     <data name="ButtonSubmit" xml:space="preserve">
         <value>Send inn</value>
     </data>
-    <data name="InputTextUser1ProjectPlan" xml:space="preserve">
-        <value>Planlegger 1</value>
-    </data>
-    <data name="InputTextUser2ProjectPlan" xml:space="preserve">
-        <value>Planlegger 2</value>
-    </data>
-    <data name="InputTextUser3ProjectPlan" xml:space="preserve">
-        <value>Planlegger 3</value>
-    </data>
     <data name="InputTextPositionN" xml:space="preserve">
         <value>Koordinater Nord</value>
     </data>
@@ -414,5 +405,17 @@
     </data>
     <data name="ErrorMessageLoadingProject" xml:space="preserve">
         <value>Feil ved lasting av prosjekt:</value>
+    </data>
+    <data name="ButtonAddNewProjectPlan" xml:space="preserve">
+        <value>+ Ny prøvetakingsplan</value>
+    </data>
+    <data name="PageProjectPlanNoPlan" xml:space="preserve">
+        <value>Ingen plan er registrert</value>
+    </data>
+    <data name="ButtonOK" xml:space="preserve">
+        <value>OK</value>
+    </data>
+    <data name="ModalTextEditingProjectPlan" xml:space="preserve">
+        <value>Du holder på å redigere en plan. Du må enten lagre planen eller avbryte redigeringen for å bytte fane.</value>
     </data>
 </root>

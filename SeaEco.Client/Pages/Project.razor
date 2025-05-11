@@ -9,6 +9,7 @@
 @using SeaEco.Abstractions.Models.User
 @using SeaEco.Client.Components
 @inject HttpClient Http
+@inject IJSRuntime Js
 
 @if (_project == null || _isLoading)
 {
@@ -208,18 +209,18 @@ else
             <div class="background-overlay"></div>
         }
         <ul class="nav nav-tabs d-flex flex-xxl-row flex-column w-100 mt-5">
-            <li class="nav-item flex-fill">
-                <a class="nav-link text-center fw-bold fs-5 cursor @(_activeTab == "projectPlan" ? "active" : "")"  @onclick=@(() => SelectedTab("projectPlan"))>
+            <li class="nav-item flex-fill" role="presentation">
+                <a class="nav-link text-center fw-bold fs-5 cursor @(_activeTab == "projectPlan" ? "active" : "")"  @onclick=@(() => SelectedTabWithModal("projectPlan"))>
                 @Resources.TabProjectPlan
                 </a>
             </li>
-            <li class="nav-item flex-fill">
-                <a class="nav-link text-center fw-bold fs-5 cursor @(_activeTab == "b_stations" ? "active" : "")" @onclick=@(() => SelectedTab("b_stations"))>
+            <li class="nav-item flex-fill" role="presentation" >
+                <a class="nav-link text-center fw-bold fs-5 cursor @(_activeTab == "b_stations" ? "active" : "")" @onclick=@(() => SelectedTabWithModal("b_stations") )>
                     @Resources.TabBStation
                 </a>
             </li>
-            <li class="nav-item flex-fill">
-                <a class="nav-link text-center fw-bold fs-5 cursor @(_activeTab == "projectReport" ? "active" : "")" @onclick=@(() => SelectedTab("projectReport"))>
+            <li class="nav-item flex-fill" role="presentation">
+                <a class="nav-link text-center fw-bold fs-5 cursor  @(_activeTab == "projectReport" ? "active" : "")" @onclick=@(() => SelectedTabWithModal("projectReport"))>
                     @Resources.TabProjectReport
                 </a>
             </li>
@@ -227,7 +228,7 @@ else
 
         @if (_activeTab=="projectPlan")
         {
-            <ProjectPlan Project="_projectCopy"></ProjectPlan>
+             <ProjectPlan Project="_projectCopy" EditProjectPlanVar="_editProjectPlan" EditProjectPlanChanged="@OnEditPlanChanged" EditProjectStationPlanChanged="@OnEditStationPlanChanged" EditProjectStationPlanVar="_editProjectStationPlan"></ProjectPlan> 
         }
         else if (_activeTab == "b_stations")
         {
@@ -237,7 +238,25 @@ else
         {
             <Report></Report>
         }
-    </div>
+
+
+        <div class="modal fade" id="EditPlanMode" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content ">
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>@Resources.ModalTextEditingProjectPlan</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Resources.ButtonOK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            </div>
 
 }
 
@@ -252,6 +271,8 @@ else
     private bool _editProjectInfo;
     private int _numberInputKey = 0;
     private string _activeTab = "projectPlan";
+    private bool _editProjectPlan;
+    private bool _editProjectStationPlan;
     private string? _errorMessage;
     private bool _isNewLocality;
     private EditContext _editContext;
@@ -410,5 +431,33 @@ else
 
         _editContext.Validate();
     }
+
+
+
+    private async Task SelectedTabWithModal(string tab)
+    {
+        if (_editProjectPlan )
+        {
+            await Js.InvokeVoidAsync("showModal", "#EditPlanMode");
+        }
+        else
+        {
+            SelectedTab(tab);
+        }
+
+    }
+
+    private void OnEditPlanChanged(bool value)
+    {
+        _editProjectPlan = value;
+        StateHasChanged();
+    }
     
+    private void OnEditStationPlanChanged(bool value)
+    {
+        _editProjectStationPlan = value;
+        StateHasChanged();
+    }
+
+
 }

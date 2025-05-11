@@ -501,24 +501,6 @@ namespace SeaEco.Client.Resources {
             }
         }
         
-        internal static string InputTextUser1ProjectPlan {
-            get {
-                return ResourceManager.GetString("InputTextUser1ProjectPlan", resourceCulture);
-            }
-        }
-        
-        internal static string InputTextUser2ProjectPlan {
-            get {
-                return ResourceManager.GetString("InputTextUser2ProjectPlan", resourceCulture);
-            }
-        }
-        
-        internal static string InputTextUser3ProjectPlan {
-            get {
-                return ResourceManager.GetString("InputTextUser3ProjectPlan", resourceCulture);
-            }
-        }
-        
         internal static string InputTextPositionN {
             get {
                 return ResourceManager.GetString("InputTextPositionN", resourceCulture);
@@ -756,6 +738,30 @@ namespace SeaEco.Client.Resources {
         internal static string ErrorMessageLoadingProject {
             get {
                 return ResourceManager.GetString("ErrorMessageLoadingProject", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonAddNewProjectPlan {
+            get {
+                return ResourceManager.GetString("ButtonAddNewProjectPlan", resourceCulture);
+            }
+        }
+        
+        internal static string PageProjectPlanNoPlan {
+            get {
+                return ResourceManager.GetString("PageProjectPlanNoPlan", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonOK {
+            get {
+                return ResourceManager.GetString("ButtonOK", resourceCulture);
+            }
+        }
+        
+        internal static string ModalTextEditingProjectPlan {
+            get {
+                return ResourceManager.GetString("ModalTextEditingProjectPlan", resourceCulture);
             }
         }
     }
