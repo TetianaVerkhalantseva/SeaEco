@@ -10,7 +10,9 @@ using SeaEco.Reporter.Models.B1;
 using SeaEco.Reporter.Models.B2;
 using SeaEco.Reporter.Models.Info;
 using System.Drawing;
+using SeaEco.Reporter.Models.Headers;
 using SeaEco.Reporter.Models.Positions;
+using SeaEco.Reporter.Models.PTP;
 
 namespace SeaEco.Reporter;
 
@@ -356,6 +358,43 @@ public sealed class Report
             worksheet.Cells[index, 6].Value = position.Bunntype.GetDisplay();
 
             Border border = worksheet.Cells[index, 1, index, 6].Style.Border;
+            border.Top.Style = ExcelBorderStyle.Thin;
+            border.Right.Style = ExcelBorderStyle.Thin;
+            border.Bottom.Style = ExcelBorderStyle.Thin;
+            border.Left.Style = ExcelBorderStyle.Thin;
+
+            index++;
+        }
+
+        sourcePackage.Save();
+    }
+    
+    public void FillPtp(string path, IEnumerable<RowPtp> ptps, PtpHeader header)
+    {
+        ExcelPackage.License.SetNonCommercialPersonal(_options.NonCommercialPersonalName);
+
+        using ExcelPackage sourcePackage = new ExcelPackage(Path.Combine(_options.DestinationPath, path));
+        using ExcelWorksheet worksheet = sourcePackage.Workbook.Worksheets.First();
+
+        worksheet.Cells["B6"].Value = header.Lokalitetsnavn;
+        worksheet.Cells["B7"].Value = header.Oppdragsgiver;
+        worksheet.Cells["F6"].Value = header.Planlagtfeltdato.ToString("dd.MM.yyyy");
+        worksheet.Cells["F7"].Value = header.Planlegger;
+        
+        int index = 10;
+        foreach (RowPtp ptp in ptps)
+        {
+            worksheet.Cells[index, 1].Value = ptp.Planlagtfeltdato.ToString("dd.MM.yyyy");
+            worksheet.Cells[index, 2].Value = ptp.Nummer;
+            
+            worksheet.Cells[index, 3].Value = ptp.KoordinatNord;
+            worksheet.Cells[index, 4].Value = "N";
+            worksheet.Cells[index, 5].Value = ptp.KoordinatOst;
+            worksheet.Cells[index, 6].Value = "Ø";
+            worksheet.Cells[index, 7].Value = ptp.Dybde;
+            worksheet.Cells[index, 8].Value = ptp.Analyser;
+
+            Border border = worksheet.Cells[index, 1, index, 8].Style.Border;
             border.Top.Style = ExcelBorderStyle.Thin;
             border.Right.Style = ExcelBorderStyle.Thin;
             border.Bottom.Style = ExcelBorderStyle.Thin;

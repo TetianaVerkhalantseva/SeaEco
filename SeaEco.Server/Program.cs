@@ -172,5 +172,5 @@ void SeedData(IServiceProvider serviceProvider)
 {
     using var scope = serviceProvider.CreateScope();
     DbSeeder seeder = new DbSeeder();
-    seeder.SeedData(scope.ServiceProvider.GetRequiredService<AppDbContext>(), false).GetAwaiter().GetResult();
+    seeder.SeedData(scope.ServiceProvider.GetRequiredService<AppDbContext>(), true).GetAwaiter().GetResult();
 }
