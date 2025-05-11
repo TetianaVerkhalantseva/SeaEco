@@ -64,8 +64,10 @@ public class PreInfoController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var ok = await _service.EditPreInfoAsync(preInfoId, dto);
-        if (!ok) return NotFound();
-        return NoContent();
+        var updated = await _service.EditPreInfoAsync(preInfoId, dto);
+        if (updated == null)
+            return NotFound();
+
+        return Ok(updated);
     }
 }
