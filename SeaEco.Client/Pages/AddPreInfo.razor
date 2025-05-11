@@ -57,6 +57,12 @@
         </div>
 
         <div class="form-floating mb-3">
+            <input type="number" id="elektrode" class="form-control"
+                   value="@_preInfo.RefElektrode">
+            <label for="elektrode">Ref.elektrode</label>
+        </div>
+
+        <div class="form-floating mb-3">
             <InputText id="grabb" class="form-control"
                        @bind-Value="_preInfo.Grabb">
             </InputText>
