@@ -327,11 +327,6 @@ else
     {
         EditProjectPlanVar = true;
         await EditProjectPlanChanged.InvokeAsync(EditProjectPlanVar);
-        if (!_isExistingPlan)
-        {
-            _newPlan.Planlagtfeltdato = DateOnly.FromDateTime(DateTime.Now);
-        }
-
     }
 
     private async Task EditProjectPlan()
@@ -341,11 +336,13 @@ else
                 var response = await Http.PostAsJsonAsync($"/api/Project/{Project.Id:D}/sampling-plan", _newPlan);
                 if (response.IsSuccessStatusCode)
                 {
+                    var createdPlan = await response.Content.ReadFromJsonAsync<SamplingPlanDto>();
+                    _existingPlan = createdPlan;
                     EditProjectPlanVar = false;
                     _isExistingPlan = true;
                     _newPlanBackup = BackUp(_newPlan);
-                    //_existingPlan = Må oppdateres, ellers er ID 0 ved lagring av ny prøveakingsplan
-                   
+                    
+
                 }
                 else
                 {

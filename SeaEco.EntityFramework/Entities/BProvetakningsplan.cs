@@ -9,7 +9,7 @@ public partial class BProvetakningsplan
 
     public Guid ProsjektId { get; set; }
 
-    public DateOnly? Planlagtfeltdato { get; set; }
+    public DateOnly Planlagtfeltdato { get; set; }
 
     public Guid PlanleggerId { get; set; }
 
