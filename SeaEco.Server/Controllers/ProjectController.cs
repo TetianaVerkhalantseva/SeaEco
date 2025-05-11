@@ -199,6 +199,16 @@ public class ProjectController : ControllerBase
     }
     
     // Stasjonsoperasjoner
+    [HttpGet("{projectId:guid}/stations")]
+    public async Task<IActionResult> GetAllStations(Guid projectId)
+    {
+        var result = await _stationService.GetStationsByProjectIdAsync(projectId);
+        if (!result.IsSuccess)
+            return NotFound(result.Message);
+
+        return Ok(result.Stations);
+    }
+    
     [HttpGet("{projectId:guid}/sampling-plan/{samplingPlanId:guid}/stations")]
     public async Task<IActionResult> GetStations(Guid projectId, Guid samplingPlanId)
     {
