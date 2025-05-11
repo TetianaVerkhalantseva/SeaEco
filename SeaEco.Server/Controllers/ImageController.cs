@@ -18,7 +18,7 @@ public class ImageController(IImageService imageService) : ApiControllerBase
             : AsOk();
     }
 
-    [HttpPut("{id:guid}/remove")]
+    [HttpDelete("{id:guid}/remove")]
     public async Task<IActionResult> RemoveImage([FromRoute] Guid id)
     {
         Response response = await imageService.DeleteImage(id);
