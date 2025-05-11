@@ -144,7 +144,7 @@
 @code {
     [Parameter] public Guid ProjectId { get; set; }
     
-    private PreInfoDto _preInfo = new();
+    private AddPreInfoDto _preInfo = new();
     private IEnumerable<UserDto> _users = [];
 
     private bool? _result;
@@ -219,7 +219,6 @@
             _preInfo.ProvetakerIds.Remove(userId);
         }
     }
-
     
     private DateTime KalibreringsdatoAsDateTime
     {
@@ -234,7 +233,6 @@
 
     private async Task CreatePreInfo()
     {
-        _preInfo.Id = Guid.NewGuid();
         _preInfo.ProsjektId = ProjectId;
         
         var response = await Http.PostAsJsonAsync("api/PreInfo", _preInfo);

@@ -106,7 +106,7 @@ public class PreInfoService : IPreInfoService
             PhSjo               = dto.Ph,
             EhSjo               = dto.Eh,
             SjoTemperatur       = dto.Temperatur,
-            RefElektrode     = dto.RefElektrode ?? 0,
+            RefElektrode     = dto.RefElektrode,
 
             Grabb            = dto.Grabb,
             Sil              = dto.Sil,
@@ -145,7 +145,7 @@ public class PreInfoService : IPreInfoService
         existing.PhSjo               = dto.Ph;
         existing.EhSjo               = dto.Eh;
         existing.SjoTemperatur       = dto.Temperatur;
-        existing.RefElektrode     = dto.RefElektrode ?? 0;
+        existing.RefElektrode     = dto.RefElektrode;
 
         existing.Grabb            = dto.Grabb;
         existing.Sil              = dto.Sil;
