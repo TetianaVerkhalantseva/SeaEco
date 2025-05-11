@@ -764,5 +764,59 @@ namespace SeaEco.Client.Resources {
                 return ResourceManager.GetString("ModalTextEditingProjectPlan", resourceCulture);
             }
         }
+        
+        internal static string InputTextNorthDegree {
+            get {
+                return ResourceManager.GetString("InputTextNorthDegree", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextNorthMinutes {
+            get {
+                return ResourceManager.GetString("InputTextNorthMinutes", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextEsthDegree {
+            get {
+                return ResourceManager.GetString("InputTextEsthDegree", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextEsthMinutes {
+            get {
+                return ResourceManager.GetString("InputTextEsthMinutes", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextNorthCoordinates {
+            get {
+                return ResourceManager.GetString("InputTextNorthCoordinates", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextEsthCoordinates {
+            get {
+                return ResourceManager.GetString("InputTextEsthCoordinates", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonCreat {
+            get {
+                return ResourceManager.GetString("ButtonCreat", resourceCulture);
+            }
+        }
+        
+        internal static string HeaderGeneralPlanInfo {
+            get {
+                return ResourceManager.GetString("HeaderGeneralPlanInfo", resourceCulture);
+            }
+        }
+        
+        internal static string HeaderNewStation {
+            get {
+                return ResourceManager.GetString("HeaderNewStation", resourceCulture);
+            }
+        }
     }
 }

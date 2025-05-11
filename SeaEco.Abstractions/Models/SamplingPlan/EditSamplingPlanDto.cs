@@ -8,7 +8,7 @@ public class EditSamplingPlanDto
     public Guid ProsjektId { get; set; }
 
     [Required(ErrorMessage = "Planlagt feltdato er påkrevd")]
-    public DateOnly Planlagtfeltdato { get; set; }
+    public DateOnly Planlagtfeltdato { get; set; } = DateOnly.FromDateTime(DateTime.Now);
 
     [Required(ErrorMessage = "Planlegger er påkrevd")]
     public Guid PlanleggerId { get; set; }
