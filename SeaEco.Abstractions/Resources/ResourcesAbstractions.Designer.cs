@@ -176,5 +176,41 @@ namespace SeaEco.Abstractions.Resources {
                 return ResourceManager.GetString("ErrorMessageProjectMtbNumber", resourceCulture);
             }
         }
+        
+        internal static string ErrorMessageDepth {
+            get {
+                return ResourceManager.GetString("ErrorMessageDepth", resourceCulture);
+            }
+        }
+        
+        internal static string ErrorMessageMethod {
+            get {
+                return ResourceManager.GetString("ErrorMessageMethod", resourceCulture);
+            }
+        }
+        
+        internal static string ErrorMessageNorthDegree {
+            get {
+                return ResourceManager.GetString("ErrorMessageNorthDegree", resourceCulture);
+            }
+        }
+        
+        internal static string ErrorMessageNorthMinutes {
+            get {
+                return ResourceManager.GetString("ErrorMessageNorthMinutes", resourceCulture);
+            }
+        }
+        
+        internal static string ErrorMessageEastDegree {
+            get {
+                return ResourceManager.GetString("ErrorMessageEastDegree", resourceCulture);
+            }
+        }
+        
+        internal static string ErrorMessageEastMinues {
+            get {
+                return ResourceManager.GetString("ErrorMessageEastMinues", resourceCulture);
+            }
+        }
     }
 }

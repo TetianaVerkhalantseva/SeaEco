@@ -16,7 +16,7 @@ else
         <EditForm EditContext="_editContext" OnValidSubmit="EditProjectPlan">
             <DataAnnotationsValidator /> 
             <div class="d-flex flex-column gap-3 box-border p-4 min-width-plan">
-                <span>Generell informasjon</span>
+                <span>@Resources.HeaderGeneralPlanInfo</span>
                 <div class="d-flex form-floating">
                     <InputSelect @bind-Value="_newPlan.PlanleggerId" id="user1" class="form-control" disabled="@(!EditProjectPlanVar)">
                         <option value=""></option>
@@ -36,7 +36,7 @@ else
                     @if (!EditProjectPlanVar)
                     {
                         <button class="btn custom-btn" type="button" @onclick="OnClickProjectPlan" disabled="@(EditProjectStationPlanVar || _isAddingNewStation)">
-                            @(_isExistingPlan ? Resources.ButtonEdit : "Opprett")
+                            @(_isExistingPlan ? Resources.ButtonEdit : Resources.ButtonCreat)
                         </button>
                     }
                     else
@@ -89,26 +89,26 @@ else
 
                                 <div class="d-flex flex-xxl-row flex-column gap-3">
                                     <div class="d-flex form-floating">
-                                        <InputNumber class="form-control" id=@($"positionNg_{station.Nummer}")  @bind-Value="station.NorthDegree" disabled="@(!EditProjectStationPlanVar)"/>
-                                        <label for="positionNg_@station.Nummer">Nordlig grader °</label>
+                                        <CustomInputNumber class="form-control"  TValue="int" id=@($"positionNg_{station.Nummer}")  @bind-Value="station.NorthDegree" disabled="@(!EditProjectStationPlanVar)"/>
+                                        <label for="positionNg_@station.Nummer">@Resources.InputTextNorthDegree</label>
                                     </div>
                                     <div class="d-flex form-floating">
-                                        <InputNumber class="form-control" id=@($"positionNm_{station.Nummer}") @bind-Value="station.NorthMinutes" disabled="@(!EditProjectStationPlanVar)"/>
-                                        <label for="positionNm_@station.Nummer">Nordlig minutter '</label>
+                                        <CustomInputNumber class="form-control" TValue="float" id=@($"positionNm_{station.Nummer}") @bind-Value="station.NorthMinutes" disabled="@(!EditProjectStationPlanVar)"/>
+                                        <label for="positionNm_@station.Nummer">@Resources.InputTextNorthMinutes</label>
                                     </div>
                                 </div>
                                 <div class="d-flex flex-xxl-row flex-column gap-3">
                                     <div class="d-flex form-floating">
-                                        <InputNumber class="form-control" id=@($"positionEg_{station.Nummer}")  @bind-Value="station.EastDegree" disabled="@(!EditProjectStationPlanVar)"/>
-                                        <label for="positionEg_@station.Nummer">Østlig grader °</label>
+                                        <CustomInputNumber class="form-control" TValue="int" id=@($"positionEg_{station.Nummer}")  @bind-Value="station.EastDegree" disabled="@(!EditProjectStationPlanVar)"/>
+                                        <label for="positionEg_@station.Nummer">@Resources.InputTextEsthDegree</label>
                                     </div>
                                     <div class="d-flex form-floating">
-                                        <InputNumber class="form-control" id=@($"positionEm_{station.Nummer}") @bind-Value=" station.EastMinutes" disabled="@(!EditProjectStationPlanVar)"/>
-                                        <label for="positionEm_@station.Nummer">Østlig minutter '</label>
+                                        <CustomInputNumber class="form-control"  TValue="float" id=@($"positionEm_{station.Nummer}") @bind-Value=" station.EastMinutes" disabled="@(!EditProjectStationPlanVar)"/>
+                                        <label for="positionEm_@station.Nummer">@Resources.InputTextEsthMinutes</label>
                                     </div>
                                 </div>
                                 <div class="d-flex form-floating">
-                                    <InputNumber class="form-control" id=@($"depth_{station.Nummer}") @bind-Value="station.Dybde" disabled="@(!EditProjectStationPlanVar)"/>
+                                    <CustomInputNumber class="form-control"  TValue="int" id=@($"depth_{station.Nummer}") @bind-Value="station.Dybde" disabled="@(!EditProjectStationPlanVar)"/>
                                     <label for="depth_@station.Nummer">@Resources.InputTextDepth</label>
                                 </div>
                                 <div class="d-flex form-floating">
@@ -150,11 +150,11 @@ else
                         <div class="d-flex flex-xxl-row flex-column gap-3">
                             <div class="d-flex form-floating">
                                 <InputText class="form-control" id=@($"positionNg_{station}")  @bind-Value="station.KoordinatNord" disabled/>
-                                <label for="positionNg_@station">Nordlig grader °</label>
+                                <label for="positionNg_@station">@Resources.InputTextNorthCoordinates</label>
                             </div>
                             <div class="d-flex form-floating">
                                 <InputText class="form-control" id=@($"positionEg_{station}")  @bind-Value="station.KoordinatOst" disabled/>
-                                <label for="positionEg_@station">Østlig grader °</label>
+                                <label for="positionEg_@station">@Resources.InputTextEsthCoordinates</label>
                             </div>
                         </div>
                         <div class="d-flex form-floating">
@@ -184,32 +184,31 @@ else
                     <DataAnnotationsValidator />
                     <div class="d-flex flex-column gap-3 mt-3 box-border p-4">
                         <div class="d-flex">
-                            <span>Ny @Resources.InputTextStation</span>
+                            <span>@Resources.HeaderNewStation</span>
                             <div class="flex-grow-1"></div>
                         </div>
                         <div class="d-flex flex-xxl-row flex-column gap-3">
                             <div class="d-flex form-floating">
-                                <InputNumber class="form-control" @bind-Value="_newStationPlan.NorthDegree"/>
-                                <label>Nordlig grader °</label>
-                                
+                                <CustomInputNumber class="form-control" TValue="int" @bind-Value="_newStationPlan.NorthDegree"/>
+                                <label>@Resources.InputTextNorthDegree</label>
                             </div>
                             <div class="d-flex form-floating">
-                                <InputNumber class="form-control" @bind-Value="_newStationPlan.NorthMinutes"/>
-                                <label>Nordlig minutter'</label>
+                                <CustomInputNumber class="form-control" TValue="float" @bind-Value="_newStationPlan.NorthMinutes"/>
+                                <label>@Resources.InputTextNorthMinutes</label>
                             </div>
                         </div>
                         <div class="d-flex flex-xxl-row flex-column gap-3">
                             <div class="d-flex form-floating">
-                                <InputNumber class="form-control" @bind-Value="_newStationPlan.EastDegree"/>
-                                <label>Østlig grader °</label>
+                                <CustomInputNumber class="form-control" TValue="int" @bind-Value="_newStationPlan.EastDegree"/>
+                                <label>@Resources.InputTextEsthDegree</label>
                             </div>
                             <div class="d-flex form-floating">
-                                <InputNumber class="form-control" @bind-Value="_newStationPlan.EastMinutes"/>
-                                <label>Østlig minutter '</label>
+                                <CustomInputNumber class="form-control" TValue="float" @bind-Value="_newStationPlan.EastMinutes"/>
+                                <label>@Resources.InputTextEsthMinutes</label>
                             </div>
                         </div>
                         <div class="d-flex form-floating">
-                            <InputNumber class="form-control" @bind-Value="_newStationPlan.Dybde"/>
+                            <CustomInputNumber class="form-control"  TValue="int" @bind-Value="_newStationPlan.Dybde"/>
                             <label >@Resources.InputTextDepth</label>
                         </div>
                         <div class="d-flex form-floating">
