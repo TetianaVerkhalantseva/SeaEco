@@ -51,15 +51,12 @@
                    value="@_preInfo.Temperatur">
             <label for="temp">Temperatur</label>
         </div>
-        
-        @if (_preInfo.RefElektrode != null)
-        {
-            <div class="form-floating mb-3">
-                <input type="number" id="elektrode" class="form-control"
-                       value="@_preInfo.RefElektrode">
-                <label for="elektrode">Ref.elektrode</label>
-            </div>
-        }
+
+        <div class="form-floating mb-3">
+            <input type="number" id="elektrode" class="form-control"
+                   value="@_preInfo.RefElektrode">
+            <label for="elektrode">Ref.elektrode</label>
+        </div>
         
         <div class="form-floating mb-3">
             <input type="text" id="grabb" class="form-control"
@@ -150,7 +147,7 @@ else
             Ph = 7.4f,
             Eh = 120.5f,
             Temperatur = 12.3f,
-            RefElektrode = 205.6f,
+            RefElektrode = 205,
             Grabb = "Van Veen 0.1 m²",
             Sil = "1mm rustfri stål",
             PhMeter = "Hanna HI98191",
