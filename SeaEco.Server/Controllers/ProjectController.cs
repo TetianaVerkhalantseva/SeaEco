@@ -129,13 +129,13 @@ public class ProjectController : ControllerBase
     
     
     // Operasjoner for prøvtakningsplan
-    [HttpGet("{projectId:guid}/sampling-plan/{samplingPlanId:guid}")]
-    public async Task<IActionResult> GetProjectSamplingPlan(Guid projectId, Guid samplingPlanId)
+    [HttpGet("{projectId:guid}/sampling-plan")]
+    public async Task<IActionResult> GetProjectSamplingPlan(Guid projectId)
     {
-        var samplingPlan = await _samplingPlanService.GetSamplingPlanById(samplingPlanId);
+        var samplingPlan = await _samplingPlanService.GetSamplingPlanById(projectId);
         if (samplingPlan == null)
         {
-            return NotFound($"No sampling plan found with id {samplingPlanId}");
+            return NotFound($"No sampling plan found with id {projectId}");
         }
 
         if (samplingPlan.ProsjektId != projectId)
@@ -159,7 +159,19 @@ public class ProjectController : ControllerBase
         dto.ProsjektId = projectId;
         var result = await _samplingPlanService.CreateSamplingPlan(dto);
         
-        return result.IsSuccess ? Ok(result.Message) : BadRequest(result.Message);
+        if (!result.IsSuccess)
+            return BadRequest(result.Message);
+
+        
+        var createdPlan = await _samplingPlanService.GetSamplingPlanById(dto.ProsjektId);
+        if (createdPlan == null)
+            return StatusCode(500, "Kunne ikke hente opprettet sampling-plan.");
+        
+        return CreatedAtAction(
+            nameof(GetProjectSamplingPlan),
+            new { projectId = projectId },
+            createdPlan
+        );
     }
 
     [RoleAccessor(true)]
@@ -229,7 +241,15 @@ public class ProjectController : ControllerBase
 
         dto.ProsjektId = projectId;
         var result = await _stationService.AddStationToPlanAsync(samplingPlanId, dto);
-        return result.IsSuccess ? Ok(new { id = result.StationId }) : BadRequest(result.Message);
+        
+        if (!result.IsSuccess)
+            return BadRequest(result.Message);
+        
+        return CreatedAtAction(
+            nameof(GetAStation),
+            new { projectId, samplingPlanId, stationId = result.Station.Id },
+            result.Station
+        );
     }
     
     // Legg til ekstra stasjon direkte på prosjekt

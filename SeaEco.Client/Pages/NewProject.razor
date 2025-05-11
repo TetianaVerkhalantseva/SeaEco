@@ -187,26 +187,20 @@ else
         var usersList = await Http.GetFromJsonAsync<List<UserDto>>("api/users");
         _users = usersList?.OrderBy(user => user.FullName).ToList();
         
-        _location = await Http.GetFromJsonAsync<List<LokalitetDto>>($"api/Lokalitet");
+        _location = await Http.GetFromJsonAsync<List<LokalitetDto>>("api/Lokalitet");
         
         _editContext = new EditContext(_newProject);
     }
 
     private async Task AddNewProject()
     {
-        
         var response = await Http.PostAsJsonAsync("/api/Project", _newProject);
-        
-        if (response.StatusCode == HttpStatusCode.Conflict)
-        {
-            _errorMessage = await response.Content.ReadAsStringAsync();
-        }
-        else if (response.IsSuccessStatusCode)
-        {
-            var created = await response.Content
-                .ReadFromJsonAsync<CreateProjectResponse>();
 
-            if (created is not null)
+        if (response.IsSuccessStatusCode)
+        {
+            var created = await response.Content.ReadFromJsonAsync<ResponseId>();
+
+            if (created != null)
             {
                 Navigation.NavigateTo($"project/{created.Id:D}", forceLoad: true);
             }
@@ -217,19 +211,18 @@ else
         }
         else
         {
-            _errorMessage = Resources.ErrorMessageUnexpected;
+            _errorMessage = response.StatusCode == HttpStatusCode.Conflict ? await response.Content.ReadAsStringAsync() : Resources.ErrorMessageUnexpected;
         }
     }
     
     
-
     private void LocationChanged(string? id)
     {
         _selectedLocationId = id;
 
         var selected = _location.FirstOrDefault(l => l.LokalitetKode == id);
 
-        if (selected is not null)
+        if (selected != null)
         {
             _newProject.Lokalitetsnavn = selected.Navn;
             _newProject.LokalitetsId = selected.LokalitetKode;
@@ -260,7 +253,7 @@ else
         _editContext.Validate();  
     }
     
-    public class CreateProjectResponse
+    public class ResponseId
     {
         public Guid Id { get; init; }
     }

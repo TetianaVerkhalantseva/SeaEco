@@ -18,7 +18,7 @@ public class ProjectService : IProjectService
     public async Task<Guid> CreateProjectAsync(NewProjectDto dto)
     {
         
-        // Sjekk om lokalitet finnes, ellers opprettes
+        // Check if Lokalitet exists, Add if not
         var lokalitet = await _context.Lokalitets
             .FirstOrDefaultAsync(l => l.Lokalitetsnavn == dto.Lokalitetsnavn || l.LokalitetsId == dto.LokalitetsId);
 
@@ -73,6 +73,7 @@ public class ProjectService : IProjectService
             {
                 Id = p.Id,
                 PoId = p.PoId,
+                ProsjektIdSe = p.ProsjektIdSe,
                 KundeId = p.KundeId,
                 Oppdragsgiver = p.Kunde.Oppdragsgiver, 
                 Kundekontaktperson = p.Kundekontaktperson,
@@ -108,12 +109,28 @@ public class ProjectService : IProjectService
 
         if (p == null)
             return null;
-
+        
+        var status = (Prosjektstatus)p.Prosjektstatus; 
+        
+        // Count Stations based on Project Status
+        int antallStasjoner;
+        if (status == Prosjektstatus.Ferdig || status == Prosjektstatus.Deaktivert)
+        {
+            // Finish -> Count stations with BSurveyID
+            antallStasjoner = await _context.BUndersokelses
+                .CountAsync(u => u.ProsjektId == p.Id);
+        }
+        else
+        {
+            // New, started or ongoing -> count all stations in project
+            antallStasjoner = await _context.BStasjons
+                .CountAsync(s => s.ProsjektId == p.Id);
+        }
+        
         return new ProjectDto
         {
             Id = p.Id,
             PoId = p.PoId,
-            ProsjektIdSe = p.ProsjektIdSe,
             KundeId = p.KundeId,
             Oppdragsgiver = p.Kunde.Oppdragsgiver,
             Kundekontaktperson = p.Kundekontaktperson,
@@ -125,17 +142,17 @@ public class ProjectService : IProjectService
             Mtbtillatelse = p.Mtbtillatelse,
             ProsjektansvarligId = p.ProsjektansvarligId,
             Merknad = p.Merknad,
+            ProsjektIdSe = p.ProsjektIdSe,
             Produksjonsstatus = (Produksjonsstatus)p.Produksjonsstatus,
-            Prosjektstatus = (Prosjektstatus)p.Prosjektstatus,
+            Prosjektstatus = status,
             Tilstand = p.BTilstand != null
                 ? (Tilstand?)p.BTilstand.TilstandLokalitet
                 : null,
             Feltdatoer = p.BPreinfos
                 .Select(pi => pi.Feltdato)
                 .OrderBy(d => d)
-                .ToList(), 
-            AntallStasjoner = await _context.BUndersokelses
-                .CountAsync(u => u.ProsjektId == p.Id)
+                .ToList(),
+            AntallStasjoner = antallStasjoner
         };
     }
     

@@ -501,24 +501,6 @@ namespace SeaEco.Client.Resources {
             }
         }
         
-        internal static string InputTextUser1ProjectPlan {
-            get {
-                return ResourceManager.GetString("InputTextUser1ProjectPlan", resourceCulture);
-            }
-        }
-        
-        internal static string InputTextUser2ProjectPlan {
-            get {
-                return ResourceManager.GetString("InputTextUser2ProjectPlan", resourceCulture);
-            }
-        }
-        
-        internal static string InputTextUser3ProjectPlan {
-            get {
-                return ResourceManager.GetString("InputTextUser3ProjectPlan", resourceCulture);
-            }
-        }
-        
         internal static string InputTextPositionN {
             get {
                 return ResourceManager.GetString("InputTextPositionN", resourceCulture);
@@ -651,6 +633,12 @@ namespace SeaEco.Client.Resources {
             }
         }
         
+        internal static string PageProjectsOverviewFilter {
+            get {
+                return ResourceManager.GetString("PageProjectsOverviewFilter", resourceCulture);
+            }
+        }
+        
         internal static string InputTextResponsibleUser {
             get {
                 return ResourceManager.GetString("InputTextResponsibleUser", resourceCulture);
@@ -750,6 +738,84 @@ namespace SeaEco.Client.Resources {
         internal static string ErrorMessageLoadingProject {
             get {
                 return ResourceManager.GetString("ErrorMessageLoadingProject", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonAddNewProjectPlan {
+            get {
+                return ResourceManager.GetString("ButtonAddNewProjectPlan", resourceCulture);
+            }
+        }
+        
+        internal static string PageProjectPlanNoPlan {
+            get {
+                return ResourceManager.GetString("PageProjectPlanNoPlan", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonOK {
+            get {
+                return ResourceManager.GetString("ButtonOK", resourceCulture);
+            }
+        }
+        
+        internal static string ModalTextEditingProjectPlan {
+            get {
+                return ResourceManager.GetString("ModalTextEditingProjectPlan", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextNorthDegree {
+            get {
+                return ResourceManager.GetString("InputTextNorthDegree", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextNorthMinutes {
+            get {
+                return ResourceManager.GetString("InputTextNorthMinutes", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextEsthDegree {
+            get {
+                return ResourceManager.GetString("InputTextEsthDegree", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextEsthMinutes {
+            get {
+                return ResourceManager.GetString("InputTextEsthMinutes", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextNorthCoordinates {
+            get {
+                return ResourceManager.GetString("InputTextNorthCoordinates", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextEsthCoordinates {
+            get {
+                return ResourceManager.GetString("InputTextEsthCoordinates", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonCreat {
+            get {
+                return ResourceManager.GetString("ButtonCreat", resourceCulture);
+            }
+        }
+        
+        internal static string HeaderGeneralPlanInfo {
+            get {
+                return ResourceManager.GetString("HeaderGeneralPlanInfo", resourceCulture);
+            }
+        }
+        
+        internal static string HeaderNewStation {
+            get {
+                return ResourceManager.GetString("HeaderNewStation", resourceCulture);
             }
         }
         

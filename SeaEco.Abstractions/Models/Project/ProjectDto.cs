@@ -38,11 +38,16 @@ public class ProjectDto
     [Required(ErrorMessageResourceName = "ErrorMessageProductionStatus", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
     [Range(1,  int.MaxValue, ErrorMessageResourceName = "ErrorMessageProductionStatus", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
     public Produksjonsstatus Produksjonsstatus { get; set; }
-
-    public int AntallStasjoner { get; set; } 
+    
+    public int AntallStasjoner { get; set; }
     
     public Prosjektstatus Prosjektstatus { get; set; }
     public Tilstand? Tilstand { get; set; }
     public string? ProsjektIdSe { get; set; }
     public List<DateTime> Feltdatoer { get; set; } = new();
+    
+    public string StationDatesString 
+        => string.Join(", ",
+            Feltdatoer
+                .Select(d => d.ToString("yyyy-MM-dd")));
 }
