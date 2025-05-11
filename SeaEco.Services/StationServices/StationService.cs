@@ -33,6 +33,7 @@ public class StationService : IStationService
             {
                 Id = s.Id,
                 Nummer = s.Nummer,
+                UndersokelseId = s.UndersokelseId,
                 KoordinatNord = s.KoordinatNord,
                 KoordinatOst = s.KoordinatOst,
                 Dybde = s.Dybde,
@@ -70,6 +71,7 @@ public class StationService : IStationService
                 KoordinatNord = s.KoordinatNord,
                 KoordinatOst = s.KoordinatOst,
                 Dybde = s.Dybde,
+                UndersokelseId = s.UndersokelseId,
                 Analyser = s.Analyser
             }
         };

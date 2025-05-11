@@ -1,4 +1,7 @@
+@using System.Text.Json
 @using SeaEco.Abstractions.Models.Project
+@using SeaEco.Abstractions.Models.SamplingPlan
+@using SeaEco.Abstractions.Models.Stations
 @inject HttpClient Http
 @using SeaEco.Client.Resources
 @inject IJSRuntime Js
@@ -11,7 +14,7 @@ else
     <div class="d-flex justify-content-center w-100">
         <div class="d-flex flex-column align-items-center projects-container">
         <div class="d-flex flex-column mt-3 gap-3 card-container w-100">
-            @if (_stationData == null)
+            @if (!_isExistingStations)
             {
                 <div class="d-flex justify-content-center">
                     @Resources.PageSatationOverviewNoStations
@@ -25,13 +28,13 @@ else
                         {
                             <div class="col mb-3 card-col">
                                 <div class="card cursor" @onclick="OnStationClick">
-                                    <div class="card-body text-center @GetStatus(station.Status)">
-                                        <h5 class="card-title">@Resources.InputTextStation @_stationData.IndexOf(station)</h5>
-                                        <span class="corner-text">@station.Status</span>
+                                    <div class="card-body text-center @GetStatus(station.UndersokelseId) ">
+                                        <h5 class="card-title">@Resources.InputTextStation @station.Nummer</h5>
+                                        <span class="corner-text">@(station.UndersokelseId != null ? "Utfylt" : "Ikke utfylt")</span>
                                     </div>
                                     <ul class="list-group list-group-flush">
-                                        <li class="list-group-item">@Resources.InputTextPositionN: @station.PositionN </li>
-                                        <li class="list-group-item">@Resources.InputTextPositionS: @station.PositionS </li>
+                                        <li class="list-group-item">@Resources.InputTextNorthCoordinates: @station.KoordinatNord </li>
+                                        <li class="list-group-item">@Resources.InputTextEsthCoordinates: @station.KoordinatOst </li>
                                     </ul>
                                 </div>
                             </div>
@@ -39,12 +42,12 @@ else
                     </div>
                 </div>
             }
-            <div class="d-flex gap-2 flex-column flex-xxl-row w-100 mb-3">
+            <div class="d-flex gap-2 flex-column flex-xxl-row justify-content-center mb-3">
                 <button class="btn custom-btn" type="button" @onclick="AddStation">
                     @Resources.ButtonAddNewStation
                 </button>
                 <div class="d-flex flex-grow-1"></div>
-                <button class="btn custom-btn" type="button" disabled="@(_stationData == null)" @onclick="DoneStationRegistration">
+                <button class="btn custom-btn" type="button" disabled="@(!_isExistingStations)" @onclick="DoneStationRegistration">
                     @Resources.ButtonComplete
                 </button>
             </div>
@@ -60,12 +63,12 @@ else
                         <p>@Resources.ModalTextCompleteProject</p>
                         <div class="mb-3">
                             <label for="message-text" class="col-form-label">@Resources.ModalComment</label>
-                            <textarea class="form-control" id="message-text" @bind-value="Comment" @bind-value:event="oninput"></textarea>
+                            <textarea class="form-control" id="message-text" @bind-value="_comment.Merknad" @bind-value:event="oninput"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Resources.ButtonCancel</button>
-                        <button type="button" class="btn btn-primary" disabled="@string.IsNullOrWhiteSpace(Comment)">@Resources.ButtonComplete</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="ClearComment">@Resources.ButtonCancel</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="CompleteStationRegistration" disabled="@string.IsNullOrWhiteSpace(_comment.Merknad)">@Resources.ButtonComplete</button>
                     </div>
                 </div>
             </div>
@@ -76,12 +79,36 @@ else
 
 @code {
     [Parameter] public ProjectDto? Project { get; set; }
-    private List<StationData>? _stationData;
+    private List<StationDto>? _stationData;
     private bool _isLoading = true;
-    private string Comment { get; set; } = string.Empty;
+    private bool _isExistingStations = false;
+    private SamplingPlanDto _existingPlan = new();
+    private MerknadDto _comment = new();
+    private NewStationDto _newStation =new ();
 
     protected override async Task OnInitializedAsync()
     {
+        _newStation = new NewStationDto
+        {
+            ProsjektId = Project.Id,
+        };
+        
+        
+        var response = await Http.GetAsync($"/api/Project/{Project.Id:D}/sampling-plan");
+
+        if (response.IsSuccessStatusCode)
+        {
+            _existingPlan = await response.Content.ReadFromJsonAsync<SamplingPlanDto>();
+
+            var response2 = await Http.GetAsync($"/api/Project/{Project.Id:D}/sampling-plan/{_existingPlan.Id:D}/stations");
+            if (response2.IsSuccessStatusCode)
+            {
+                _stationData = await response2.Content.ReadFromJsonAsync<List<StationDto>>();
+                _stationData?.Sort((a, b) => a.Nummer.CompareTo(b.Nummer));
+                _isExistingStations = true;
+            }
+        }
+        
         _isLoading = false;
     }
 
@@ -89,31 +116,23 @@ else
     {
     }
 
-    private void AddStation()
+    private async Task AddStation()
     {
-        if (_stationData == null)
+        var response = await Http.PostAsJsonAsync($"/api/Project/{Project.Id:D}/sampling-plan/{_existingPlan.Id:D}/station", _newStation);
+        //var response = await Http.PostAsJsonAsync($"/api/Project/{Project.Id:D}/station", _newStation);
+
+        if (response.IsSuccessStatusCode)
         {
-            _stationData =
-            [
-                new StationData
-                {
-                    Status = "Ikke utfylt"
-                }
-            ];
+            var newStation = await response.Content.ReadFromJsonAsync<StationDto>();
+            _stationData.Add(newStation); 
         }
-        else
-        {
-            _stationData.Add(new StationData
-            {
-                Status = "Ikke utfylt"
-            });
-        }
+
     }
 
 
     private async Task DoneStationRegistration()
     {
-        var anyPlannedStationsNotRegistred = _stationData.Any(station => station.Status == "Ikke utfylt");
+        var anyPlannedStationsNotRegistred = _stationData.Any(station => station.UndersokelseId == null);
 
         if (anyPlannedStationsNotRegistred)
         {
@@ -127,25 +146,25 @@ else
 
     async Task CompleteStationRegistration()
     {
+        if (_comment.Merknad != null)
+        {
+            await Http.PostAsJsonAsync($"/api/Project/{Project.Id:D}/merknad/add",_comment);
+        }
     }
 
-    private string GetStatus(string? status)
+    private void ClearComment()
+    {
+        _comment.Merknad = string.Empty;
+    }
+
+    private string GetStatus(Guid? status)
     {
         return status switch
         {
-            "Ikke utfylt" => "card-status-new",
-            "Utfylt" => "card-status-done",
-            _ => throw new ArgumentOutOfRangeException(nameof(status), status, null)
+            null => "card-status-new", 
+            not null => "card-status-done",
         };
     }
-
-    public class StationData
-    {
-        public string? PositionN { get; set; }
-        public string? PositionS { get; set; }
-        public string? Depth { get; set; }
-        public string? Method { get; set; }
-        public string? Status { get; set; }
-    }
+    
 
 }
