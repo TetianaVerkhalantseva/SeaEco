@@ -1,0 +1,235 @@
+
+@page "/project/{ProjectId:guid}/preInfo/{PreInfoId:guid}/edit"
+@using Microsoft.AspNetCore.Authorization
+@using SeaEco.Abstractions.Models.PreInfo
+@using SeaEco.Abstractions.Models.User
+@inject HttpClient Http
+@attribute [Authorize]
+@attribute [Authorize(Roles = "admin")]
+@inject NavigationManager Navigation
+
+
+<h3>Rediger preinformasjon</h3>
+
+@if (_isLoaded)
+{
+    <EditForm Model="_preInfo" OnInvalidSubmit="CreatePreInfo">
+        <DataAnnotationsValidator/>
+        <div class="preInfo-container">
+            <div class="form-floating mb-3">
+                <InputDate id="date" class="form-control"
+                           @bind-Value="_preInfo.Feltdato">
+                </InputDate>
+                <label for="date">Dato</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <InputSelect id="user" class="form-select"
+                             @bind-Value="_preInfo.FeltansvarligId">
+                    <option value="" disabled>Velg feltansvarlig</option>
+                    @foreach (var user in _users)
+                    {
+                        <option value="@user.Id">@user.FullName</option>
+                    }
+                </InputSelect>
+                <label for="user">Feltansvarlig</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <InputNumber id="ph" class="form-control"
+                             @bind-Value="_preInfo.Ph">
+                </InputNumber>
+                <label for="ph">pH</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <InputNumber id="eh" class="form-control"
+                             @bind-Value="_preInfo.Eh">
+                </InputNumber>
+                <label for="eh">Eh</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <InputNumber id="temp" class="form-control"
+                             @bind-Value="_preInfo.Temperatur">
+                </InputNumber>
+                <label for="temp">Temperatur</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input type="number" id="elektrode" class="form-control"
+                       value="@_preInfo.RefElektrode">
+                <label for="elektrode">Ref.elektrode</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <InputText id="grabb" class="form-control"
+                           @bind-Value="_preInfo.Grabb">
+                </InputText>
+                <label for="grabb">Grabb</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <InputText id="sil" class="form-control"
+                           @bind-Value="_preInfo.Sil">
+                </InputText>
+                <label for="sil">Sil</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <InputText id="ph-meter" class="form-control"
+                           @bind-Value="_preInfo.PhMeter">
+                </InputText>
+                <label for="ph-meter">pH-meter</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <InputDate id="date_2" class="form-control"
+                           @bind-Value="KalibreringsdatoAsDateTime">
+                </InputDate>
+                <label for="date_2">Kalibreringsdato</label>
+            </div>
+        </div>
+
+        <div class="mb-3 sampler-container">
+            <label class="form-label">Andre prøvetakere</label>
+            <div class="provetaker-grid">
+                @foreach (var user in _users)
+                {
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               id="@($"provetaker-{user.Id}")"
+                               value="@user.Id"
+                               @onchange="e => OnProvetakerCheckboxChanged(e, user.Id)"
+                               checked="@_preInfo.ProvetakerIds.Contains(user.Id)" />
+                        <label class="form-check-label" for="@($"provetaker-{user.Id}")">
+                            @user.FullName
+                        </label>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="mt-3 text-center">
+            <div class="custom-validation-summary">
+                <ValidationSummary/>
+            </div>
+
+            @if (_result.HasValue)
+            {
+                if (_result.Value)
+                {
+                    <div class="alert alert-success">@_resultMessage</div>
+                }
+                else
+                {
+                    <div class="alert alert-danger">@_resultMessage</div>
+                }
+            }
+        </div>
+
+        <div class="button-container">
+            <button @onclick="BackToProjectPage" class="custom-btn">
+                Avbryt
+            </button>
+
+            <button type="submit" class="custom-btn">
+                Bekreft
+            </button>
+        </div>
+    </EditForm>
+}
+else
+{
+    <div class="mt-3 text-center">
+        <div class="alert alert-info">Laster data...</div>
+    </div>
+}
+
+
+@code {
+    [Parameter] public Guid ProjectId { get; set; }
+    [Parameter] public Guid PreInfoId { get; set; }
+
+    private EditPreInfoDto? _preInfo = new();
+    private IEnumerable<UserDto> _users = [];
+    
+    private bool _isLoaded = false;
+
+    private bool? _result;
+    private string? _resultMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPreInfoData();
+        _isLoaded = true;
+    }
+
+    private async Task LoadPreInfoData()
+    {
+        var info = await Http.GetFromJsonAsync<PreInfoDto>($"api/PreInfo/{PreInfoId}");
+        if (info != null)
+        {
+            _preInfo.Feltdato = info.Feltdato;
+            _preInfo.FeltansvarligId = info.FeltansvarligId;
+            _preInfo.ProvetakerIds = info.ProvetakerIds;
+            _preInfo.Ph = info.Ph;
+            _preInfo.Eh = info.Eh;
+            _preInfo.Temperatur = info.Temperatur;
+            _preInfo.RefElektrode = info.RefElektrode;
+            _preInfo.Grabb = info.Grabb;
+            _preInfo.Sil = info.Sil;
+            _preInfo.PhMeter = info.PhMeter;
+            _preInfo.Kalibreringsdato = info.Kalibreringsdato;
+        }
+
+        _users = await Http.GetFromJsonAsync<IEnumerable<UserDto>>("api/users?isActive=true");
+
+    }
+
+    private void OnProvetakerCheckboxChanged(ChangeEventArgs e, Guid userId)
+    {
+        var isChecked = (bool)e.Value!;
+
+        if (isChecked)
+        {
+            if (!_preInfo.ProvetakerIds.Contains(userId))
+            {
+                _preInfo.ProvetakerIds.Add(userId);
+            }
+        }
+        else
+        {
+            _preInfo.ProvetakerIds.Remove(userId);
+        }
+    }
+
+    private DateTime KalibreringsdatoAsDateTime
+    {
+        get => _preInfo.Kalibreringsdato.ToDateTime(TimeOnly.MinValue);
+        set => _preInfo.Kalibreringsdato = DateOnly.FromDateTime(value);
+    }
+
+    private void BackToProjectPage()
+    {
+        Navigation.NavigateTo($"project/{ProjectId:D}");
+    }
+
+    private async Task CreatePreInfo()
+    {
+        var response = await Http.PutAsJsonAsync($"api/PreInfo/{PreInfoId}", _preInfo);
+        if (response.IsSuccessStatusCode)
+        {
+            _result = true;
+            _resultMessage = "Preinfo er redigert.";
+            await Task.Delay(2000);
+            StateHasChanged();
+        }
+        else
+        {
+            _result = false;
+            _resultMessage = "Redigering mislykkes.";
+        }
+    }
+}

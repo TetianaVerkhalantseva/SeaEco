@@ -13,14 +13,17 @@
 else
 {   
     //PreInfo
-    <div class="d-flex gap-2 flex-column flex-xxl-row justify-content-center mt-5">        
-    @foreach (var preInfo in _preInfoData)
+    if (_isExistingPreInfo)
     {
-        <button class="btn custom-btn" type="button">
-            @DateOnly.FromDateTime(preInfo.Feltdato)
-        </button>
-    } 
-    </div> 
+        <div class="d-flex gap-2 flex-column flex-xxl-row justify-content-center mt-5">       
+            @foreach (var preInfo in _preInfoData)
+            {
+                <button class="btn custom-btn" type="button" @onclick="() => viewPreInfo(preInfo.Id)">
+                    @DateOnly.FromDateTime(preInfo.Feltdato)
+                </button>
+            } 
+        </div> 
+    }
     <div class="d-flex gap-2 flex-column justify-content-center mb-3 mt-3">
         <button class="btn custom-btn" type="button" disabled="@(_isPreInfoDateToday || _isProjectComplete)" @onclick="AddPreInfo">
             + Ny preInfo
@@ -155,14 +158,10 @@ else
             _preInfoData = await responsePreInfo.Content.ReadFromJsonAsync<List<PreInfoDto>>();
             _preInfoData?.Sort((a, b) => a.Feltdato.CompareTo(b.Feltdato));
             _isExistingPreInfo = true;
-            foreach (var preInfo in _preInfoData)
+            foreach (var preInfo in _preInfoData.Where(preInfo => DateOnly.FromDateTime(preInfo.Feltdato) == DateOnly.FromDateTime(DateTime.Today)))
             {
-
-                if (DateOnly.FromDateTime(preInfo.Feltdato) == DateOnly.FromDateTime(DateTime.Today))
-                {
-                    _isPreInfoDateToday = true;
-                    _todaysServeyId = preInfo.Id;
-                }
+                _isPreInfoDateToday = true;
+                _todaysServeyId = preInfo.Id;
             }
         }
 
@@ -182,6 +181,12 @@ else
 
         _isLoading = false;
     }
+
+    private async Task viewPreInfo(Guid preInfoId)
+    {
+        Navigation.NavigateTo($"project/{Project.Id:D}/preInfo/{preInfoId:D}");
+
+    }   
 
     private async Task OnStationClick(Guid stationId, Guid? surveyId)
     {
@@ -209,8 +214,9 @@ else
 
     }
 
-    private async Task AddPreInfo()
+    private void AddPreInfo()
     {
+        Navigation.NavigateTo($"project/{Project.Id:D}/preInfo/");
     }
 
 

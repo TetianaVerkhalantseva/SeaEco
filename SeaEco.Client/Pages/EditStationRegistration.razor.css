@@ -34,15 +34,17 @@
     margin-top: -15px;
 }
 
-.sampler-container {
-    display: flex;
-    width: 80%;
-    margin: 1rem auto;
-    gap: 2rem;
+.btn-outline-primary.clear-data
+{
+    background-color: rgb(100, 151, 177);
+    border-color: rgb(100, 151, 177);
+    color: white;
 }
 
-.sampler-container.form-floating>.form-select {
-    padding: .375rem 10rem .375rem .75rem;
+.btn-outline-primary.clear-data:hover {
+    background-color: rgb(28, 99, 137);
+    border-color: rgb(28, 99, 137);
+    transition: all 0.3s ease-in-out;
 }
 
 .equipment-container {
@@ -222,6 +224,24 @@
     padding-left: 28px;
 }
 
+.toggle-btn {
+    padding: 0.5rem 1rem;
+    margin: 0.25rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: lightgray;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.toggle-btn[data-level='0.5'] {
+    background-color: orange;
+}
+
+.toggle-btn[data-level='1'] {
+    background-color: green;
+}
+
 /* Hide default checkbox */
 .checkbox-container input[type="checkbox"] {
     appearance: none;
@@ -337,11 +357,11 @@
     height: 28px;
     border-radius: 10px;
     background-color: #ffffff2b;
-    box-shadow:
-            rgba(0, 0, 0, 0.62) 0 0 5px inset,
-            rgba(0, 0, 0, 0.21) 0 0 0 24px inset,
-            dodgerblue 0 0 0 0 inset,
-            rgba(224, 224, 224, 0.45) 0 1px 0 0;
+    box-shadow: 
+        rgba(0, 0, 0, 0.62) 0 0 5px inset,
+        rgba(0, 0, 0, 0.21) 0 0 0 24px inset,
+        dodgerblue 0 0 0 0 inset,
+        rgba(224, 224, 224, 0.45) 0 1px 0 0;
     cursor: pointer;
     position: relative;
 }
@@ -362,11 +382,11 @@
 
 .custom-checkbox input:checked + .custom-checkmark {
     background-color: dodgerblue;
-    box-shadow:
-            rgba(0, 0, 0, 0.62) 0 0 5px inset,
-            dodgerblue 0 0 0 2px inset,
-            dodgerblue 0 0 0 24px inset,
-            rgba(224, 224, 224, 0.45) 0 1px 0 0;
+    box-shadow: 
+        rgba(0, 0, 0, 0.62) 0 0 5px inset,
+        dodgerblue 0 0 0 2px inset,
+        dodgerblue 0 0 0 24px inset,
+        rgba(224, 224, 224, 0.45) 0 1px 0 0;
 }
 
 .custom-checkbox input:checked + .custom-checkmark::after {
@@ -417,6 +437,7 @@
     grid-template-columns: repeat(4, 1fr);
     gap: 2rem;
     width: 60%;
+    
 }
 
 @media (max-width: 1024px) {
