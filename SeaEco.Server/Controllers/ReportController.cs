@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using SeaEco.Abstractions.ResponseService;
 using SeaEco.Reporter.Models;
 using SeaEco.Services.ReportServices;
+using SeaEco.Services.TilstandServices;
+using SeaEco.Services.TilstandServices.Models;
 
 namespace SeaEco.Server.Controllers;
 
 [Route("api/report")]
-public class ReportController(IReportService reportService) : ApiControllerBase
+public class ReportController(IReportService reportService, TilstandService tilstandService) : ApiControllerBase
 {
     [HttpPost("generate/info")]
     public async Task<IActionResult> GenerateInfo([FromBody] Guid projectId)
@@ -87,5 +89,22 @@ public class ReportController(IReportService reportService) : ApiControllerBase
         }
         
         return File(result.Value.Content, result.Value.ContentType, result.Value.DownloadName);
+    }
+    
+    // KUN TIL TESTING – skal ikke brukes i frontend
+    // Test-endpoint for TilstandServices
+    [HttpPost("klasse")]
+    public async Task<IActionResult> GenerateClass([FromBody] CalculateClassModel model)
+    {
+        try
+        {
+            var result = tilstandService.CalculateClass(model.pH, model.eH);
+            return AsOk(result);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return AsBadRequest(e.ToString());
+        }
     }
 }
