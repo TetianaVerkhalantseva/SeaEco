@@ -6,6 +6,7 @@ using SeaEco.EntityFramework.Contexts;
 using SeaEco.Services.Mapping;
 using SeaEco.Services.ProjectServices;
 using SeaEco.Services.ReportServices;
+using SeaEco.Services.StationServices;
 
 namespace SeaEco.Services.BSurveyService;
 
@@ -73,9 +74,25 @@ public class BSurveyService: IBSurveyService
             //     log.Id = Guid.NewGuid();
             // }
             
+            var station = await _db.BStasjons
+                .FirstOrDefaultAsync(s => s.Id == stationId && s.ProsjektId == projectId);
+
+            if (station == null)
+            {
+                return new EditSurveyResult
+                {
+                    IsSuccess = false,
+                    Message = "Cannot find the station"
+                };
+            }
+            
             var entity = dto.ToEntity();
+            station.UndersokelseId = entity.Id;
+            entity.BStasjon = station;
+
             _db.BUndersokelses.Add(entity);
             await _db.SaveChangesAsync();
+            
             
             var proj = await _projectService.GetProjectByIdAsync(projectId);
             if (proj?.Prosjektstatus == Prosjektstatus.Pabegynt)
