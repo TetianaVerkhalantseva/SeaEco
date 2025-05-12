@@ -1,4 +1,5 @@
 @page "/project/{ProjectId:guid}"
+@using System.Text.Json
 @using Microsoft.AspNetCore.Authorization
 @using SeaEco.Abstractions.Enums
 @using SeaEco.Abstractions.Extensions
@@ -6,6 +7,7 @@
 @attribute [Authorize]
 @using SeaEco.Client.Resources
 @using SeaEco.Abstractions.Models.Project
+@using SeaEco.Abstractions.Models.Stations
 @using SeaEco.Abstractions.Models.User
 @using SeaEco.Client.Components
 @inject HttpClient Http
@@ -209,34 +211,34 @@ else
             <div class="background-overlay"></div>
         }
         <ul class="nav nav-tabs d-flex flex-xxl-row flex-column w-100 mt-5">
-            <li class="nav-item flex-fill" role="presentation">
+            <li class="nav-item tab-size" role="presentation">
                 <a class="nav-link text-center fw-bold fs-5 cursor @(_activeTab == "projectPlan" ? "active" : "")"  @onclick=@(() => SelectedTabWithModal("projectPlan"))>
                 @Resources.TabProjectPlan
                 </a>
             </li>
-            <li class="nav-item flex-fill" role="presentation" >
+            <li class="nav-item tab-size" role="presentation" >
                 <a class="nav-link text-center fw-bold fs-5 cursor @(_activeTab == "b_stations" ? "active" : "")" @onclick=@(() => SelectedTabWithModal("b_stations") )>
                     @Resources.TabBStation
                 </a>
             </li>
-            <li class="nav-item flex-fill" role="presentation">
+            <li class="nav-item tab-size" role="presentation">
                 <a class="nav-link text-center fw-bold fs-5 cursor  @(_activeTab == "projectReport" ? "active" : "")" @onclick=@(() => SelectedTabWithModal("projectReport"))>
                     @Resources.TabProjectReport
                 </a>
             </li>
         </ul>
 
-        @if (_activeTab=="projectPlan")
+        @switch (_activeTab)
         {
-             <ProjectPlan Project="_projectCopy" EditProjectPlanVar="_editProjectPlan" EditProjectPlanChanged="@OnEditPlanChanged" EditProjectStationPlanChanged="@OnEditStationPlanChanged" EditProjectStationPlanVar="_editProjectStationPlan"></ProjectPlan> 
-        }
-        else if (_activeTab == "b_stations")
-        {
-            <B_stations Project="_projectCopy"></B_stations>
-        }
-        else if (_activeTab=="projectReport")
-        {
-            <Report></Report>
+            case "projectPlan":
+                <ProjectPlan Project="_projectCopy" EditProjectPlanVar="_editProjectPlan" EditProjectPlanChanged="@OnEditPlanChanged" EditProjectStationPlanChanged="@OnEditStationPlanChanged" EditProjectStationPlanVar="_editProjectStationPlan"></ProjectPlan>
+                break;
+            case "b_stations":
+                <B_stations Project="_projectCopy" EditStationChanged="@OnEditStationChanged"></B_stations>
+                break;
+            case "projectReport":
+                <Report></Report>
+                break;
         }
 
 
@@ -273,6 +275,7 @@ else
     private string _activeTab = "projectPlan";
     private bool _editProjectPlan;
     private bool _editProjectStationPlan;
+    private bool _editStation;
     private string? _errorMessage;
     private bool _isNewLocality;
     private EditContext _editContext;
@@ -290,7 +293,7 @@ else
             {
                 var usersList = await Http.GetFromJsonAsync<List<UserDto>>("api/users");
                 _users = usersList?.OrderBy(user => user.FullName).ToList();
-                _projectCopy = BackupProject(_project);
+                _projectCopy = BackUp(_project);
                 _location = await Http.GetFromJsonAsync<List<LokalitetDto>>($"api/Lokalitet");
                 _editContext = new EditContext(_project);
                 _selectedLocationId = _project.LokalitetsId;
@@ -322,7 +325,7 @@ else
             if (response.IsSuccessStatusCode)
             {
                 var updated = await response.Content.ReadFromJsonAsync<ProjectDto>();
-                if (updated != null) _projectCopy = BackupProject(updated);
+                if (updated != null) _projectCopy = BackUp(updated);
                 //add the values not returned from updated-response. These values can not be edited in GUI
                 _projectCopy.Oppdragsgiver = _project.Oppdragsgiver;
                 _projectCopy.AntallStasjoner = _project.AntallStasjoner;
@@ -350,7 +353,7 @@ else
 
     private void CancelEditProjectInformation()
     {
-        _project = BackupProject(_projectCopy);
+        _project = BackUp(_projectCopy);
         _selectedLocationId = _project.LokalitetsId;
         _isNewLocality = false;
         _numberInputKey++;
@@ -362,29 +365,6 @@ else
     private void SelectedTab(string tab)
     {
         _activeTab = tab;
-    }
-
-    private ProjectDto BackupProject(ProjectDto source)
-    {
-        return new ProjectDto
-        {
-            Id = source.Id,
-            PoId = source.PoId,
-            ProsjektIdSe = source.ProsjektIdSe,
-            Oppdragsgiver = source.Oppdragsgiver,
-            Lokalitetsnavn = source.Lokalitetsnavn,
-            LokalitetsId = source.LokalitetsId,
-            Mtbtillatelse = source.Mtbtillatelse,
-            Merknad = source.Merknad,
-            Prosjektstatus = source.Prosjektstatus,
-            Kundetlf = source.Kundetlf,
-            Kundekontaktperson = source.Kundekontaktperson,
-            Kundeepost = source.Kundeepost,
-            Produksjonsstatus = source.Produksjonsstatus,
-            ProsjektansvarligId = source.ProsjektansvarligId,
-            AntallStasjoner = source.AntallStasjoner,
-            Tilstand = _project.Tilstand
-        };
     }
 
     private void LocationChanged(string? id)
@@ -457,6 +437,20 @@ else
     {
         _editProjectStationPlan = value;
         StateHasChanged();
+    }
+
+    private void OnEditStationChanged(ProjectDto project)
+    {
+        _project.Prosjektstatus = project.Prosjektstatus;
+        _project.Merknad= project.Merknad;
+        _projectCopy = BackUp(_project);
+        StateHasChanged();
+    }
+    
+    private static T BackUp<T>(T source)
+    {
+        var json = JsonSerializer.Serialize(source);
+        return JsonSerializer.Deserialize<T>(json)!;
     }
 
 

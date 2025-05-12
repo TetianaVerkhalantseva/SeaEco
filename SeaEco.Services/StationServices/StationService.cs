@@ -60,7 +60,8 @@ public class StationService : IStationService
                 KoordinatNord = s.KoordinatNord,
                 KoordinatOst = s.KoordinatOst,
                 Dybde = s.Dybde,
-                Analyser = s.Analyser
+                Analyser = s.Analyser,
+                UndersokelseId = s.UndersokelseId
             })
             .ToListAsync();
 
