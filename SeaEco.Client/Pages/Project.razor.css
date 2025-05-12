@@ -110,5 +110,9 @@
     background-color: #eef2f4;
 }
 
+.tab-size {
+    flex: 1; 
+}
+
 
 

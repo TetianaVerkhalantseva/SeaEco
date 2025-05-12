@@ -246,9 +246,9 @@
         {
             if (_projects != null)
                 return _projects.Where(p =>
-                    ((!SelectedStatuses.Any()) || SelectedStatuses.Contains(p.Prosjektstatus.GetDescription())) &&
-                    (!SelectedYear.HasValue || (p.Feltdatoer.Any(d => d.Year == SelectedYear.Value))) &&
-                    (!SelectedMnd.HasValue || (p.Feltdatoer.Any(d => d.Month == SelectedMnd.Value))) &&
+                    (!SelectedStatuses.Any() || SelectedStatuses.Contains(p.Prosjektstatus.GetDescription())) &&
+                    (!SelectedYear.HasValue || p.Feltdatoer.Any(d => d.Year == SelectedYear.Value)) &&
+                    (!SelectedMnd.HasValue || p.Feltdatoer.Any(d => d.Month == SelectedMnd.Value)) &&
                     (string.IsNullOrEmpty(SelectedLocation) || p.Lokalitetsnavn == SelectedLocation) &&
                     (string.IsNullOrEmpty(SelectedCustomer) || p.Oppdragsgiver == SelectedCustomer)
                 );
