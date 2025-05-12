@@ -7,6 +7,7 @@ public interface IStationService
 {
     Task<StationResult> GetStationsByProvetakningsplanIdAsync(Guid samplingPlanId);
     Task<StationResult> GetStationByIdAsync(Guid projectId, Guid stationId);
+    Task<StationResult> GetStationsByProjectIdAsync(Guid projectId);
     
     Task<BStationDto?> GetBStationDtoByStationId(Guid projectId, Guid stationId);
     Task<StationResult> AddStationToPlanAsync(Guid samplingPlanId, NewStationDto dto);

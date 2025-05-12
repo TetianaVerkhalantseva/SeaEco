@@ -33,6 +33,7 @@ public class StationService : IStationService
             {
                 Id = s.Id,
                 Nummer = s.Nummer,
+                UndersokelseId = s.UndersokelseId,
                 KoordinatNord = s.KoordinatNord,
                 KoordinatOst = s.KoordinatOst,
                 Dybde = s.Dybde,
@@ -45,6 +46,32 @@ public class StationService : IStationService
             IsSuccess = stations.Any(),
             Message = stations.Any() ? null : "Ingen stasjoner funnet for denne prøvetakingsplanen.",
             Stations = stations
+        };
+    }
+    
+    public async Task<StationResult> GetStationsByProjectIdAsync(Guid projectId)
+    {
+        var stations = await _db.BStasjons
+            .Where(s => s.ProsjektId == projectId)
+            .Select(s => new StationDto
+            {
+                Id = s.Id,
+                Nummer = s.Nummer,
+                KoordinatNord = s.KoordinatNord,
+                KoordinatOst = s.KoordinatOst,
+                Dybde = s.Dybde,
+                Analyser = s.Analyser,
+                UndersokelseId = s.UndersokelseId
+            })
+            .ToListAsync();
+
+        return new StationResult
+        {
+            IsSuccess = stations.Any(),
+            Message   = stations.Any() 
+                ? null 
+                : "Ingen stasjoner funnet for dette prosjektet.",
+            Stations  = stations
         };
     }
     
@@ -70,6 +97,7 @@ public class StationService : IStationService
                 KoordinatNord = s.KoordinatNord,
                 KoordinatOst = s.KoordinatOst,
                 Dybde = s.Dybde,
+                UndersokelseId = s.UndersokelseId,
                 Analyser = s.Analyser
             }
         };
