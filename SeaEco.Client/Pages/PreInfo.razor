@@ -1,9 +1,200 @@
-@page "/project/{ProjectId:guid}/preInfo/"
-@using Microsoft.AspNetCore.Authorization
-@attribute [Authorize]
+@* The next line is for testing *@
+@page "/project/get-preinfo"
 
-<h3>Siden er enda ikke laget</h3>
+@* @page "/project/{ProjectId:guid}/preInfo/{PreInfoId:guid}" *@
+@using Microsoft.AspNetCore.Authorization
+@using SeaEco.Abstractions.Models.PreInfo
+@using SeaEco.Abstractions.Models.User
+@inject HttpClient Http
+@* @attribute [Authorize] *@
+@inject NavigationManager Navigation
+
+
+<h3>Preinfo</h3>
+
+
+@if (_isLoaded)
+{
+    <div class="preInfo-container">
+        <div class="form-floating mb-3">
+            <input type="date" id="date" class="form-control"
+                   value="@_preInfo.Feltdato.ToString("yyyy-MM-dd")">
+            <label for="date">Dato</label>
+        </div>
+        
+        <div class="form-floating mb-3">
+            <input type="text" id="user" class="form-control"
+                   value="@_user.FullName">
+            <label for="user">Feltansvarlig</label>
+        </div>
+        
+        <div class="form-floating mb-3">
+            <input type="text" id="samplers" class="form-control"
+                   value="@string.Join(", ", _samplers.Select(s => s.FullName))">
+            <label for="samplers">Andre prøvetakere</label>
+        </div>
+        
+        <div class="form-floating mb-3">
+            <input type="number" id="ph" class="form-control"
+                   value="@_preInfo.Ph">
+            <label for="ph">pH</label>
+        </div>
+        
+        <div class="form-floating mb-3">
+            <input type="number" id="eh" class="form-control"
+                   value="@_preInfo.Eh">
+            <label for="eh">Eh</label>
+        </div>
+        
+        <div class="form-floating mb-3">
+            <input type="number" id="temp" class="form-control"
+                   value="@_preInfo.Temperatur">
+            <label for="temp">Temperatur</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="number" id="elektrode" class="form-control"
+                   value="@_preInfo.RefElektrode">
+            <label for="elektrode">Ref.elektrode</label>
+        </div>
+        
+        <div class="form-floating mb-3">
+            <input type="text" id="grabb" class="form-control"
+                   value="@_preInfo.Grabb">
+            <label for="grabb">Grabb</label>
+        </div>
+        
+        <div class="form-floating mb-3">
+            <input type="text" id="sil" class="form-control"
+                   value="@_preInfo.Sil">
+            <label for="sil">Sil</label>
+        </div>
+        
+        <div class="form-floating mb-3">
+            <input type="text" id="ph-meter" class="form-control"
+                   value="@_preInfo.PhMeter">
+            <label for="ph-meter">pH-meter</label>
+        </div>
+    </div>
+}
+else
+{
+    <div class="mt-3 text-center">
+        <div class="alert alert-info">Laster data...</div>
+    </div>
+}
+
+<div class="button-container">
+    <button @onclick="BackToProjectPage" class="custom-btn">
+        Tilbake
+    </button>
+
+    @if (_preInfo != null)
+    { 
+        <button @onclick="EditPreInfo" class="custom-btn">
+            Rediger
+        </button>
+    }
+</div>
+
 
 @code {
-    
+    [Parameter] public Guid ProjectId { get; set; }
+    [Parameter] public Guid PreInfoId { get; set; }
+
+    private PreInfoDto? _preInfo = new();
+    private UserDto? _user = new();
+    private List<UserDto?> _samplers = [];
+
+    private bool _isLoaded = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadPreInfoData();
+        _isLoaded = true;
+    }
+
+    private async Task LoadPreInfoData()
+    {
+        // _preInfo = await Http.GetFromJsonAsync<PreInfoDto>($"api/PreInfo/{PreInfoId}");
+        // if (_preInfo != null)
+        // {
+        //     _user = await Http.GetFromJsonAsync<UserDto>($"api/users/{_preInfo.FeltansvarligId}");
+        //     
+        //     foreach (var userId in _preInfo.ProvetakerIds)
+        //     {
+        //         var sampler = await Http.GetFromJsonAsync<UserDto>($"api/users/{userId}");
+        //         if (sampler is not null)
+        //         {
+        //             _samplers.Add(sampler);
+        //         }                    
+        //     }
+        // }
+
+
+        // Test code
+        _preInfo = new PreInfoDto
+        {
+            Id = Guid.NewGuid(),
+            ProsjektId = Guid.Parse("e2e6ff64-b37e-4f33-92a9-83a3d1cd0a65"),
+            Feltdato = DateTime.Now,
+            FeltansvarligId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
+            ProvetakerIds =
+            [
+                Guid.Parse("22222222-2222-2222-2222-222222222222"),
+                Guid.Parse("33333333-3333-3333-3333-333333333333")
+            ],
+            Ph = 7.4f,
+            Eh = 120.5f,
+            Temperatur = 12.3f,
+            RefElektrode = 205,
+            Grabb = "Van Veen 0.1 m²",
+            Sil = "1mm rustfri stål",
+            PhMeter = "Hanna HI98191",
+            Kalibreringsdato = DateOnly.FromDateTime(DateTime.Today.AddDays(-3))
+        };
+
+        _user = new UserDto()
+        {
+            Id = Guid.Parse("44444444-4444-4444-4444-444444444444"),
+            FirstName = "Anna",
+            LastName = "Hansen",
+            Email = "anna.hansen@example.com",
+            IsAdmin = false,
+            IsActive = true
+        };
+
+        _samplers =
+        [
+            new UserDto
+            {
+                Id = Guid.Parse("22222222-2222-2222-2222-222222222222"),
+                FirstName = "Maria",
+                LastName = "Berg",
+                Email = "maria.berg@example.com",
+                IsAdmin = false,
+                IsActive = true
+            },
+
+            new UserDto
+            {
+                Id = Guid.Parse("33333333-3333-3333-3333-333333333333"),
+                FirstName = "Jonas",
+                LastName = "Lunde",
+                Email = "jonas.lunde@example.com",
+                IsAdmin = false,
+                IsActive = true
+            }
+        ];
+    }
+
+    private void BackToProjectPage()
+    {
+        Navigation.NavigateTo("");
+    }
+
+    private void EditPreInfo()
+    {
+        Navigation.NavigateTo("/project/edit-preinfo");
+    }
 }
