@@ -199,6 +199,16 @@ public class ProjectController : ControllerBase
     }
     
     // Stasjonsoperasjoner
+    [HttpGet("{projectId:guid}/stations")]
+    public async Task<IActionResult> GetAllStations(Guid projectId)
+    {
+        var result = await _stationService.GetStationsByProjectIdAsync(projectId);
+        if (!result.IsSuccess)
+            return NotFound(result.Message);
+
+        return Ok(result.Stations);
+    }
+    
     [HttpGet("{projectId:guid}/sampling-plan/{samplingPlanId:guid}/stations")]
     public async Task<IActionResult> GetStations(Guid projectId, Guid samplingPlanId)
     {
@@ -262,7 +272,17 @@ public class ProjectController : ControllerBase
 
         dto.ProsjektId = projectId;
         var result = await _stationService.AddStationToProjectAsync(projectId, dto);
-        return result.IsSuccess ? Ok(new { id = result.StationId }) : BadRequest(result.Message);
+
+        if (!result.IsSuccess)
+            return BadRequest(result.Message);
+
+        var stationDto = result.Station!;
+        
+        return CreatedAtAction(
+            nameof(GetStationById),
+            new { projectId = projectId, stationId = stationDto.Id },
+            stationDto
+        );
     }
     
     [RoleAccessor(true)]

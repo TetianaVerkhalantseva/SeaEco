@@ -1,0 +1,79 @@
+
+
+
+.card-status-new {
+    background: linear-gradient(to bottom, #8CBFD9, #6497B1);
+    color: white;
+    border: 1px solid #ccc;
+    border-top-left-radius: .3rem;
+    border-top-right-radius: .3rem;
+    border-bottom: none;
+}
+
+.card-status-done {
+    background: linear-gradient(to bottom, #BFD98C, #97B164);
+    color: white;
+    border: 1px solid #ccc;
+    border-top-left-radius: .3rem;
+    border-top-right-radius: .3rem;
+    border-bottom: none;
+}
+.card{
+    background: transparent;
+    border-radius: .3rem;
+    overflow: hidden;
+}
+
+.card-body {
+    position: relative;
+}
+
+.card-bottom{
+    padding: .3rem;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-bottom-left-radius: .3rem;
+    border-bottom-right-radius: .3rem;
+    border-top: none;
+
+}
+
+.corner-text {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 8px;
+    font-size: .7rem;
+}
+
+.card-col {
+    flex: 0 0 300px;
+    max-width: 300px;
+    min-width: 300px;
+}
+
+
+    .card-container {
+        max-width: 600px;
+        margin: auto;
+    }
+
+
+.projects-container {
+    max-width: 1200px;
+    flex-grow: 1;
+}
+
+
+
+.line {
+    border-top: solid 1px lightgray !important;
+}
+
+
+
+
+
+
+
+

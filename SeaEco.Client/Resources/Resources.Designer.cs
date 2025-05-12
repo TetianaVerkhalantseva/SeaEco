@@ -818,5 +818,35 @@ namespace SeaEco.Client.Resources {
                 return ResourceManager.GetString("HeaderNewStation", resourceCulture);
             }
         }
+        
+        internal static string ButtonAddNewStation {
+            get {
+                return ResourceManager.GetString("ButtonAddNewStation", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonComplete {
+            get {
+                return ResourceManager.GetString("ButtonComplete", resourceCulture);
+            }
+        }
+        
+        internal static string ModalTextCompleteProject {
+            get {
+                return ResourceManager.GetString("ModalTextCompleteProject", resourceCulture);
+            }
+        }
+        
+        internal static string PageSatationOverviewNoStations {
+            get {
+                return ResourceManager.GetString("PageSatationOverviewNoStations", resourceCulture);
+            }
+        }
+        
+        internal static string ModalComment {
+            get {
+                return ResourceManager.GetString("ModalComment", resourceCulture);
+            }
+        }
     }
 }

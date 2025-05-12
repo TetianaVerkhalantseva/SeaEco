@@ -62,7 +62,7 @@
 }
 
 .card-status-done {
-    background: linear-gradient(to bottom, #99D98C, #70B164);
+    background: linear-gradient(to bottom, #BFD98C, #97B164);
     color: white;
     border: 1px solid #ccc;
     border-top-left-radius: .3rem;

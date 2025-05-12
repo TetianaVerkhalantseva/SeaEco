@@ -11,11 +11,11 @@ public enum Prosjektstatus
     Pabegynt = 2,
 
     [Description("Pågår")]
-    Ferdig = 3,
+    Pagar= 3,
 
     [Description("Ferdig")]
-    Deaktivert = 4,
+    Ferdig = 4,
     
     [Description("Deaktivert")]
-    Pagar = 5
+    Deaktivert = 5
 }

@@ -5,6 +5,7 @@ public class StationDto
     public Guid Id { get; set; }
     public Guid ProsjektId { get; set; }
     public Guid? ProvetakingsplanId { get; set; }
+    public Guid? UndersokelseId { get; set; }
     public int Nummer { get; set; }
     public string KoordinatNord { get; set; } = null!;
     public string KoordinatOst { get; set; } = null!;
