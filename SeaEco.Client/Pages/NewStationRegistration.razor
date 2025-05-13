@@ -74,7 +74,7 @@
     <div class="equipment-container">
         <div class="form-floating mb-3">
             <InputSelect id="equip-1" class="form-control" @bind-Value="_surveyDto.AntallGrabbhugg">
-                <option value="">Velg antall grabbhugg</option>
+                <option value="0">Velg antall grabbhugg</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -166,6 +166,39 @@
             </div>
 
             <div class="form-floating mb-3">
+                <InputSelect id="GrabbVolum" class="form-select" @bind-Value="_surveyDto.BSensorisk.Grabbvolum">
+                    <option value="" disabled>Velg grabbvolum</option>
+                    @foreach (Grabbvolum g in Enum.GetValues(typeof(Grabbvolum)))
+                    {
+                        <option value="@( (int)g )">@g.GetDescription()</option>
+                    }
+                </InputSelect>
+                <label for="GrabbVolum">GrabbVolum</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <InputSelect id="Tykkelse" class="form-select" @bind-Value="_surveyDto.BSensorisk.Tykkelseslamlag">
+                    <option value="" disabled>Velg tykkelseslamlag</option>
+                    @foreach (Tykkelseslamlag t in Enum.GetValues(typeof(Tykkelseslamlag)))
+                    {
+                        <option value="@( (int)t )">@t.GetDescription()</option>
+                    }
+                </InputSelect>
+                <label for="Tykkelse">Tykkelseslamlag</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <InputSelect id="Gassbobler" class="form-select" @bind-Value="_surveyDto.BSensorisk.Gassbobler">
+                    <option value="" disabled>Velg gassbobler</option>
+                    @foreach (Gassbobler gass in Enum.GetValues(typeof(Gassbobler)))
+                    {
+                        <option value="@( (int)gass )">@gass.GetDescription()</option>
+                    }
+                </InputSelect>
+                <label for="Gassbobler">Gassbobler</label>
+            </div>
+
+            <div class="form-floating mb-3">
                 <InputSelect id="Farge" class="form-select" @bind-Value="_surveyDto.BSensorisk.Farge">
                     <option value="" disabled>Velg farge</option>
                     @foreach (Farge f in Enum.GetValues(typeof(Farge)))
@@ -198,39 +231,6 @@
                 </InputSelect>
                 <label for="Konsistens">Konsistens</label>
             </div>
-
-            <div class="form-floating mb-3">
-                <InputSelect id="GrabbVolum" class="form-select" @bind-Value="_surveyDto.BSensorisk.Grabbvolum">
-                    <option value="" disabled>Velg grabbvolum</option>
-                    @foreach (Grabbvolum g in Enum.GetValues(typeof(Grabbvolum)))
-                    {
-                        <option value="@( (int)g )">@g.GetDescription()</option>
-                    }
-                </InputSelect>
-                <label for="GrabbVolum">GrabbVolum</label>
-            </div>
-
-            <div class="form-floating mb-3">
-                <InputSelect id="Tykkelse" class="form-select" @bind-Value="_surveyDto.BSensorisk.Tykkelseslamlag">
-                    <option value="" disabled>Velg tykkelseslamlag</option>
-                    @foreach (Tykkelseslamlag t in Enum.GetValues(typeof(Tykkelseslamlag)))
-                    {
-                        <option value="@( (int)t )">@t.GetDescription()</option>
-                    }
-                </InputSelect>
-                <label for="Tykkelse">Tykkelseslamlag</label>
-            </div>
-
-            <div class="form-floating mb-3">
-                <InputSelect id="Gassbobler" class="form-select" @bind-Value="_surveyDto.BSensorisk.Gassbobler">
-                    <option value="" disabled>Velg gassbobler</option>
-                    @foreach (Gassbobler gass in Enum.GetValues(typeof(Gassbobler)))
-                    {
-                        <option value="@( (int)gass )">@gass.GetDescription()</option>
-                    }
-                </InputSelect>
-                <label for="Gassbobler">Gassbobler</label>
-            </div>
         </div>
     </div>
 
@@ -240,14 +240,14 @@
             
             <div class="checkbox-container">
                 <button class="toggle-btn" data-level="@(_surveyDto.BHardBase?.Steinbunn.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
-                        @onclick="() => CycleValue(_surveyDto.BHardBase, nameof(_surveyDto.BHardBase.Steinbunn))"
-                        disabled="@(_surveyDto.BHardBase == null)">
+                        @onclick="() => ToggleZeroOneValue(_surveyDto.BHardBase, nameof(_surveyDto.BHardBase.Steinbunn))"
+                        disabled="@(_surveyDto.BHardBase == null || _surveyDto.BHardBase.Fjellbunn == 1f)">
                     Steinbunn
                 </button>
                 
                 <button class="toggle-btn" data-level="@(_surveyDto.BHardBase?.Fjellbunn.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
-                        @onclick="() => CycleValue(_surveyDto.BHardBase, nameof(_surveyDto.BHardBase.Fjellbunn))"
-                        disabled="@(_surveyDto.BHardBase == null)">
+                        @onclick="() => ToggleZeroOneValue(_surveyDto.BHardBase, nameof(_surveyDto.BHardBase.Fjellbunn))"
+                        disabled="@(_surveyDto.BHardBase == null || _surveyDto.BHardBase.Steinbunn == 1f)">
                     Fjellbunn
                 </button>
             </div>
@@ -791,6 +791,19 @@
                 property.SetValue(target, 1f);
             else
                 property.SetValue(target, 0f);
+        }
+    }
+    
+    private void ToggleZeroOneValue(object target, string propertyName)
+    {
+        if (target == null) return;
+    
+        var property = target.GetType().GetProperty(propertyName);
+        if (property != null && property.PropertyType == typeof(float))
+        {
+            var currentValue = (float)(property.GetValue(target) ?? 0f);
+
+            property.SetValue(target, currentValue == 0f ? 1f : 0f);
         }
     }
     
