@@ -115,6 +115,7 @@
 @code {
     [Parameter]
     public Guid CustomerId { get; set; }
+    
     private CustomerDto? _customer = new();
     private bool? _result;
     private string _currentSort = "all";
@@ -132,7 +133,7 @@
         {
             _customer = await Http.GetFromJsonAsync<CustomerDto>($"api/Customer/{CustomerId}");
             
-            _allProjects = await Http.GetFromJsonAsync<List<ProjectDto>>($"api/Project/Customer/{_customer.Id}");
+            _allProjects = await Http.GetFromJsonAsync<List<ProjectDto>>($"api/Project/Customer/{CustomerId}");
             
             SortProjectList(_currentSort);
         }

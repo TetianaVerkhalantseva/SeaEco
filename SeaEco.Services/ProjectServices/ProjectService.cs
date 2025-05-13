@@ -101,18 +101,14 @@ public class ProjectService : IProjectService
     public async Task<List<ProjectDto>> GetAllProjectsByCustomerId(Guid customerId)
     {
         return await _context.BProsjekts
-            .Include(p => p.Kunde)  
-            .Include(p => p.Lokalitet)
-            .Include(p => p.BTilstand)
-            .Include(p => p.BPreinfos)  
-            .Where(c => c.KundeId == customerId)
+            .Where(p => p.KundeId == customerId)
             .Select(p => new ProjectDto
             {
                 Id = p.Id,
                 PoId = p.PoId,
                 ProsjektIdSe = p.ProsjektIdSe,
                 KundeId = p.KundeId,
-                Oppdragsgiver = p.Kunde.Oppdragsgiver, 
+                Oppdragsgiver = p.Kunde.Oppdragsgiver,
                 Kundekontaktperson = p.Kundekontaktperson,
                 Kundetlf = p.Kundetlf,
                 Kundeepost = p.Kundeepost,
@@ -132,9 +128,9 @@ public class ProjectService : IProjectService
                     .OrderBy(d => d)
                     .ToList()
             })
+            .AsNoTracking()
             .ToListAsync();
     }
-
 
     public async Task<ProjectDto?> GetProjectByIdAsync(Guid id)
     {
