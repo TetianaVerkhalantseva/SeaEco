@@ -1,0 +1,68 @@
+@page "/registerUser"
+@using Microsoft.AspNetCore.Authorization
+@using SeaEco.Abstractions.Models.Authentication
+@using SeaEco.Client.Resources
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@attribute [Authorize(Roles = "admin")]
+
+<EditForm Model="newUser" OnValidSubmit="UserRegistration">
+    <DataAnnotationsValidator />
+    <div class="d-flex flex-column align-items-center">
+        <div class="mb-3">
+            <h2>@Resources.PageRegisterUserNewUser</h2>
+        </div>
+
+        <div class="d-flex flex-column">
+            <div class="d-flex flex-column gap-2">
+                <div class="d-flex justify-content-center gap-2">
+                    <InputText id="firstName" class="form-control" @bind-Value="newUser.FirstName" placeholder="@Resources.InputTextFirstName" />
+                    <InputText id="lastName" class="form-control" @bind-Value="newUser.LastName" placeholder="@Resources.InputTextLastName" />
+                </div>
+                <InputText id="email" class="form-control" @bind-Value="newUser.Email" placeholder="@Resources.InputTextMail" />
+                <InputText id="password" type="password" class="form-control"  @bind-Value="newUser.Password" placeholder="@Resources.InputTextPassword" />
+                <InputText id="repPassword" type="password" class="form-control" @bind-Value="newUser.ConfirmPassword" placeholder="@Resources.InputTextRepPassword" />
+            </div>
+
+            <div class="mt-2 gap-2">
+                <InputCheckbox id="admin" class="form-check-input" @bind-Value="newUser.IsAdmin" />
+                <label class="ms-1" title="@(Resources.TooltipAdmin + "\n" + Resources.TooltipAdminOne + "\n" + Resources.TooltipAdminTwo  + "\n" +Resources.TooltipAdminThree)">@Resources.CheckboksAdmin</label>
+            </div>
+
+            <div class="d-flex justify-content-center mt-2">
+                <NavLink class="btn custom-outline-secondary-btn me-2" href="/user">@Resources.ButtonCancel</NavLink>
+                <button type="submit" class="btn custom-btn me-2">@Resources.ButtonSave</button>
+            </div>
+            
+            <div class="mt-3 text-center" style="height: 30px">
+                    <div class="custom-validation-summary">
+                        <ValidationSummary/>
+                    </div>
+                
+                @if (!string.IsNullOrEmpty(_errorMessage))
+                {
+                    <p class="text-danger">@_errorMessage</p>
+                }
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    
+    private RegisterUserDto newUser = new RegisterUserDto();
+    private string? _errorMessage;
+
+    private async Task UserRegistration()
+    {
+        var response = await Http.PostAsJsonAsync("api/authentication/register", newUser);
+        if (response.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo("/user", forceLoad: true);
+        }
+        else
+        {
+            _errorMessage = @Resources.ErrorMessageUnexpected;
+        }
+    }
+}

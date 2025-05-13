@@ -53,7 +53,6 @@ public sealed class UserService(IGenericRepository<Bruker> userRepository) : IUs
         record.Etternavn = dto.LastName;
         record.Epost = dto.Email;
         record.IsAdmin = dto.IsAdmin;
-        record.Aktiv = dto.IsActive;
         
         return await userRepository.Update(record);
     }
@@ -78,7 +77,6 @@ public sealed class UserService(IGenericRepository<Bruker> userRepository) : IUs
         LastName = model.Etternavn,
         Email = model.Epost,
         IsAdmin = model.IsAdmin,
-        IsActive = model.Aktiv,
-        Datoregistrert = model.Datoregistrert
+        IsActive = model.Aktiv
     };
 }

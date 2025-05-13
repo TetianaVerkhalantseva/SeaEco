@@ -1,0 +1,938 @@
+@* if testing, comment out this line *@
+@* @page "/project/{ProjectId:guid}/station/{StationId:guid}/create-survey" *@
+
+@page "/project/create-survey"
+
+@* @using Microsoft.AspNetCore.Authorization *@
+@using SeaEco.Abstractions.Enums
+@using SeaEco.Abstractions.Enums.Bsensorisk
+@using SeaEco.Abstractions.Extensions
+@using SeaEco.Abstractions.Models.BSurvey
+@using SeaEco.Abstractions.Models.Bundersokelse
+@using SeaEco.Abstractions.ValueObjects
+@inject HttpClient Http
+@inject IJSRuntime Js
+@inject NavigationManager Navigation
+@* @attribute [Authorize] *@
+@* @attribute [Authorize(Roles = "admin")] *@
+
+
+<h4>Stasjonsredigering</h4>
+
+
+<div id="div1" class="content-div active">
+    @if (_surveyDto.BStation != null)
+    {
+        <div class="position-depth-container">
+            <div class="form-floating mb-3">
+                <InputText id="position_n_deg" class="form-control"
+                           @bind-Value="_coordinateNorthGrade"
+                           @oninput='e => { _coordinateNorthGrade = e.Value?.ToString() ?? ""; UpdateCoordinateNorth(); }'
+                           placeholder="Grader"/>
+                <label for="position_n_deg">Nordlig grader</label>
+            </div>
+    
+            <div class="form-floating mb-3">
+                <InputText id="position_n_min" class="form-control"
+                           @bind-Value="_coordinateNorthMinute"
+                           @oninput='e => { _coordinateNorthMinute = e.Value?.ToString() ?? ""; UpdateCoordinateNorth(); }'
+                           placeholder="Minutter"/>
+                <label for="position_n_min">Nordlig minutter</label>
+            </div>
+    
+    
+            <div class="form-floating mb-3">
+                <InputText id="position_e_deg" class="form-control"
+                           @bind-Value="_coordinateEastGrade"
+                           @oninput='e => { _coordinateEastGrade = e.Value?.ToString() ?? ""; UpdateCoordinateEast(); }'
+                           placeholder="Grader"/>
+                <label for="position_e_deg">Østlig grader</label>
+            </div>
+    
+            <div class="form-floating mb-3">
+                <InputText id="position_e_min" class="form-control"
+                           @bind-Value="_coordinateEastMinute"
+                           @oninput='e => { _coordinateEastMinute = e.Value?.ToString() ?? ""; UpdateCoordinateEast(); }'
+                           placeholder="Minutter"/>
+                <label for="position_e_min">Østlig minutter</label>
+            </div>
+    
+            <div class="form-floating mb-3">
+                <InputNumber id="depth" class="form-control" @bind-Value="_surveyDto.BStation.Dybde" placeholder="M"/>
+                <label for="depth">Dybde</label>
+            </div>
+    
+            <div class="position-depth-button-container">
+                <button class="btn btn-outline-primary clear-data @(_surveyDto.BStation.Dybde == 0 ? "active" : "")"
+                        @onclick="() => ClearPositionAndDepth(0)">
+                    Annen posisjon og dybde
+                </button>
+            </div>
+        </div>
+    }
+
+    <div class="equipment-container">
+        <div class="form-floating mb-3">
+            <InputSelect id="equip-1" class="form-control" @bind-Value="_surveyDto.AntallGrabbhugg">
+                <option value="0">Velg antall grabbhugg</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </InputSelect>
+            <label for="equip-1"></label>
+        </div>
+
+        <div class="checkbox-3-container">
+            <label class="custom-checkbox" for="equip-2">
+                <span class="custom-label">Gokjent grabbhastighet</span>
+                <input id="equip-2" type="checkbox" checked="@_surveyDto.GrabbhastighetGodkjent">
+                <span class="custom-checkmark"></span>
+            </label>
+        </div>
+    </div>
+</div>
+
+
+<div id="div2" class="content-div">
+    <div class="typeRadio-container">
+        <h5>Bunntype: </h5>
+
+        <div class="cntr">
+            <input type="radio"
+                   name="bunntype"
+                   id="cbx1"
+                   class="hidden-xs-up"
+                   @onchange="@(() => _selectBunnType = "blot")"
+                   checked="@(_selectBunnType == "blot")" />
+            <label for="cbx1" class="cbx"></label>
+            <label for="cbx1" class="lbl">Bløt</label>
+        </div>
+
+        <div class="cntr">
+            <input type="radio"
+                   name="bunntype"
+                   id="cbx2"
+                   class="hidden-xs-up"
+                   @onchange="@(() => _selectBunnType = "hard")"
+                   checked="@(_selectBunnType == "hard")" />
+            <label for="cbx2" class="cbx"></label>
+            <label for="cbx2" class="lbl">Hard</label>
+        </div>
+    </div>
+
+    <div id="sensoryRadio" class="sensoryRadio-container">
+        <h5>Er sensorisk utført?</h5>
+
+        <div class="cntr">
+            <input type="radio" 
+                   name="sensorisk" 
+                   id="cbx3" 
+                   class="hidden-xs-up"
+                   @onchange="@(() => _selectSensorisk = "ja")"
+                   checked="@(_selectSensorisk == "ja")"
+            />
+            <label for="cbx3" class="cbx"></label>
+            <label for="cbx3" class="lbl">Ja</label>
+        </div>
+
+        <div class="cntr">
+            <input type="radio"
+                   name="sensorisk"
+                   id="cbx4"
+                   class="hidden-xs-up"
+                   @onchange="@(() => _selectSensorisk = "nei")"
+                   checked="@(_selectSensorisk == "nei")"
+            />
+            <label for="cbx4" class="cbx"></label>
+            <label for="cbx4" class="lbl">Nei</label>
+        </div>
+    </div>
+
+    <div id="sensoryInfo" class="sensoryInfo-container">
+        <div class="sensoryData">
+            <div class="form-floating mb-3" id="sensoryDataSoft_1">
+                <InputNumber id="ProvePh" class="form-control" @bind-Value="_surveyDto.BSediment.Ph" placeholder="pH" />
+                <label for="ProvePh">pH</label>
+            </div>
+
+            <div class="form-floating mb-3" id="sensoryDataSoft_2">
+                <InputNumber id="ProveEh" class="form-control" @bind-Value="_surveyDto.BSediment.Eh" placeholder="Eh" />
+                <label for="ProveEh">EH</label>
+            </div>
+
+            <div class="form-floating mb-3" id="sensoryDataSoft_3">
+                <InputNumber id="ProveTemp" class="form-control" @bind-Value="_surveyDto.BSediment.Temperatur" placeholder="Temp" />
+                <label for="ProveTemp">Temp</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <InputSelect id="GrabbVolum" class="form-select" @bind-Value="_surveyDto.BSensorisk.Grabbvolum">
+                    <option value="" disabled>Velg grabbvolum</option>
+                    @foreach (Grabbvolum g in Enum.GetValues(typeof(Grabbvolum)))
+                    {
+                        <option value="@( (int)g )">@g.GetDescription()</option>
+                    }
+                </InputSelect>
+                <label for="GrabbVolum">GrabbVolum</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <InputSelect id="Tykkelse" class="form-select" @bind-Value="_surveyDto.BSensorisk.Tykkelseslamlag">
+                    <option value="" disabled>Velg tykkelseslamlag</option>
+                    @foreach (Tykkelseslamlag t in Enum.GetValues(typeof(Tykkelseslamlag)))
+                    {
+                        <option value="@( (int)t )">@t.GetDescription()</option>
+                    }
+                </InputSelect>
+                <label for="Tykkelse">Tykkelseslamlag</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <InputSelect id="Gassbobler" class="form-select" @bind-Value="_surveyDto.BSensorisk.Gassbobler">
+                    <option value="" disabled>Velg gassbobler</option>
+                    @foreach (Gassbobler gass in Enum.GetValues(typeof(Gassbobler)))
+                    {
+                        <option value="@( (int)gass )">@gass.GetDescription()</option>
+                    }
+                </InputSelect>
+                <label for="Gassbobler">Gassbobler</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <InputSelect id="Farge" class="form-select" @bind-Value="_surveyDto.BSensorisk.Farge">
+                    <option value="" disabled>Velg farge</option>
+                    @foreach (Farge f in Enum.GetValues(typeof(Farge)))
+                    {
+                        <option value="@( (int)f )">@f.GetDescription()</option>
+                    }
+                </InputSelect>
+                <label for="Farge">Farge</label>
+            </div>
+
+
+            <div class="form-floating mb-3">
+                <InputSelect id="Lukt" class="form-select" @bind-Value="_surveyDto.BSensorisk.Lukt">
+                    <option value="" disabled>Velg lukt</option>
+                    @foreach (Lukt l in Enum.GetValues(typeof(Lukt)))
+                    {
+                        <option value="@( (int)l )">@l.GetDescription()</option>
+                    }
+                </InputSelect>
+                <label for="Lukt">Lukt</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <InputSelect id="Konsistens" class="form-select" @bind-Value="_surveyDto.BSensorisk.Konsistens">
+                    <option value="" disabled>Velg konsistens</option>
+                    @foreach (Konsistens k in Enum.GetValues(typeof(Konsistens)))
+                    {
+                        <option value="@( (int)k )">@k.GetDescription()</option>
+                    }
+                </InputSelect>
+                <label for="Konsistens">Konsistens</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="sedimentType-container" id="sedimentType">
+        <div class="hardSediment-container" id="hardSediment">
+            <h5>Bunntype:</h5>
+            
+            <div class="checkbox-container">
+                <button class="toggle-btn" data-level="@(_surveyDto.BHardBase?.Steinbunn.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
+                        @onclick="() => ToggleZeroOneValue(_surveyDto.BHardBase, nameof(_surveyDto.BHardBase.Steinbunn))"
+                        disabled="@(_surveyDto.BHardBase == null || _surveyDto.BHardBase.Fjellbunn == 1f)">
+                    Steinbunn
+                </button>
+                
+                <button class="toggle-btn" data-level="@(_surveyDto.BHardBase?.Fjellbunn.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
+                        @onclick="() => ToggleZeroOneValue(_surveyDto.BHardBase, nameof(_surveyDto.BHardBase.Fjellbunn))"
+                        disabled="@(_surveyDto.BHardBase == null || _surveyDto.BHardBase.Steinbunn == 1f)">
+                    Fjellbunn
+                </button>
+            </div>
+        </div>
+
+        <div class="softSediment-container" id="softSediment">
+            <h5>Sedimenttype:</h5>
+            
+            <div class="checkbox-container">
+                <button class="toggle-btn" data-level="@(_surveyDto.BSoftBase?.Sand.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
+                        @onclick="() => CycleValue(_surveyDto.BSoftBase, nameof(_surveyDto.BSoftBase.Sand))"
+                        disabled="@(_surveyDto.BSoftBase == null)">
+                    Sand
+                </button>
+                <button class="toggle-btn" data-level="@(_surveyDto.BSoftBase?.Leire.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
+                        @onclick="() => CycleValue(_surveyDto.BSoftBase, nameof(_surveyDto.BSoftBase.Leire))"
+                        disabled="@(_surveyDto.BSoftBase == null)">
+                    Leire
+                </button>
+                <button class="toggle-btn" data-level="@(_surveyDto.BSoftBase?.Silt.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
+                        @onclick="() => CycleValue(_surveyDto.BSoftBase, nameof(_surveyDto.BSoftBase.Silt))"
+                        disabled="@(_surveyDto.BSoftBase == null)">
+                    Silt
+                </button>
+                <button class="toggle-btn" data-level="@(_surveyDto.BSoftBase?.Grus.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
+                        @onclick="() => CycleValue(_surveyDto.BSoftBase, nameof(_surveyDto.BSoftBase.Grus))"
+                        disabled="@(_surveyDto.BSoftBase == null)">
+                    Grus
+                </button>
+                <button class="toggle-btn" data-level="@(_surveyDto.BSoftBase?.Skjellsand.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
+                        @onclick="() => CycleValue(_surveyDto.BSoftBase, nameof(_surveyDto.BSoftBase.Skjellsand))"
+                        disabled="@(_surveyDto.BSoftBase == null)">
+                    Skjellsand
+                </button>
+            </div>
+        </div>
+    </div>
+
+    @* TODO: Picture usilt and tom grabb container *@
+    <div class="picture-container">
+        <button class="picture-button" style="vertical-align:middle"><span>Usilt</span></button>
+
+        <div class="tom-grabb-container" id="tomGrabb_1">
+            <label class="custom-checkbox" for="tom-grabb-1">
+                <span class="custom-label">Tom grabb</span>
+                <input id="tom-grabb-1" type="checkbox">
+                <span class="custom-checkmark"></span>
+            </label>
+        </div>
+    </div>
+    @* TODO: Picture usilt and tom grabb container *@
+</div>
+
+
+
+<div id="div3" class="content-div">
+    @* TODO: Picture silt and tom grabb container *@
+    <div class="picture-container">
+        <button class="picture-button" style="vertical-align:middle"><span>Silt</span></button>
+
+        <div class="tom-grabb-container" id="tomGrabb_2">
+            <label class="custom-checkbox" for="tom-grabb-2">
+                <span class="custom-label">Tom grabb</span>
+                <input id="tom-grabb-2" type="checkbox">
+                <span class="custom-checkmark"></span>
+            </label>
+        </div>
+    </div>
+    @* TODO: Picture usilt and tom grabb container *@
+
+    <div class="checkbox-1-container">
+        <label class="custom-checkbox" for="beggiatoa">
+            <span class="custom-label">Beggiatoa</span>
+            <input type="checkbox" id="beggiatoa" @bind="_surveyDto.Beggiatoa"/>
+            <span class="custom-checkmark"></span>
+        </label>
+
+        <label class="custom-checkbox" for="forrester">
+            <span class="custom-label">Forrester</span>
+            <input type="checkbox" id="forrester" @bind="_surveyDto.Forrester"/>
+            <span class="custom-checkmark"></span>
+        </label>
+
+        <label class="custom-checkbox" for="fekalier">
+            <span class="custom-label">Fekalier</span>
+            <input type="checkbox" id="fekalier" @bind="_surveyDto.Fekalier"/>
+            <span class="custom-checkmark"></span>
+        </label>
+    </div>
+
+    <div class="animalRadio-container">
+        <h5>Dyr: </h5>
+
+        <div class="cntr">
+            <input type="radio"
+                   name="dyr" 
+                   id="cbx5" 
+                   class="hidden-xs-up"
+                   @onchange="@(() => _selectDyr = "ja")"
+                   checked="@(_selectDyr == "ja")"
+            />
+            <label for="cbx5" class="cbx"></label>
+            <label for="cbx5" class="lbl">Ja</label>
+        </div>
+
+        <div class="cntr">
+            <input type="radio"
+                   name="dyr" 
+                   id="cbx6" 
+                   class="hidden-xs-up"
+                   @onchange="@(() => _selectDyr = "nei")"
+                   checked="@(_selectDyr == "nei")"
+            />
+            <label for="cbx6" class="cbx"></label>
+            <label for="cbx6" class="lbl">Nei</label>
+        </div>
+    </div>
+
+    <div id="animalInfo" class="animalInfo-container">
+        <div class="animalData">
+            <div class="form-floating mb-3">
+                <InputText id="pigghuder" class="form-control"
+                           @bind-Value="_surveyDto.BAnimal.Pigghunder"
+                           placeholder="Pigghuder" />
+                <label for="pigghuder">Pigghuder</label>
+            </div>
+            <div class="btn-group mb-3" role="group">
+                <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Pigghunder == "30+" ? "active" : "")"
+                        @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Pigghunder = v)'>30+</button>
+                <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Pigghunder == "50+" ? "active" : "")"
+                        @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Pigghunder = v)'>50+</button>
+            </div>
+
+            <div class="form-floating mb-3">
+                <InputText id="krepsdyr" class="form-control"
+                           @bind-Value="_surveyDto.BAnimal.Krepsdyr"
+                           placeholder="Krepsdyr" />
+                <label for="krepsdyr">Krepsdyr</label>
+            </div>
+            <div class="btn-group mb-3" role="group">
+                <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Krepsdyr == "30+" ? "active" : "")"
+                        @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Krepsdyr = v)'>30+</button>
+                <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Krepsdyr == "50+" ? "active" : "")"
+                        @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Krepsdyr = v)'>50+</button>
+            </div>
+
+            <div class="form-floating mb-3">                
+                <InputText id="skjell" class="form-control"
+                           @bind-Value="_surveyDto.BAnimal.Skjell"
+                           placeholder="Skjell"/>
+                <label for="skjell">Skjell</label>
+            </div>
+            <div class="btn-group mb-3" role="group">
+                <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Skjell == "30+" ? "active" : "")"
+                        @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Skjell = v)'>30+</button>
+                <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Skjell == "50+" ? "active" : "")"
+                        @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Skjell = v)'>50+</button>
+            </div>
+
+            <div class="form-floating mb-3">
+                <InputText id="borstemark" class="form-control"
+                           @bind-Value="_surveyDto.BAnimal.Borstemark"
+                           placeholder="Børstemark"/>
+                <label for="borstemark">Børstemark</label>
+            </div>
+            <div class="btn-group mb-3" role="group">
+                <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Borstemark == "30+" ? "active" : "")"
+                        @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Borstemark = v)'>30+</button>
+                <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Borstemark == "50+" ? "active" : "")"
+                        @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Borstemark = v)'>50+</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-floating mb-3 user-input" id="arter-container">
+        @foreach (Arter art in Enum.GetValues(typeof(Arter)))
+        {
+            <button type="button" class="btn btn-outline-secondary btn-sm me-1 mb-1"
+                    @onclick="() => AddArter(art)">
+                @art.ToString()
+            </button>
+        }
+
+        <InputText class="form-control" id="arter" placeholder="Arter" @bind-Value="_surveyDto.BAnimal.Arter"/>
+    </div>
+
+    <div class="form-floating mb-3 user-input" id="merknader-container">
+        @foreach (Merknader note in Enum.GetValues(typeof(Merknader)))
+        {
+            <button type="button" class="btn btn-outline-secondary btn-sm me-1 mb-1"
+                    @onclick="() => AddMerknad(note)">
+                @note.GetDescription()
+            </button>
+        }
+        
+        <InputText class="form-control" id="merknader" placeholder="Merknader" @bind-Value="_surveyDto.Merknader"/>
+    </div>
+
+    @switch (_result)
+    {
+        case true:
+            <div class="alert alert-success">@_resultMessage</div>
+            break;
+        case false:
+            <div class="alert alert-danger">@_resultMessage</div>
+            break;
+    }
+</div>
+
+
+<div class="button-container">
+    <button id="lastBtn" onclick="showLast()" class="custom-btn">Forrige</button>
+    <button id="nextBtn" onclick="showNext()" class="custom-btn">Neste</button>
+    <button id="submitBtn" class="custom-btn" style="display: none;" @onclick="SubmitSurvey">
+        Registrer
+    </button>
+</div>
+
+
+@* Last and next button script *@
+<script>
+    let currentIndex = 1;
+    const totalDivs = 3;
+
+    function showDiv(index) {
+        for (let i = 1; i <= totalDivs; i++) {
+            document.getElementById('div' + i).classList.remove('active');
+        }
+        document.getElementById('div' + index).classList.add('active');
+        updateButtons();
+    }
+
+    function showLast() {
+        if (currentIndex > 1) {
+            currentIndex--;
+            showDiv(currentIndex);
+        }
+    }
+
+    function showNext() {
+        if (currentIndex < totalDivs) {
+            currentIndex++;
+            showDiv(currentIndex);
+        }
+    }
+
+    function updateButtons() {
+        const lastBtn = document.getElementById('lastBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+
+        lastBtn.style.display = currentIndex === 1 ? 'none' : 'inline-block';
+        nextBtn.style.display = currentIndex === totalDivs ? 'none' : 'inline-block';
+        submitBtn.style.display = currentIndex === totalDivs ? 'inline-block' : 'none';
+    }
+
+    updateButtons();
+
+</script>
+
+<script>
+    const radioSoft = document.getElementById("cbx1");
+    const radioHard = document.getElementById("cbx2");
+    const sensoryQuestion = document.getElementById("sensoryRadio");
+    
+    const radioYes = document.getElementById("cbx3");
+    const radioNo = document.getElementById("cbx4");
+    const sensoryInfo = document.getElementById("sensoryInfo");
+    
+    const sedimentType = document.getElementById("sedimentType");
+    const hardSediment = document.getElementById("hardSediment");
+    const softSediment = document.getElementById("softSediment");
+    
+    const tomGrabb_1 = document.getElementById("tomGrabb_1");
+    const tomGrabb_2 = document.getElementById("tomGrabb_2");
+    
+    const animalYes = document.getElementById("cbx5");
+    const animalNo = document.getElementById("cbx6");
+    const animalInfo = document.getElementById("animalInfo");
+    const arterContainer = document.getElementById("arter-container")
+    
+    function updateDisplay() {
+        if (radioHard.checked) {
+            sensoryQuestion.style.display = "flex";
+
+            sedimentType.style.display = "flex";
+            hardSediment.style.display = "flex";
+            softSediment.style.display = "none";
+            
+            tomGrabb_1.style.display = "flex";
+            tomGrabb_2.style.display = "flex";
+            
+            if (radioYes.checked) {
+                sensoryInfo.style.display = "flex";
+
+                document.getElementById("ProvePh").disabled = true;
+                document.getElementById("ProveEh").disabled = true;
+                document.getElementById("ProveTemp").disabled = true;
+                sensoryDataSoft_1.style.opacity = "0.5";
+                sensoryDataSoft_2.style.opacity = "0.5";
+                sensoryDataSoft_3.style.opacity = "0.5";
+            }
+            else {
+                sensoryInfo.style.display = "none";
+            }
+        }
+        else if (radioSoft.checked) {
+            sensoryQuestion.style.display = "none";
+            sensoryInfo.style.display = "flex";
+
+            sedimentType.style.display = "flex";
+            softSediment.style.display = "flex";
+            hardSediment.style.display = "none";
+
+            document.getElementById("ProvePh").disabled = false;
+            document.getElementById("ProveEh").disabled = false;
+            document.getElementById("ProveTemp").disabled = false;
+            sensoryDataSoft_1.style.opacity = "1";
+            sensoryDataSoft_2.style.opacity = "1";
+            sensoryDataSoft_3.style.opacity = "1";
+
+            tomGrabb_1.style.display = "none";
+            tomGrabb_2.style.display = "none";
+        }
+        else {
+            sensoryQuestion.style.display = "none";
+            sensoryInfo.style.display = "none";
+        }
+    }
+    
+    function updateDisplay_2() {
+        if (animalYes.checked) {
+            animalInfo.style.display = "flex";
+            arterContainer.style.display = "flex";
+        }
+        else {
+            animalInfo.style.display = "none";
+            arterContainer.style.display = "none";
+        }
+    }
+    
+    radioSoft.addEventListener("change", updateDisplay);
+    radioHard.addEventListener("change", updateDisplay);
+    radioYes.addEventListener("change", updateDisplay);
+    radioNo.addEventListener("change", updateDisplay);
+
+    animalYes.addEventListener("change", updateDisplay_2);
+    animalNo.addEventListener("change", updateDisplay_2);
+    
+    updateDisplay();
+    updateDisplay_2();
+</script>
+
+@code {
+    // Remeber to uncomment this part when not testing
+    // [Parameter] 
+    // public Guid ProjectId { get; set; }
+    // [Parameter]
+    // public Guid StationId { get; set; }
+
+    private EditSurveyDto _surveyDto = new();
+    private BStationDto _station = new();
+
+    private string _coordinateNorthGrade = "";
+    private string _coordinateNorthMinute = "";
+    private string _coordinateEastGrade = "";
+    private string _coordinateEastMinute = "";
+
+    private string? _selectBunnType;
+    private string? _selectSensorisk;
+    private string? _selectDyr;
+    
+    private bool? _result;
+    private string? _resultMessage;
+
+    // Remember to add word "async" when not testing
+    protected override Task OnInitializedAsync()
+    {
+        // Create mode
+        // _surveyDto = new EditSurveyDto
+        // {
+        //     Id = Guid.NewGuid(),
+        //     ProsjektId = ProjectId,
+        //     BlotbunnId = Guid.NewGuid(),
+        //     HardbunnId = Guid.NewGuid(),
+        //     SedimentId = Guid.NewGuid(),
+        //     SensoriskId = Guid.NewGuid(),
+        //     DyrId = Guid.NewGuid(),
+        //     
+        //     BSoftBase = new BSoftBaseDto(),
+        //     BHardBase = new BHardBaseDto(),
+        //     BSediment = new BSedimentDto(),
+        //     BAnimal = new BAnimalDto(),
+        //     BSensorisk = new BSensoriskDto(),
+        // };
+        //
+        // _station = await Http.GetFromJsonAsync<BStationDto>($"api/Project/{ProjectId}/station/{StationId}");
+        //
+        // if (_station != null)
+        // {
+        //     _surveyDto.BStation = _station;
+        //     
+        //     ParseCoordinateNorth();
+        //     ParseCoordinateEast();
+        // }
+        // else
+        // {
+        //     _surveyDto.BStation = new BStationDto();
+        //     _surveyDto.BStation.Id = Guid.NewGuid();
+        // }
+        
+        
+        // Test code
+        _surveyDto = new EditSurveyDto
+        {
+            Id = Guid.NewGuid(),
+            ProsjektId = Guid.NewGuid(),
+            BlotbunnId = null,
+            HardbunnId = null,
+            SedimentId = null,
+            SensoriskId = null,
+            DyrId = null,
+            
+            BStation = new BStationDto(),
+            BSoftBase = new BSoftBaseDto(),
+            BAnimal = new BAnimalDto(),
+            BHardBase = new BHardBaseDto(),
+            BSediment = new BSedimentDto(),
+            BSensorisk = new BSensoriskDto(),
+            
+        };
+        if (_surveyDto.BStation != null)
+        {
+            ParseCoordinateNorth();
+            ParseCoordinateEast();
+        }
+        // Test code
+        
+
+        _selectBunnType = null;
+        _selectSensorisk = null;
+        _selectDyr = null;
+
+        return Task.CompletedTask;
+    }
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await Js.InvokeVoidAsync("updateDisplay_2");
+        }
+    }
+
+    // Split the value
+    private void ParseCoordinateNorth()
+    {
+        if (!string.IsNullOrEmpty(_surveyDto.BStation.KoordinatNord))
+        {
+            var parts = _surveyDto.BStation.KoordinatNord.Split('°');
+            if (parts.Length == 2)
+            {
+                _coordinateNorthGrade = parts[0];
+                _coordinateNorthMinute = parts[1];
+            }
+        }
+    }
+    
+    private void ParseCoordinateEast()
+    {
+        if (!string.IsNullOrEmpty(_surveyDto.BStation.KoordinatOst))
+        {
+            var parts = _surveyDto.BStation.KoordinatOst.Split('°');
+            if (parts.Length == 2)
+            {
+                _coordinateEastGrade = parts[0];
+                _coordinateEastMinute = parts[1];
+            }
+        }
+    }
+    
+    // Merge the value
+    private void UpdateCoordinateNorth()
+    {
+        if (!string.IsNullOrWhiteSpace(_coordinateNorthGrade) && !string.IsNullOrWhiteSpace(_coordinateNorthMinute))
+        {
+            if (double.TryParse(_coordinateNorthMinute, out var minute))
+            {
+                _surveyDto.BStation.KoordinatNord = $"{_coordinateNorthGrade}°{minute:F3}";
+            }
+            else
+            {
+                _surveyDto.BStation.KoordinatNord = $"{_coordinateNorthGrade}°{_coordinateNorthMinute}";
+            }
+        }
+    }
+    
+    private void UpdateCoordinateEast()
+    {
+        if (!string.IsNullOrWhiteSpace(_coordinateEastGrade) && !string.IsNullOrWhiteSpace(_coordinateEastMinute))
+        {
+            if (double.TryParse(_coordinateEastMinute, out var minute))
+            {
+                _surveyDto.BStation.KoordinatOst = $"{_coordinateEastGrade}°{minute:F3}";
+            }
+            else
+            {
+                _surveyDto.BStation.KoordinatOst = $"{_coordinateEastGrade}°{_coordinateEastMinute}";
+            }
+        }
+    }
+    
+    private void ClearPositionAndDepth(int value)
+    {
+        if (_surveyDto.BStation != null)
+        {
+            _coordinateNorthGrade = "0";
+            _coordinateNorthMinute = "0";
+            _coordinateEastGrade = "0";
+            _coordinateEastMinute = "0";
+            
+            UpdateCoordinateNorth();
+            UpdateCoordinateEast();
+
+            _surveyDto.BStation.Dybde = 0;
+        }
+    }
+
+    private void CycleValue(object target, string propertyName)
+    {
+        if (target == null) return;
+        
+        var property = target.GetType().GetProperty(propertyName);
+        if (property != null)
+        {
+            var currentValue = (float)(property.GetValue(target) ?? 0f);
+            
+            if (currentValue == 0)
+                property.SetValue(target, 0.5f);
+            else if (currentValue == 0.5f)
+                property.SetValue(target, 1f);
+            else
+                property.SetValue(target, 0f);
+        }
+    }
+    
+    private void ToggleZeroOneValue(object target, string propertyName)
+    {
+        if (target == null) return;
+    
+        var property = target.GetType().GetProperty(propertyName);
+        if (property != null && property.PropertyType == typeof(float))
+        {
+            var currentValue = (float)(property.GetValue(target) ?? 0f);
+
+            property.SetValue(target, currentValue == 0f ? 1f : 0f);
+        }
+    }
+    
+    private void SetAntallDyrVerdi(string verdi, Action<string> setValue)
+    {
+        try
+        {
+            var antall = new AntallDyr(verdi);
+            setValue(antall.ToString());
+        }
+        catch (ArgumentException ex)
+        {
+            _resultMessage = ex.Message;
+        }
+    }
+    
+    private void AddArter(Arter arter)
+    {
+        var newValue = arter.ToString();
+
+        if (string.IsNullOrWhiteSpace(_surveyDto.BAnimal.Arter))
+        {
+            _surveyDto.BAnimal.Arter = newValue;
+        }
+        else if (!_surveyDto.BAnimal.Arter.Contains(newValue))
+        {
+            _surveyDto.BAnimal.Arter += $", {newValue}";
+        }
+    }
+    
+    private void AddMerknad(Merknader merknad)
+    {
+        var newValue = merknad.ToString();
+
+        if (string.IsNullOrWhiteSpace(_surveyDto.Merknader))
+        {
+            _surveyDto.Merknader = newValue;
+        }
+        else if (!_surveyDto.Merknader.Contains(newValue))
+        {
+            _surveyDto.Merknader += $", {newValue}";
+        }
+    }
+
+    private async Task SubmitSurvey()
+    {
+        // _surveyDto.ProsjektId = ProjectId;
+        _surveyDto.Feltdato = DateOnly.FromDateTime(DateTime.Today);
+        
+        if (_selectBunnType == "blot")
+        {
+            _surveyDto.BlotbunnId = Guid.NewGuid();
+            if (_surveyDto.BSoftBase != null)
+            {
+                _surveyDto.BSoftBase.Id = _surveyDto.BlotbunnId.Value;
+            }
+            
+            _surveyDto.HardbunnId = null;
+            _surveyDto.BHardBase = null;
+        
+            _surveyDto.SedimentId = Guid.NewGuid();
+            if (_surveyDto.BSediment != null)
+            {
+                _surveyDto.BSediment.Id = _surveyDto.SedimentId.Value;
+            }
+        }
+        else if (_selectBunnType == "hard")
+        {
+            _surveyDto.HardbunnId = Guid.NewGuid();
+            if (_surveyDto.BHardBase != null)
+            {
+                _surveyDto.BHardBase.Id = _surveyDto.HardbunnId.Value;
+            }
+            
+            _surveyDto.BlotbunnId = null;
+            _surveyDto.BSoftBase = null;
+        }
+        
+        if (_selectSensorisk == "ja")
+        {
+            _surveyDto.SensoriskId = Guid.NewGuid();
+            if (_surveyDto.BSensorisk != null)
+            {
+                _surveyDto.BSensorisk.Id = _surveyDto.SensoriskId.Value;
+            };
+        }
+        else
+        {
+            _surveyDto.SensoriskId = null;
+            _surveyDto.BSensorisk = null;
+        }
+        
+        if (_selectDyr == "ja")
+        {
+            _surveyDto.DyrId = Guid.NewGuid();
+            if (_surveyDto.BAnimal != null)
+            {
+                _surveyDto.BAnimal.Id = _surveyDto.DyrId.Value;
+            };
+        }
+        else
+        {
+            _surveyDto.DyrId = null;
+            _surveyDto.BAnimal = null;
+        }
+        
+        _surveyDto.DatoRegistrert = DateTime.Now;
+        _surveyDto.DatoEndret = DateTime.Now;
+        
+        
+        // var response = await Http.PostAsJsonAsync(
+        //         $"api/Project/{ProjectId}/station/{StationId}/survey",
+        //         _surveyDto);
+        //
+        // if (response.IsSuccessStatusCode)
+        // {
+        //     _result = true;
+        //     _resultMessage = await response.Content.ReadAsStringAsync();
+        //     
+        //     StateHasChanged();
+        //     await Task.Delay(2000);
+        //     
+        //     // remember to add address
+        //     Navigation.NavigateTo($"");
+        // }
+        // else
+        // {
+        //     _result = false;
+        //     _resultMessage = await response.Content.ReadAsStringAsync();
+        // }
+    }
+}

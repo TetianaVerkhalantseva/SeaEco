@@ -1,0 +1,126 @@
+@page "/user"
+@using Microsoft.AspNetCore.Authorization
+@using SeaEco.Abstractions.Models.User
+@using SeaEco.Client.Resources
+@inject HttpClient Http
+@attribute [Authorize(Roles = "admin")]
+@inject NavigationManager Navigation
+
+
+
+
+<div class="d-flex flex-column align-items-center" >
+    
+    @if (_isLoading || _users == null)
+    {
+    }
+    else if (!_users.Any())
+    {
+        <div class="mb-3">         
+            <h2>@Resources.PageUserAllUsers</h2>  
+        </div>                                           
+        <p>@Resources.PageUserNoUserFoun</p>    
+        <div class="d-flex flex-fill mt-1 justify-content-lg-start p-4">   
+            <NavLink class="btn custom-btn" href="/registerUser">@Resources.ButtonAddNewUser</NavLink>              
+        </div>                                                                              
+    }
+    else
+    {
+        <div class="mb-3">         
+            <h2>@Resources.PageUserAllUsers</h2>  
+        </div>     
+        <div class="table-responsive p-4">
+            <table class="table ">
+                <thead>
+                <tr>
+                    <th>@Resources.TableHeadingName</th>
+                    <th>@Resources.TableHeadingMail</th>
+                    <th>@Resources.TableHeadingRole</th>
+                    <th style="width:60px;"></th>
+                    <th style="min-width:128px;"></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var user in _users)
+                {
+                    <tr>
+                        <td>@user.FullName</td>
+                        <td>@user.Email</td>
+                        <td>@(user.IsAdmin ? Resources.TableInputIsAdmin : Resources.TableInputIsNotAdmin)</td>
+                        <td></td>
+                        <td>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input cursor" type="checkbox" checked="@user.IsActive" @onchange="@(e => EditUserIsActive(user, e))"/>
+                                @if(user.IsActive)
+                                {
+                                    <label class="form-check-label">@Resources.TableInputIsActive</label> 
+                                }
+                                else                                                  
+                                {                                                                   
+                                    <label class="form-check-label">@Resources.TableInputIsNotActive</label>     
+                                }                                                                   
+                            </div>
+                        </td>
+                        <td>
+                            <span title="@Resources.TooltipRegisterUser">
+                                <span class="bi bi-editUser cursor" @onclick="@(() => EditUser(user.Id))">
+                                </span>
+                            </span>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+
+            <div class="d-flex flex-fill mt-2 justify-content-lg-start mb-3" >
+            <NavLink class="btn custom-btn" href="/registerUser">@Resources.ButtonAddNewUser</NavLink>
+            </div>
+        </div>} 
+        </div>
+
+
+@code {
+    private List<UserDto>? _users;
+    private bool _isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var usersList = await Http.GetFromJsonAsync<List<UserDto>>("api/users");
+            _users = usersList?.OrderBy(user => user.FullName).ToList();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($@"{Resources.ErrorMessageLoadingUsers} {ex.Message}");
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+
+    private async Task EditUserIsActive(UserDto user, ChangeEventArgs e)
+    {
+        if (bool.TryParse(e.Value?.ToString(), out var isActive))
+        {
+            user.IsActive = isActive;
+            try
+            {
+                HttpResponseMessage response = await Http.PutAsync($"api/users/{user.Id:D}/update/active", null);
+                Console.WriteLine(await response.Content.ReadAsStringAsync());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($@"{Resources.ErrorMessageLoadingUsers} {ex.Message}");
+            }
+        }
+    }
+    
+    private void EditUser(Guid userId)
+    {
+        Navigation.NavigateTo($"editUser/{userId:D}");
+    }
+}

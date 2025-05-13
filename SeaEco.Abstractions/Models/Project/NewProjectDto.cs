@@ -1,25 +1,39 @@
-﻿namespace SeaEco.Abstractions.Models.Project;
+﻿using System.ComponentModel.DataAnnotations;
+using SeaEco.Abstractions.Enums;
+using SeaEco.Abstractions.Resources;
+
+namespace SeaEco.Abstractions.Models.Project;
 
 public class NewProjectDto
 {
+    [Required(ErrorMessageResourceName = "ErrorMessagePoId", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    [RegularExpression(@"^\d+$", ErrorMessageResourceName = "ErrorMessagePoIdIdNumber", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
     public string PoId { get; set; } = null!;
-    public int KundeId { get; set; }
-    public string Kundekontaktpersons { get; set; } = null!;
-    public int Kundetlf { get; set; }
+    [Required]
+    public Guid KundeId { get; set; }
+    [Required(ErrorMessageResourceName = "ErrorMessageCustomer", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    public string Kundekontaktperson { get; set; } = null!;
+    public string? Kundetlf { get; set; } = null!;
+    
+    [Required(ErrorMessageResourceName = "ErrorMessageMailRequired", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    [EmailAddress(ErrorMessageResourceName = "ErrorMessageMailError", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
     public string Kundeepost { get; set; } = null!;
-    
-    public string Lokalitet { get; set; } = null!;
-    public int Lokalitetid { get; set; }
+    [Required(ErrorMessageResourceName = "ErrorMessageLocalityName", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    public string Lokalitetsnavn { get; set; } = null!;
+    [Required(ErrorMessageResourceName = "ErrorMessageLocalityId", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    [MinLength(5, ErrorMessageResourceName = "ErrorMessageLocalityIdLength", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    [MaxLength(5, ErrorMessageResourceName = "ErrorMessageLocalityIdLength", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    [RegularExpression(@"^\d+$", ErrorMessageResourceName = "ErrorMessageLocalityIdNumber", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    public string LokalitetsId { get; set; } = null!;
+    [Required(ErrorMessageResourceName = "ErrorMessageProjectMtb", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    [Range(1, int.MaxValue, ErrorMessageResourceName = "ErrorMessageProjectMtb", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
     public int Mtbtillatelse { get; set; }
-    public int Biomasse { get; set; }
-    public DateOnly Planlagtfeltdato { get; set; }
     
-    public Guid Ansvarligansattid { get; set; }
-    public Guid? Ansvarligansatt2id { get; set; }
-    public Guid? Ansvarligansatt3id { get; set; }
-    public Guid? Ansvarligansatt4id { get; set; }
-    public Guid? Ansvarligansatt5id { get; set; }
-    public int Antallstasjoner { get; set; }
+    [Required(ErrorMessageResourceName = "ErrorMessageProjectResponsible", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    public Guid? ProsjektansvarligId { get; set; }
     public string? Merknad { get; set; }
-    public string Status { get; set; } = "Nytt";
+    [Required(ErrorMessageResourceName = "ErrorMessageProductionStatus", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    [Range(1,4,ErrorMessageResourceName = "ErrorMessageProductionStatus", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    public Produksjonsstatus Produksjonsstatus { get; set; }
+   
 }

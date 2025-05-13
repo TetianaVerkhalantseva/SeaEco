@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using SeaEco.Abstractions.Models.Image;
 using SeaEco.Abstractions.ResponseService;
 using SeaEco.Services.ImageServices;
 using SeaEco.Services.ImageServices.Models;
@@ -17,7 +18,7 @@ public class ImageController(IImageService imageService) : ApiControllerBase
             : AsOk();
     }
 
-    [HttpPut("{id:guid}/remove")]
+    [HttpDelete("{id:guid}/remove")]
     public async Task<IActionResult> RemoveImage([FromRoute] Guid id)
     {
         Response response = await imageService.DeleteImage(id);
@@ -25,4 +26,14 @@ public class ImageController(IImageService imageService) : ApiControllerBase
             ? AsBadRequest(response.ErrorMessage)
             : AsOk();
     }
+
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetImage([FromRoute] Guid id)
+    {
+        Response<ImageDto> response = await imageService.GetImage(id);
+        return response.IsError
+            ? AsBadRequest(response.ErrorMessage)
+            : AsOk(response.Value);
+    }
+
 }

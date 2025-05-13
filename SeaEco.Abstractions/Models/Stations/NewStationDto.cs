@@ -1,26 +1,22 @@
-﻿namespace SeaEco.Abstractions.Models.Stations;
+﻿using System.ComponentModel.DataAnnotations;
+using SeaEco.Abstractions.Resources;
+
+namespace SeaEco.Abstractions.Models.Stations;
 
 public class NewStationDto
 {
-    public int? Dybde { get; set; } = 0;
-    public int? Kordinatern { get; set; }
-    public int? Kordinatero { get; set; }
-    public int? SkjovannPh { get; set; }
-    public int? SkjovannEh { get; set; }
-    public int? SkjovannTemperatur { get; set; }
-    public bool? Bunntype { get; set; }
-    public bool? Dyr { get; set; }
-    public int? Antallgrabbskudd { get; set; }
-    public bool? Grabhastighetgodkjent { get; set; }
-    public bool? Sensoriskutfort { get; set; }
-        
-    public int? Bunnsammensettningid { get; set; }
-    public string? Arter { get; set; }
-    public string? Merknad { get; set; }
-    public string? Korrigering { get; set; }
-    public int? Grabbid { get; set; }
-    public int? Phehmeter { get; set; }
-    public DateOnly? Datokalibrert { get; set; }
-    public int? Silid { get; set; }
-    public string? Status { get; set; } = "Ikke registrert";
+    public Guid ProsjektId { get; set; }
+    [Required(ErrorMessageResourceName = "ErrorMessageNorthDegree", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    public int NorthDegree { get; set; }
+    [Required(ErrorMessageResourceName = "ErrorMessageNorthMinutes", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    public float NorthMinutes { get; set; }
+    [Required(ErrorMessageResourceName = "ErrorMessageEastDegree", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    public int EastDegree { get; set; }
+    
+    [Required(ErrorMessageResourceName = "ErrorMessageEastMinues", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    public float EastMinutes { get; set; }
+    [Required(ErrorMessageResourceName = "ErrorMessageDepth", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    public int Dybde { get; set; }
+    [Required(ErrorMessageResourceName = "ErrorMessageMethod", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    public string Analyser { get; set; } = "Parameter I, II og III";
 }

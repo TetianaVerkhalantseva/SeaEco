@@ -1,0 +1,22 @@
+.preInfo-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    justify-content: center;
+}
+
+@media (max-width: 1024px) {
+    .preInfo-container {
+        grid-template-columns: 1fr;
+        width: 80%;
+        padding-left: 6.5rem;
+    }
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7rem;
+    margin: 4rem auto 1rem auto;
+}

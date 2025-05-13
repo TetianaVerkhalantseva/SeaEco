@@ -1,0 +1,260 @@
+@page "/newProject/{CustomerId:guid}"
+@using System.Net
+@using Microsoft.AspNetCore.Authorization
+@using SeaEco.Abstractions.Enums
+@using SeaEco.Abstractions.Extensions
+@using SeaEco.Abstractions.Models.Lokalitet
+@using SeaEco.Abstractions.Models.Project
+@attribute [Authorize(Roles = "admin")]
+@using SeaEco.Client.Resources
+@using SeaEco.Abstractions.Models.User
+@inject HttpClient Http
+@using SeaEco.EntityFramework.Entities
+@inject NavigationManager Navigation
+
+
+@if (_isLoading)
+{
+}
+else
+{
+    <EditForm EditContext="_editContext" OnValidSubmit="AddNewProject">
+    <DataAnnotationsValidator />
+
+    <div class="d-flex flex-column align-items-center gap-3 mb-3">
+        <div class="mb-3">
+            <h2>@Resources.PageNewProjectNewProject</h2>
+            <h6 class="text-secondary">- @_customer.Oppdragsgiver</h6>
+        </div>
+        <div class="d-flex justify-content-lg-start flex-column gap-3">
+                <div class="d-flex gap-3 flex-column p-4 box-border">
+                    <h6>@Resources.TextProjectInfo</h6>
+                <div class="d-flex form-floating flex-fill">
+                    <InputText class="form-control" id="poId" @bind-Value="_newProject.PoId" @oninput="() => _errorMessage = null"/>
+                    <label for="poId">@Resources.InputTextPoId</label>
+                </div>
+
+                <div class="d-flex form-floating flex-fill">
+                    <InputSelect @bind-Value="_newProject.ProsjektansvarligId" id="user" class="form-select" @oninput="() => _errorMessage = null">
+                        <option value=""></option>
+                        @foreach (var user in _users)
+                        {
+                            <option value="@user.Id">@user.FullName</option>
+                        }
+                    </InputSelect>
+                    <label for="user">@Resources.InputTextResponsibleUser</label>
+                </div>
+            </div>
+                <div class="d-flex gap-3 flex-column p-4 box-border">
+                    <h6>@Resources.TextCusomerInfo</h6>
+                <div class="d-flex gap-3">
+                    <div class="form-floating flex-fill" style="min-width:600px;">
+                        <InputText class="form-control" id="contactCustomer" @bind-Value="_newProject.Kundekontaktperson" @oninput="() => _errorMessage = null"/>
+                        <label for="contactCustomer">@Resources.InputTextCustomerUser</label>
+                    </div>
+                </div>
+                <div class="d-flex gap-3">
+                    <div class="form-floating">
+                        <InputText class="form-control" id="tlfCustomer" @bind-Value="_newProject.Kundetlf" @oninput="() => _errorMessage = null"/>
+                        <label for="tlfCustomer">@Resources.InputTextCustomerUserTlf</label>
+                    </div>
+                    <div class="form-floating flex-fill">
+                        <InputText class="form-control" id="emailCustomer" @bind-Value="_newProject.Kundeepost" @oninput="() => _errorMessage = null"/>
+                        <label for="emailCustomer">@Resources.InputTextCustomerUserEmail</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex form-floating gap-3 flex-column p-4 box-border">
+                <h6>@Resources.TextLocationInfo</h6>
+            <div class="d-flex gap-3 align-items-end">
+                @if (!_isNewLocality)
+                {
+                    <div class="form-floating flex-fill">
+                        <InputSelect TValue="string" Value="_selectedLocationId" ValueChanged="LocationChanged" ValueExpression="() => _newProject.LokalitetsId" id="locality" class="form-select" @oninput="() => _errorMessage = null">
+                            <option value=""></option>
+                            @foreach (var loc in _location)
+                            {
+                                <option value="@loc.LokalitetKode">@loc.Navn (@loc.LokalitetKode)</option>
+                            }
+                        </InputSelect>
+                        <label for="locality">@Resources.InputTextFullLocation</label>
+                    </div>
+                }
+                else
+                {
+                    <div class="form-floating flex-fill">
+                        <InputText class="form-control" id="newLocalityName" @bind-Value="_newProject.Lokalitetsnavn" @oninput="() => _errorMessage = null"/>
+                        <label for="newLocalityName">@Resources.InputTextLocation</label>
+                    </div>
+                    <div class="form-floating">
+                        <InputText class="form-control" id="newLocalityId" @bind-Value="_newProject.LokalitetsId" @oninput="() => _errorMessage = null"/>
+                        <label for="newLocalityId">@Resources.InputTextLocationId</label>
+                    </div>
+                }
+            </div>
+            <button type="button"
+                    class="btn custom-btn align-self-end" style="min-width: 155px"
+                    @onclick="ToggleLocalityButton">
+                @(_isNewLocality ?  Resources.ButtonExistingLocation:  Resources.ButtonNewLocation)
+            </button>
+                <div class="d-flex gap-3">
+                    <div class="form-floating flex-fill">
+                        <InputSelect @bind-Value="_newProject.Produksjonsstatus" id="productionStatus" class="form-select" @oninput="() => _errorMessage = null">
+                            <option value=""></option>
+                            @foreach (var status in Enum.GetValues<Produksjonsstatus>())
+                            {
+                                <option value="@status">@status.GetDescription()</option>
+                            }
+                        </InputSelect>
+                        <label for="productionStatus">@Resources.InputTextProductionStatus</label>
+                    </div>
+                    <div class="form-floating">
+                        <InputNumber class="form-control" id="mtb" @bind-Value="_newProject.Mtbtillatelse" @oninput="() => _errorMessage = null"/>
+                        <label for="mtb">@Resources.InputTextMtb</label>
+                    </div>
+                </div>
+            </div>
+
+            
+            
+        <div class="d-flex w-100 mt-4 mb-4">
+            <div class="form-floating w-100">
+                <InputTextArea class="form-control" style="height: 150px;" id="comment" @bind-Value="_newProject.Merknad" @oninput="() => _errorMessage = null"/>
+                <label for="comment">@Resources.InputTextComment</label>
+            </div>
+        </div>
+    
+        </div>
+        <div class="d-flex gap-3">
+            <NavLink class="btn custom-outline-secondary-btn align-self-start" type="button" href=@($"/CustomerInfo/{CustomerId}")>@Resources.ButtonCancel</NavLink>
+            <button type=submit class="btn custom-btn align-self-end">
+                @Resources.ButtonSave
+            </button>
+        </div>
+    </div>
+        <div class=" text-center">
+            <div class="custom-validation-summary">
+                <ValidationSummary/>
+            </div>
+            @if (!string.IsNullOrEmpty(_errorMessage))
+            {
+                <p class="text-danger">@_errorMessage</p>
+            }
+        </div>
+    </EditForm>
+}
+
+@code {
+    private NewProjectDto _newProject = new();
+    private List<LokalitetDto>? _location = [new LokalitetDto()];
+    private List<UserDto>? _users = [new UserDto()];
+    private Kunde? _customer = new();
+    private bool _isLoading = true;
+    [Parameter] public Guid CustomerId { get; set; }
+    private string? _errorMessage;
+    private bool _isNewLocality;
+    private EditContext _editContext; 
+    private string? _selectedLocationId;
+    
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _customer = await Http.GetFromJsonAsync<Kunde>($"api/Customer/{CustomerId}");
+            if (_customer != null)
+            {
+                _newProject = new NewProjectDto
+                {
+                    Kundekontaktperson = _customer.Kontaktperson,
+                    Kundetlf = _customer.Telefon,
+                    KundeId =  CustomerId,
+                };
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($@"{Resources.ErrorMessageLoadingCustomer} {ex.Message}");
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+        
+        _newProject.ProsjektansvarligId = null;
+        
+        var usersList = await Http.GetFromJsonAsync<List<UserDto>>("api/users?isActive=true");
+        _users = usersList?.OrderBy(user => user.FullName).ToList();
+        
+        _location = await Http.GetFromJsonAsync<List<LokalitetDto>>("api/Lokalitet");
+        
+        _editContext = new EditContext(_newProject);
+    }
+
+    private async Task AddNewProject()
+    {
+        var response = await Http.PostAsJsonAsync("/api/Project", _newProject);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var created = await response.Content.ReadFromJsonAsync<ResponseId>();
+
+            if (created != null)
+            {
+                Navigation.NavigateTo($"project/{created.Id:D}", forceLoad: true);
+            }
+            else
+            {
+                _errorMessage = Resources.ErrorMessageUnexpected;
+            }
+        }
+        else
+        {
+            _errorMessage = response.StatusCode == HttpStatusCode.Conflict ? await response.Content.ReadAsStringAsync() : Resources.ErrorMessageUnexpected;
+        }
+    }
+    
+    
+    private void LocationChanged(string? id)
+    {
+        _selectedLocationId = id;
+
+        var selected = _location.FirstOrDefault(l => l.LokalitetKode == id);
+
+        if (selected != null)
+        {
+            _newProject.Lokalitetsnavn = selected.Navn;
+            _newProject.LokalitetsId = selected.LokalitetKode;
+        }
+        else
+        {
+            _newProject.Lokalitetsnavn = string.Empty;
+            _newProject.LokalitetsId = string.Empty;
+        }
+        _editContext.Validate();  
+    }
+
+    private void ToggleLocalityButton()
+    {
+        _isNewLocality = !_isNewLocality;
+        
+        if (_isNewLocality)
+        {
+            _newProject.LokalitetsId = string.Empty;
+            _newProject.Lokalitetsnavn = string.Empty;
+        }
+        else
+        {
+            _selectedLocationId = string.Empty;
+            LocationChanged(_selectedLocationId);
+        }
+        
+        _editContext.Validate();  
+    }
+    
+    public class ResponseId
+    {
+        public Guid Id { get; init; }
+    }
+}

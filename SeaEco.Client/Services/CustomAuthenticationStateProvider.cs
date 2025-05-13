@@ -20,8 +20,8 @@ public class CustomAuthenticationStateProvider : AuthenticationStateProvider
         {
             var authStatus = await _httpClient.GetFromJsonAsync<AuthStatus>( "api/authentication/isAuthenticated");
             
-            Console.WriteLine($"Role from authStatus: {authStatus.Roles}");
-            // Eller med logger:
+            Console.WriteLine($@"Role from authStatus: {authStatus.Roles}");
+            
             _logger.LogInformation("Role from authStatus: {Roles}", string.Join(", ", authStatus.Roles));
             
             if (authStatus != null && authStatus.IsAuthenticated)
