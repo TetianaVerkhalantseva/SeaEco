@@ -70,6 +70,7 @@
                     <option value="status-new">Nytt</option>
                     <option value="status-ongoing">Pågår</option>
                     <option value="status-done">Ferdig</option>
+                    <option value="status-deactivated">Deaktivert</option>
                     <option value="name-asc">Sorter etter navn: A-Z</option>
                     <option value="name-desc">Sorter etter navn: Z-A</option>
                     <option value="date-asc">Sorter etter dato: eldst først</option>
@@ -129,8 +130,10 @@
     {
         try
         {
-            _customer = await Http.GetFromJsonAsync<CustomerDto>($"api/Customer//{CustomerId}");
+            _customer = await Http.GetFromJsonAsync<CustomerDto>($"api/Customer/{CustomerId}");
+            
             _allProjects = await Http.GetFromJsonAsync<List<ProjectDto>>($"api/Project/Customer/{_customer.Id}");
+            
             SortProjectList(_currentSort);
         }
         catch (Exception e)
@@ -155,24 +158,30 @@
         {
             case "all":
                 break;
-            case "status-started":
-                _selectedProjects = _selectedProjects
-                    .Where(p => (Prosjektstatus)p.Prosjektstatus == Prosjektstatus.Pabegynt)
-                    .ToList();
-                break;
+                
             case "status-new":
                 _selectedProjects = _selectedProjects
-                    .Where(p => (Prosjektstatus)p.Prosjektstatus == Prosjektstatus.Nytt)
+                    .Where(p => p.Prosjektstatus == Prosjektstatus.Nytt)
+                    .ToList();
+                break;
+            case "status-started":
+                _selectedProjects = _selectedProjects
+                    .Where(p => p.Prosjektstatus == Prosjektstatus.Pabegynt)
                     .ToList();
                 break;
             case "status-ongoing":
                 _selectedProjects = _selectedProjects
-                    .Where(p => (Prosjektstatus)p.Prosjektstatus == Prosjektstatus.Pagar)
+                    .Where(p => p.Prosjektstatus == Prosjektstatus.Pagar)
                     .ToList();
                 break;
             case "status-done":
                 _selectedProjects = _selectedProjects
-                    .Where(p => (Prosjektstatus)p.Prosjektstatus == Prosjektstatus.Ferdig)
+                    .Where(p => p.Prosjektstatus == Prosjektstatus.Ferdig)
+                    .ToList();
+                break;
+            case "status-deactivated":
+                _selectedProjects = _selectedProjects
+                    .Where(p => p.Prosjektstatus == Prosjektstatus.Deaktivert)
                     .ToList();
                 break;
             case "name-asc":
@@ -192,7 +201,7 @@
                 break;
             case "date-desc":
                 _selectedProjects = _selectedProjects
-                    .OrderBy(p => p.Id)
+                    .OrderByDescending(p => p.Id)
                     .ToList();
                 break;
         }
