@@ -130,11 +130,13 @@ public sealed class ReportService(Report report,
             Bunntype = _.HardbunnId is null ? Bunntype.Blotbunn : Bunntype.Hardbunn,
             Dyr = _.DyrId is null ? Dyr.Nei : Dyr.Ja,
             
+            HasSediment = _.SedimentId is not null,
             pH = _.Sediment?.Ph ?? 0,
             Eh = _.Sediment?.Eh ?? 0,
             phEh = _.Sediment?.KlasseGr2 ?? 0,
-            TilstandProveGr2 = (Tilstand)(_.Sediment?.TilstandGr2 ?? 0),
+            TilstandProveGr2 = (Tilstand)(_.Sediment?.TilstandGr2 ?? 1),
             
+            HasSensorisk = _.SensoriskId is not null,
             Gassbobler = (Gassbobler)(_.Sensorisk?.Gassbobler ?? 0),
             Farge = (Farge)(_.Sensorisk?.Farge ?? 0),
             Lukt = (Lukt)(_.Sensorisk?.Lukt ?? 0),
@@ -149,9 +151,9 @@ public sealed class ReportService(Report report,
                   _.Sensorisk.Grabbvolum +
                   _.Sensorisk.Tykkelseslamlag,
             KorrigertSum = _.Sensorisk?.IndeksGr3 ?? 0,
-            TilstandProveGr3 = (Tilstand)(_.Sensorisk?.TilstandGr3 ?? 0),
+            TilstandProveGr3 = (Tilstand)(_.Sensorisk?.TilstandGr3 ?? 1),
             MiddelVerdiGr2Gr3 = _.IndeksGr2Gr3 ?? 0,
-            TilstandProveGr2Gr3 = (Tilstand)(_.TilstandGr2Gr3 ?? 0)
+            TilstandProveGr2Gr3 = (Tilstand)(_.TilstandGr2Gr3 ?? 1)
         });
 
         BHeader header = new BHeader()
@@ -352,6 +354,7 @@ public sealed class ReportService(Report report,
                     string path = Path.Combine(
                         webHostEnvironment.WebRootPath,
                         "images",
+                        dbRecord.ProsjektIdSe,
                         $"{img.Id.ToString()}.{img.Extension}");
                     
                     using FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read);
@@ -464,11 +467,11 @@ public sealed class ReportService(Report report,
             .Where(_ => _.ProsjektId == projectId)
             .ToListAsync();
 
-        ReportDto plan = MapReport(dbRecords.FirstOrDefault(_ => (SheetName)_.ArkNavn == SheetName.PTP));
-
+        BRapporter? ptpReport = dbRecords.FirstOrDefault(_ => (SheetName)_.ArkNavn == SheetName.PTP);
+        
         return new GetReportsDto()
         {
-            Plan = plan,
+            Plan = ptpReport is null ? null : MapReport(ptpReport),
             Reports = dbRecords.Where(_ => (SheetName)_.ArkNavn != SheetName.PTP).OrderBy(_ => _.ArkNavn).Select(MapReport)
         };
     }
