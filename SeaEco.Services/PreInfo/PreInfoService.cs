@@ -4,6 +4,7 @@ using SeaEco.Abstractions.Models.PreInfo;
 using SeaEco.EntityFramework.Contexts;
 using SeaEco.EntityFramework.Entities;
 using SeaEco.Services.ProjectServices;
+using SeaEco.Services.ReportServices;
 
 namespace SeaEco.Services.PreInfo;
 
@@ -11,11 +12,16 @@ public class PreInfoService : IPreInfoService
 {
     private readonly AppDbContext _db;
     private readonly IProjectService _projectService;
+    private readonly IReportService    _reportService;
 
-    public PreInfoService(AppDbContext db, IProjectService projectService)
+    public PreInfoService(
+        AppDbContext db, 
+        IProjectService projectService,
+        IReportService reportService)
     {
         _db = db;
         _projectService = projectService;
+        _reportService   = reportService;
     }
     
     public async Task<PreInfoDto?> GetByIdAsync(Guid preInfoId)
@@ -94,7 +100,26 @@ public class PreInfoService : IPreInfoService
         // Generer ProsjektIdSe dersom nødvendig
         await _projectService.GenerateAndSetProsjektIdSeAsync(dto.ProsjektId, dto.Feltdato);
         
-        prosjekt.Prosjektstatus = (int)Prosjektstatus.Pabegynt;
+        // Sett status til Pågår om prosjektstatus var Nytt eller Påbegynt
+        var tidligereStatus = (Prosjektstatus)prosjekt.Prosjektstatus;
+        if (tidligereStatus == Prosjektstatus.Nytt 
+            || tidligereStatus == Prosjektstatus.Pabegynt)
+        {
+            await _projectService.UpdateProjectStatusAsync(
+                dto.ProsjektId,
+                Prosjektstatus.Pagar,
+                merknad: null
+            );
+
+            // Generer PTP-rapport
+            var ptpResult = await _reportService.GeneratePtpReport(dto.ProsjektId);
+            if (ptpResult.IsError)
+            {
+                Console.Error.WriteLine(
+                    $"PTP-generering feilet for prosjekt {dto.ProsjektId}: {ptpResult.ErrorMessage}"
+                );
+            }
+        }
 
         var entity = new BPreinfo
         {
