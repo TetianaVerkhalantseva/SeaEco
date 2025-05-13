@@ -1,7 +1,7 @@
 @* if testing, comment out this line *@
-@* @page "/project/{ProjectId:guid}/station/{StationId:guid}/edit-survey/{SurveyId:guid}" *@
+@* @page "/project/{ProjectId:guid}/station/{StationId:guid}/create-survey" *@
 
-@page "/project/edit-survey"
+@page "/project/create-survey"
 
 @* @using Microsoft.AspNetCore.Authorization *@
 @using SeaEco.Abstractions.Enums
@@ -18,6 +18,7 @@
 
 
 <h4>Stasjonsredigering</h4>
+
 
 <div id="div1" class="content-div active">
     @if (_surveyDto.BStation != null)
@@ -85,6 +86,7 @@
         </div>
     </div>
 </div>
+
 
 <div id="div2" class="content-div">
     <div class="typeRadio-container">
@@ -294,6 +296,8 @@
     @* TODO: Picture usilt and tom grabb container *@
 </div>
 
+
+
 <div id="div3" class="content-div">
     @* TODO: Picture silt and tom grabb container *@
     <div class="picture-container">
@@ -448,11 +452,12 @@
     }
 </div>
 
+
 <div class="button-container">
     <button id="lastBtn" onclick="showLast()" class="custom-btn">Forrige</button>
     <button id="nextBtn" onclick="showNext()" class="custom-btn">Neste</button>
     <button id="submitBtn" class="custom-btn" style="display: none;" @onclick="SubmitSurvey">
-        oppdater
+        Registrer
     </button>
 </div>
 
@@ -592,15 +597,14 @@
 </script>
 
 @code {
-    [Parameter] 
-    public Guid ProjectId { get; set; }
-    [Parameter]
-    public Guid StationId { get; set; }
-    [Parameter]
-    public Guid SurveyId { get; set; }
+    // Remeber to uncomment this part when not testing
+    // [Parameter] 
+    // public Guid ProjectId { get; set; }
+    // [Parameter]
+    // public Guid StationId { get; set; }
 
     private EditSurveyDto _surveyDto = new();
-    private BStationDto? _station = new();
+    private BStationDto _station = new();
 
     private string _coordinateNorthGrade = "";
     private string _coordinateNorthMinute = "";
@@ -614,109 +618,75 @@
     private bool? _result;
     private string? _resultMessage;
 
-    protected override async Task OnInitializedAsync()
+    // Remember to add word "async" when not testing
+    protected override Task OnInitializedAsync()
     {
-        
-        // Remember to uncomment this part when not testing !!!
-        // if (SurveyId.HasValue && SurveyId.Value != Guid.Empty)
+        // Create mode
+        // _surveyDto = new EditSurveyDto
         // {
-        //     // Edit mode
-        //     var existingSurvey = await Http.GetFromJsonAsync<EditSurveyDto>
-        //         ($"api/Project/{ProjectId}/station/{StationId}/survey/{SurveyId}");
-        //     if (existingSurvey != null)
-        //     {
-        //         _surveyDto = existingSurvey;
-        //         ParseCoordinateNorth();
-        //         ParseCoordinateEast();
-        //         return;
-        //     }
+        //     Id = Guid.NewGuid(),
+        //     ProsjektId = ProjectId,
+        //     BlotbunnId = Guid.NewGuid(),
+        //     HardbunnId = Guid.NewGuid(),
+        //     SedimentId = Guid.NewGuid(),
+        //     SensoriskId = Guid.NewGuid(),
+        //     DyrId = Guid.NewGuid(),
+        //     
+        //     BSoftBase = new BSoftBaseDto(),
+        //     BHardBase = new BHardBaseDto(),
+        //     BSediment = new BSedimentDto(),
+        //     BAnimal = new BAnimalDto(),
+        //     BSensorisk = new BSensoriskDto(),
+        // };
+        //
+        // _station = await Http.GetFromJsonAsync<BStationDto>($"api/Project/{ProjectId}/station/{StationId}");
+        //
+        // if (_station != null)
+        // {
+        //     _surveyDto.BStation = _station;
+        //     
+        //     ParseCoordinateNorth();
+        //     ParseCoordinateEast();
+        // }
+        // else
+        // {
+        //     _surveyDto.BStation = new BStationDto();
+        //     _surveyDto.BStation.Id = Guid.NewGuid();
         // }
         
         
-        // Test code for editing survey
+        // Test code
         _surveyDto = new EditSurveyDto
         {
             Id = Guid.NewGuid(),
             ProsjektId = Guid.NewGuid(),
-            PreinfoId = Guid.NewGuid(),
-            Feltdato = DateOnly.FromDateTime(DateTime.Now),
-            AntallGrabbhugg = 5,
-            GrabbhastighetGodkjent = true,
-            BlotbunnId = Guid.NewGuid(),
+            BlotbunnId = null,
             HardbunnId = null,
-            SedimentId = Guid.NewGuid(),
-            SensoriskId = Guid.NewGuid(),
-            Beggiatoa = true,
-            Forrester = false,
-            Fekalier = true,
-            DyrId = Guid.NewGuid(),
-            Merknader = "TM, D, RAR",
-            DatoRegistrert = DateTime.Now,
-            DatoEndret = DateTime.Now.AddDays(-1),
-            IndeksGr2Gr3 = 2.5f,
-            TilstandGr2Gr3 = 3,
-        
-            // DTO properties
-            BStation = new BStationDto
-            {
-                Id = Guid.NewGuid(),
-                KoordinatNord = "66°22",
-                KoordinatOst = "10°58",
-                Dybde = 100
-            },
-        
-            BSoftBase = new BSoftBaseDto
-            {
-                Id = Guid.NewGuid(),
-                Leire = 1,
-                Sand = 1,
-                Skjellsand = 0
-            },
-            BAnimal = new BAnimalDto
-            {
-                Id = Guid.NewGuid(),
-                Pigghunder = "14",
-                Krepsdyr = "26",
-                Arter = "CC, OP"
-            },
+            SedimentId = null,
+            SensoriskId = null,
+            DyrId = null,
             
-            BHardBase = null,
+            BStation = new BStationDto(),
+            BSoftBase = new BSoftBaseDto(),
+            BAnimal = new BAnimalDto(),
+            BHardBase = new BHardBaseDto(),
+            BSediment = new BSedimentDto(),
+            BSensorisk = new BSensoriskDto(),
             
-            BPreInfo = new BPreInfoDto
-            {
-                Id = Guid.NewGuid(),
-            },
-            BSediment = new BSedimentDto
-            {
-                Id = Guid.NewGuid(),
-                Ph = 6,
-                Eh = 2,
-                Temperatur = 3
-            },
-            BSensorisk = new BSensoriskDto
-            {
-                Id = Guid.NewGuid(),
-                Farge = 0,
-                Lukt = 0,
-                Konsistens = 2,
-                Grabbvolum = 1,
-                Tykkelseslamlag = 1,
-                Gassbobler = 0
-            }
         };
-        ParseCoordinateNorth();
-        ParseCoordinateEast();
-        // Test code for editing survey
+        if (_surveyDto.BStation != null)
+        {
+            ParseCoordinateNorth();
+            ParseCoordinateEast();
+        }
+        // Test code
+        
 
-        
-        if (_surveyDto.BlotbunnId != null)
-            _selectBunnType = "blot";
-        else if (_surveyDto.HardbunnId != null)
-            _selectBunnType = "hard";
-        
-        _selectSensorisk = _surveyDto.SensoriskId != null ? "ja" : "nei";
-        
-        _selectDyr = _surveyDto.DyrId != null ? "ja" : "nei";
+        _selectBunnType = null;
+        _selectSensorisk = null;
+        _selectDyr = null;
+
+        return Task.CompletedTask;
     }
     
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -862,30 +832,33 @@
 
     private async Task SubmitSurvey()
     {
+        // _surveyDto.ProsjektId = ProjectId;
+        _surveyDto.Feltdato = DateOnly.FromDateTime(DateTime.Today);
+        
         if (_selectBunnType == "blot")
         {
-            _surveyDto.BlotbunnId ??= Guid.NewGuid();
+            _surveyDto.BlotbunnId = Guid.NewGuid();
             if (_surveyDto.BSoftBase != null)
             {
                 _surveyDto.BSoftBase.Id = _surveyDto.BlotbunnId.Value;
-            };
+            }
             
             _surveyDto.HardbunnId = null;
             _surveyDto.BHardBase = null;
         
-            _surveyDto.SedimentId ??= Guid.NewGuid();
+            _surveyDto.SedimentId = Guid.NewGuid();
             if (_surveyDto.BSediment != null)
             {
                 _surveyDto.BSediment.Id = _surveyDto.SedimentId.Value;
-            };
+            }
         }
         else if (_selectBunnType == "hard")
         {
-            _surveyDto.HardbunnId ??= Guid.NewGuid();
+            _surveyDto.HardbunnId = Guid.NewGuid();
             if (_surveyDto.BHardBase != null)
             {
                 _surveyDto.BHardBase.Id = _surveyDto.HardbunnId.Value;
-            };
+            }
             
             _surveyDto.BlotbunnId = null;
             _surveyDto.BSoftBase = null;
@@ -893,7 +866,7 @@
         
         if (_selectSensorisk == "ja")
         {
-            _surveyDto.SensoriskId ??= Guid.NewGuid();
+            _surveyDto.SensoriskId = Guid.NewGuid();
             if (_surveyDto.BSensorisk != null)
             {
                 _surveyDto.BSensorisk.Id = _surveyDto.SensoriskId.Value;
@@ -907,7 +880,7 @@
         
         if (_selectDyr == "ja")
         {
-            _surveyDto.DyrId ??= Guid.NewGuid();
+            _surveyDto.DyrId = Guid.NewGuid();
             if (_surveyDto.BAnimal != null)
             {
                 _surveyDto.BAnimal.Id = _surveyDto.DyrId.Value;
@@ -919,25 +892,29 @@
             _surveyDto.BAnimal = null;
         }
         
+        _surveyDto.DatoRegistrert = DateTime.Now;
+        _surveyDto.DatoEndret = DateTime.Now;
         
-         var response = await Http.PutAsJsonAsync(
-            $"api/Project/{ProjectId}/station/{StationId}/survey/{SurveyId}",
-            _surveyDto);
         
-        if (response.IsSuccessStatusCode)
-        {
-            _result = true;
-            _resultMessage = await response.Content.ReadAsStringAsync();
-            
-            StateHasChanged();
-            await Task.Delay(2000);
-            // remember to add address
-            Navigation.NavigateTo("");
-        }
-        else
-        {
-            _result = false;
-            _resultMessage = await response.Content.ReadAsStringAsync();
-        }
+        // var response = await Http.PostAsJsonAsync(
+        //         $"api/Project/{ProjectId}/station/{StationId}/survey",
+        //         _surveyDto);
+        //
+        // if (response.IsSuccessStatusCode)
+        // {
+        //     _result = true;
+        //     _resultMessage = await response.Content.ReadAsStringAsync();
+        //     
+        //     StateHasChanged();
+        //     await Task.Delay(2000);
+        //     
+        //     // remember to add address
+        //     Navigation.NavigateTo($"");
+        // }
+        // else
+        // {
+        //     _result = false;
+        //     _resultMessage = await response.Content.ReadAsStringAsync();
+        // }
     }
 }

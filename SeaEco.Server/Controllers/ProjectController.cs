@@ -293,7 +293,7 @@ public class ProjectController : ControllerBase
         return result.IsSuccess ? Ok(result.Message) : BadRequest(result.Message);
     }
     
-    // Stasjonsregistrering operasjoner
+    // BUndersøkelse operasjoner
     [HttpGet("{projectId:guid}/station/{stationId:guid}/survey/{surveyId:guid}")]
     public async Task<IActionResult> GetSurvey(Guid projectId, Guid stationId, Guid surveyId)
     {
@@ -301,14 +301,15 @@ public class ProjectController : ControllerBase
         if (project == null)
             return BadRequest("Project does not exist");
         
+        var station = await _stationService.GetBStationDtoByStationId(projectId, stationId);
+        if (station == null)
+        {
+            return BadRequest("Station does not exist");
+        }
+        
         var survey = await _surveyService.GetSurveyById(surveyId);
         if (survey == null)
             return BadRequest($"No survey with id {surveyId}");
-
-        if (survey.ProsjektId != projectId)
-        {
-            return BadRequest("Survey does not belong to the given project");
-        }
         
         return Ok(survey);
     }
@@ -326,8 +327,8 @@ public class ProjectController : ControllerBase
         if (project == null)
             return BadRequest("Project does not exist");
         
-        var stationResult = await _stationService.GetStationByIdAsync(projectId, stationId);
-        if (stationResult.IsSuccess == false)
+        var station = await _stationService.GetBStationDtoByStationId(projectId, stationId);
+        if (station == null)
         {
             return BadRequest("Station does not exist");
         }
@@ -350,8 +351,8 @@ public class ProjectController : ControllerBase
         if (project == null)
             return BadRequest("Project does not exist");
         
-        var stationResult = await _stationService.GetStationByIdAsync(projectId, stationId);
-        if (stationResult.IsSuccess == false)
+        var station = await _stationService.GetBStationDtoByStationId(projectId, stationId);
+        if (station == null)
         {
             return BadRequest("Station does not exist");
         }
