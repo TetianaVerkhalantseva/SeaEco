@@ -4,6 +4,7 @@
 @using SeaEco.Abstractions.Models.Stations
 @inject HttpClient Http
 @using SeaEco.Client.Resources
+@using Microsoft.AspNetCore.Components.Authorization
 @inject IJSRuntime Js
 @inject NavigationManager Navigation
 
@@ -13,106 +14,122 @@
 else
 {   
     //PreInfo
-    <div class="d-flex gap-2 flex-column flex-xxl-row justify-content-center mt-5">        
-    @foreach (var preInfo in _preInfoData)
-    {
-        <button class="btn custom-btn" type="button">
-            @DateOnly.FromDateTime(preInfo.Feltdato)
-        </button>
-    } 
-    </div> 
-    <div class="d-flex gap-2 flex-column justify-content-center mb-3 mt-3">
-        <button class="btn custom-btn" type="button" disabled="@(_isPreInfoDateToday || _isProjectComplete)" @onclick="AddPreInfo">
-            + Ny preInfo
-        </button>
-        <div class="d-flex flex-grow-1"></div>
-    </div>  
+    <div class="d-flex gap-2 flex-column align-items-center mt-5 mb-3 box-border p-4">
+        <h5>Feltinformasjon</h5>
+        @if (_isExistingPreInfo)
+        {
+            <div class="d-flex gap-2 flex-column flex-xxl-row justify-content-center">
+                @foreach (var preInfo in _preInfoData)
+                {
+                    <button class="btn custom-btn" type="button" @onclick="() => viewPreInfo(preInfo.Id)">
+                        @DateOnly.FromDateTime(preInfo.Feltdato)
+                    </button>
+                }
+            </div>
+        }
+        else
+        {
+            <span>Ingen feltinformasjon registrert</span>
+        }
+        <div class="d-flex gap-2 flex-column justify-content-center mt-3 ">
+            <button class="btn custom-btn" type="button" disabled="@(_isPreInfoDateToday || _isProjectComplete)" @onclick="AddPreInfo">
+                + Ny preInfo
+            </button>
+            <div class="d-flex flex-grow-1"></div>
+        </div>
+    </div>
+
+    <div class="d-flex flex-column align-items-center line w-100"></div>  
     
-    <div class="d-flex flex-column align-items-center line w-100"></div>
     //Station
+    <div class="d-flex flex-column align-items-center mt-5 gap-3">  
+    <h5>Stasjoner</h5> 
     <div class="d-flex justify-content-center w-100">
         <div class="d-flex flex-column align-items-center projects-container">
-        <div class="d-flex flex-column mt-5 gap-3 card-container w-100">
-            @if (!_isExistingStations)
-            {
-                <div class="d-flex justify-content-center">
-                    @Resources.PageSatationOverviewNoStations
-                </div>
-            }
-            else
-            {
-                <div class="card-container">
-                    <div class="row" style="justify-content: center;">
-                        @foreach (var station in _stationData)
-                        {
-                            <div class="col mb-3 card-col">
-                                <div class="card cursor" @onclick="() => OnStationClick(station.Id, station.UndersokelseId)">
-                                    <div class="card-body text-center @GetStatus(station.UndersokelseId) ">
-                                        <h5 class="card-title">@Resources.InputTextStation @station.Nummer</h5>
-                                        <span class="corner-text">@(station.UndersokelseId != null ? "Utfylt" : "Ikke utfylt")</span>
+            <div class="d-flex flex-column gap-3 card-container w-100">
+                @if (!_isExistingStations)
+                {
+                    <div class="d-flex justify-content-center">
+                        @Resources.PageSatationOverviewNoStations
+                    </div>
+                }
+                else
+                {
+                    <div class="card-container">
+                        <div class="row" style="justify-content: center;">
+                            @foreach (var station in _stationData)
+                            {
+                                <div class="col mb-3 card-col">
+                                    <div class="card cursor" @onclick="() => OnStationClick(station.Id, station.UndersokelseId)">
+                                        <div class="card-body text-center @GetStatus(station.UndersokelseId) ">
+                                            <h5 class="card-title">@Resources.InputTextStation @station.Nummer</h5>
+                                            <span class="corner-text">@(station.UndersokelseId != null ? "Utfylt" : "Ikke utfylt")</span>
+                                        </div>
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <span>@Resources.InputTextNorthCoordinates:</span>
+                                                <span>@station.KoordinatNord</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                <span>@Resources.InputTextEsthCoordinates:</span>
+                                                <span>@station.KoordinatOst</span>
+                                            </li>
+                                        </ul>
                                     </div>
-                                    <ul class="list-group list-group-flush">
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <span>@Resources.InputTextNorthCoordinates:</span>
-                                            <span>@station.KoordinatNord</span>
-                                        </li>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <span>@Resources.InputTextEsthCoordinates:</span>
-                                            <span>@station.KoordinatOst</span>
-                                        </li>
-                                    </ul>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+                <div class="d-flex gap-2 flex-column flex-xxl-row justify-content-center mb-3">
+                    <button class="btn custom-btn" type="button" disabled="@(_isProjectComplete || Project.Prosjektstatus is not (Prosjektstatus.Pagar or Prosjektstatus.Ferdig))" @onclick="AddStation">
+                        @Resources.ButtonAddNewStation
+                    </button>
+                    <div class="d-flex flex-grow-1"></div>   
+                    <AuthorizeView Roles="admin">
+                    <button class="btn custom-btn" type="button" disabled="@(!_isExistingStations)" @onclick="DoneStationRegistration">
+                        @(_isProjectComplete ? "Gjenåpne" : Resources.ButtonComplete)
+                    </button>       
+                    </AuthorizeView >
+                </div>
+            </div>  
+            </div>
+
+            <div class="modal fade" id="Modal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content ">
+                        <div class="modal-header">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        @if (_modalCompleat)
+                        {
+                            <div class="modal-body">
+                                <p>@Resources.ModalTextCompleteProject</p>
+                                <div class="mb-3">
+                                    <label for="message-text" class="col-form-label">@Resources.ModalComment</label>
+                                    <textarea class="form-control" id="message-text" @bind-value="_comment.Merknad" @bind-value:event="oninput"></textarea>
                                 </div>
                             </div>
-                        }
-                    </div>
-                </div>
-            }
-            <div class="d-flex gap-2 flex-column flex-xxl-row justify-content-center mb-3">
-                <button class="btn custom-btn" type="button" disabled="@(_isProjectComplete  || Project.Prosjektstatus is not (Prosjektstatus.Pagar or Prosjektstatus.Ferdig))" @onclick="AddStation">
-                    @Resources.ButtonAddNewStation
-                </button>
-                <div class="d-flex flex-grow-1"></div>
-                <button class="btn custom-btn" type="button" disabled="@(!_isExistingStations)" @onclick="DoneStationRegistration">
-                    @(_isProjectComplete? "Gjenåpne" : Resources.ButtonComplete)
-                </button>
-            </div>
-        </div>
-
-        <div class="modal fade" id="Modal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content ">
-                    <div class="modal-header">
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    @if (_modalCompleat)
-                    {
-                        <div class="modal-body">
-                            <p>@Resources.ModalTextCompleteProject</p>
-                            <div class="mb-3">
-                                <label for="message-text" class="col-form-label">@Resources.ModalComment</label>
-                                <textarea class="form-control" id="message-text" @bind-value="_comment.Merknad" @bind-value:event="oninput"></textarea>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="ClearComment">@Resources.ButtonCancel</button>
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="CompleteStationRegistration" disabled="@string.IsNullOrWhiteSpace(_comment.Merknad)">
+                                    @Resources.ButtonComplete
+                                </button>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="ClearComment">@Resources.ButtonCancel</button>
-                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="CompleteStationRegistration" disabled="@string.IsNullOrWhiteSpace(_comment.Merknad)">
-                                @Resources.ButtonComplete
-                            </button>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="modal-body">
-                            <p>Du må registrere preinfo for dagens dato før du kan regisrere på stasjonen</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="ClearComment">@Resources.ButtonCancel</button>
-                        </div>
-                    }
+                        }
+                        else
+                        {
+                            <div class="modal-body">
+                                <p>Du må registrere preinfo for dagens dato før du kan regisrere på stasjonen</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="ClearComment">@Resources.ButtonCancel</button>
+                            </div>
+                        }
 
+                    </div>
                 </div>
             </div>
-        </div>
         </div>
     </div>
 }
@@ -155,14 +172,10 @@ else
             _preInfoData = await responsePreInfo.Content.ReadFromJsonAsync<List<PreInfoDto>>();
             _preInfoData?.Sort((a, b) => a.Feltdato.CompareTo(b.Feltdato));
             _isExistingPreInfo = true;
-            foreach (var preInfo in _preInfoData)
+            foreach (var preInfo in _preInfoData.Where(preInfo => DateOnly.FromDateTime(preInfo.Feltdato) == DateOnly.FromDateTime(DateTime.Today)))
             {
-
-                if (DateOnly.FromDateTime(preInfo.Feltdato) == DateOnly.FromDateTime(DateTime.Today))
-                {
-                    _isPreInfoDateToday = true;
-                    _todaysServeyId = preInfo.Id;
-                }
+                _isPreInfoDateToday = true;
+                _todaysServeyId = preInfo.Id;
             }
         }
 
@@ -182,6 +195,12 @@ else
 
         _isLoading = false;
     }
+
+    private async Task viewPreInfo(Guid preInfoId)
+    {
+        Navigation.NavigateTo($"project/{Project.Id:D}/preInfo/{preInfoId:D}");
+
+    }   
 
     private async Task OnStationClick(Guid stationId, Guid? surveyId)
     {
@@ -209,8 +228,9 @@ else
 
     }
 
-    private async Task AddPreInfo()
+    private void AddPreInfo()
     {
+        Navigation.NavigateTo($"project/{Project.Id:D}/preInfo/");
     }
 
 

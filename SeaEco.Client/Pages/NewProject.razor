@@ -184,7 +184,7 @@ else
         
         _newProject.ProsjektansvarligId = null;
         
-        var usersList = await Http.GetFromJsonAsync<List<UserDto>>("api/users");
+        var usersList = await Http.GetFromJsonAsync<List<UserDto>>("api/users?isActive=true");
         _users = usersList?.OrderBy(user => user.FullName).ToList();
         
         _location = await Http.GetFromJsonAsync<List<LokalitetDto>>("api/Lokalitet");

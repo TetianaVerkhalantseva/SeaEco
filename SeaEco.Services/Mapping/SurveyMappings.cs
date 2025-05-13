@@ -226,21 +226,6 @@ public static class SurveyMappings
                 UndersokelseId = log.UndersokelseId
             }).ToList(),
 
-            BStasjon = dto.BStation != null
-                ? new BStasjon
-                {
-                    Id = dto.BStation.Id,
-                    ProsjektId = dto.BStation.ProsjektId,
-                    Nummer = dto.BStation.Nummer,
-                    KoordinatNord = dto.BStation.KoordinatNord,
-                    KoordinatOst = dto.BStation.KoordinatOst,
-                    Dybde = dto.BStation.Dybde,
-                    Analyser = dto.BStation.Analyser,
-                    ProvetakingsplanId = dto.BStation.ProvetakingsplanId,
-                    UndersokelseId = dto.BStation.UndersokelseId
-                }
-                : null,
-
             /*BBilders = dto.BBilders.Select(pic => new BBilder
             {
                 Id = pic.Id,

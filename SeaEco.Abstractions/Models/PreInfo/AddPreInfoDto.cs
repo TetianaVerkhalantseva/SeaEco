@@ -8,7 +8,7 @@ public class AddPreInfoDto
     public Guid ProsjektId { get; set; }
     
     [Required(ErrorMessage = "Feltdato er påkrevd")]
-    public DateTime Feltdato { get; set; }
+    public DateTime Feltdato { get; set; } = DateTime.Now;
     
     [Required(ErrorMessage = "Du må velge en feltansvarlig")]
     public Guid FeltansvarligId { get; set; }
@@ -41,5 +41,5 @@ public class AddPreInfoDto
     public string PhMeter { get; set; } = string.Empty;
     
     [Required(ErrorMessage = "Datoen er ikke gyldig")]
-    public DateOnly Kalibreringsdato { get; set; }
+    public DateOnly Kalibreringsdato { get; set; } = DateOnly.FromDateTime(DateTime.Now);
 }
