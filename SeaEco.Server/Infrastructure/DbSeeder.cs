@@ -519,7 +519,9 @@ public sealed class DbSeeder
                 Dyr = null,
                 Merknader = "Rester 4",
                 DatoRegistrert = DateTime.Now,
-                DatoEndret = DateTime.Now
+                DatoEndret = DateTime.Now,
+                IndeksGr2Gr3 = 0,
+                TilstandGr2Gr3 = 1
             },
             new BUndersokelse()
             {

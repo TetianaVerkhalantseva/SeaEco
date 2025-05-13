@@ -15,6 +15,7 @@ using SeaEco.Reporter.Models.B2;
 using SeaEco.Reporter.Models.Headers;
 using SeaEco.Reporter.Models.Images;
 using SeaEco.Reporter.Models.Info;
+using SeaEco.Reporter.Models.Plot;
 using SeaEco.Reporter.Models.Positions;
 using SeaEco.Reporter.Models.PTP;
 
@@ -171,7 +172,10 @@ public sealed class ReportService(Report report,
             SjoTemperatur = dbPreinfo?.SjoTemperatur ?? 0,
             pHSjo = dbPreinfo?.PhSjo ?? 0,
             EhSjo = dbPreinfo?.EhSjo ?? 0,
-            SedimentTemperatur = dbRecord.BUndersokelses.Any() ? dbRecord.BUndersokelses.Average(u => u.Sediment?.Temperatur ?? 0): 0,
+            SedimentTemperatur = dbRecord.BUndersokelses.Any() ? 
+                dbRecord.BUndersokelses.Sum(u => u.Sediment?.Temperatur ?? 0) /
+                dbRecord.BUndersokelses.Count(u => u.SedimentId is not null)
+                : 0,
             RefElektrode = dbPreinfo?.RefElektrode ?? 0,
         };
 
@@ -452,6 +456,44 @@ public sealed class ReportService(Report report,
         return Response<string>.Ok(copyResult.Value);
     }
 
+    public async Task<Response<string>> GeneratePlotreport(Guid projectId)
+    {
+        BProsjekt? dbRecord = await projectRepository.GetAll()
+            .Include(_ => _.BStasjons)
+            .ThenInclude(_ => _.Undersokelse)
+            .ThenInclude(_ => _.Sediment)
+            .FirstOrDefaultAsync(_ => _.Id == projectId);
+
+        if (dbRecord is null)
+        {
+            return Response<string>.Error(ProjectNotFoundError);
+        }
+        
+        Response<string> copyResult = report.CopyDocument(dbRecord.ProsjektIdSe, SheetName.Plot);
+        if (copyResult.IsError)
+        {
+            return copyResult;
+        }
+
+        IEnumerable<PlotColumn> columns = dbRecord.BStasjons
+            .OrderBy(_ => _.Nummer)
+            .Select(_ => new PlotColumn()
+        {
+            Ph = _.Undersokelse?.SedimentId is null ? 0 : _.Undersokelse.Sediment.Ph,
+            Eh = _.Undersokelse?.SedimentId is null ? 0 : _.Undersokelse.Sediment.Eh,
+        });
+        
+        report.FillPhEhPlot(copyResult.Value, columns);
+        
+        Response saveResult = await CheckAndReplaceReport(projectId, SheetName.Plot);
+        if (saveResult.IsError)
+        {
+            return Response<string>.Error(saveResult.ErrorMessage);
+        }
+        
+        return Response<string>.Ok(copyResult.Value);
+    }
+    
     public async Task<IEnumerable<Response<string>>> GenerateAllReports(Guid projectId) =>
     [
         await GenerateInfoReport(projectId),
@@ -459,6 +501,7 @@ public sealed class ReportService(Report report,
         await GenerateB1Report(projectId),
         await GenerateB2Report(projectId),
         await GenerateImagesReport(projectId),
+        await GeneratePlotreport(projectId),
     ];
 
     public async Task<GetReportsDto> GetAllReports(Guid projectId)
