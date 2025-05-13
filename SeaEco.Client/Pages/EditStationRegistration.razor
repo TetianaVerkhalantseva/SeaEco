@@ -78,7 +78,7 @@
                 <option value="2">2</option>
                 <option value="3">3</option>
             </InputSelect>
-            <label for="equip-1"></label>
+            <label for="equip-1">Antall grabbhugg</label>
         </div>
 
         <div class="checkbox-3-container">
@@ -164,40 +164,6 @@
             </div>
 
             <div class="form-floating mb-3">
-                <InputSelect id="Farge" class="form-select" @bind-Value="_surveyDto.BSensorisk.Farge">
-                    <option value="" disabled>Velg farge</option>
-                    @foreach (Farge f in Enum.GetValues(typeof(Farge)))
-                    {
-                        <option value="@( (int)f )">@f.GetDescription()</option>
-                    }
-                </InputSelect>
-                <label for="Farge">Farge</label>
-            </div>
-
-
-            <div class="form-floating mb-3">
-                <InputSelect id="Lukt" class="form-select" @bind-Value="_surveyDto.BSensorisk.Lukt">
-                    <option value="" disabled>Velg lukt</option>
-                    @foreach (Lukt l in Enum.GetValues(typeof(Lukt)))
-                    {
-                        <option value="@( (int)l )">@l.GetDescription()</option>
-                    }
-                </InputSelect>
-                <label for="Lukt">Lukt</label>
-            </div>
-
-            <div class="form-floating mb-3">
-                <InputSelect id="Konsistens" class="form-select" @bind-Value="_surveyDto.BSensorisk.Konsistens">
-                    <option value="" disabled>Velg konsistens</option>
-                    @foreach (Konsistens k in Enum.GetValues(typeof(Konsistens)))
-                    {
-                        <option value="@( (int)k )">@k.GetDescription()</option>
-                    }
-                </InputSelect>
-                <label for="Konsistens">Konsistens</label>
-            </div>
-
-            <div class="form-floating mb-3">
                 <InputSelect id="GrabbVolum" class="form-select" @bind-Value="_surveyDto.BSensorisk.Grabbvolum">
                     <option value="" disabled>Velg grabbvolum</option>
                     @foreach (Grabbvolum g in Enum.GetValues(typeof(Grabbvolum)))
@@ -229,6 +195,39 @@
                 </InputSelect>
                 <label for="Gassbobler">Gassbobler</label>
             </div>
+
+            <div class="form-floating mb-3">
+                <InputSelect id="Farge" class="form-select" @bind-Value="_surveyDto.BSensorisk.Farge">
+                    <option value="" disabled>Velg farge</option>
+                    @foreach (Farge f in Enum.GetValues(typeof(Farge)))
+                    {
+                        <option value="@( (int)f )">@f.GetDescription()</option>
+                    }
+                </InputSelect>
+                <label for="Farge">Farge</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <InputSelect id="Lukt" class="form-select" @bind-Value="_surveyDto.BSensorisk.Lukt">
+                    <option value="" disabled>Velg lukt</option>
+                    @foreach (Lukt l in Enum.GetValues(typeof(Lukt)))
+                    {
+                        <option value="@( (int)l )">@l.GetDescription()</option>
+                    }
+                </InputSelect>
+                <label for="Lukt">Lukt</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <InputSelect id="Konsistens" class="form-select" @bind-Value="_surveyDto.BSensorisk.Konsistens">
+                    <option value="" disabled>Velg konsistens</option>
+                    @foreach (Konsistens k in Enum.GetValues(typeof(Konsistens)))
+                    {
+                        <option value="@( (int)k )">@k.GetDescription()</option>
+                    }
+                </InputSelect>
+                <label for="Konsistens">Konsistens</label>
+            </div>
         </div>
     </div>
 
@@ -238,14 +237,14 @@
             
             <div class="checkbox-container">
                 <button class="toggle-btn" data-level="@(_surveyDto.BHardBase?.Steinbunn.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
-                        @onclick="() => CycleValue(_surveyDto.BHardBase, nameof(_surveyDto.BHardBase.Steinbunn))"
-                        disabled="@(_surveyDto.BHardBase == null)">
+                        @onclick="() => ToggleZeroOneValue(_surveyDto.BHardBase, nameof(_surveyDto.BHardBase.Steinbunn))"
+                        disabled="@(_surveyDto.BHardBase == null || _surveyDto.BHardBase.Fjellbunn == 1f)">
                     Steinbunn
                 </button>
                 
                 <button class="toggle-btn" data-level="@(_surveyDto.BHardBase?.Fjellbunn.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
-                        @onclick="() => CycleValue(_surveyDto.BHardBase, nameof(_surveyDto.BHardBase.Fjellbunn))"
-                        disabled="@(_surveyDto.BHardBase == null)">
+                        @onclick="() => ToggleZeroOneValue(_surveyDto.BHardBase, nameof(_surveyDto.BHardBase.Fjellbunn))"
+                        disabled="@(_surveyDto.BHardBase == null || _surveyDto.BHardBase.Steinbunn == 1f)">
                     Fjellbunn
                 </button>
             </div>
@@ -457,7 +456,7 @@
     <button id="lastBtn" onclick="showLast()" class="custom-btn">Forrige</button>
     <button id="nextBtn" onclick="showNext()" class="custom-btn">Neste</button>
     <button id="submitBtn" class="custom-btn" style="display: none;" @onclick="SubmitSurvey">
-        oppdater
+        Oppdater
     </button>
 </div>
 
@@ -645,7 +644,7 @@
             ProsjektId = Guid.NewGuid(),
             PreinfoId = Guid.NewGuid(),
             Feltdato = DateOnly.FromDateTime(DateTime.Now),
-            AntallGrabbhugg = 5,
+            AntallGrabbhugg = 2,
             GrabbhastighetGodkjent = true,
             BlotbunnId = Guid.NewGuid(),
             HardbunnId = null,
@@ -821,6 +820,19 @@
                 property.SetValue(target, 1f);
             else
                 property.SetValue(target, 0f);
+        }
+    }
+
+    private void ToggleZeroOneValue(object target, string propertyName)
+    {
+        if (target == null) return;
+    
+        var property = target.GetType().GetProperty(propertyName);
+        if (property != null && property.PropertyType == typeof(float))
+        {
+            var currentValue = (float)(property.GetValue(target) ?? 0f);
+
+            property.SetValue(target, currentValue == 0f ? 1f : 0f);
         }
     }
     
