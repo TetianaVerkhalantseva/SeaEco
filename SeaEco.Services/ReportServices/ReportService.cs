@@ -467,11 +467,11 @@ public sealed class ReportService(Report report,
             .Where(_ => _.ProsjektId == projectId)
             .ToListAsync();
 
-        ReportDto plan = MapReport(dbRecords.FirstOrDefault(_ => (SheetName)_.ArkNavn == SheetName.PTP));
-
+        BRapporter? ptpReport = dbRecords.FirstOrDefault(_ => (SheetName)_.ArkNavn == SheetName.PTP);
+        
         return new GetReportsDto()
         {
-            Plan = plan,
+            Plan = ptpReport is null ? null : MapReport(ptpReport),
             Reports = dbRecords.Where(_ => (SheetName)_.ArkNavn != SheetName.PTP).OrderBy(_ => _.ArkNavn).Select(MapReport)
         };
     }
