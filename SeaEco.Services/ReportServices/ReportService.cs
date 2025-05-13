@@ -519,6 +519,20 @@ public sealed class ReportService(Report report,
         };
     }
 
+    public async Task<Response<ReportDto>> GetPtpReport(Guid projectId)
+    {
+        BRapporter? dbRecord = await reportRepository.GetBy(_ =>
+            _.ProsjektId == projectId &&
+            _.ArkNavn == (int)SheetName.PTP);
+
+        if (dbRecord is null)
+        {
+            return Response<ReportDto>.Error(ReportNotFoundError);
+        }
+        
+        return Response<ReportDto>.Ok(MapReport(dbRecord));
+    }
+    
     public async Task<Response<FileModel>> DownloadReportById(Guid peportId)
     {
         BRapporter? dbRecord = await reportRepository.GetAll()

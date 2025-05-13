@@ -17,5 +17,6 @@ public interface IReportService
     Task<IEnumerable<Response<string>>> GenerateAllReports(Guid projectId);
     
     Task<GetReportsDto> GetAllReports(Guid projectId);
+    Task<Response<ReportDto>> GetPtpReport(Guid projectId);
     Task<Response<FileModel>> DownloadReportById(Guid reporId);
 }

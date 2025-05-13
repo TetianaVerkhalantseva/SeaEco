@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SeaEco.Abstractions.Models.Report;
 using SeaEco.Abstractions.ResponseService;
 using SeaEco.EntityFramework.Contexts;
 using SeaEco.EntityFramework.Entities;
@@ -82,6 +83,15 @@ public class ReportController(IReportService reportService, TilstandService tils
 
     [HttpGet("{projectId:guid}/all")]
     public async Task<IActionResult> GetAll([FromRoute] Guid projectId) => AsOk(await reportService.GetAllReports(projectId));
+
+    [HttpGet("{projectId:guid}/pt-plan")]
+    public async Task<IActionResult> GetPtp([FromRoute] Guid projectId)
+    {
+        Response<ReportDto> response = await reportService.GetPtpReport(projectId);
+        return response.IsError
+            ? AsBadRequest(response.ErrorMessage)
+            : AsOk(response.Value);
+    }
     
     [HttpGet("{reportId:guid}")]
     public async Task<IActionResult> DownloadReport([FromRoute] Guid reportId)
