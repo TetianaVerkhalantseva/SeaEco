@@ -296,7 +296,7 @@ else
                 _location = await Http.GetFromJsonAsync<List<LokalitetDto>>($"api/Lokalitet");
                 _editContext = new EditContext(_project);
                 _selectedLocationId = _project.LokalitetsId;
-                _stationDatesString = string.Join(", ", _project.Feltdatoer.Select(d => d.ToString("yyyy-MM-dd")));
+                _stationDatesString = string.Join(", ", _project.Feltdatoer.Select(d => d.ToString("dd.MM.yyyy")));
             }
         }
         catch (Exception ex)
