@@ -93,23 +93,6 @@ public class BSurveyService: IBSurveyService
             _db.BUndersokelses.Add(entity);
             await _db.SaveChangesAsync();
             
-            
-            var proj = await _projectService.GetProjectByIdAsync(projectId);
-            if (proj?.Prosjektstatus == Prosjektstatus.Pabegynt)
-            {
-                await _projectService.UpdateProjectStatusAsync(
-                    projectId,
-                    Prosjektstatus.Pagar,
-                    merknad: null
-                );
-                
-                var rpt = await _reportService.GeneratePtpReport(projectId);
-                if (rpt.IsError)
-                {
-                    Console.Error.WriteLine($"PTP‐generering feilet for prosjekt {projectId}: {rpt.ErrorMessage}");
-                }
-            }
-            
             return new EditSurveyResult
             {
                 IsSuccess = true,
