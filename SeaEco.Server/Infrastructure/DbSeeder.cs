@@ -16,27 +16,40 @@ public sealed class DbSeeder
         }
         
         // Seed Bruker
-        Guid adminId = Guid.Parse("8fffdaa4-7dfe-4d78-a28b-b80558d542b6");
+        Guid adminId1 = Guid.Parse("8fffdaa4-7dfe-4d78-a28b-b80558d542b6");
+        Guid brukerId1 = Guid.Parse("9ec86e55-78d5-4463-8fdd-782006b74dd0");
         
-        Bruker? admin = context.Brukers.FirstOrDefault(x => x.Id == adminId);
-        if (admin is null)
-        {
-            var password = Hasher.Hash("1111");
-            admin = new()
+        var password1 = Hasher.Hash("1111");
+        var password2 = Hasher.Hash("12345678");
+        
+        IEnumerable<Bruker> users =
+        [
+            new Bruker()
             {   
-                Id = adminId,
-                Fornavn = "admin",
-                Etternavn = "admin",
+                Id = adminId1,
+                Fornavn = "Admin",
+                Etternavn = "Main",
                 Epost = "gruppe202520@gmail.com",
-                PassordHash = password.hashed,
-                Salt = password.salt,
+                PassordHash = password1.hashed,
+                Salt = password1.salt,
                 IsAdmin = true,
                 Aktiv = true
-            };
+            },
+            new Bruker()
+            {   
+                Id = brukerId1,
+                Fornavn = "Ann",
+                Etternavn = "Brue",
+                Epost = "annbrueab@gmail.com",
+                PassordHash = password2.hashed,
+                Salt = password2.salt,
+                IsAdmin = false,
+                Aktiv = true
+            },
+        ];
         
-            await context.Brukers.AddAsync(admin);
-            await context.SaveChangesAsync();
-        }
+        await context.Brukers.AddRangeAsync(users);
+        await context.SaveChangesAsync();
 
         // Seed Lokalitet
         Guid lokalitetId1 = Guid.Parse("546e9ab0-9bbb-41be-95be-af879924b192");
@@ -158,7 +171,7 @@ public sealed class DbSeeder
                 Id = provetakingsplanId1,
                 ProsjektId = prosjektId1,
                 Planlagtfeltdato = new DateOnly(2025, 3, 30),
-                PlanleggerId = adminId 
+                PlanleggerId = adminId1 
             }
         ];
         
@@ -315,8 +328,6 @@ public sealed class DbSeeder
                 Ph = 6.6f,
                 Eh = -239.4f,
                 Temperatur = 10.5f,
-                KlasseGr2 = 5,
-                TilstandGr2 = 4
             },
             new BSediment()
             {
@@ -324,8 +335,6 @@ public sealed class DbSeeder
                 Ph = 7.4f,
                 Eh = -19.2f,
                 Temperatur = -2.5f,
-                KlasseGr2 = 2,
-                TilstandGr2 = 2
             },
             new BSediment()
             {
@@ -333,8 +342,6 @@ public sealed class DbSeeder
                 Ph = 6.9f,
                 Eh = -313.0f,
                 Temperatur = 9.5f,
-                KlasseGr2 = 3,
-                TilstandGr2 = 3
             },
         ];
         
@@ -359,8 +366,6 @@ public sealed class DbSeeder
                 Konsistens = 2,
                 Grabbvolum = 1,
                 Tykkelseslamlag = 0,
-                IndeksGr3 = 1.54f,
-                TilstandGr3 = 2
             },
             new BSensorisk
             {
@@ -371,8 +376,6 @@ public sealed class DbSeeder
                 Konsistens = 2,
                 Grabbvolum = 0,
                 Tykkelseslamlag = 0,
-                IndeksGr3 = 0.88f,
-                TilstandGr3 = 1
             },
             new BSensorisk
             {
@@ -383,8 +386,6 @@ public sealed class DbSeeder
                 Konsistens = 2,
                 Grabbvolum = 0,
                 Tykkelseslamlag = 0,
-                IndeksGr3 = 0.88f,
-                TilstandGr3 = 1
             },
             new BSensorisk
             {
@@ -395,8 +396,6 @@ public sealed class DbSeeder
                 Konsistens = 2,
                 Grabbvolum = 1,
                 Tykkelseslamlag = 0,
-                IndeksGr3 = 1.54f,
-                TilstandGr3 = 2
             }
         ];
         
@@ -454,8 +453,6 @@ public sealed class DbSeeder
                 Merknader = "Rester av anleggsmateriale",
                 DatoRegistrert = DateTime.Now,
                 DatoEndret = DateTime.Now,
-                IndeksGr2Gr3 = 3.27f,
-                TilstandGr2Gr3 = 4
             },
             new BUndersokelse()
             {
@@ -476,8 +473,6 @@ public sealed class DbSeeder
                 Merknader = "Rester 2",
                 DatoRegistrert = DateTime.Now,
                 DatoEndret = DateTime.Now,
-                IndeksGr2Gr3 = 0.88f,
-                TilstandGr2Gr3 = 1
             },
             new BUndersokelse()
             {
@@ -498,8 +493,6 @@ public sealed class DbSeeder
                 Merknader = "Rester av 3",
                 DatoRegistrert = DateTime.Now,
                 DatoEndret = DateTime.Now,
-                IndeksGr2Gr3 = 1.44f,
-                TilstandGr2Gr3 = 2
             },
             new BUndersokelse()
             {
@@ -520,8 +513,6 @@ public sealed class DbSeeder
                 Merknader = "Rester 4",
                 DatoRegistrert = DateTime.Now,
                 DatoEndret = DateTime.Now,
-                IndeksGr2Gr3 = 0,
-                TilstandGr2Gr3 = 1
             },
             new BUndersokelse()
             {
@@ -542,8 +533,6 @@ public sealed class DbSeeder
                 Merknader = "Rester 5",
                 DatoRegistrert = DateTime.Now,
                 DatoEndret = DateTime.Now,
-                IndeksGr2Gr3 = 2.27f,
-                TilstandGr2Gr3 = 3
             },
             new BUndersokelse()
             {
@@ -564,8 +553,6 @@ public sealed class DbSeeder
                 Merknader = "Rester222",
                 DatoRegistrert = DateTime.Now,
                 DatoEndret = DateTime.Now,
-                IndeksGr2Gr3 = 0,
-                TilstandGr2Gr3 = 1
             }
         ];
         
@@ -647,25 +634,5 @@ public sealed class DbSeeder
         await context.BStasjons.AddRangeAsync(stasjons);
         await context.SaveChangesAsync();
         
-        // Seed BTistand
-        Guid tilstandId1 = Guid.Parse("e716cc15-d2bd-4ead-9da6-8be75b939c20");
-
-        List<BTilstand> tilstands =
-        [
-            new BTilstand
-            {
-                Id = tilstandId1,
-                ProsjektId = prosjektId1,
-                IndeksGr2 = 2.5f,
-                TilstandGr2 = 3,
-                IndeksGr3 = 0.968f,
-                TilstandGr3 = 1,
-                IndeksLokalitet = 1.572f,
-                TilstandLokalitet = 2
-            }
-        ];
-        
-        await context.BTilstands.AddRangeAsync(tilstands);
-        await context.SaveChangesAsync();
     }
 }
