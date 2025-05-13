@@ -231,6 +231,7 @@ public sealed class DbSeeder
         Guid blotbunnId1 = Guid.Parse("830eebc8-6d86-40ad-88ed-3cbe3e43e0bc");
         Guid blotbunnId2 = Guid.Parse("37e05b0b-0a82-45c3-a304-7e8426e1bf53");
         Guid blotbunnId3 = Guid.Parse("0d3724ca-3887-4bdc-b718-5bbe52f3e80d");
+        Guid blotbunnId5 = Guid.Parse("a7c8c5d1-a62a-4391-b071-b0658a7eedda");
         
         
         List<BBlotbunn> blotbunns =
@@ -256,6 +257,15 @@ public sealed class DbSeeder
             new BBlotbunn
             {
                 Id = blotbunnId3,
+                Leire = 0,
+                Silt = 0.5f,
+                Sand = 0,
+                Grus = 1,
+                Skjellsand = 0
+            },
+            new BBlotbunn
+            {
+                Id = blotbunnId5,
                 Leire = 0,
                 Silt = 0.5f,
                 Sand = 0,
@@ -291,21 +301,88 @@ public sealed class DbSeeder
         await context.BHardbunns.AddRangeAsync(hardbunns);
         await context.SaveChangesAsync();
         
+        
+        // Seed BSediment
+        Guid sedimentId1 = Guid.Parse("06290e72-2e6b-409b-bfce-6295a48d900c");
+        Guid sedimentId3 = Guid.Parse("474b0557-6ee4-41e5-83bc-9c5a00c9a65c");
+        Guid sedimentId5 = Guid.Parse("27fca494-95e9-48be-aaa3-3578ecbd1a39");
+        
+        List<BSediment> sediments =
+        [
+            new BSediment()
+            {
+                Id = sedimentId1,
+                Ph = 6.6f,
+                Eh = -239.4f,
+                Temperatur = 10.5f,
+                KlasseGr2 = 5,
+                TilstandGr2 = 4
+            },
+            new BSediment()
+            {
+                Id = sedimentId3,
+                Ph = 7.4f,
+                Eh = -19.2f,
+                Temperatur = -2.5f,
+                KlasseGr2 = 2,
+                TilstandGr2 = 2
+            },
+            new BSediment()
+            {
+                Id = sedimentId5,
+                Ph = 6.9f,
+                Eh = -313.0f,
+                Temperatur = 9.5f,
+                KlasseGr2 = 3,
+                TilstandGr2 = 3
+            },
+        ];
+        
+        await context.BSediments.AddRangeAsync(sediments);
+        await context.SaveChangesAsync();
+        
+        
         // Seed BSensorisk
         Guid sensoriskId1 = Guid.Parse("02843db6-6a65-4f45-85c2-4537096686e6");
+        Guid sensoriskId3 = Guid.Parse("da077591-ab46-44b2-b3ce-fa032fc60696");
+        Guid sensoriskId5 = Guid.Parse("a6d80dc5-3911-4559-b092-54645be31a63");
         
         List<BSensorisk> sensorisks =
         [
             new BSensorisk
             {
                 Id = sensoriskId1,
-                Gassbobler = 1,
+                Gassbobler = 0,
                 Farge = 2,
                 Lukt = 2,
                 Konsistens = 2,
-                Grabbvolum = 5,
-                Tykkelseslamlag = 3,
-                IndeksGr3 = 0.5f,
+                Grabbvolum = 1,
+                Tykkelseslamlag = 0,
+                IndeksGr3 = 1.54f,
+                TilstandGr3 = 2
+            },
+            new BSensorisk
+            {
+                Id = sensoriskId3,
+                Gassbobler = 0,
+                Farge = 2,
+                Lukt = 0,
+                Konsistens = 2,
+                Grabbvolum = 0,
+                Tykkelseslamlag = 0,
+                IndeksGr3 = 0.88f,
+                TilstandGr3 = 1
+            },
+            new BSensorisk
+            {
+                Id = sensoriskId5,
+                Gassbobler = 0,
+                Farge = 2,
+                Lukt = 2,
+                Konsistens = 2,
+                Grabbvolum = 1,
+                Tykkelseslamlag = 0,
+                IndeksGr3 = 1.54f,
                 TilstandGr3 = 2
             }
         ];
@@ -355,7 +432,7 @@ public sealed class DbSeeder
                 GrabbhastighetGodkjent = true,
                 BlotbunnId = blotbunnId1,
                 HardbunnId = null,
-                SedimentId = null, 
+                SedimentId = sedimentId1, 
                 SensoriskId = sensoriskId1,
                 Beggiatoa = false,
                 Forrester = true,
@@ -364,8 +441,8 @@ public sealed class DbSeeder
                 Merknader = "Rester av anleggsmateriale",
                 DatoRegistrert = DateTime.Now,
                 DatoEndret = DateTime.Now,
-                IndeksGr2Gr3 = 0,
-                TilstandGr2Gr3 = 1
+                IndeksGr2Gr3 = 3.27f,
+                TilstandGr2Gr3 = 4
             },
             new BUndersokelse()
             {
@@ -385,9 +462,7 @@ public sealed class DbSeeder
                 DyrId = null,
                 Merknader = "Rester 2",
                 DatoRegistrert = DateTime.Now,
-                DatoEndret = DateTime.Now,
-                IndeksGr2Gr3 = 0,
-                TilstandGr2Gr3 = 1
+                DatoEndret = DateTime.Now
             },
             new BUndersokelse()
             {
@@ -399,8 +474,8 @@ public sealed class DbSeeder
                 GrabbhastighetGodkjent = true,
                 BlotbunnId = blotbunnId3,
                 HardbunnId = null,
-                SedimentId = null, 
-                SensoriskId = null,
+                SedimentId = sedimentId3, 
+                SensoriskId = sensoriskId3,
                 Beggiatoa = true,
                 Forrester = false,
                 Fekalier = false,
@@ -408,8 +483,8 @@ public sealed class DbSeeder
                 Merknader = "Rester av 3",
                 DatoRegistrert = DateTime.Now,
                 DatoEndret = DateTime.Now,
-                IndeksGr2Gr3 = 0,
-                TilstandGr2Gr3 = 1
+                IndeksGr2Gr3 = 1.44f,
+                TilstandGr2Gr3 = 2
             },
             new BUndersokelse()
             {
@@ -429,9 +504,7 @@ public sealed class DbSeeder
                 Dyr = null,
                 Merknader = "Rester 4",
                 DatoRegistrert = DateTime.Now,
-                DatoEndret = DateTime.Now,
-                IndeksGr2Gr3 = 0,
-                TilstandGr2Gr3 = 1
+                DatoEndret = DateTime.Now
             },
             new BUndersokelse()
             {
@@ -441,10 +514,10 @@ public sealed class DbSeeder
                 Feltdato = DateOnly.FromDateTime(DateTime.Now),
                 AntallGrabbhugg = 8,
                 GrabbhastighetGodkjent = true,
-                BlotbunnId = null,
-                HardbunnId = hardbunnId2,
-                SedimentId = null, 
-                SensoriskId = null,
+                BlotbunnId = blotbunnId5,
+                HardbunnId = null,
+                SedimentId = sedimentId5, 
+                SensoriskId = sensoriskId5,
                 Beggiatoa = true,
                 Forrester = false,
                 Fekalier = false,
@@ -452,8 +525,8 @@ public sealed class DbSeeder
                 Merknader = "Rester 5",
                 DatoRegistrert = DateTime.Now,
                 DatoEndret = DateTime.Now,
-                IndeksGr2Gr3 = 0,
-                TilstandGr2Gr3 = 1
+                IndeksGr2Gr3 = 2.27f,
+                TilstandGr2Gr3 = 3
             },
             new BUndersokelse()
             {
@@ -557,5 +630,25 @@ public sealed class DbSeeder
         await context.BStasjons.AddRangeAsync(stasjons);
         await context.SaveChangesAsync();
         
+        // Seed BTistand
+        Guid tilstandId1 = Guid.Parse("e716cc15-d2bd-4ead-9da6-8be75b939c20");
+
+        List<BTilstand> tilstands =
+        [
+            new BTilstand
+            {
+                Id = tilstandId1,
+                ProsjektId = prosjektId1,
+                IndeksGr2 = 2,
+                TilstandGr2 = 2,
+                IndeksGr3 = 0.792f,
+                TilstandGr3 = 1,
+                IndeksLokalitet = 1.396f,
+                TilstandLokalitet = 2
+            }
+        ];
+        
+        await context.BTilstands.AddRangeAsync(tilstands);
+        await context.SaveChangesAsync();
     }
 }
