@@ -341,8 +341,7 @@ else
                     EditProjectPlanVar = false;
                     _isExistingPlan = true;
                     _newPlanBackup = BackUp(_newPlan);
-                    
-
+                    await EditProjectPlanChanged.InvokeAsync(EditProjectPlanVar);
                 }
                 else
                 {
@@ -357,7 +356,7 @@ else
                 {
                     EditProjectPlanVar = false;
                     _newPlanBackup = BackUp(_newPlan);
-                    
+                    await EditProjectPlanChanged.InvokeAsync(EditProjectPlanVar);
                 }
                 else
                 {
