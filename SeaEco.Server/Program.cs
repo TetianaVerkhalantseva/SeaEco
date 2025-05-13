@@ -27,6 +27,7 @@ using SeaEco.Services.ProjectServices;
 using SeaEco.Services.ReportServices;
 using SeaEco.Services.SamplingPlanServices;
 using SeaEco.Services.StationServices;
+using SeaEco.Services.TilstandServices;
 using SeaEco.Services.TokenServices;
 using SeaEco.Services.UserServices;
 using SeaEco.Services.Validators;
@@ -106,7 +107,7 @@ services.Configure<JwtOptions>(configuration.GetSection("JwtOptions"));
 services.Configure<SmtpOptions>(configuration.GetSection("SmtpOptions"));
 services.Configure<ReportOptions>(configuration.GetSection("ReportOptions"));
 
-services.AddDbContext<AppDbContext>(options => options.UseNpgsql(configuration["ConnectionStrings:DefaultConnection"]));
+services.AddDbContext<AppDbContext>(options => options.UseNpgsql(configuration["ConnectionStrings:LocalConnection"]));
 services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 // Core services
@@ -126,8 +127,9 @@ services.AddTransient<ISamplingPlanService, SamplingPlanService>();
 services.AddTransient<IStationService, StationService>();
 services.AddTransient<IBSurveyService, BSurveyService>();
 services.AddScoped<ILokalitetService, LokalitetService>();
-services.AddScoped<Report>();
 services.AddTransient<IReportService, ReportService>();
+services.AddScoped<Report>();
+services.AddScoped<TilstandService>();
 
 // Models validators
 services.AddScoped<IValidator<LoginDto>, LoginDtoValidator>();
@@ -172,5 +174,5 @@ void SeedData(IServiceProvider serviceProvider)
 {
     using var scope = serviceProvider.CreateScope();
     DbSeeder seeder = new DbSeeder();
-    //seeder.SeedData(scope.ServiceProvider.GetRequiredService<AppDbContext>(), true).GetAwaiter().GetResult();
+    seeder.SeedData(scope.ServiceProvider.GetRequiredService<AppDbContext>(), true).GetAwaiter().GetResult();
 }
