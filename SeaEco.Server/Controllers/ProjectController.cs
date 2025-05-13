@@ -66,7 +66,7 @@ public class ProjectController : ControllerBase
     [HttpGet("Customer/{customerId:guid}")]
     public async Task<IActionResult> GetAllProjectsByCustomerId(Guid customerId)
     {
-        var projects = await _projectService.GetAllProjectsAsync();
+        var projects = await _projectService.GetAllProjectsByCustomerId(customerId);
         return Ok(projects);
     }
     
