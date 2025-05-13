@@ -73,8 +73,13 @@
 
     <div class="equipment-container">
         <div class="form-floating mb-3">
-            <InputNumber id="equip-1" class="form-control" @bind-Value="_surveyDto.AntallGrabbhugg" placeholder="Grabbhugg"/>
-            <label for="equip-1">Antall grabbhugg</label>
+            <InputSelect id="equip-1" class="form-control" @bind-Value="_surveyDto.AntallGrabbhugg">
+                <option value="">Velg antall grabbhugg</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </InputSelect>
+            <label for="equip-1"></label>
         </div>
 
         <div class="checkbox-3-container">
