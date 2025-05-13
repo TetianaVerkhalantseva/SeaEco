@@ -344,6 +344,7 @@ public sealed class DbSeeder
         
         // Seed BSensorisk
         Guid sensoriskId1 = Guid.Parse("02843db6-6a65-4f45-85c2-4537096686e6");
+        Guid sensoriskId2 = Guid.Parse("c1fce4f2-8c0e-4c62-9e0b-278dfb4e0218");
         Guid sensoriskId3 = Guid.Parse("da077591-ab46-44b2-b3ce-fa032fc60696");
         Guid sensoriskId5 = Guid.Parse("a6d80dc5-3911-4559-b092-54645be31a63");
         
@@ -360,6 +361,18 @@ public sealed class DbSeeder
                 Tykkelseslamlag = 0,
                 IndeksGr3 = 1.54f,
                 TilstandGr3 = 2
+            },
+            new BSensorisk
+            {
+                Id = sensoriskId2,
+                Gassbobler = 0,
+                Farge = 2,
+                Lukt = 0,
+                Konsistens = 2,
+                Grabbvolum = 0,
+                Tykkelseslamlag = 0,
+                IndeksGr3 = 0.88f,
+                TilstandGr3 = 1
             },
             new BSensorisk
             {
@@ -452,17 +465,19 @@ public sealed class DbSeeder
                 Feltdato = DateOnly.FromDateTime(DateTime.Now),
                 AntallGrabbhugg = 8,
                 GrabbhastighetGodkjent = true,
-                BlotbunnId = blotbunnId2,
-                HardbunnId = null,
+                BlotbunnId = null,
+                HardbunnId = hardbunnId2,
                 SedimentId = null, 
-                SensoriskId = null,
+                SensoriskId = sensoriskId2,
                 Beggiatoa = true,
                 Forrester = false,
                 Fekalier = false,
                 DyrId = null,
                 Merknader = "Rester 2",
                 DatoRegistrert = DateTime.Now,
-                DatoEndret = DateTime.Now
+                DatoEndret = DateTime.Now,
+                IndeksGr2Gr3 = 0.88f,
+                TilstandGr2Gr3 = 1
             },
             new BUndersokelse()
             {
@@ -639,11 +654,11 @@ public sealed class DbSeeder
             {
                 Id = tilstandId1,
                 ProsjektId = prosjektId1,
-                IndeksGr2 = 2,
-                TilstandGr2 = 2,
-                IndeksGr3 = 0.792f,
+                IndeksGr2 = 2.5f,
+                TilstandGr2 = 3,
+                IndeksGr3 = 0.968f,
                 TilstandGr3 = 1,
-                IndeksLokalitet = 1.396f,
+                IndeksLokalitet = 1.572f,
                 TilstandLokalitet = 2
             }
         ];

@@ -131,60 +131,67 @@ public sealed class Report
             worksheet.Cells[5, index].Value = column.Bunntype.GetDisplay();
             worksheet.Cells[7, index].Value = (int)column.Dyr;
 
-            worksheet.Cells[9, index].Value = column.Bunntype == Bunntype.Hardbunn || column.pH == 0 ? string.Empty : $"{column.pH:F1}";
-            worksheet.Cells[10, index].Value = column.Bunntype == Bunntype.Hardbunn || column.Eh == 0 ? string.Empty : $"{column.Eh:F1}";
-            worksheet.Cells[11, index].Value = column.Bunntype == Bunntype.Hardbunn ? 0 : column.phEh;
-            
-            if (Enum.IsDefined(column.TilstandProveGr2))
+            if (!(column.Bunntype == Bunntype.Hardbunn &&
+                column.HasSediment == false &&
+                column.HasSensorisk == true))
             {
-                worksheet.Cells[12, index].Value = (int)column.TilstandProveGr2;
-                worksheet.Cells[12, index].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                worksheet.Cells[12, index].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(column.TilstandProveGr2.GetDisplay()));
+                worksheet.Cells[9, index].Value = column.Bunntype == Bunntype.Hardbunn || column.pH == 0 ? string.Empty : $"{column.pH:F1}";
+                worksheet.Cells[10, index].Value = column.Bunntype == Bunntype.Hardbunn || column.Eh == 0 ? string.Empty : $"{column.Eh:F1}";
+                worksheet.Cells[11, index].Value = column.Bunntype == Bunntype.Hardbunn ? 0 : column.phEh;
+            
+                if (Enum.IsDefined(column.TilstandProveGr2))
+                {
+                    worksheet.Cells[12, index].Value = (int)column.TilstandProveGr2;
+                    worksheet.Cells[12, index].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[12, index].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(column.TilstandProveGr2.GetDisplay()));
+                }
+                else if (column.TilstandProveGr2 == 0)
+                {
+                    Tilstand gr2 = Tilstand.Blue;
+
+                    worksheet.Cells[12, index].Value = (int)gr2;
+                    worksheet.Cells[12, index].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    worksheet.Cells[12, index].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(gr2.GetDisplay()));
+                }
             }
-            else if (column.TilstandProveGr2 == 0)
-            {
-                Tilstand gr2 = Tilstand.Blue;
 
-                worksheet.Cells[12, index].Value = (int)gr2;
-                worksheet.Cells[12, index].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                worksheet.Cells[12, index].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(gr2.GetDisplay()));
+            if (column.HasSensorisk)
+            {
+                worksheet.Cells[column.Gassbobler == Gassbobler.Ja ? 17 : 18, index].Value = (int)column.Gassbobler;
+                worksheet.Cells[column.Farge == Farge.LysGrå ? 19 : 20, index].Value = (int)column.Farge;
+            
+                worksheet.Cells[column.Lukt switch 
+                { 
+                    Lukt.Ingen => 21,
+                    Lukt.Noe=> 22,
+                    Lukt.Sterk => 23,
+                    _ => 21
+                }, index].Value = (int)column.Lukt;
+
+                worksheet.Cells[column.Konsistens switch 
+                { 
+                    Konsistens.Fast => 24,
+                    Konsistens.Myk => 25,
+                    Konsistens.Løs => 26,
+                    _ => 24
+                }, index].Value = (int)column.Konsistens;
+
+                worksheet.Cells[column.Grabbvolum switch
+                {
+                    Grabbvolum.MindreEnnKvart => 27,
+                    Grabbvolum.MellomKvartOgTreKvart => 28,
+                    Grabbvolum.StørreEnnTreKvart => 29,
+                    _ => 27
+                }, index].Value = (int)column.Grabbvolum;
+
+                worksheet.Cells[column.Tykkelseslamlag switch
+                {
+                    Tykkelseslamlag.Under2Cm => 30,
+                    Tykkelseslamlag.Mellom2Og8Cm => 31,
+                    Tykkelseslamlag.Over8Cm => 32,
+                    _ => 30
+                }, index].Value = (int)column.Tykkelseslamlag;
             }
-            
-            worksheet.Cells[column.Gassbobler == Gassbobler.Ja ? 17 : 18, index].Value = (int)column.Gassbobler;
-            worksheet.Cells[column.Farge == Farge.LysGrå ? 19 : 20, index].Value = (int)column.Farge;
-            
-            
-            worksheet.Cells[column.Lukt switch 
-            { 
-                Lukt.Ingen => 21,
-                Lukt.Noe=> 22,
-                Lukt.Sterk => 23,
-                _ => 21
-            }, index].Value = (int)column.Lukt;
-
-            worksheet.Cells[column.Konsistens switch 
-            { 
-                Konsistens.Fast => 24,
-                Konsistens.Myk => 25,
-                Konsistens.Løs => 26,
-                _ => 24
-            }, index].Value = (int)column.Konsistens;
-
-            worksheet.Cells[column.Grabbvolum switch
-            {
-                Grabbvolum.MindreEnnKvart => 27,
-                Grabbvolum.MellomKvartOgTreKvart => 28,
-                Grabbvolum.StørreEnnTreKvart => 29,
-                _ => 27
-            }, index].Value = (int)column.Grabbvolum;
-
-            worksheet.Cells[column.Tykkelseslamlag switch
-            {
-                Tykkelseslamlag.Under2Cm => 30,
-                Tykkelseslamlag.Mellom2Og8Cm => 31,
-                Tykkelseslamlag.Over8Cm => 32,
-                _ => 30
-            }, index].Value = (int)column.Tykkelseslamlag;
 
             worksheet.Cells[33, index].Value = column.Sum > 0 ? $"{column.Sum:F2}" : 0;
             worksheet.Cells[34, index].Value = column.KorrigertSum;

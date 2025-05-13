@@ -130,11 +130,13 @@ public sealed class ReportService(Report report,
             Bunntype = _.HardbunnId is null ? Bunntype.Blotbunn : Bunntype.Hardbunn,
             Dyr = _.DyrId is null ? Dyr.Nei : Dyr.Ja,
             
+            HasSediment = _.SedimentId is not null,
             pH = _.Sediment?.Ph ?? 0,
             Eh = _.Sediment?.Eh ?? 0,
             phEh = _.Sediment?.KlasseGr2 ?? 0,
             TilstandProveGr2 = (Tilstand)(_.Sediment?.TilstandGr2 ?? 1),
             
+            HasSensorisk = _.SensoriskId is not null,
             Gassbobler = (Gassbobler)(_.Sensorisk?.Gassbobler ?? 0),
             Farge = (Farge)(_.Sensorisk?.Farge ?? 0),
             Lukt = (Lukt)(_.Sensorisk?.Lukt ?? 0),

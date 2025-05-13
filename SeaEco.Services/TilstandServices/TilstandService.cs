@@ -43,16 +43,25 @@ public sealed class TilstandService
 
     public void CalculateUndersokelseTilstand(BUndersokelse undersokelse)
     {
-        float index = ((undersokelse.Sediment?.KlasseGr2! ?? 0) +
-                        (undersokelse.Sensorisk?.IndeksGr3! ?? 0)) / 2;
-        
+        float index = undersokelse.SedimentId is null &&
+                      undersokelse.SensoriskId is not null
+                          ? undersokelse.Sensorisk.IndeksGr3 ?? 0f
+                          : ((undersokelse.Sediment?.KlasseGr2! ?? 0) +
+                           (undersokelse.Sensorisk?.IndeksGr3! ?? 0)) / 2;
+                      
         undersokelse.IndeksGr2Gr3 = index;
         undersokelse.TilstandGr2Gr3 = (int)CalculateTilstand(index);
     }
 
     public BTilstand CalculateProsjektTilstand(IEnumerable<BUndersokelse> undersokelse, Guid projectId)
     {
-        float indexGr2Avg = undersokelse.Average(_ => _.Sediment?.KlasseGr2! ?? 0f);
+        float indexGr2Avg = undersokelse.Sum(_ => _.Sediment?.KlasseGr2! ?? 0f) / 
+                            (undersokelse.Count() - 
+                             undersokelse.Count(_ => _.HardbunnId is not null &&
+                                                     _.SedimentId is null &&
+                                                     _.SensoriskId is not null)
+                             );
+        
         float indexGr3Avg = undersokelse.Average(_ => _.Sensorisk?.IndeksGr3! ?? 0);
         float indexGr2Gr3Avg = undersokelse.Average(_ => _.IndeksGr2Gr3! ?? 0);
 
