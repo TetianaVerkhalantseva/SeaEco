@@ -98,6 +98,40 @@ public class ProjectService : IProjectService
             .ToListAsync();
     }
 
+    public async Task<List<ProjectDto>> GetAllProjectsByCustomerId(Guid customerId)
+    {
+        return await _context.BProsjekts
+            .Where(p => p.KundeId == customerId)
+            .Select(p => new ProjectDto
+            {
+                Id = p.Id,
+                PoId = p.PoId,
+                ProsjektIdSe = p.ProsjektIdSe,
+                KundeId = p.KundeId,
+                Oppdragsgiver = p.Kunde.Oppdragsgiver,
+                Kundekontaktperson = p.Kundekontaktperson,
+                Kundetlf = p.Kundetlf,
+                Kundeepost = p.Kundeepost,
+                LokalitetId = p.LokalitetId,
+                Lokalitetsnavn = p.Lokalitet.Lokalitetsnavn,
+                LokalitetsId = p.Lokalitet.LokalitetsId,
+                Mtbtillatelse = p.Mtbtillatelse,
+                ProsjektansvarligId = p.ProsjektansvarligId,
+                Merknad = p.Merknad,
+                Produksjonsstatus = (Produksjonsstatus)p.Produksjonsstatus,
+                Prosjektstatus = (Prosjektstatus)p.Prosjektstatus,
+                Tilstand = p.BTilstand != null
+                    ? (Tilstand?)p.BTilstand.TilstandLokalitet
+                    : null,
+                Feltdatoer = p.BPreinfos
+                    .Select(pi => pi.Feltdato)
+                    .OrderBy(d => d)
+                    .ToList()
+            })
+            .AsNoTracking()
+            .ToListAsync();
+    }
+
     public async Task<ProjectDto?> GetProjectByIdAsync(Guid id)
     {
         var p = await _context.BProsjekts

@@ -8,6 +8,8 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @using SeaEco.Abstractions.Enums
 @using SeaEco.Abstractions.Extensions
+@using SeaEco.Abstractions.Models.Customer
+@using SeaEco.Abstractions.Models.Project
 
 
 <div class="container mt-5">
@@ -68,6 +70,7 @@
                     <option value="status-new">Nytt</option>
                     <option value="status-ongoing">Pågår</option>
                     <option value="status-done">Ferdig</option>
+                    <option value="status-deactivated">Deaktivert</option>
                     <option value="name-asc">Sorter etter navn: A-Z</option>
                     <option value="name-desc">Sorter etter navn: Z-A</option>
                     <option value="date-asc">Sorter etter dato: eldst først</option>
@@ -83,17 +86,17 @@
     </div>
     
     <div class="row justify-content-center">
-        @if (_customer?.BProsjekts != null)
+        @if (_selectedProjects != null)
         {
-            @foreach (var project in _customer.BProsjekts)
+            @foreach (var project in _selectedProjects)
             {
                 <div class="col-md-5 col-lg-4 mb-4">
                     <div class="card shadow-sm p-4 rounded-3 hover-effect d-flex align-items-center justify-content-center">
                         
                         <!-- href to project detail page -->
-                        <a href=""><h5 class="project-info">@project.PoId</h5></a>
-                        <a href="">
-                            <p>@(project.Prosjektstatus.ToEnumDescription<Prosjektstatus>())</p>
+                        <a href="/project/@project.Id"><h5 class="project-info">@project.PoId</h5></a>
+                        <a href="/project/@project.Id">
+                            <p>@(project.Prosjektstatus.GetDescription())</p>
                         </a>
                     </div>
                 </div>
@@ -112,10 +115,12 @@
 @code {
     [Parameter]
     public Guid CustomerId { get; set; }
-    private Kunde? _customer = new();
+    
+    private CustomerDto? _customer = new();
     private bool? _result;
     private string _currentSort = "all";
-    private List<BProsjekt> _allProjects = new();
+    private List<ProjectDto>? _allProjects;
+    private List<ProjectDto>? _selectedProjects;
 
     protected override async Task OnInitializedAsync()
     {
@@ -126,59 +131,10 @@
     {
         try
         {
-            _customer = await Http.GetFromJsonAsync<Kunde>($"api/Customer/Project-details-for-customer/{CustomerId}");
-            _customer.BProsjekts = new List<BProsjekt>
-            {
-                new BProsjekt
-                {
-                    Id = new Guid(),
-                    PoId = "1001",
-                    Prosjektstatus = 3
-                },
-                new BProsjekt
-                {
-                    Id = new Guid(),
-                    PoId = "1002",
-                    Prosjektstatus = 2,
-                    Datoregistrert = DateTime.Now
-                },
-                new BProsjekt
-                {
-                    Id = new Guid(),
-                    PoId = "1003",
-                    Prosjektstatus = 2,
-                    Datoregistrert = DateTime.Now
-                },
-                new BProsjekt
-                {
-                    Id = new Guid(),
-                    PoId = "1004",
-                    Prosjektstatus = 1,
-                    Datoregistrert = DateTime.Now
-                },
-                new BProsjekt
-                {
-                    Id = new Guid(),
-                    PoId = "1005",
-                    Prosjektstatus = 2,
-                    Datoregistrert = DateTime.Now
-                },
-                new BProsjekt
-                {
-                    Id = new Guid(),
-                    PoId = "1006",
-                    Prosjektstatus = 1,
-                    Datoregistrert = DateTime.Now
-                },
-                new BProsjekt
-                {
-                Id = new Guid(),
-                PoId = "1007",
-                Prosjektstatus = 5,
-                Datoregistrert = DateTime.MinValue 
-                }
-            };
-            _allProjects = _customer.BProsjekts.ToList();
+            _customer = await Http.GetFromJsonAsync<CustomerDto>($"api/Customer/{CustomerId}");
+            
+            _allProjects = await Http.GetFromJsonAsync<List<ProjectDto>>($"api/Project/Customer/{CustomerId}");
+            
             SortProjectList(_currentSort);
         }
         catch (Exception e)
@@ -195,52 +151,58 @@
 
     private void SortProjectList(string sortOption)
     {
-        if (_customer?.BProsjekts == null) return;
+        if (_allProjects == null) return;
 
-        _customer.BProsjekts = _allProjects.ToList();
+        _selectedProjects = _allProjects.ToList();
 
         switch (sortOption)
         {
             case "all":
                 break;
-            case "status-started":
-                _customer.BProsjekts = _customer.BProsjekts
-                    .Where(p => (Prosjektstatus)p.Prosjektstatus == Prosjektstatus.Pabegynt)
+                
+            case "status-new":
+                _selectedProjects = _selectedProjects
+                    .Where(p => p.Prosjektstatus == Prosjektstatus.Nytt)
                     .ToList();
                 break;
-            case "status-new":
-                _customer.BProsjekts = _customer.BProsjekts
-                    .Where(p => (Prosjektstatus)p.Prosjektstatus == Prosjektstatus.Nytt)
+            case "status-started":
+                _selectedProjects = _selectedProjects
+                    .Where(p => p.Prosjektstatus == Prosjektstatus.Pabegynt)
                     .ToList();
                 break;
             case "status-ongoing":
-                _customer.BProsjekts = _customer.BProsjekts
-                    .Where(p => (Prosjektstatus)p.Prosjektstatus == Prosjektstatus.Pagar)
+                _selectedProjects = _selectedProjects
+                    .Where(p => p.Prosjektstatus == Prosjektstatus.Pagar)
                     .ToList();
                 break;
             case "status-done":
-                _customer.BProsjekts = _customer.BProsjekts
-                    .Where(p => (Prosjektstatus)p.Prosjektstatus == Prosjektstatus.Ferdig)
+                _selectedProjects = _selectedProjects
+                    .Where(p => p.Prosjektstatus == Prosjektstatus.Ferdig)
+                    .ToList();
+                break;
+            case "status-deactivated":
+                _selectedProjects = _selectedProjects
+                    .Where(p => p.Prosjektstatus == Prosjektstatus.Deaktivert)
                     .ToList();
                 break;
             case "name-asc":
-                _customer.BProsjekts = _customer.BProsjekts
+                _selectedProjects = _selectedProjects
                     .OrderBy(p => p.PoId)
                     .ToList();
                 break;
             case "name-desc":
-                _customer.BProsjekts = _customer.BProsjekts
+                _selectedProjects = _selectedProjects
                     .OrderByDescending(p => p.PoId)
                     .ToList();
                 break;
             case "date-asc":
-                _customer.BProsjekts = _customer.BProsjekts
-                    .OrderBy(p => p.Datoregistrert)
+                _selectedProjects = _selectedProjects
+                    .OrderBy(p => p.Id)
                     .ToList();
                 break;
             case "date-desc":
-                _customer.BProsjekts = _customer.BProsjekts
-                    .OrderBy(p => p.Datoregistrert)
+                _selectedProjects = _selectedProjects
+                    .OrderByDescending(p => p.Id)
                     .ToList();
                 break;
         }
@@ -259,7 +221,7 @@
 
     private void ToNewProjectPage()
     {
-        Navigation.NavigateTo($"NewProject/{CustomerId}");
+        Navigation.NavigateTo($"/newProject/{CustomerId}");
     }
 
     private async Task DeleteCustomer()
