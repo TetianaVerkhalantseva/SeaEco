@@ -14,61 +14,61 @@
 {
     <div class="preInfo-container">
         <div class="form-floating mb-3">
-            <input type="date" id="date" class="form-control"
+            <input type="date" id="date" class="form-control" disabled
                    value="@_preInfo.Feltdato.ToString("yyyy-MM-dd")">
             <label for="date">Dato</label>
         </div>
         
         <div class="form-floating mb-3">
-            <input type="text" id="user" class="form-control"
+            <input type="text" id="user" class="form-control" disabled
                    value="@_user.FullName">
             <label for="user">Feltansvarlig</label>
         </div>
         
         <div class="form-floating mb-3">
-            <input type="text" id="samplers" class="form-control"
+            <input type="text" id="samplers" class="form-control" disabled
                    value="@string.Join(", ", _samplers.Select(s => s.FullName))">
             <label for="samplers">Andre prøvetakere</label>
         </div>
         
         <div class="form-floating mb-3">
-            <input type="number" id="ph" class="form-control"
+            <input type="number" id="ph" class="form-control" disabled
                    value="@_preInfo.Ph">
             <label for="ph">pH</label>
         </div>
         
         <div class="form-floating mb-3">
-            <input type="number" id="eh" class="form-control"
+            <input type="number" id="eh" class="form-control" disabled
                    value="@_preInfo.Eh">
             <label for="eh">Eh</label>
         </div>
         
         <div class="form-floating mb-3">
-            <input type="number" id="temp" class="form-control"
+            <input type="number" id="temp" class="form-control" disabled
                    value="@_preInfo.Temperatur">
             <label for="temp">Temperatur</label>
         </div>
 
         <div class="form-floating mb-3">
-            <input type="number" id="elektrode" class="form-control"
+            <input type="number" id="elektrode" class="form-control" disabled
                    value="@_preInfo.RefElektrode">
             <label for="elektrode">Ref.elektrode</label>
         </div>
         
         <div class="form-floating mb-3">
-            <input type="text" id="grabb" class="form-control"
+            <input type="text" id="grabb" class="form-control" disabled
                    value="@_preInfo.Grabb">
             <label for="grabb">Grabb</label>
         </div>
         
         <div class="form-floating mb-3">
-            <input type="text" id="sil" class="form-control"
+            <input type="text" id="sil" class="form-control" disabled
                    value="@_preInfo.Sil">
             <label for="sil">Sil</label>
         </div>
         
         <div class="form-floating mb-3">
-            <input type="text" id="ph-meter" class="form-control"
+            <input type="text" id="ph-meter" class="form-control" disabled
                    value="@_preInfo.PhMeter">
             <label for="ph-meter">pH-meter</label>
         </div>
@@ -82,15 +82,14 @@ else
 }
 
 <div class="button-container">
-    <button @onclick="BackToProjectPage" class="custom-btn">
+    <NavLink class="btn custom-btn me-2" href="@($"/project/{ProjectId:D}?tab=b_stations")">
         Tilbake
-    </button>
-
+    </NavLink>
     @if (_preInfo != null)
-    { 
-        <button @onclick="EditPreInfo" class="custom-btn">
+    {
+        <NavLink class="btn custom-btn me-2" href="@($"project/{ProjectId:D}/preInfo/{PreInfoId:D}/edit")">
             Rediger
-        </button>
+        </NavLink>
     }
 </div>
 
@@ -127,16 +126,5 @@ else
                 }
             }
         }
-    }
-
-
-    private void BackToProjectPage()
-    {
-        Navigation.NavigateTo($"project/{ProjectId:D}");
-    }
-
-    private void EditPreInfo()
-    {
-        Navigation.NavigateTo($"project/{ProjectId:D}/preInfo/{PreInfoId:D}");
     }
 }

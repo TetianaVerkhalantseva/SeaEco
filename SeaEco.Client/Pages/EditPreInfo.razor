@@ -5,7 +5,6 @@
 @using SeaEco.Abstractions.Models.User
 @inject HttpClient Http
 @attribute [Authorize]
-@attribute [Authorize(Roles = "admin")]
 @inject NavigationManager Navigation
 
 
@@ -130,11 +129,10 @@
         </div>
 
         <div class="button-container">
-            <button @onclick="BackToProjectPage" class="custom-btn">
+            <NavLink class="btn custom-outline-secondary-btn me-2" href="@($"/project/{ProjectId:D}?tab=b_stations")">
                 Avbryt
-            </button>
-
-            <button type="submit" class="custom-btn">
+            </NavLink>
+            <button type="submit" class="btn custom-btn">
                 Bekreft
             </button>
         </div>
@@ -209,11 +207,6 @@ else
     {
         get => _preInfo.Kalibreringsdato.ToDateTime(TimeOnly.MinValue);
         set => _preInfo.Kalibreringsdato = DateOnly.FromDateTime(value);
-    }
-
-    private void BackToProjectPage()
-    {
-        Navigation.NavigateTo($"project/{ProjectId:D}");
     }
 
     private async Task CreatePreInfo()

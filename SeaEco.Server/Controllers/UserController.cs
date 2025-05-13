@@ -9,7 +9,6 @@ namespace SeaEco.Server.Controllers;
 
 [Route("/api/users")]
 [Authorize]
-[RoleAccessor(true)]
 
 public class UserController(IUserService userService, ICurrentUserContext currentUserContext) : ApiControllerBase
 {

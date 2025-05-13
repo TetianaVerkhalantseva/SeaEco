@@ -114,7 +114,7 @@
 
         @if (_result.HasValue)
         {
-            @if (_result.Value)
+            if (_result.Value)
             {
                 <div class="alert alert-success">@_resultMessage</div>
             }
@@ -126,11 +126,10 @@
     </div>
 
     <div class="button-container">
-        <button @onclick="BackToProjectPage" class="custom-btn">
+        <NavLink class="btn custom-outline-secondary-btn me-2" href="@($"/project/{ProjectId:D}?tab=b_stations")">
             Avbryt
-        </button>
-
-        <button type="submit" class="custom-btn">
+        </NavLink>
+        <button type="submit" class="btn custom-btn">
             Opprett
         </button>
     </div>
@@ -179,12 +178,7 @@
         get => _preInfo.Kalibreringsdato.ToDateTime(TimeOnly.MinValue);
         set => _preInfo.Kalibreringsdato = DateOnly.FromDateTime(value);
     }
-
-    private void BackToProjectPage()
-    {
-        Navigation.NavigateTo($"project/{ProjectId:D}");
-    }
-
+    
     private async Task CreatePreInfo()
     {
         _preInfo.ProsjektId = ProjectId;
