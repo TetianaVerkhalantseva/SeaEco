@@ -48,6 +48,9 @@ public class BSurveyService: IBSurveyService
     {
         try
         {
+            dto.DatoRegistrert ??= DateTime.Now;
+            dto.DatoEndret ??= DateTime.Now;
+            
             var targetDate = DateTime.Today;
 
             var preInfo = await _db.BPreinfos

@@ -1,5 +1,5 @@
 @* if testing, comment out this line *@
-@* @page "/project/{ProjectId:guid}/station/{StationId:guid}/create-survey" *@
+@* @page "/project/{ProjectId:guid}/station/{StationId:guid}/create-survey/{ReceivedSurveyId:guid}" *@
 
 @page "/project/create-survey"
 
@@ -457,6 +457,15 @@
             <div class="alert alert-danger">@_resultMessage</div>
             break;
     }
+
+    <div class="row justify-content-center">
+        @if (_validationMessage != null)
+        {
+            <div class="col-12 text-center alert alert-danger mb-2" style="width: 60%;">
+                @_validationMessage
+            </div>
+        }
+    </div>
 </div>
 
 
@@ -610,13 +619,15 @@
 
 @code {
     // Remeber to uncomment this part when not testing
-    // [Parameter] 
-    // public Guid ProjectId { get; set; }
-    // [Parameter]
-    // public Guid StationId { get; set; }
+    [Parameter] 
+    public Guid ProjectId { get; set; }
+    [Parameter]
+    public Guid StationId { get; set; }
+    [Parameter]
+    public Guid ReceivedSurveyId { get; set; }
 
-    private EditSurveyDto _surveyDto = new();
-    private BStationDto _station = new();
+    private EditSurveyDto _surveyDto;
+    private BStationDto? _station;
 
     private string _coordinateNorthGrade = "";
     private string _coordinateNorthMinute = "";
@@ -630,6 +641,8 @@
     private bool? _result;
     private string? _resultMessage;
 
+    private string? _validationMessage;
+
     // Remember to add word "async" when not testing
     protected override Task OnInitializedAsync()
     {
@@ -638,7 +651,7 @@
         // // Create mode
         // _surveyDto = new EditSurveyDto
         // {
-        //     Id = Guid.NewGuid(),
+        //     Id = ReceivedSurveyId,
         //     ProsjektId = ProjectId,
         //     BlotbunnId = Guid.NewGuid(),
         //     HardbunnId = Guid.NewGuid(),
@@ -856,6 +869,46 @@
             _surveyDto.Merknader += $", {newValue}";
         }
     }
+    
+    bool IsAllZeroOrNull<T>(T obj)
+    {
+        if (obj == null) return true;
+
+        foreach (var prop in typeof(T).GetProperties())
+        {
+            if (!prop.CanRead) continue;
+
+            var value = prop.GetValue(obj);
+            if (value == null) continue;
+
+            var type = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
+
+            if (type == typeof(int))
+            {
+                if ((int)value != 0) return false;
+            }
+            else if (type == typeof(float))
+            {
+                if (Math.Abs((float)value) > 0.0001f) return false;
+            }
+            else if (type == typeof(Guid))
+            {
+                if ((Guid)value != Guid.Empty) return false;
+            }
+            else if (type == typeof(string))
+            {
+                if (!string.IsNullOrWhiteSpace((string)value)) return false;
+            }
+            else
+            {
+                var defaultValue = Activator.CreateInstance(type);
+                if (!value.Equals(defaultValue)) return false;
+            }
+        }
+
+        return true;
+    }
+
 
     private void BackToProjectPage()
     {
@@ -871,41 +924,68 @@
         if (_selectBunnType == "blot")
         {
             _surveyDto.BlotbunnId = Guid.NewGuid();
-            if (_surveyDto.BSoftBase != null)
+            _surveyDto.BSoftBase.Id = _surveyDto.BlotbunnId.Value;
+
+            bool allDefault = IsAllZeroOrNull(_surveyDto.BSoftBase);
+            if (allDefault)
             {
-                _surveyDto.BSoftBase.Id = _surveyDto.BlotbunnId.Value;
+                _validationMessage = "Feltene for sedimenttype må velges";
+                return;
+            }
+
+            bool valueDefault = IsAllZeroOrNull(_surveyDto.BSensorisk);
+            if (valueDefault)
+            {
+                _validationMessage = "Feltene for sensorisk må fylles ut";
+                return;
             }
             
             _surveyDto.HardbunnId = null;
             _surveyDto.BHardBase = null;
         
             _surveyDto.SedimentId = Guid.NewGuid();
-            if (_surveyDto.BSediment != null)
+            _surveyDto.BSediment.Id = _surveyDto.SedimentId.Value;
+
+            bool onlyDefault = IsAllZeroOrNull(_surveyDto.BSediment);
+            if (onlyDefault)
             {
-                _surveyDto.BSediment.Id = _surveyDto.SedimentId.Value;
+                _validationMessage = "Feltene for sediment må fylles ut";
+                return;
             }
         }
         else if (_selectBunnType == "hard")
         {
-            _surveyDto.HardbunnId = Guid.NewGuid();
-            if (_surveyDto.BHardBase != null)
-            {
-                _surveyDto.BHardBase.Id = _surveyDto.HardbunnId.Value;
-            }
+            _surveyDto.HardbunnId = Guid.NewGuid(); 
+            _surveyDto.BHardBase.Id = _surveyDto.HardbunnId.Value;
             
             _surveyDto.BlotbunnId = null;
             _surveyDto.BSoftBase = null;
+
+            if (_selectSensorisk != "ja" && _selectSensorisk != "nei")
+            {
+                _validationMessage = "Valg av sensorisk er påkrevd";
+                return;
+            }
+        }
+        else
+        {
+            _validationMessage = "Valg av bunntype er påkrevd";
+            return;
         }
         
         if (_selectSensorisk == "ja")
         {
             _surveyDto.SensoriskId = Guid.NewGuid();
-            if (_surveyDto.BSensorisk != null)
+            _surveyDto.BSensorisk.Id = _surveyDto.SensoriskId.Value;
+
+            bool defaultValues = IsAllZeroOrNull(_surveyDto.BSensorisk);
+            if (defaultValues)
             {
-                _surveyDto.BSensorisk.Id = _surveyDto.SensoriskId.Value;
-            };
+                _validationMessage = "Feltene for sensorisk må fylles ut";
+                return;
+            }
         }
-        else
+        else if (_selectSensorisk == "nei")
         {
             _surveyDto.SensoriskId = null;
             _surveyDto.BSensorisk = null;
@@ -914,21 +994,31 @@
         if (_selectDyr == "ja")
         {
             _surveyDto.DyrId = Guid.NewGuid();
-            if (_surveyDto.BAnimal != null)
+            _surveyDto.BAnimal.Id = _surveyDto.DyrId.Value;
+
+            bool defaultAttributes = IsAllZeroOrNull(_surveyDto.BAnimal);
+            if (defaultAttributes)
             {
-                _surveyDto.BAnimal.Id = _surveyDto.DyrId.Value;
-            };
+                _validationMessage = "Feltene knyttes til dyr må fylles ut";
+                return;
+            }
         }
-        else
+        else if (_selectDyr == "nei")
         {
             _surveyDto.DyrId = null;
             _surveyDto.BAnimal = null;
+        }
+        else
+        {
+            _validationMessage = "Valg av dyr er påkrevd";
+            return;
         }
         
         _surveyDto.DatoRegistrert = DateTime.Now;
         _surveyDto.DatoEndret = DateTime.Now;
         
         
+        // uncomment this part when not testing
         // var response = await Http.PostAsJsonAsync(
         //         $"api/Project/{ProjectId}/station/{StationId}/survey",
         //         _surveyDto);

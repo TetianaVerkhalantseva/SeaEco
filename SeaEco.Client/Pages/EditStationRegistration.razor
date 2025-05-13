@@ -452,6 +452,15 @@
             <div class="alert alert-danger">@_resultMessage</div>
             break;
     }
+
+    <div class="row justify-content-center">
+        @if (_validationMessage != null)
+        {
+            <div class="col-12 text-center alert alert-danger mb-2" style="width: 60%;">
+                @_validationMessage
+            </div>
+        }
+    </div>
 </div>
 
 <div class="button-container">
@@ -624,6 +633,8 @@
     
     private bool? _result;
     private string? _resultMessage;
+    
+    private string? _validationMessage;
 
     protected override async Task OnInitializedAsync()
     {
@@ -885,52 +896,118 @@
         }
     }
     
+    bool IsAllZeroOrNull<T>(T obj)
+    {
+        if (obj == null) return true;
+
+        foreach (var prop in typeof(T).GetProperties())
+        {
+            if (!prop.CanRead) continue;
+
+            var value = prop.GetValue(obj);
+            if (value == null) continue;
+
+            var type = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
+
+            if (type == typeof(int))
+            {
+                if ((int)value != 0) return false;
+            }
+            else if (type == typeof(float))
+            {
+                if (Math.Abs((float)value) > 0.0001f) return false;
+            }
+            else if (type == typeof(Guid))
+            {
+                if ((Guid)value != Guid.Empty) return false;
+            }
+            else if (type == typeof(string))
+            {
+                if (!string.IsNullOrWhiteSpace((string)value)) return false;
+            }
+            else
+            {
+                var defaultValue = Activator.CreateInstance(type);
+                if (!value.Equals(defaultValue)) return false;
+            }
+        }
+
+        return true;
+    }
+    
     private void BackToProjectPage()
     {
         NavigationLockService.Unlock();
-        Navigation.NavigateTo($"/project/{_surveyDto.ProsjektId}");
+        Navigation.NavigateTo($"/project/{ProjectId}");
     }
 
     private async Task SubmitSurvey()
     {
         if (_selectBunnType == "blot")
         {
-            _surveyDto.BlotbunnId ??= Guid.NewGuid();
-            if (_surveyDto.BSoftBase != null)
+            _surveyDto.BlotbunnId = Guid.NewGuid();
+            _surveyDto.BSoftBase.Id = _surveyDto.BlotbunnId.Value;
+
+            bool allDefault = IsAllZeroOrNull(_surveyDto.BSoftBase);
+            if (allDefault)
             {
-                _surveyDto.BSoftBase.Id = _surveyDto.BlotbunnId.Value;
-            };
+                _validationMessage = "Feltene for sedimenttype må velges";
+                return;
+            }
+
+            bool valueDefault = IsAllZeroOrNull(_surveyDto.BSensorisk);
+            if (valueDefault)
+            {
+                _validationMessage = "Feltene for sensorisk må fylles ut";
+                return;
+            }
             
             _surveyDto.HardbunnId = null;
             _surveyDto.BHardBase = null;
         
-            _surveyDto.SedimentId ??= Guid.NewGuid();
-            if (_surveyDto.BSediment != null)
+            _surveyDto.SedimentId = Guid.NewGuid();
+            _surveyDto.BSediment.Id = _surveyDto.SedimentId.Value;
+
+            bool onlyDefault = IsAllZeroOrNull(_surveyDto.BSediment);
+            if (onlyDefault)
             {
-                _surveyDto.BSediment.Id = _surveyDto.SedimentId.Value;
-            };
+                _validationMessage = "Feltene for sediment må fylles ut";
+                return;
+            }
         }
         else if (_selectBunnType == "hard")
         {
-            _surveyDto.HardbunnId ??= Guid.NewGuid();
-            if (_surveyDto.BHardBase != null)
-            {
-                _surveyDto.BHardBase.Id = _surveyDto.HardbunnId.Value;
-            };
+            _surveyDto.HardbunnId = Guid.NewGuid(); 
+            _surveyDto.BHardBase.Id = _surveyDto.HardbunnId.Value;
             
             _surveyDto.BlotbunnId = null;
             _surveyDto.BSoftBase = null;
+
+            if (_selectSensorisk != "ja" && _selectSensorisk != "nei")
+            {
+                _validationMessage = "Valg av sensorisk er påkrevd";
+                return;
+            }
+        }
+        else
+        {
+            _validationMessage = "Valg av bunntype er påkrevd";
+            return;
         }
         
         if (_selectSensorisk == "ja")
         {
-            _surveyDto.SensoriskId ??= Guid.NewGuid();
-            if (_surveyDto.BSensorisk != null)
+            _surveyDto.SensoriskId = Guid.NewGuid();
+            _surveyDto.BSensorisk.Id = _surveyDto.SensoriskId.Value;
+
+            bool defaultValues = IsAllZeroOrNull(_surveyDto.BSensorisk);
+            if (defaultValues)
             {
-                _surveyDto.BSensorisk.Id = _surveyDto.SensoriskId.Value;
-            };
+                _validationMessage = "Feltene for sensorisk må fylles ut";
+                return;
+            }
         }
-        else
+        else if (_selectSensorisk == "nei")
         {
             _surveyDto.SensoriskId = null;
             _surveyDto.BSensorisk = null;
@@ -938,38 +1015,51 @@
         
         if (_selectDyr == "ja")
         {
-            _surveyDto.DyrId ??= Guid.NewGuid();
-            if (_surveyDto.BAnimal != null)
+            _surveyDto.DyrId = Guid.NewGuid();
+            _surveyDto.BAnimal.Id = _surveyDto.DyrId.Value;
+
+            bool defaultAttributes = IsAllZeroOrNull(_surveyDto.BAnimal);
+            if (defaultAttributes)
             {
-                _surveyDto.BAnimal.Id = _surveyDto.DyrId.Value;
-            };
+                _validationMessage = "Feltene knyttes til dyr må fylles ut";
+                return;
+            }
         }
-        else
+        else if (_selectDyr == "nei")
         {
             _surveyDto.DyrId = null;
             _surveyDto.BAnimal = null;
         }
-        
-        
-         var response = await Http.PutAsJsonAsync(
-            $"api/Project/{ProjectId}/station/{StationId}/survey/{SurveyId}",
-            _surveyDto);
-        
-        if (response.IsSuccessStatusCode)
-        {
-            _result = true;
-            _resultMessage = await response.Content.ReadAsStringAsync();
-            
-            StateHasChanged();
-            await Task.Delay(2000);
-            // remember to add address
-            Navigation.NavigateTo("");
-        }
         else
         {
-            _result = false;
-            _resultMessage = await response.Content.ReadAsStringAsync();
+            _validationMessage = "Valg av dyr er påkrevd";
+            return;
         }
+        
+        _surveyDto.DatoEndret = DateTime.Now;
+        
+        // uncomment this part when not testing
+        //  var response = await Http.PutAsJsonAsync(
+        //     $"api/Project/{ProjectId}/station/{StationId}/survey/{SurveyId}",
+        //     _surveyDto);
+        //
+        // if (response.IsSuccessStatusCode)
+        // {
+        //     _result = true;
+        //     _resultMessage = await response.Content.ReadAsStringAsync();
+        //     
+        //     NavigationLockService.Unlock();
+        //     await Task.Delay(2000);
+        //     
+        //     // remember to add address
+        //     Navigation.NavigateTo($"/project/{ProjectId}");
+        // }
+        // else
+        // {
+        //     _result = false;
+        //     _resultMessage = await response.Content.ReadAsStringAsync();
+        //     StateHasChanged();
+        // }
         
         NavigationLockService.Unlock();
     }
