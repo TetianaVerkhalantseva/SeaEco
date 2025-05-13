@@ -352,6 +352,7 @@ public sealed class ReportService(Report report,
                     string path = Path.Combine(
                         webHostEnvironment.WebRootPath,
                         "images",
+                        dbRecord.ProsjektIdSe,
                         $"{img.Id.ToString()}.{img.Extension}");
                     
                     using FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read);
