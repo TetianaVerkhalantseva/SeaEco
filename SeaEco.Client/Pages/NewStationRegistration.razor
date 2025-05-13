@@ -10,6 +10,8 @@
 @using SeaEco.Abstractions.Models.BSurvey
 @using SeaEco.Abstractions.Models.Bundersokelse
 @using SeaEco.Abstractions.ValueObjects
+@using SeaEco.Services.NavigationLockService
+@inject NavigationLockService NavigationLockService
 @inject HttpClient Http
 @inject IJSRuntime Js
 @inject NavigationManager Navigation
@@ -459,6 +461,9 @@
 
 
 <div class="button-container">
+    <button id="cancelBtn" class="custom-btn" style="display: none;" @onclick="BackToProjectPage">
+        Avbryt
+    </button>
     <button id="lastBtn" onclick="showLast()" class="custom-btn">Forrige</button>
     <button id="nextBtn" onclick="showNext()" class="custom-btn">Neste</button>
     <button id="submitBtn" class="custom-btn" style="display: none;" @onclick="SubmitSurvey">
@@ -497,15 +502,17 @@
     function updateButtons() {
         const lastBtn = document.getElementById('lastBtn');
         const nextBtn = document.getElementById('nextBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
         const submitBtn = document.getElementById('submitBtn');
 
+        
         lastBtn.style.display = currentIndex === 1 ? 'none' : 'inline-block';
         nextBtn.style.display = currentIndex === totalDivs ? 'none' : 'inline-block';
+        cancelBtn.style.display = currentIndex === 1 ? 'inline-block' : 'none';
         submitBtn.style.display = currentIndex === totalDivs ? 'inline-block' : 'none';
     }
 
     updateButtons();
-
 </script>
 
 <script>
@@ -626,7 +633,9 @@
     // Remember to add word "async" when not testing
     protected override Task OnInitializedAsync()
     {
-        // Create mode
+        NavigationLockService.Lock();
+        
+        // // Create mode
         // _surveyDto = new EditSurveyDto
         // {
         //     Id = Guid.NewGuid(),
@@ -655,8 +664,8 @@
         // }
         // else
         // {
-        //     _surveyDto.BStation = new BStationDto();
-        //     _surveyDto.BStation.Id = Guid.NewGuid();
+        //     _result = false;
+        //     _resultMessage = $"Cannot find the station with station ID {StationId}";
         // }
         
         
@@ -848,6 +857,12 @@
         }
     }
 
+    private void BackToProjectPage()
+    {
+        NavigationLockService.Unlock();
+        Navigation.NavigateTo($"/project/{_surveyDto.ProsjektId}");
+    }
+
     private async Task SubmitSurvey()
     {
         // _surveyDto.ProsjektId = ProjectId;
@@ -922,8 +937,8 @@
         // {
         //     _result = true;
         //     _resultMessage = await response.Content.ReadAsStringAsync();
-        //     
-        //     StateHasChanged();
+        //
+        //     NavigationLockService.Unlock();
         //     await Task.Delay(2000);
         //     
         //     // remember to add address
@@ -933,6 +948,9 @@
         // {
         //     _result = false;
         //     _resultMessage = await response.Content.ReadAsStringAsync();
+        //     StateHasChanged();
         // }
+        
+        NavigationLockService.Unlock();
     }
 }

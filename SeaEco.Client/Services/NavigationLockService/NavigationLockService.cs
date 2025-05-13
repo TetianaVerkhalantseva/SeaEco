@@ -2,7 +2,7 @@ namespace SeaEco.Services.NavigationLockService;
 
 public class NavigationLockService
 {
-    public bool IsNavigationLocked { get; private set; }
+    public static bool IsNavigationLocked { get; private set; }
 
     public event Action? OnChange;
 
