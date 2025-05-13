@@ -148,7 +148,7 @@
                             <div class="card cursor" @onclick="() => OnRowClick(project.Id)">
                                 <div class="card-body text-center @GetStatus(project.Prosjektstatus.GetDescription())">
                                     <h5 class="card-title">@project.ProsjektIdSe</h5>
-                                    <span class="corner-text">@project.Prosjektstatus.GetDescription()</span>
+                                    <span class="corner-text fw-bold">@project.Prosjektstatus.GetDescription()</span>
                                 </div>
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item">@Resources.TableHeaderLocality: @project.Lokalitetsnavn</li>
