@@ -1,9 +1,74 @@
+using SeaEco.Abstractions.Enums;
 using SeaEco.Abstractions.ResponseService;
+using SeaEco.EntityFramework.Entities;
 
 namespace SeaEco.Services.TilstandServices;
 
 public sealed class TilstandService
-{ 
+{
+    public Response CalculateSedimentTilstand(BSediment sediment)
+    {
+        Response<int> classResult = CalculateClass(sediment.Ph, sediment.Eh);
+        if (classResult.IsError)
+        {
+            return Response.Error(classResult.ErrorMessage);
+        }
+        
+        sediment.KlasseGr2 = classResult.Value;
+        sediment.TilstandGr2 = classResult.Value switch
+        {
+            0 => (int)Tilstand.Blue,
+            1 => (int)Tilstand.Blue,
+            2 => (int)Tilstand.Green,
+            3 => (int)Tilstand.Yellow,
+            5 => (int)Tilstand.Red,
+            _ => (int)Tilstand.Blue
+        };
+
+        return Response.Ok();
+    }
+
+    public void CalculateSensoriskTilstand(BSensorisk sensorisk)
+    {
+        float index = (sensorisk.Gassbobler +
+                       sensorisk.Farge +
+                       sensorisk.Lukt +
+                       sensorisk.Konsistens +
+                       sensorisk.Grabbvolum +
+                       sensorisk.Tykkelseslamlag) * 0.22f;
+        
+        sensorisk.IndeksGr3 = index;
+        sensorisk.TilstandGr3 = (int)CalculateTilstand(index);
+    }
+
+    public void CalculateUndersokelseTilstand(BUndersokelse undersokelse)
+    {
+        float index = ((undersokelse.Sediment?.KlasseGr2! ?? 0) +
+                        (undersokelse.Sensorisk?.IndeksGr3! ?? 0)) / 2;
+        
+        undersokelse.IndeksGr2Gr3 = index;
+        undersokelse.TilstandGr2Gr3 = (int)CalculateTilstand(index);
+    }
+
+    public BTilstand CalculateProsjektTilstand(IEnumerable<BUndersokelse> undersokelse, Guid projectId)
+    {
+        float indexGr2Avg = undersokelse.Average(_ => _.Sediment?.KlasseGr2! ?? 0f);
+        float indexGr3Avg = undersokelse.Average(_ => _.Sensorisk?.IndeksGr3! ?? 0);
+        float indexGr2Gr3Avg = undersokelse.Average(_ => _.IndeksGr2Gr3! ?? 0);
+
+        return new BTilstand()
+        {
+            Id = Guid.NewGuid(),
+            ProsjektId = projectId,
+            IndeksGr2 = indexGr2Avg,
+            TilstandGr2 = (int)CalculateTilstand(indexGr2Avg),
+            IndeksGr3 = indexGr3Avg,
+            TilstandGr3 = (int)CalculateTilstand(indexGr3Avg),
+            IndeksLokalitet = indexGr2Gr3Avg,
+            TilstandLokalitet = (int)CalculateTilstand(indexGr2Gr3Avg),
+        };
+    }
+    
     public Response<int> CalculateClass(double pH, double eh)
     {
 
@@ -43,5 +108,22 @@ public sealed class TilstandService
         }
         
         return Response<int>.Error($"Kan ikke kategorisere pH={pH}, Eh={eh}");
+    }
+
+    private Tilstand CalculateTilstand(float index)
+    {
+        if (index < 1.1)
+            return Tilstand.Blue;
+
+        if (index >= 1.1 && index < 2.1)
+            return Tilstand.Green;
+
+        if (index >= 2.1 && index < 3.1)
+            return Tilstand.Yellow;
+
+        if (index >= 3.1)
+            return Tilstand.Red;
+
+        return Tilstand.Blue;
     }
 }

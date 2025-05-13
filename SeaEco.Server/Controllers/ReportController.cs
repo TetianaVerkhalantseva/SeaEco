@@ -1,6 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SeaEco.Abstractions.ResponseService;
+using SeaEco.EntityFramework.Contexts;
+using SeaEco.EntityFramework.Entities;
+using SeaEco.EntityFramework.GenericRepository;
 using SeaEco.Reporter.Models;
 using SeaEco.Services.ReportServices;
 using SeaEco.Services.TilstandServices;
@@ -9,7 +13,7 @@ using SeaEco.Services.TilstandServices.Models;
 namespace SeaEco.Server.Controllers;
 
 [Route("api/report")]
-public class ReportController(IReportService reportService, TilstandService tilstandService) : ApiControllerBase
+public class ReportController(IReportService reportService, TilstandService tilstandService, AppDbContext context) : ApiControllerBase
 {
     [HttpPost("generate/info")]
     public async Task<IActionResult> GenerateInfo([FromBody] Guid projectId)
@@ -106,5 +110,69 @@ public class ReportController(IReportService reportService, TilstandService tils
             Console.WriteLine(e);
             return AsBadRequest(e.ToString());
         }
+    }
+
+    [HttpPut("tilstand/sediment/{id:guid}")]
+    public async Task<IActionResult> CalculateSediment([FromRoute] Guid id)
+    {
+        BSediment? sediment = await context.BSediments.FirstOrDefaultAsync(_ => _.Id == id);
+        if (sediment is null)
+        {
+            return NotFound();
+        }
+        
+        tilstandService.CalculateSedimentTilstand(sediment);
+        
+        return AsOk(sediment);
+    }
+    
+    [HttpPut("tilstand/sensorisk/{id:guid}")]
+    public async Task<IActionResult> CalculateSensorisk([FromRoute] Guid id)
+    {
+        BSensorisk? sensorisk = await context.BSensorisks.FirstOrDefaultAsync(_ => _.Id == id);
+        if (sensorisk is null)
+        {
+            return NotFound();
+        }
+        
+        tilstandService.CalculateSensoriskTilstand(sensorisk);
+        
+        return AsOk(sensorisk);
+    }
+    
+    [HttpPut("tilstand/project/{id:guid}")]
+    public async Task<IActionResult> CalculateProject([FromRoute] Guid id)
+    {
+        BProsjekt? prosjekt = await context.BProsjekts
+            .Include(_ => _.BUndersokelses)
+            .ThenInclude(_ => _.Sensorisk)
+            .Include(_ => _.BUndersokelses)
+            .ThenInclude(_ => _.Sediment)
+            .FirstOrDefaultAsync(_ => _.Id == id);
+        
+        if (prosjekt is null)
+        {
+            return NotFound();
+        }
+        
+        return AsOk(tilstandService.CalculateProsjektTilstand(prosjekt.BUndersokelses, prosjekt.Id));
+    }
+    
+    [HttpPut("tilstand/undersokelses/{id:guid}")]
+    public async Task<IActionResult> CalculateUndersokelseTilstand([FromRoute] Guid id)
+    {
+        BUndersokelse? undersokelse = await context.BUndersokelses
+            .Include(_ => _.Sediment)
+            .Include(_ => _.Sensorisk)
+            .FirstOrDefaultAsync(_ => _.Id == id);
+        
+        if (undersokelse is null)
+        {
+            return NotFound();
+        }
+        
+        tilstandService.CalculateUndersokelseTilstand(undersokelse);
+        
+        return AsOk(undersokelse);
     }
 }
