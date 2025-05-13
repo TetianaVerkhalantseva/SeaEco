@@ -1,17 +1,14 @@
-@* The next line is for testing *@
-@page "/project/edit-preinfo"
 
-@* @page "/project/{ProjectId:guid}/preInfo/{PreInfoId:guid}" *@
+@page "/project/{ProjectId:guid}/preInfo/{PreInfoId:guid}/edit"
 @using Microsoft.AspNetCore.Authorization
 @using SeaEco.Abstractions.Models.PreInfo
 @using SeaEco.Abstractions.Models.User
 @inject HttpClient Http
-@* @attribute [Authorize] *@
-@* @attribute [Authorize(Roles = "admin")] *@
+@attribute [Authorize]
 @inject NavigationManager Navigation
 
 
-<h3>Rediger preinfo</h3>
+<h3>Rediger preinformasjon</h3>
 
 @if (_isLoaded)
 {
@@ -120,7 +117,7 @@
 
             @if (_result.HasValue)
             {
-                @if (_result.Value)
+                if (_result.Value)
                 {
                     <div class="alert alert-success">@_resultMessage</div>
                 }
@@ -132,11 +129,10 @@
         </div>
 
         <div class="button-container">
-            <button @onclick="BackToProjectPage" class="custom-btn">
+            <NavLink class="btn custom-outline-secondary-btn me-2" href="@($"/project/{ProjectId:D}?tab=b_stations")">
                 Avbryt
-            </button>
-
-            <button type="submit" class="custom-btn">
+            </NavLink>
+            <button type="submit" class="btn custom-btn">
                 Bekreft
             </button>
         </div>
@@ -170,86 +166,24 @@ else
 
     private async Task LoadPreInfoData()
     {
-        // var info = await Http.GetFromJsonAsync<PreInfoDto>($"api/PreInfo/{PreInfoId}");
-        // if (info != null)
-        // {
-        //     _preInfo.Feltdato = info.Feltdato;
-        //     _preInfo.FeltansvarligId = info.FeltansvarligId;
-        //     _preInfo.ProvetakerIds = info.ProvetakerIds;
-        //     _preInfo.Ph = info.Ph;
-        //     _preInfo.Eh = info.Eh;
-        //     _preInfo.Temperatur = info.Temperatur;
-        //     _preInfo.RefElektrode = info.RefElektrode;
-        //     _preInfo.Grabb = info.Grabb;
-        //     _preInfo.Sil = info.Sil;
-        //     _preInfo.PhMeter = info.PhMeter;
-        //     _preInfo.Kalibreringsdato = info.Kalibreringsdato;
-        // }
-        // _users = await Http.GetFromJsonAsync<IEnumerable<UserDto>>("api/users?isActive=true");
-
-        
-        // Test code
-        _preInfo = new EditPreInfoDto()
+        var info = await Http.GetFromJsonAsync<PreInfoDto>($"api/PreInfo/{PreInfoId}");
+        if (info != null)
         {
-            Feltdato = new DateTime(2025, 5, 10),
-            FeltansvarligId = Guid.Parse("22222222-2222-2222-2222-222222222222"),
-            ProvetakerIds = new List<Guid>
-            {
-                Guid.Parse("33333333-3333-3333-3333-333333333333"),
-                Guid.Parse("44444444-4444-4444-4444-444444444444")
-            },
-            Ph = 7.2f,
-            Eh = 250f,
-            Temperatur = 14.5f,
-            RefElektrode = 207,
-            Grabb = "Van Veen",
-            Sil = "500 µm",
-            PhMeter = "Hanna HI98194",
-            Kalibreringsdato = new DateOnly(2025, 5, 9)
-        };
+            _preInfo.Feltdato = info.Feltdato;
+            _preInfo.FeltansvarligId = info.FeltansvarligId;
+            _preInfo.ProvetakerIds = info.ProvetakerIds;
+            _preInfo.Ph = info.Ph;
+            _preInfo.Eh = info.Eh;
+            _preInfo.Temperatur = info.Temperatur;
+            _preInfo.RefElektrode = info.RefElektrode;
+            _preInfo.Grabb = info.Grabb;
+            _preInfo.Sil = info.Sil;
+            _preInfo.PhMeter = info.PhMeter;
+            _preInfo.Kalibreringsdato = info.Kalibreringsdato;
+        }
 
-        _users =
-        [
-            new UserDto
-            {
-                Id = Guid.Parse("22222222-2222-2222-2222-222222222222"),
-                FirstName = "Maria",
-                LastName = "Berg",
-                Email = "maria.berg@example.com",
-                IsAdmin = false,
-                IsActive = true
-            },
+        _users = await Http.GetFromJsonAsync<IEnumerable<UserDto>>("api/users?isActive=true");
 
-            new UserDto
-            {
-                Id = Guid.Parse("33333333-3333-3333-3333-333333333333"),
-                FirstName = "Jonas",
-                LastName = "Lunde",
-                Email = "jonas.lunde@example.com",
-                IsAdmin = false,
-                IsActive = true
-            },
-
-            new UserDto()
-            {
-                Id = Guid.Parse("44444444-4444-4444-4444-444444444444"),
-                FirstName = "Anna",
-                LastName = "Hansen",
-                Email = "anna.hansen@example.com",
-                IsAdmin = false,
-                IsActive = true
-            },
-            new UserDto()
-            {
-                Id = Guid.Parse("55555555-5555-5555-5555-555555555555"),
-                FirstName = "Marie",
-                LastName = "Robertsen",
-                Email = "anna.hansen@example.com",
-                IsAdmin = false,
-                IsActive = true
-            }
-        ];
-        // Test code
     }
 
     private void OnProvetakerCheckboxChanged(ChangeEventArgs e, Guid userId)
@@ -273,11 +207,6 @@ else
     {
         get => _preInfo.Kalibreringsdato.ToDateTime(TimeOnly.MinValue);
         set => _preInfo.Kalibreringsdato = DateOnly.FromDateTime(value);
-    }
-
-    private void BackToProjectPage()
-    {
-        Navigation.NavigateTo("");
     }
 
     private async Task CreatePreInfo()

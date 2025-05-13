@@ -1,17 +1,13 @@
-@* The next line is for testing *@
-@page "/project/add-preinfo"
-
-@* @page "/project/{ProjectId:guid}/preInfo/" *@
+@page "/project/{ProjectId:guid}/preInfo/"
 @using Microsoft.AspNetCore.Authorization
 @using SeaEco.Abstractions.Models.PreInfo
 @using SeaEco.Abstractions.Models.User
 @inject HttpClient Http
-@* @attribute [Authorize] *@
-@* @attribute [Authorize(Roles = "admin")] *@
+@attribute [Authorize]
 @inject NavigationManager Navigation
 
 
-<h3>Opprett preinfo</h3>
+<h3>Opprett preinformasjon</h3>
 
 <EditForm Model="_preInfo" OnInvalidSubmit="CreatePreInfo">
     <DataAnnotationsValidator/>
@@ -118,7 +114,7 @@
 
         @if (_result.HasValue)
         {
-            @if (_result.Value)
+            if (_result.Value)
             {
                 <div class="alert alert-success">@_resultMessage</div>
             }
@@ -130,11 +126,10 @@
     </div>
 
     <div class="button-container">
-        <button @onclick="BackToProjectPage" class="custom-btn">
+        <NavLink class="btn custom-outline-secondary-btn me-2" href="@($"/project/{ProjectId:D}?tab=b_stations")">
             Avbryt
-        </button>
-
-        <button type="submit" class="custom-btn">
+        </NavLink>
+        <button type="submit" class="btn custom-btn">
             Opprett
         </button>
     </div>
@@ -157,50 +152,8 @@
 
     private async Task LoadUserData()
     {
-        // _users = await Http.GetFromJsonAsync<IEnumerable<UserDto>>("api/users?isActive=true");
-        
-        // Test code
-        _users =
-        [
-            new UserDto
-            {
-                Id = Guid.Parse("22222222-2222-2222-2222-222222222222"),
-                FirstName = "Maria",
-                LastName = "Berg",
-                Email = "maria.berg@example.com",
-                IsAdmin = false,
-                IsActive = true
-            },
-        
-            new UserDto
-            {
-                Id = Guid.Parse("33333333-3333-3333-3333-333333333333"),
-                FirstName = "Jonas",
-                LastName = "Lunde",
-                Email = "jonas.lunde@example.com",
-                IsAdmin = false,
-                IsActive = true
-            },
-            
-            new UserDto()
-            {
-                Id = Guid.Parse("44444444-4444-4444-4444-444444444444"),
-                FirstName = "Anna",
-                LastName = "Hansen",
-                Email = "anna.hansen@example.com",
-                IsAdmin = false,
-                IsActive = true
-            },
-            new UserDto()
-            {
-                Id = Guid.Parse("44422444-4444-4444-4444-444444444444"),
-                FirstName = "Marie",
-                LastName = "Robertsen",
-                Email = "anna.hansen@example.com",
-                IsAdmin = false,
-                IsActive = true
-            }
-        ];
+         _users = await Http.GetFromJsonAsync<IEnumerable<UserDto>>("api/users?isActive=true");
+         
     }
     
     private void OnProvetakerCheckboxChanged(ChangeEventArgs e, Guid userId)
@@ -225,12 +178,7 @@
         get => _preInfo.Kalibreringsdato.ToDateTime(TimeOnly.MinValue);
         set => _preInfo.Kalibreringsdato = DateOnly.FromDateTime(value);
     }
-
-    private void BackToProjectPage()
-    {
-        Navigation.NavigateTo("");
-    }
-
+    
     private async Task CreatePreInfo()
     {
         _preInfo.ProsjektId = ProjectId;

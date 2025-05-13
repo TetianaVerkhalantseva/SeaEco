@@ -9,7 +9,7 @@ namespace SeaEco.Server.Controllers;
 
 [Route("/api/users")]
 [Authorize]
-[RoleAccessor(true)]
+
 
 public class UserController(IUserService userService, ICurrentUserContext currentUserContext) : ApiControllerBase
 {
@@ -19,7 +19,8 @@ public class UserController(IUserService userService, ICurrentUserContext curren
         IEnumerable<UserDto> users = await userService.GetAllUsers(isActive);
         return users.Any() ? AsOk(users) : AsOk();
     }
-
+    
+    [RoleAccessor(true)]
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetUser([FromRoute] Guid id)
     {
@@ -29,6 +30,7 @@ public class UserController(IUserService userService, ICurrentUserContext curren
             : AsOk(response.Value);
     }
 
+    [RoleAccessor(true)]
     [HttpPut("{id:guid}/update")]
     public async Task<IActionResult> UpdateUser([FromRoute] Guid id, [FromBody] EditUserDto dto)
     {
@@ -43,6 +45,7 @@ public class UserController(IUserService userService, ICurrentUserContext curren
             : AsOk();
     }
 
+    [RoleAccessor(true)]
     [HttpPut("{id:guid}/update/active")]
     public async Task<IActionResult> ToggleActive([FromRoute] Guid id)
     {
@@ -51,7 +54,7 @@ public class UserController(IUserService userService, ICurrentUserContext curren
             ? BadRequest(response.ErrorMessage)
             : AsOk();
     }
-
+    
     [HttpGet("current")]
     public async Task<IActionResult> GetCurrentUser()
     {
