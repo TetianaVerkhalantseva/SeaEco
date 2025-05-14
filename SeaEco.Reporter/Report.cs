@@ -13,6 +13,7 @@ using System.Drawing;
 using OfficeOpenXml.Drawing;
 using SeaEco.Reporter.Models.Headers;
 using SeaEco.Reporter.Models.Images;
+using SeaEco.Reporter.Models.Plot;
 using SeaEco.Reporter.Models.Positions;
 using SeaEco.Reporter.Models.PTP;
 
@@ -115,13 +116,6 @@ public sealed class Report
         worksheet.Cells[1, 21].Value = header.Oppdragsgiver;
         worksheet.Cells[1, 26].Value = string.Join(", ", header.FeltDatoer.Select(date => date.ToString("dd.MM.yy")));
         worksheet.Cells[2, 21].Value = header.Lokalitetsnavn;
-
-        worksheet.Cells["H14"].Value = sjovann.SjoTemperatur;
-        worksheet.Cells["J14"].Value = sjovann.SjoTemperatur;
-        worksheet.Cells["H15"].Value = sjovann.pHSjo;
-        worksheet.Cells["J15"].Value = sjovann.EhSjo;
-        worksheet.Cells["M14"].Value = sjovann.SedimentTemperatur;
-        worksheet.Cells["M15"].Value = sjovann.RefElektrode;
         
         int index = 4;
         foreach (ColumnB1 column in columns)
@@ -193,7 +187,7 @@ public sealed class Report
                 }, index].Value = (int)column.Tykkelseslamlag;
             }
 
-            worksheet.Cells[33, index].Value = column.Sum > 0 ? $"{column.Sum:F2}" : 0;
+            worksheet.Cells[33, index].Value = column.Sum;
             worksheet.Cells[34, index].Value = column.KorrigertSum;
 
             if (Enum.IsDefined(typeof(Tilstand), column.TilstandProveGr3))
@@ -232,34 +226,76 @@ public sealed class Report
             index = index % 13 == 0 ? 19 : index + 1;
         }
 
-        worksheet.Cells["AC11"].Value = tilstand.IndeksGr2;
+        worksheet.Cells["H14"].Value = sjovann.SjoTemperatur;
+        worksheet.Cells["J14"].Value = sjovann.SjoTemperatur;
+        worksheet.Cells["H15"].Value = sjovann.pHSjo;
+        worksheet.Cells["J15"].Value = sjovann.EhSjo;
+        worksheet.Cells["M14"].Value = sjovann.SedimentTemperatur;
+        worksheet.Cells["M15"].Value = sjovann.RefElektrode;
 
-        int til2 = (int)tilstand.TilstandGr2;
-        if (til2 != 0)
+        if (columns.Count() > 10)
         {
-            worksheet.Cells["S13"].Value = til2;
-            worksheet.Cells["S13"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            worksheet.Cells["S13"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(tilstand.TilstandGr2.GetDisplay()));
-        }
+            worksheet.Cells["AC11"].Value = tilstand.IndeksGr2;
+
+            int til2 = (int)tilstand.TilstandGr2;
+            if (til2 != 0)
+            {
+                worksheet.Cells["S13"].Value = til2;
+                worksheet.Cells["S13"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells["S13"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(tilstand.TilstandGr2.GetDisplay()));
+            }
         
-        worksheet.Cells["AC34"].Value = tilstand.IndeksGr3;
+            worksheet.Cells["AC34"].Value = tilstand.IndeksGr3;
 
-        int til3 = (int)tilstand.TilstandGr3;
-        if (til3 != 0)
-        {
-            worksheet.Cells["S36"].Value = til3;
-            worksheet.Cells["S36"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            worksheet.Cells["S36"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(tilstand.TilstandGr3.GetDisplay()));
+            int til3 = (int)tilstand.TilstandGr3;
+            if (til3 != 0)
+            {
+                worksheet.Cells["S36"].Value = til3;
+                worksheet.Cells["S36"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells["S36"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(tilstand.TilstandGr3.GetDisplay()));
+            }
+
+            worksheet.Cells["AC38"].Value = tilstand.LokalitetsIndeks;
+
+            int tilLok = (int)tilstand.LokalitetsTilstand;
+            if (tilLok != 0)
+            {
+                worksheet.Cells["Z41"].Value = tilLok;
+                worksheet.Cells["Z41"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells["Z41"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(tilstand.LokalitetsTilstand.GetDisplay()));
+            }   
         }
-
-        worksheet.Cells["AC38"].Value = tilstand.LokalitetsIndeks;
-
-        int tilLok = (int)tilstand.LokalitetsTilstand;
-        if (tilLok != 0)
+        else
         {
-            worksheet.Cells["Z41"].Value = tilLok;
-            worksheet.Cells["Z41"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            worksheet.Cells["Z41"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(tilstand.LokalitetsTilstand.GetDisplay()));
+            worksheet.Cells["N11"].Value = tilstand.IndeksGr2;
+
+            int til2 = (int)tilstand.TilstandGr2;
+            if (til2 != 0)
+            {
+                worksheet.Cells["D13"].Value = til2;
+                worksheet.Cells["D13"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells["D13"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(tilstand.TilstandGr2.GetDisplay()));
+            }
+        
+            worksheet.Cells["N34"].Value = tilstand.IndeksGr3;
+
+            int til3 = (int)tilstand.TilstandGr3;
+            if (til3 != 0)
+            {
+                worksheet.Cells["D36"].Value = til3;
+                worksheet.Cells["D36"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells["D36"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(tilstand.TilstandGr3.GetDisplay()));
+            }
+
+            worksheet.Cells["N38"].Value = tilstand.LokalitetsIndeks;
+
+            int tilLok = (int)tilstand.LokalitetsTilstand;
+            if (tilLok != 0)
+            {
+                worksheet.Cells["K41"].Value = tilLok;
+                worksheet.Cells["K41"].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells["K41"].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(tilstand.LokalitetsTilstand.GetDisplay()));
+            }
         }
 
         sourcePackage.Save();
@@ -364,7 +400,31 @@ public sealed class Report
         
         worksheet.Cells[24, 2].Value = information.Tilstand4.Item1 == 0 ? "-" : information.Tilstand4.Item1;
         worksheet.Cells[24, 3].Value = information.Tilstand4.Item2 == 0 ? "-" : information.Tilstand4.Item2;
-        
+
+        worksheet.Cells[27, 2].Value = $"{information.IndeksGr2:F2}";
+        if (Enum.IsDefined<Tilstand>(information.TilstandGr2))
+        {
+            worksheet.Cells[27, 3].Value = (int)information.TilstandGr2;
+            worksheet.Cells[27, 3].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            worksheet.Cells[27, 3].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(information.TilstandGr2.GetDisplay()));
+        }
+
+        worksheet.Cells[28, 2].Value = $"{information.IndeksGr3:F2}";
+        if (Enum.IsDefined<Tilstand>(information.TilstandGr3))
+        {
+            worksheet.Cells[28, 3].Value = (int)information.TilstandGr3;
+            worksheet.Cells[28, 3].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            worksheet.Cells[28, 3].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(information.TilstandGr3.GetDisplay()));
+        }
+
+        worksheet.Cells[29, 2].Value = $"{information.LokalitetsIndeks:F2}";
+        if (Enum.IsDefined<Tilstand>(information.LokalitetsTilstand))
+        {
+            worksheet.Cells[29, 3].Value = (int)information.LokalitetsTilstand;
+            worksheet.Cells[29, 3].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            worksheet.Cells[29, 3].Style.Fill.BackgroundColor.SetColor(ColorTranslator.FromHtml(information.LokalitetsTilstand.GetDisplay()));
+        }
+            
         sourcePackage.Save();
     }
 
@@ -485,6 +545,24 @@ public sealed class Report
             index++;
         }
 
+        sourcePackage.Save();
+    }
+
+    public void FillPhEhPlot(string path, IEnumerable<PlotColumn> columns)
+    {
+        ExcelPackage.License.SetNonCommercialPersonal(_options.NonCommercialPersonalName);
+
+        using ExcelPackage sourcePackage = new ExcelPackage(Path.Combine(_options.DestinationPath, path));
+        using ExcelWorksheet worksheet = sourcePackage.Workbook.Worksheets.First();
+
+        int index = 3;
+        foreach (PlotColumn column in columns)
+        {
+            worksheet.Cells[1, index].Value = column.Ph;
+            worksheet.Cells[2, index].Value = column.Eh;
+            index++;
+        }
+        
         sourcePackage.Save();
     }
 }
