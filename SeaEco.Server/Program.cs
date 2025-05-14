@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json.Serialization;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -55,6 +56,8 @@ builder.Services.AddControllers(options =>
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
     })
     .AddFluentValidation();
 
@@ -107,7 +110,7 @@ services.Configure<JwtOptions>(configuration.GetSection("JwtOptions"));
 services.Configure<SmtpOptions>(configuration.GetSection("SmtpOptions"));
 services.Configure<ReportOptions>(configuration.GetSection("ReportOptions"));
 
-services.AddDbContext<AppDbContext>(options => options.UseNpgsql(configuration["ConnectionStrings:LocalConnection"]));
+services.AddDbContext<AppDbContext>(options => options.UseNpgsql(configuration["ConnectionStrings:DefaultConnection"]));
 services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
 // Core services

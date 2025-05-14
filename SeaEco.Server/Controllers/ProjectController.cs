@@ -335,11 +335,11 @@ public class ProjectController : ControllerBase
         if (project == null)
             return BadRequest("Project does not exist");
         
-        var station = await _stationService.GetBStationDtoByStationId(projectId, stationId);
-        if (station == null)
-        {
-            return BadRequest("Station does not exist");
-        }
+        // var station = await _stationService.GetBStationDtoByStationId(projectId, stationId);
+        // if (station == null)
+        // {
+        //     return BadRequest("Station does not exist");
+        // }
         
         var result = await _surveyService.CreateSurvey(projectId, stationId, dto);
         return result.IsSuccess ? Ok(result.Message) : BadRequest(result.Message);
@@ -359,11 +359,11 @@ public class ProjectController : ControllerBase
         if (project == null)
             return BadRequest("Project does not exist");
         
-        var station = await _stationService.GetBStationDtoByStationId(projectId, stationId);
-        if (station == null)
-        {
-            return BadRequest("Station does not exist");
-        }
+        // var station = await _stationService.GetBStationDtoByStationId(projectId, stationId);
+        // if (station == null)
+        // {
+        //     return BadRequest("Station does not exist");
+        // }
         
         var survey = await _surveyService.GetSurveyById(surveyId);
         if (survey == null)

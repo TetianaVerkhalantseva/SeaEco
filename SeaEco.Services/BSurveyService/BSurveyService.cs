@@ -48,19 +48,22 @@ public class BSurveyService: IBSurveyService
     {
         try
         {
-            dto.DatoRegistrert ??= DateTime.Now;
-            dto.DatoEndret ??= DateTime.Now;
-            
-            var targetDate = DateTime.Today;
+            var now = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
+            dto.DatoRegistrert = DateTime.SpecifyKind(dto.DatoRegistrert ?? now, DateTimeKind.Unspecified);
+            dto.DatoEndret = DateTime.SpecifyKind(dto.DatoEndret ?? now, DateTimeKind.Unspecified);
+
+            dto.Feltdato = DateOnly.FromDateTime(DateTime.Today);
+
+            var searchDate = dto.Feltdato.ToDateTime(TimeOnly.MinValue);
 
             var preInfo = await _db.BPreinfos
                 .FirstOrDefaultAsync(p =>
                     p.ProsjektId == projectId &&
-                    p.Feltdato.Date == targetDate);
-            
+                    p.Feltdato.Date == searchDate.Date);
+
             if (preInfo != null)
             {
-                dto.Feltdato = DateOnly.FromDateTime(preInfo.Feltdato);
+                dto.Feltdato = DateOnly.FromDateTime(DateTime.SpecifyKind(preInfo.Feltdato, DateTimeKind.Unspecified));
                 dto.PreinfoId = preInfo.Id;
             }
             else
@@ -117,7 +120,8 @@ public class BSurveyService: IBSurveyService
     {
         try
         {
-            dto.DatoEndret ??= DateTime.Now;
+            var now = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
+            dto.DatoEndret = DateTime.SpecifyKind(dto.DatoEndret ?? now, DateTimeKind.Unspecified);
             
             // foreach (var log in dto.BSurveyLogs)
             // {

@@ -936,9 +936,6 @@
 
     private async Task SubmitSurvey()
     {
-        // _surveyDto.ProsjektId = ProjectId;
-        _surveyDto.Feltdato = DateOnly.FromDateTime(DateTime.Today);
-        
         if (_selectBunnType == "blot")
         {
             _surveyDto.BlotbunnId = Guid.NewGuid();
@@ -1025,9 +1022,6 @@
             _validationMessage = "Valg av dyr er påkrevd";
             return;
         }
-        
-        _surveyDto.DatoRegistrert = DateTime.Now;
-        _surveyDto.DatoEndret = DateTime.Now;
         
         
         // uncomment this part when not testing
