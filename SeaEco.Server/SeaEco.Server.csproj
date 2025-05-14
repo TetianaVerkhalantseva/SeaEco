@@ -31,4 +31,9 @@
       <Content Remove="wwwroot\reports\generated\SE-25-BU-1-Bilder.xlsx" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="wwwroot\images\" />
+      <Folder Include="wwwroot\reports\generated\" />
+    </ItemGroup>
+
 </Project>

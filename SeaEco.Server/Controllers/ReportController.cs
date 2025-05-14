@@ -72,17 +72,17 @@ public class ReportController(IReportService reportService, TilstandService tils
     public async Task<IActionResult> GenerateAll([FromBody] Guid projectId)
     {
         Response<IEnumerable<Response<string>>> response = await reportService.GenerateAllReports(projectId);
-        return response.IsError
-            ? AsBadRequest(response.ErrorMessage)
-            : AsOk(response.Value.Select(_ => new
-            {
-                ErrorMessage = _.IsError ? _.ErrorMessage : null,
-                Path = _.IsError ? null : _.Value
-            }));
+        if (response.IsError)
+            return AsBadRequest(response.ErrorMessage);
+        
+        GetReportsDto reports = await reportService.GetAllReports(projectId);
+
+        return AsOk(reports);
     }
 
     [HttpGet("{projectId:guid}/all")]
     public async Task<IActionResult> GetAll([FromRoute] Guid projectId) => AsOk(await reportService.GetAllReports(projectId));
+    
 
     [HttpGet("{projectId:guid}/pt-plan")]
     public async Task<IActionResult> GetPtp([FromRoute] Guid projectId)
