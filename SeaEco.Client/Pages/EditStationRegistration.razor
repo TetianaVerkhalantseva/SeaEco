@@ -464,12 +464,12 @@
 </div>
 
 <div class="button-container">
-    <button id="cancelBtn" class="custom-btn" style="display: none;" @onclick="BackToProjectPage">
+    <button id="cancelBtn" class="custom-btn" style="display: none;" @onclick="ConfirmCancel">
         Avbryt
     </button>
     <button id="lastBtn" onclick="showLast()" class="custom-btn">Forrige</button>
     <button id="nextBtn" onclick="showNext()" class="custom-btn">Neste</button>
-    <button id="submitBtn" class="custom-btn" style="display: none;" @onclick="SubmitSurvey">
+    <button id="submitBtn" class="custom-btn" style="display: none;" @onclick="ConfirmSubmit">
         Oppdater
     </button>
 </div>
@@ -906,6 +906,7 @@
 
             var value = prop.GetValue(obj);
             if (value == null) continue;
+            if (value is string str && string.IsNullOrWhiteSpace(str)) continue;
 
             var type = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
 
@@ -935,10 +936,28 @@
         return true;
     }
     
+    private async Task ConfirmCancel()
+    {
+        bool confirmed = await Js.InvokeAsync<bool>("confirm", "Er du sikker på at du vil avbryte?");
+        if (confirmed)
+        {
+            BackToProjectPage();
+        }
+    }
+
+    private async Task ConfirmSubmit()
+    {
+        bool confirmed = await Js.InvokeAsync<bool>("confirm", "Er du sikker på at du vil registrere undersøkelsen?");
+        if (confirmed)
+        {
+            await SubmitSurvey();
+        }
+    }
+    
     private void BackToProjectPage()
     {
         NavigationLockService.Unlock();
-        Navigation.NavigateTo($"/project/{ProjectId}");
+        Navigation.NavigateTo($"/project/{_surveyDto.ProsjektId}");
     }
 
     private async Task SubmitSurvey()
@@ -947,6 +966,9 @@
         {
             _surveyDto.BlotbunnId = Guid.NewGuid();
             _surveyDto.BSoftBase.Id = _surveyDto.BlotbunnId.Value;
+            
+            _surveyDto.HardbunnId = null;
+            _surveyDto.BHardBase = null;
 
             bool allDefault = IsAllZeroOrNull(_surveyDto.BSoftBase);
             if (allDefault)
@@ -956,24 +978,15 @@
             }
 
             bool valueDefault = IsAllZeroOrNull(_surveyDto.BSensorisk);
-            if (valueDefault)
+            bool onlyDefault = IsAllZeroOrNull(_surveyDto.BSediment);
+            if (valueDefault && onlyDefault)
             {
                 _validationMessage = "Feltene for sensorisk må fylles ut";
                 return;
             }
-            
-            _surveyDto.HardbunnId = null;
-            _surveyDto.BHardBase = null;
         
             _surveyDto.SedimentId = Guid.NewGuid();
             _surveyDto.BSediment.Id = _surveyDto.SedimentId.Value;
-
-            bool onlyDefault = IsAllZeroOrNull(_surveyDto.BSediment);
-            if (onlyDefault)
-            {
-                _validationMessage = "Feltene for sediment må fylles ut";
-                return;
-            }
         }
         else if (_selectBunnType == "hard")
         {
@@ -1021,7 +1034,7 @@
             bool defaultAttributes = IsAllZeroOrNull(_surveyDto.BAnimal);
             if (defaultAttributes)
             {
-                _validationMessage = "Feltene knyttes til dyr må fylles ut";
+                _validationMessage = "Feltene for dyr må fylles ut";
                 return;
             }
         }

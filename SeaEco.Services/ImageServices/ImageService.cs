@@ -27,6 +27,11 @@ public sealed class ImageService : IImageService
         _imageRepository = imageRepository;
         _undersokelRepository = undersokelRepository;
         _destinationPath = Path.Combine(hostingEnvironment.WebRootPath, "images");
+        
+        if (!Directory.Exists(_destinationPath))
+        {
+            Directory.CreateDirectory(_destinationPath);
+        }
     }
     
     public async Task<Response> AddImage(AddImageDto dto)

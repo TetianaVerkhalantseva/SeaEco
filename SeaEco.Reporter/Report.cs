@@ -44,18 +44,25 @@ public sealed class Report
         }
 
         string newPeportName = $"{projectIdSe}-{name.GetDescription()}.xlsx";
+        string fullPath = Path.Combine(_options.DestinationPath, newPeportName);
+        string? directory = Path.GetDirectoryName(fullPath);
 
         using var destinationPackage = new ExcelPackage();
         destinationPackage.Workbook.Worksheets.Add(sourceSheet.Name, sourceSheet);
 
         try
         {
-            if (File.Exists(Path.Combine(_options.DestinationPath, newPeportName)))
+            if (!Directory.Exists(directory))
             {
-                File.Delete(Path.Combine(_options.DestinationPath, newPeportName));
+                Directory.CreateDirectory(directory);
             }
-            
-            destinationPackage.SaveAs(new FileInfo(Path.Combine(_options.DestinationPath, newPeportName)));
+
+            if (File.Exists(fullPath))
+            {
+                File.Delete(fullPath);
+            }
+
+            destinationPackage.SaveAs(new FileInfo(fullPath));
         }
         catch (Exception ex)
         {
