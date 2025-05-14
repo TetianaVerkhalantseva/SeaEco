@@ -40,14 +40,23 @@ public class PreInfoController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var newId = await _service.CreatePreInfoAsync(dto);
-
-        // 201 Created → GET /api/PreInfo/{newId}
-        return CreatedAtAction(
-            nameof(GetById),
-            new { preInfoId = newId },
-            null
-        );
+        try
+        {
+            var newId = await _service.CreatePreInfoAsync(dto);
+            return CreatedAtAction(
+                nameof(GetById),
+                new { preInfoId = newId },
+                null
+            );
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { Message = ex.Message });
+        }
+        catch (KeyNotFoundException knf)
+        {
+            return NotFound(knf.Message);
+        }
     }
     
     [HttpDelete("{preInfoId:guid}")]
