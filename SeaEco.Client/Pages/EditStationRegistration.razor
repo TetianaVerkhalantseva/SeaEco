@@ -906,6 +906,7 @@
 
             var value = prop.GetValue(obj);
             if (value == null) continue;
+            if (value is string str && string.IsNullOrWhiteSpace(str)) continue;
 
             var type = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
 
@@ -947,6 +948,9 @@
         {
             _surveyDto.BlotbunnId = Guid.NewGuid();
             _surveyDto.BSoftBase.Id = _surveyDto.BlotbunnId.Value;
+            
+            _surveyDto.HardbunnId = null;
+            _surveyDto.BHardBase = null;
 
             bool allDefault = IsAllZeroOrNull(_surveyDto.BSoftBase);
             if (allDefault)
@@ -956,24 +960,15 @@
             }
 
             bool valueDefault = IsAllZeroOrNull(_surveyDto.BSensorisk);
-            if (valueDefault)
+            bool onlyDefault = IsAllZeroOrNull(_surveyDto.BSediment);
+            if (valueDefault && onlyDefault)
             {
                 _validationMessage = "Feltene for sensorisk må fylles ut";
                 return;
             }
-            
-            _surveyDto.HardbunnId = null;
-            _surveyDto.BHardBase = null;
         
             _surveyDto.SedimentId = Guid.NewGuid();
             _surveyDto.BSediment.Id = _surveyDto.SedimentId.Value;
-
-            bool onlyDefault = IsAllZeroOrNull(_surveyDto.BSediment);
-            if (onlyDefault)
-            {
-                _validationMessage = "Feltene for sediment må fylles ut";
-                return;
-            }
         }
         else if (_selectBunnType == "hard")
         {
@@ -1021,7 +1016,7 @@
             bool defaultAttributes = IsAllZeroOrNull(_surveyDto.BAnimal);
             if (defaultAttributes)
             {
-                _validationMessage = "Feltene knyttes til dyr må fylles ut";
+                _validationMessage = "Feltene for dyr må fylles ut";
                 return;
             }
         }
