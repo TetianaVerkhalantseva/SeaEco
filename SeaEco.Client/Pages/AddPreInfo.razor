@@ -22,7 +22,7 @@
         <div class="form-floating mb-3">
             <InputSelect id="user" class="form-select"
                          @bind-Value="_preInfo.FeltansvarligId">
-                <option value="" disabled>Velg feltansvarlig</option>
+                <option value="">Velg feltansvarlig</option>
                 @foreach (var user in _users)
                 {
                     <option value="@user.Id">@user.FullName</option>
