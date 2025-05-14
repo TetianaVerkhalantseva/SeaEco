@@ -464,12 +464,12 @@
 </div>
 
 <div class="button-container">
-    <button id="cancelBtn" class="custom-btn" style="display: none;" @onclick="BackToProjectPage">
+    <button id="cancelBtn" class="custom-btn" style="display: none;" @onclick="ConfirmCancel">
         Avbryt
     </button>
     <button id="lastBtn" onclick="showLast()" class="custom-btn">Forrige</button>
     <button id="nextBtn" onclick="showNext()" class="custom-btn">Neste</button>
-    <button id="submitBtn" class="custom-btn" style="display: none;" @onclick="SubmitSurvey">
+    <button id="submitBtn" class="custom-btn" style="display: none;" @onclick="ConfirmSubmit">
         Oppdater
     </button>
 </div>
@@ -936,10 +936,28 @@
         return true;
     }
     
+    private async Task ConfirmCancel()
+    {
+        bool confirmed = await Js.InvokeAsync<bool>("confirm", "Er du sikker på at du vil avbryte?");
+        if (confirmed)
+        {
+            BackToProjectPage();
+        }
+    }
+
+    private async Task ConfirmSubmit()
+    {
+        bool confirmed = await Js.InvokeAsync<bool>("confirm", "Er du sikker på at du vil registrere undersøkelsen?");
+        if (confirmed)
+        {
+            await SubmitSurvey();
+        }
+    }
+    
     private void BackToProjectPage()
     {
         NavigationLockService.Unlock();
-        Navigation.NavigateTo($"/project/{ProjectId}");
+        Navigation.NavigateTo($"/project/{_surveyDto.ProsjektId}");
     }
 
     private async Task SubmitSurvey()
