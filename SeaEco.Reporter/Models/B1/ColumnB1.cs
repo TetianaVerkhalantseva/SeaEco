@@ -10,11 +10,13 @@ public sealed class ColumnB1
     public Bunntype Bunntype { get; set; }
     public Dyr Dyr { get; set; }
 
+    public bool HasSediment { get; set; }
     public float pH { get; set; }
     public float Eh { get; set; }
     public int phEh { get; set; }
     public Tilstand TilstandProveGr2 { get; set; }
 
+    public bool HasSensorisk { get; set; }
     public Gassbobler Gassbobler { get; set; }
     public Farge Farge { get; set; }
     public Lukt Lukt { get; set; }

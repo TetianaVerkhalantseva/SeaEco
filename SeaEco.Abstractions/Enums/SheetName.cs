@@ -20,5 +20,8 @@ public enum SheetName
     B2 = 5,
     
     [Description("Bilder")]
-    Image = 6
+    Image = 6,
+    
+    [Description("PhEh-Plot")]
+    Plot = 7,
 }

@@ -27,6 +27,7 @@ using SeaEco.Services.ProjectServices;
 using SeaEco.Services.ReportServices;
 using SeaEco.Services.SamplingPlanServices;
 using SeaEco.Services.StationServices;
+using SeaEco.Services.TilstandServices;
 using SeaEco.Services.TokenServices;
 using SeaEco.Services.UserServices;
 using SeaEco.Services.Validators;
@@ -126,8 +127,9 @@ services.AddTransient<ISamplingPlanService, SamplingPlanService>();
 services.AddTransient<IStationService, StationService>();
 services.AddTransient<IBSurveyService, BSurveyService>();
 services.AddScoped<ILokalitetService, LokalitetService>();
-services.AddScoped<Report>();
 services.AddTransient<IReportService, ReportService>();
+services.AddScoped<Report>();
+services.AddScoped<TilstandService>();
 
 // Models validators
 services.AddScoped<IValidator<LoginDto>, LoginDtoValidator>();

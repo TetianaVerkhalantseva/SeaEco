@@ -15,19 +15,27 @@ using SeaEco.Reporter.Models.B2;
 using SeaEco.Reporter.Models.Headers;
 using SeaEco.Reporter.Models.Images;
 using SeaEco.Reporter.Models.Info;
+using SeaEco.Reporter.Models.Plot;
 using SeaEco.Reporter.Models.Positions;
 using SeaEco.Reporter.Models.PTP;
+using SeaEco.Services.TilstandServices;
 
 namespace SeaEco.Services.ReportServices;
 
 public sealed class ReportService(Report report,
+    TilstandService tilstandService,
     IGenericRepository<BProsjekt> projectRepository,
     IGenericRepository<BRapporter> reportRepository,
+    IGenericRepository<BSediment> sedimentRepository,
+    IGenericRepository<BSensorisk> sensoriskRepository,
+    IGenericRepository<BUndersokelse> undersokelseRepository,
+    IGenericRepository<BTilstand> tilstandRepository,
     IWebHostEnvironment webHostEnvironment)
     : IReportService
 {
     private const string ProjectNotFoundError = "Project not found";
     private const string ReportNotFoundError = "Report not found";
+    private const string InvalidReportGenerationData = "Invalid report generation data";
 
     public async Task<Response<string>> GenerateInfoReport(Guid projectId)
     {
@@ -130,11 +138,13 @@ public sealed class ReportService(Report report,
             Bunntype = _.HardbunnId is null ? Bunntype.Blotbunn : Bunntype.Hardbunn,
             Dyr = _.DyrId is null ? Dyr.Nei : Dyr.Ja,
             
+            HasSediment = _.SedimentId is not null,
             pH = _.Sediment?.Ph ?? 0,
             Eh = _.Sediment?.Eh ?? 0,
             phEh = _.Sediment?.KlasseGr2 ?? 0,
-            TilstandProveGr2 = (Tilstand)(_.Sediment?.TilstandGr2 ?? 0),
+            TilstandProveGr2 = (Tilstand)(_.Sediment?.TilstandGr2 ?? 1),
             
+            HasSensorisk = _.SensoriskId is not null,
             Gassbobler = (Gassbobler)(_.Sensorisk?.Gassbobler ?? 0),
             Farge = (Farge)(_.Sensorisk?.Farge ?? 0),
             Lukt = (Lukt)(_.Sensorisk?.Lukt ?? 0),
@@ -149,9 +159,9 @@ public sealed class ReportService(Report report,
                   _.Sensorisk.Grabbvolum +
                   _.Sensorisk.Tykkelseslamlag,
             KorrigertSum = _.Sensorisk?.IndeksGr3 ?? 0,
-            TilstandProveGr3 = (Tilstand)(_.Sensorisk?.TilstandGr3 ?? 0),
+            TilstandProveGr3 = (Tilstand)(_.Sensorisk?.TilstandGr3 ?? 1),
             MiddelVerdiGr2Gr3 = _.IndeksGr2Gr3 ?? 0,
-            TilstandProveGr2Gr3 = (Tilstand)(_.TilstandGr2Gr3 ?? 0)
+            TilstandProveGr2Gr3 = (Tilstand)(_.TilstandGr2Gr3 ?? 1)
         });
 
         BHeader header = new BHeader()
@@ -169,7 +179,10 @@ public sealed class ReportService(Report report,
             SjoTemperatur = dbPreinfo?.SjoTemperatur ?? 0,
             pHSjo = dbPreinfo?.PhSjo ?? 0,
             EhSjo = dbPreinfo?.EhSjo ?? 0,
-            SedimentTemperatur = dbRecord.BUndersokelses.Any() ? dbRecord.BUndersokelses.Average(u => u.Sediment?.Temperatur ?? 0): 0,
+            SedimentTemperatur = dbRecord.BUndersokelses.Any() ? 
+                dbRecord.BUndersokelses.Sum(u => u.Sediment?.Temperatur ?? 0) /
+                dbRecord.BUndersokelses.Count(u => u.SedimentId is not null)
+                : 0,
             RefElektrode = dbPreinfo?.RefElektrode ?? 0,
         };
 
@@ -352,6 +365,7 @@ public sealed class ReportService(Report report,
                     string path = Path.Combine(
                         webHostEnvironment.WebRootPath,
                         "images",
+                        dbRecord.ProsjektIdSe,
                         $"{img.Id.ToString()}.{img.Extension}");
                     
                     using FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read);
@@ -449,14 +463,125 @@ public sealed class ReportService(Report report,
         return Response<string>.Ok(copyResult.Value);
     }
 
-    public async Task<IEnumerable<Response<string>>> GenerateAllReports(Guid projectId) =>
-    [
-        await GenerateInfoReport(projectId),
-        await GeneratePositionsReport(projectId),
-        await GenerateB1Report(projectId),
-        await GenerateB2Report(projectId),
-        await GenerateImagesReport(projectId),
-    ];
+    public async Task<Response<string>> GeneratePlotreport(Guid projectId)
+    {
+        BProsjekt? dbRecord = await projectRepository.GetAll()
+            .Include(_ => _.BStasjons)
+            .ThenInclude(_ => _.Undersokelse)
+            .ThenInclude(_ => _.Sediment)
+            .FirstOrDefaultAsync(_ => _.Id == projectId);
+
+        if (dbRecord is null)
+        {
+            return Response<string>.Error(ProjectNotFoundError);
+        }
+        
+        Response<string> copyResult = report.CopyDocument(dbRecord.ProsjektIdSe, SheetName.Plot);
+        if (copyResult.IsError)
+        {
+            return copyResult;
+        }
+
+        IEnumerable<PlotColumn> columns = dbRecord.BStasjons
+            .OrderBy(_ => _.Nummer)
+            .Select(_ => new PlotColumn()
+        {
+            Ph = _.Undersokelse?.SedimentId is null ? 0 : _.Undersokelse.Sediment.Ph,
+            Eh = _.Undersokelse?.SedimentId is null ? 0 : _.Undersokelse.Sediment.Eh,
+        });
+        
+        report.FillPhEhPlot(copyResult.Value, columns);
+        
+        Response saveResult = await CheckAndReplaceReport(projectId, SheetName.Plot);
+        if (saveResult.IsError)
+        {
+            return Response<string>.Error(saveResult.ErrorMessage);
+        }
+        
+        return Response<string>.Ok(copyResult.Value);
+    }
+
+    public async Task<Response<IEnumerable<Response<string>>>> GenerateAllReports(Guid projectId)
+    {
+        BProsjekt? dbRecord = await projectRepository.GetAll()
+            .Include(_ => _.BUndersokelses)
+            .ThenInclude(_ => _.Sediment)
+            .Include(_ => _.BUndersokelses)
+            .ThenInclude(_ => _.Sensorisk)
+            .FirstOrDefaultAsync(_ => _.Id == projectId);
+
+        if (dbRecord is null)
+        {
+            return Response<IEnumerable<Response<string>>>.Error(ProjectNotFoundError);
+        }
+        
+        // Calculate Sediments Tilstand
+        List<BSediment?> sediments = dbRecord.BUndersokelses.Select(_ => _.Sediment).ToList();
+        foreach (BSediment sediment in sediments)
+        {
+            if (sediment is not null)
+            {
+                Response response = tilstandService.CalculateSedimentTilstand(sediment);
+                if (response.IsError)
+                {
+                    return Response<IEnumerable<Response<string>>>.Error(response.ErrorMessage);
+                }
+            }
+        }
+        
+        Response sedimentUpdateResult = await sedimentRepository.UpdateRange(sediments.Where(_ => _ is not null));
+        if (sedimentUpdateResult.IsError)
+        {
+            return Response<IEnumerable<Response<string>>>.Error(sedimentUpdateResult.ErrorMessage);
+        }
+        
+        // Calculate Sensorisks Tilstand
+        List<BSensorisk?> sensorisks = dbRecord.BUndersokelses.Select(_ => _.Sensorisk).ToList();
+        foreach (BSensorisk sensorisk in sensorisks)
+        {
+            if (sensorisk is not null)
+            {
+                tilstandService.CalculateSensoriskTilstand(sensorisk);
+            }
+        }
+        
+        Response updateSensoriskResult = await sensoriskRepository.UpdateRange(sensorisks.Where(_ => _ is not null));
+        if (updateSensoriskResult.IsError)
+        {
+            return Response<IEnumerable<Response<string>>>.Error(updateSensoriskResult.ErrorMessage);
+        }
+        
+        // Calculate Undersøkelses Tilstand
+        List<BUndersokelse> undersokelses = dbRecord.BUndersokelses.ToList();
+        foreach (BUndersokelse undersokelse in undersokelses)
+        {
+            tilstandService.CalculateUndersokelseTilstand(undersokelse);
+        }
+        
+        Response updateUndersResult = await undersokelseRepository.UpdateRange(undersokelses);
+        if (updateUndersResult.IsError)
+        {
+            return Response<IEnumerable<Response<string>>>.Error(updateUndersResult.ErrorMessage);
+        }
+        
+        // Calculate Prosjekts Tilstand
+        BTilstand tilstand = tilstandService.CalculateProsjektTilstand(dbRecord.BUndersokelses, dbRecord.Id);
+        
+        Response createTilstandResult = await tilstandRepository.Add(tilstand);
+        if (createTilstandResult.IsError)
+        {
+            return Response<IEnumerable<Response<string>>>.Error(createTilstandResult.ErrorMessage);
+        }
+        
+        return Response<IEnumerable<Response<string>>>.Ok([
+            await GenerateInfoReport(projectId),
+            await GeneratePositionsReport(projectId),
+            await GenerateB1Report(projectId),
+            await GenerateB2Report(projectId),
+            await GenerateImagesReport(projectId),
+            await GeneratePlotreport(projectId),
+        ]);
+    }
 
     public async Task<GetReportsDto> GetAllReports(Guid projectId)
     {
@@ -464,15 +589,29 @@ public sealed class ReportService(Report report,
             .Where(_ => _.ProsjektId == projectId)
             .ToListAsync();
 
-        ReportDto plan = MapReport(dbRecords.FirstOrDefault(_ => (SheetName)_.ArkNavn == SheetName.PTP));
-
+        BRapporter? ptpReport = dbRecords.FirstOrDefault(_ => (SheetName)_.ArkNavn == SheetName.PTP);
+        
         return new GetReportsDto()
         {
-            Plan = plan,
+            Plan = ptpReport is null ? null : MapReport(ptpReport),
             Reports = dbRecords.Where(_ => (SheetName)_.ArkNavn != SheetName.PTP).OrderBy(_ => _.ArkNavn).Select(MapReport)
         };
     }
 
+    public async Task<Response<ReportDto>> GetPtpReport(Guid projectId)
+    {
+        BRapporter? dbRecord = await reportRepository.GetBy(_ =>
+            _.ProsjektId == projectId &&
+            _.ArkNavn == (int)SheetName.PTP);
+
+        if (dbRecord is null)
+        {
+            return Response<ReportDto>.Error(ReportNotFoundError);
+        }
+        
+        return Response<ReportDto>.Ok(MapReport(dbRecord));
+    }
+    
     public async Task<Response<FileModel>> DownloadReportById(Guid peportId)
     {
         BRapporter? dbRecord = await reportRepository.GetAll()
