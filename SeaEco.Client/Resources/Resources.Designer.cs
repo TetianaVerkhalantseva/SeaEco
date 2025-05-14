@@ -849,15 +849,15 @@ namespace SeaEco.Client.Resources {
             }
         }
         
-        internal static string ButtonGenerateDocumentReport {
+        internal static string ButtonReGenerateReports {
             get {
-                return ResourceManager.GetString("ButtonGenerateDocumentReport", resourceCulture);
+                return ResourceManager.GetString("ButtonReGenerateReports", resourceCulture);
             }
         }
         
-        internal static string ButtonGeneratePicturesReport {
+        internal static string ButtonGenerateReports {
             get {
-                return ResourceManager.GetString("ButtonGeneratePicturesReport", resourceCulture);
+                return ResourceManager.GetString("ButtonGenerateReports", resourceCulture);
             }
         }
         
@@ -912,6 +912,12 @@ namespace SeaEco.Client.Resources {
         internal static string ButtonNotApproved {
             get {
                 return ResourceManager.GetString("ButtonNotApproved", resourceCulture);
+            }
+        }
+        
+        internal static string HeaderProjectPlan {
+            get {
+                return ResourceManager.GetString("HeaderProjectPlan", resourceCulture);
             }
         }
     }

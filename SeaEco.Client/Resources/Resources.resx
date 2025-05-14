@@ -460,11 +460,11 @@
     <data name="ModalComment" xml:space="preserve">
         <value>Merknad :</value>
     </data>
-    <data name="ButtonGenerateDocumentReport" xml:space="preserve">
-        <value>+ Generer rapporter</value>
+    <data name="ButtonReGenerateReports" xml:space="preserve">
+        <value>+ Regenerer rapporter</value>
     </data>
-    <data name="ButtonGeneratePicturesReport" xml:space="preserve">
-        <value>+ Generer rapportbilder</value>
+    <data name="ButtonGenerateReports" xml:space="preserve">
+        <value>+ Generer rapport</value>
     </data>
     <data name="PageReportNoReport" xml:space="preserve">
         <value>Ingen rapporter generert</value>
@@ -492,5 +492,8 @@
     </data>
     <data name="ButtonNotApproved" xml:space="preserve">
         <value>Ikke godkjent</value>
+    </data>
+    <data name="HeaderProjectPlan" xml:space="preserve">
+        <value>Prosjektplan</value>
     </data>
 </root>

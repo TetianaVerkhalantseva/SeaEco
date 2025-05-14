@@ -246,6 +246,9 @@ else
                     @Resources.ButtonAddStation
                 </button>
                 <div class="d-flex flex-grow-1"></div>
+            <button class="btn custom-btn" type="button" disabled="@(EditProjectStationPlanVar || EditProjectPlanVar || !_isExistingPlan || _isAddingNewStation || Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt))" @onclick="GenerateProjectPlanReport">
+                @(!_isPlanGenerated ? "Generer plan": "Regenerer plan")
+            </button>
         </div>
     </div>
 }
@@ -269,6 +272,7 @@ else
     private DateOnly _selectedDate;
     private EditContext _editContext;
     private bool _isExistingPlan;
+    private bool _isPlanGenerated = false;
     private string? _errorMessageProjectPlan;
     
     //New station plan
@@ -486,6 +490,11 @@ else
         {
             _errorMessage = Resources.ErrorMessageUnexpected;
         }
+    }
+
+    private async Task GenerateProjectPlanReport()
+    {
+        _isPlanGenerated = true;
     }
 
     private static T BackUp<T>(T source)

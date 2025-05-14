@@ -1,70 +1,103 @@
 @using SeaEco.Abstractions.Models.Project
 @using SeaEco.Client.Resources
-@using Microsoft.AspNetCore.Components.Authorization
+@using SeaEco.Abstractions.Enums
 
 @if (_isLoading)
 {
 }
 else
 {
-    <div class="d-flex flex-column align-items-center gap-3 mt-3 w-100">
-        <div class="d-flex gap-3 justify-content-center mb-3">
-            <button class="btn btn-outline-secondary filter-button" type="button" @onclick="GenerateReportDocumentsOne">
-                @Resources.ButtonGenerateDocumentReport
-            </button>
-            <button class="btn btn-outline-secondary filter-button" type="button" @onclick="GenerateReportDocumentsTwo">
-                @Resources.ButtonGeneratePicturesReport
-            </button>
-        </div>
-        <div class="d-flex flex-column align-items-center line w-100"></div>
-        <div class="d-flex flex-column align-items-center mt-1">
-            <h5>@Resources.PageReportDocumentsReport</h5>
-            @if (_documentReports == null)
+    <div class="d-flex mb-5">
+    <div class="d-flex flex-column align-items-center gap-3 mt-5 w-100">
+        
+        <div class="d-flex flex-column align-items-center box-border p-4 min-width-box min-width-box-sm">
+            <div class="d-flex flex-fill w-100">
+                <h5>@Resources.HeaderProjectPlan</h5>
+            </div>
+            @if (_projectPlanReports == null)
             {
-                <p>@Resources.PageReportNoReport</p>
+                <div class="d-flex flex-fill w-100">
+                    <p>Ingen prosjektplan generert</p>
+                </div>
             }
             else
             {
+                <div class="col mb-2 mt-xxl-4 mt-1 card-col">
+                    <div class="card d-flex">
+                        <div class="card-body">
+                            <div class="d-flex w-100 flex-xxl-row flex-column custom-gap">
+                                <div class="d-flex flex-column">
+                                    <div class="d-flex gap-3">
+                                        <p class="mb-0">@Resources.InputTextReportType</p>
+                                        <div class="flex-grow-1"></div>
+                                        <p class="mb-0 text-nowrap justify-content-end">@_projectPlanReports.RapportType</p>
+                                    </div>
+                                    <div class="d-flex gap-3">
+                                        <p class="mb-0 text-nowrap">@Resources.InputTextReportDateGenerated</p>
+                                        <div class="flex-grow-1"></div>
+                                        <p class="mb-0 justify-content-end text-nowrap">@_projectPlanReports.DateRegistered</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center flex-xxl-column mt-2 mt-xxl-0">
+                                    <button class="btn custom-btn sm" type="button" @onclick="Download">
+                                        Last ned
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        
+        
+        <div class="d-flex flex-column align-items-center mt-3 mb-3 box-border p-4 min-width-box min-width-box-sm">
+            <div class="d-flex flex-fill w-100 gap-xxl-3 gap-1 flex-xxl-row flex-column">
+                <div class="d-flex flex-column">
+                    <h5>@Resources.PageReportDocumentsReport</h5>
+                    @if (_documentReports == null)
+                    {
+                        <div class="d-flex flex-fill w-100">
+                            <p>@Resources.PageReportNoReport</p>
+                        </div>
+                    }
+                </div>
+                <div class="d-flex flex-grow-1"></div>
+                <div class="d-flex flex-xxl-column justify-content-center align-items-end">
+                    <button class="btn custom-btn " type="button" @onclick="GenerateReports" disabled="@(Project.Prosjektstatus is not Prosjektstatus.Ferdig)">
+                        @(_documentReports == null ? Resources.ButtonGenerateReports : Resources.ButtonReGenerateReports)
+                    </button>
+                </div>
+            </div>
+            
+            @if(_documentReports != null)
+            {
                 <div class="card-container mt-3">
-                    <div class="row" style="justify-content: center;">
+                    <div class="d-flex justify-content-center flex-column gap-1">
                         @foreach (var report in _documentReports)
                         {
-                            <div class="col mb-3 card-col">
+                            <div class="col mb-2 card-col">
                                 <div class="card d-flex">
                                     <div class="card-body">
-                                        <div class="d-flex mb-3">
-                                        <div class="flex-grow-1"></div>
-                                        <span class="bi bi-printer cursor" @onclick="PrintReport"></span>
-                                        </div>
-                                        <div class="d-flex gap-3">
-                                            <p class="mb-0">@Resources.InputTextReportType</p>
-                                            <div class="flex-grow-1"></div>
-                                            <p class="mb-0 text-nowrap justify-content-end">@report.RapportType</p>
-                                        </div>
-                                        <div class="d-flex gap-3">
-                                            <p class="mb-0 text-nowrap">@Resources.InputTextReportDateGenerated</p>
-                                            <div class="flex-grow-1"></div>
-                                            <p class="mb-0 justify-content-end text-nowrap">@report.DateRegistered</p>
-                                        </div>
-                                        <div class="d-flex gap-3">
-                                                    <p class="mb-3 text-nowrap">@Resources.InputTextApprovedBy</p>
+                                        <div class="d-flex w-100 flex-xxl-row flex-column custom-gap">
+                                            <div class="d-flex flex-column">
+                                                <div class="d-flex gap-3">
+                                                    <p class="mb-0">@Resources.InputTextReportType</p>
                                                     <div class="flex-grow-1"></div>
-                                                @if (report.FullName != null)
-                                                {
-                                                    <p class="mb-0 text-nowrap">@report.FullName</p>
-                                                }
-                                                else
-                                                {
-                                                    <p class="mb-0 text-nowrap text-muted fst-italic">@Resources.InputTextWaitingForApproval</p>
-                                                }
+                                                    <p class="mb-0 text-nowrap justify-content-end">@report.RapportType</p>
                                                 </div>
-                                        <AuthorizeView Roles="admin">
-                                            <Authorized>
-                                                <button class="btn btn-outline-secondary" type="button" @onclick="ApproveReport">
-                                                    @(report.FullName != null ? Resources.ButtonNotApproved : Resources.ButtonApproved)
+                                                <div class="d-flex gap-3">
+                                                    <p class="mb-0 text-nowrap">@Resources.InputTextReportDateGenerated</p>
+                                                    <div class="flex-grow-1"></div>
+                                                    <p class="mb-0 justify-content-end text-nowrap">@report.DateRegistered</p>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-center flex-xxl-column mt-2 mt-xxl-0">
+                                                <button class="btn custom-btn sm" type="button" @onclick="Download">
+                                                    Last ned
                                                 </button>
-                                            </Authorized>
-                                        </AuthorizeView>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -73,62 +106,6 @@ else
                 </div>
             }
         </div>
-        <div class="d-flex flex-column align-items-center line w-100"></div>
-    <div class="d-flex flex-column align-items-center mt-1">
-        <h5>@Resources.PageReportPicturesReport</h5>
-        @if (_picturesReports == null)
-        {
-            <p>@Resources.PageReportNoReport</p>
-        }
-        else
-        {
-            <div class="card-container mt-3">
-                    <div class="row" style="justify-content: center;">
-                        @foreach (var report in _picturesReports)
-                        {
-                            <div class="col mb-3 card-col">
-                                <div class="card d-flex">
-                                    <div class="card-body">
-                                        <div class="d-flex mb-3">
-                                        <div class="flex-grow-1"></div>
-                                        <span class="bi bi-printer cursor" @onclick="PrintReport"></span>
-                                        </div>
-                                        <div class="d-flex gap-3">
-                                            <p class="mb-0">@Resources.InputTextReportType</p>
-                                            <div class="flex-grow-1"></div>
-                                            <p class="mb-0 text-nowrap justify-content-end">@report.RapportType</p>
-                                        </div>
-                                        <div class="d-flex gap-3">
-                                            <p class="mb-0 text-nowrap">@Resources.InputTextReportDateGenerated</p>
-                                            <div class="flex-grow-1"></div>
-                                            <p class="mb-0 justify-content-end text-nowrap">@report.DateRegistered</p>
-                                        </div>
-                                        <div class="d-flex gap-3">
-                                                    <p class="mb-3 text-nowrap">@Resources.InputTextApprovedBy</p>
-                                                    <div class="flex-grow-1"></div>
-                                                @if (report.FullName != null)
-                                                {
-                                                    <p class="mb-0 text-nowrap">@report.FullName</p>
-                                                }
-                                                else
-                                                {
-                                                    <p class="mb-0 text-nowrap text-muted fst-italic">@Resources.InputTextWaitingForApproval</p>
-                                                }
-                                                </div>
-                                        <AuthorizeView Roles="admin">
-                                            <Authorized>
-                                                <button class="btn btn-outline-secondary" type="button" @onclick="ApproveReport">
-                                                    @(report.FullName != null ? Resources.ButtonNotApproved : Resources.ButtonApproved)
-                                                </button>
-                                            </Authorized>
-                                        </AuthorizeView>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                </div>
-        }
     </div>
     </div>
 }
@@ -138,7 +115,7 @@ else
 @code {
     [Parameter] public ProjectDto? Project { get; set; }
     private bool _isLoading = true;
-    private List<ReportData>? _picturesReports;
+    private ReportData? _projectPlanReports;
     private List<ReportData>? _documentReports;
 
     protected override async Task OnInitializedAsync()
@@ -146,10 +123,23 @@ else
         
         _documentReports  =
         [ new ReportData { 
-            RapportType    = "B1",
+            RapportType    = "B5",
             DateRegistered = new DateOnly(2025, 4, 19),
             FullName = "Rikke G."}
         ];
+        
+        _documentReports.Add(new ReportData
+        {
+            RapportType    = "B2",
+            DateRegistered = DateOnly.FromDateTime(DateTime.Today),
+            FullName = "Rikke G."
+        });
+        _documentReports.Add(new ReportData
+        {
+            RapportType    = "B2",
+            DateRegistered = DateOnly.FromDateTime(DateTime.Today),
+            FullName = "Rikke G."
+        });
         
         _documentReports.Add(new ReportData
         {
@@ -172,24 +162,21 @@ else
         });
         
         
-        _picturesReports  =
-        [ new ReportData { 
-            RapportType    = "Bilde",
+        _projectPlanReports  =
+        new ReportData { 
+            RapportType    = "PTP",
             DateRegistered = new DateOnly(2025, 4, 19),
             FullName = "Rikke G."}
-        ];
+        ;
         
         _isLoading = false;
 
     }
 
-    private void GenerateReportDocumentsOne()
+    private void GenerateReports()
     {
     }
 
-    private void GenerateReportDocumentsTwo()
-    {
-    }
     
     private class ReportPicture
     {
@@ -203,7 +190,7 @@ else
     }
 
 
-    private async Task ApproveReport()
+    private async Task Download()
     {
     }
 
