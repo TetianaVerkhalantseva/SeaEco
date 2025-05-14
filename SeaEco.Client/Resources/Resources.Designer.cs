@@ -920,5 +920,11 @@ namespace SeaEco.Client.Resources {
                 return ResourceManager.GetString("HeaderProjectPlan", resourceCulture);
             }
         }
+        
+        internal static string ButtonDownload {
+            get {
+                return ResourceManager.GetString("ButtonDownload", resourceCulture);
+            }
+        }
     }
 }

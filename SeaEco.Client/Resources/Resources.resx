@@ -496,4 +496,7 @@
     <data name="HeaderProjectPlan" xml:space="preserve">
         <value>Prøvetakingsplan</value>
     </data>
+    <data name="ButtonDownload" xml:space="preserve">
+        <value>Last ned</value>
+    </data>
 </root>

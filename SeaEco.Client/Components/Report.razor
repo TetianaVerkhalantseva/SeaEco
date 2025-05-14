@@ -4,6 +4,8 @@
 @using SeaEco.Abstractions.Enums
 @using SeaEco.Abstractions.Models.Report
 @inject HttpClient Http
+@inject NavigationManager Navigation
+@inject IConfiguration Configuration
 
 @if (_isLoading)
 {
@@ -42,9 +44,9 @@ else
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-center flex-xxl-column mt-2 mt-xxl-0">
-                                    <button class="btn custom-btn sm" type="button" @onclick="() => Download(_projectPlan.Id)">
-                                        Last ned
-                                    </button>
+                                    <a href="@($"{Configuration["ApiBaseUrl"].TrimEnd('/')}/api/Report/{_projectPlan.Id}")" download class="btn custom-btn sm">
+                                        @Resources.ButtonDownload
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -96,9 +98,9 @@ else
                                                 </div>
                                             </div>
                                             <div class="d-flex justify-content-center flex-xxl-column mt-2 mt-xxl-0">
-                                                <button class="btn custom-btn sm" type="button" @onclick="() => Download(report.Id)">
-                                                    Last ned
-                                                </button>
+                                                <a href="@($"{Configuration["ApiBaseUrl"].TrimEnd('/')}/api/Report/{report.Id}")" download class="btn custom-btn sm">
+                                                    @Resources.ButtonDownload
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
@@ -157,7 +159,7 @@ else
     
     private async Task Download(Guid rapportId)
     {
-        await Http.GetAsync($"/api/Report/{rapportId:D}");
+        Navigation.NavigateTo($"/api/Report/{rapportId:D}");
     }
 }
 
