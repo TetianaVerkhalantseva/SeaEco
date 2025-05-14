@@ -1,3 +1,4 @@
+@using System.Net
 @using System.Text.Json
 @using SeaEco.Abstractions.Enums
 @using SeaEco.Client.Resources
@@ -241,14 +242,22 @@ else
                     </EditForm>
                 }
         }
-        <div class="d-flex mb-5 mt-3">
-                <button class="btn custom-btn" type="button" disabled="@(EditProjectStationPlanVar || EditProjectPlanVar || !_isExistingPlan || _isAddingNewStation || Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt))" @onclick="AddStation">
-                    @Resources.ButtonAddStation
-                </button>
-                <div class="d-flex flex-grow-1"></div>
-            <button class="btn custom-btn" type="button" disabled="@(EditProjectStationPlanVar || EditProjectPlanVar || !_isExistingPlan || _isAddingNewStation || Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt))" @onclick="GenerateProjectPlanReport">
-                @(!_isPlanGenerated ? "Generer plan": "Regenerer plan")
+        <div class="d-flex mb-5 mt-3 gap-3 flex-column">
+            <div class="d-flex flex-column flex-xxl-row">
+            <button class="btn custom-btn" type="button" disabled="@(EditProjectStationPlanVar || EditProjectPlanVar || !_isExistingPlan || _isAddingNewStation || Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt))" @onclick="AddStation">
+                @Resources.ButtonAddStation
             </button>
+            <div class="d-flex flex-grow-1"></div>
+            <button class="btn custom-btn" type="button" disabled="@(EditProjectStationPlanVar || EditProjectPlanVar || !_isExistingPlan || _isAddingNewStation || Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt))" @onclick="GenerateProjectPlanReport">
+                @(!_isPlanGenerated ? "Generer plan" : "Regenerer plan")
+            </button>
+            </div>
+            <div class=" text-center">
+                @if (!string.IsNullOrEmpty(_errorMessagePlanGenerate))
+                {
+                    <p class="text-danger">@_errorMessagePlanGenerate</p>
+                }
+            </div>
         </div>
     </div>
 }
@@ -289,6 +298,7 @@ else
     private List<UpdateStationDto> _editStationPlanBackup = new();
     
     private string? _errorMessage;
+    private string? _errorMessagePlanGenerate;
     
     
     protected override async Task OnInitializedAsync()
@@ -321,6 +331,12 @@ else
         _editContext = new EditContext(_newPlan);
         _editStationPlanContext = new EditContext(_editStationPlan);
         _newStationPlanContext = new EditContext(_newStationPlan);
+        
+        var isPlanGeneratedResponse = await Http.GetAsync($"/api/report/{Project.Id:D}/pt-plan");
+        if (isPlanGeneratedResponse.IsSuccessStatusCode)
+        {
+            _isPlanGenerated = true;
+        }
 
         _isLoading = false;
     }
@@ -494,8 +510,18 @@ else
 
     private async Task GenerateProjectPlanReport()
     {
-        _isPlanGenerated = true;
+        _errorMessagePlanGenerate = string.Empty;
+        var responseGenerateReports = await Http.PostAsJsonAsync("/api/Report/generate/pt-plan",Project.Id);  
+        if(responseGenerateReports.StatusCode == HttpStatusCode.OK)
+        { 
+            _isPlanGenerated = true;
+        }
+        else
+        {
+            _errorMessagePlanGenerate = "Uventet feil ved generering av plan";
+        }
     }
+    
 
     private static T BackUp<T>(T source)
     {

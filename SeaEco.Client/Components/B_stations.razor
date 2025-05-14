@@ -210,10 +210,14 @@ else
             await Js.InvokeVoidAsync("showModal", "#Modal");
             return;
         }
+
+        var newSurveyIdGuid =Guid.NewGuid();
+        Navigation.NavigateTo($"project/{Project.Id:D}/station/{stationId:D}/create-survey/{newSurveyIdGuid}");
+
         //Må sende brukeren til rett side for undersøkelse.
         //Navigation.NavigateTo(surveyId == null ? $"project/{Project.Id:D}/station/{stationId:D}/create-survey" 
-            //: $"project/{Project.Id:D}/station/{stationId:D}/edit-survey/{surveyId:D}");
-        
+        //: $"project/{Project.Id:D}/station/{stationId:D}/edit-survey/{surveyId:D}");
+
     }
 
     private async Task AddStation()
@@ -255,7 +259,6 @@ else
         {
             Project.Prosjektstatus = Prosjektstatus.Pagar;
             _updateStatus.Status = Prosjektstatus.Pagar;
-            _updateStatus.Merknad = "test";
             await Http.PutAsJsonAsync($"/api/Project/{Project.Id:D}/status", _updateStatus);
             await EditStationChanged.InvokeAsync(Project);
         }

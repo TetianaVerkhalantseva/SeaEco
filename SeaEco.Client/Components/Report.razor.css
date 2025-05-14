@@ -10,9 +10,9 @@
 
 @media (min-width: 1400px) {
     .min-width-box{
-        min-width:510px;
+        min-width:560px;
     }}
 @media (max-width: 1400px) {
     .min-width-box-sm{
-        min-width:300px;
+        min-width:350px;
     }}

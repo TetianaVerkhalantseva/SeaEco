@@ -17,7 +17,7 @@ else
             <div class="d-flex flex-fill w-100">
                 <h5>@Resources.HeaderProjectPlan</h5>
             </div>
-            @if (_projectPlanReports == null)
+            @if (_projectPlan == null)
             {
                 <div class="d-flex flex-fill w-100">
                     <p>Ingen prosjektplan generert</p>
@@ -33,16 +33,16 @@ else
                                     <div class="d-flex gap-3">
                                         <p class="mb-0">@Resources.InputTextReportType</p>
                                         <div class="flex-grow-1"></div>
-                                        <p class="mb-0 text-nowrap justify-content-end">@_projectPlanReports.RapportType</p>
+                                        <p class="mb-0 text-nowrap justify-content-end">@_projectPlan.SheetName</p>
                                     </div>
                                     <div class="d-flex gap-3">
                                         <p class="mb-0 text-nowrap">@Resources.InputTextReportDateGenerated</p>
                                         <div class="flex-grow-1"></div>
-                                        <p class="mb-0 justify-content-end text-nowrap">@_projectPlanReports.DateRegistered</p>
+                                        <p class="mb-0 justify-content-end text-nowrap">@DateOnly.FromDateTime(_projectPlan.DateCreated)</p>
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-center flex-xxl-column mt-2 mt-xxl-0">
-                                    <button class="btn custom-btn sm" type="button" @onclick="Download">
+                                    <button class="btn custom-btn sm" type="button" @onclick="() => Download(_projectPlan.Id)">
                                         Last ned
                                     </button>
                                 </div>
@@ -58,7 +58,7 @@ else
             <div class="d-flex flex-fill w-100 gap-xxl-3 gap-1 flex-xxl-row flex-column">
                 <div class="d-flex flex-column">
                     <h5>@Resources.PageReportDocumentsReport</h5>
-                    @if (_documentReports == null)
+                    @if (_documentReports == null )
                     {
                         <div class="d-flex flex-fill w-100">
                             <p>@Resources.PageReportNoReport</p>
@@ -96,7 +96,7 @@ else
                                                 </div>
                                             </div>
                                             <div class="d-flex justify-content-center flex-xxl-column mt-2 mt-xxl-0">
-                                                <button class="btn custom-btn sm" type="button" @onclick="Download">
+                                                <button class="btn custom-btn sm" type="button" @onclick="() => Download(report.Id)">
                                                     Last ned
                                                 </button>
                                             </div>
@@ -118,7 +118,7 @@ else
 @code {
     [Parameter] public ProjectDto? Project { get; set; }
     private bool _isLoading = true;
-    private ReportData? _projectPlanReports;
+    private ReportDto? _projectPlan;
     private GetReportsDto? _documentReports;
 
     protected override async Task OnInitializedAsync()
@@ -127,48 +127,38 @@ else
         if(responseReports.StatusCode == HttpStatusCode.OK)
         { 
             _documentReports = await responseReports.Content.ReadFromJsonAsync<GetReportsDto>();
-
+            if (_documentReports != null && !_documentReports.Reports.Any())
+            {
+                _documentReports = null;
+            }
         }
-        
-        _projectPlanReports  =
-        new ReportData { 
-            RapportType    = "PTP",
-            DateRegistered = new DateOnly(2025, 4, 19),
-            FullName = "Rikke G."}
-        ;
-        
-        _isLoading = false;
+        var responsePlan = await Http.GetAsync($"/api/Report/{Project.Id:D}/pt-plan");  
+        if(responsePlan.StatusCode == HttpStatusCode.OK)
+        { 
+            _projectPlan = await responsePlan.Content.ReadFromJsonAsync<ReportDto>();
+        }
 
+        _isLoading = false;
     }
 
-    private void GenerateReports()
+    private async Task GenerateReports()
     {
+        var responseGenerateReports = await Http.PostAsJsonAsync("/api/Report/generate/all",Project.Id);  
+        if(responseGenerateReports.StatusCode == HttpStatusCode.OK)
+        { 
+            var responseReports = await Http.GetAsync($"/api/Report/{Project.Id:D}/all");  
+            if(responseReports.StatusCode == HttpStatusCode.OK)
+            { 
+                _documentReports = await responseReports.Content.ReadFromJsonAsync<GetReportsDto>();
+            }
+        }
     }
 
     
-    private class ReportPicture
+    private async Task Download(Guid rapportId)
     {
-        public string? RapportType { get; set; }
-        public DateOnly? DateRegistered { get; set; }
-        public String? FullName { get; set; }
+        await Http.GetAsync($"/api/Report/{rapportId:D}");
     }
-
-    private void PrintReport()
-    {
-    }
-
-
-    private async Task Download()
-    {
-    }
-
-    private class ReportData
-    {
-        public string? RapportType { get; set; }
-        public DateOnly? DateRegistered { get; set; }
-        public String? FullName { get; set; }
-    }
-
 }
 
 
