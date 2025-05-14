@@ -56,6 +56,7 @@ public class StationService : IStationService
             .Select(s => new StationDto
             {
                 Id = s.Id,
+                ProsjektId = s.ProsjektId,
                 Nummer = s.Nummer,
                 KoordinatNord = s.KoordinatNord,
                 KoordinatOst = s.KoordinatOst,

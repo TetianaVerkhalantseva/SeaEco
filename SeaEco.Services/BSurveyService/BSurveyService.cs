@@ -31,9 +31,7 @@ public class BSurveyService: IBSurveyService
     {
         var survey = await _db.BUndersokelses
             .Include(s => s.Preinfo)
-            .Include(s => s.BBilders)
             .Include(s => s.BStasjon)
-            .Include(s => s.BUndersokelsesloggs)
             .Include(s => s.Blotbunn)
             .Include(s => s.Hardbunn)
             .Include(s => s.Sediment)
@@ -74,11 +72,6 @@ public class BSurveyService: IBSurveyService
                     Message = "Cannot find the preinfo with the same date"
                 };
             }
-
-            // foreach (var log in dto.BSurveyLogs)
-            // {
-            //     log.Id = Guid.NewGuid();
-            // }
             
             var station = await _db.BStasjons
                 .FirstOrDefaultAsync(s => s.Id == stationId && s.ProsjektId == projectId);
@@ -122,15 +115,28 @@ public class BSurveyService: IBSurveyService
         {
             var now = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
             dto.DatoEndret = DateTime.SpecifyKind(dto.DatoEndret ?? now, DateTimeKind.Unspecified);
-            
-            // foreach (var log in dto.BSurveyLogs)
-            // {
-            // }
-            
-            var entity = dto.ToEntity();
-            _db.BUndersokelses.Update(entity);
+
+            var existing = await _db.BUndersokelses
+                .Include(x => x.BStasjon)
+                .Include(x => x.Blotbunn)
+                .Include(x => x.Hardbunn)
+                .Include(x => x.Sediment)
+                .Include(x => x.Sensorisk)
+                .Include(x => x.Dyr)
+                .FirstOrDefaultAsync(x => x.Id == dto.Id);
+
+            if (existing == null)
+            {
+                return new EditSurveyResult
+                {
+                    IsSuccess = false,
+                    Message = "Survey not found."
+                };
+            }
+
+            existing.ApplyEditSurveyDto(dto);
             await _db.SaveChangesAsync();
-            
+
             return new EditSurveyResult
             {
                 IsSuccess = true,
@@ -139,12 +145,13 @@ public class BSurveyService: IBSurveyService
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
+            Console.WriteLine(ex);
             return new EditSurveyResult
             {
                 IsSuccess = false,
-                Message = "An error occured while updating the survey."
+                Message = "An error occurred while updating the survey."
             };
         }
     }
+
 }
