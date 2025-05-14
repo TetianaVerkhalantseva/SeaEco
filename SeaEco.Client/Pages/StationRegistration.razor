@@ -1,20 +1,19 @@
 @* if testing, comment out this line *@
-@* @page "/project/{ProjectId:guid}/station/{StationId:guid}/survey/{SurveyId:guid}" *@
+@page "/project/{ProjectId:guid}/station/{StationId:guid}/survey/{SurveyId:guid}"
 
 @using Microsoft.AspNetCore.Authorization
 @using SeaEco.Abstractions.Enums.Bsensorisk
 @using SeaEco.Abstractions.Extensions
 @using SeaEco.Abstractions.Models.BSurvey
-@using SeaEco.Abstractions.Models.Bundersokelse
 @inject HttpClient Http
-@* @attribute [Authorize] *@
+@attribute [Authorize]
 @inject NavigationManager Navigation
 @inject IJSRuntime Js
 
 @* If testing, uncomment these lines *@
-@page "/project/survey"
-@using SeaEco.Abstractions.Enums
-@using SeaEco.Abstractions.Models.BSurvey
+@* @page "/project/survey" *@
+@* @using SeaEco.Abstractions.Enums *@
+@* @using SeaEco.Abstractions.Models.BSurvey *@
 
 
 <h4>Stasjonsregistrering</h4>
@@ -309,6 +308,16 @@
 
 </div>
 
+@if (!string.IsNullOrWhiteSpace(_errorMessage))
+{
+    <div class="row justify-content-center">
+        <div class="col-12 text-center alert alert-danger mb-2" style="width: 60%;">
+            @_errorMessage
+        </div>
+    </div>
+}
+
+
 <div class="button-container">
     <button id="lastBtn" onclick="showLast()" class="custom-btn">Forrige</button>
     <button id="nextBtn" onclick="showNext()" class="custom-btn">Neste</button>
@@ -460,6 +469,8 @@
     private string? _selectedBunnType;
     private string? _selectedSensorisk;
     private string? _selectedDyr;
+
+    private string? _errorMessage;
     
     protected override async Task OnInitializedAsync()
     {
@@ -471,81 +482,84 @@
         try
         {
             // If testing, comment out this line
-            // _survey = await Http.GetFromJsonAsync<EditSurveyDto>($"api/Project/{ProjectId:guid}/station/{StationId:guid}/survey/{SurveyId:guid}");
-            
-            // If testing, uncomment these lines
-            _survey = new EditSurveyDto
+            _survey = await Http.GetFromJsonAsync<EditSurveyDto>($"api/Project/{ProjectId:guid}/station/{StationId:guid}/survey/{SurveyId:guid}");
+            if (_survey == null)
             {
-                Id = Guid.NewGuid(),
-                ProsjektId = Guid.NewGuid(),
-                PreinfoId = Guid.NewGuid(),
-                Feltdato = DateOnly.FromDateTime(DateTime.Now),
-                AntallGrabbhugg = 5,
-                GrabbhastighetGodkjent = true,
-                BlotbunnId = Guid.NewGuid(),
-                HardbunnId = null,
-                SedimentId = Guid.NewGuid(),
-                SensoriskId = Guid.NewGuid(),
-                Beggiatoa = true,
-                Forrester = false,
-                Fekalier = true,
-                DyrId = Guid.NewGuid(),
-                Merknader = "Simulated survey with some remarks.",
-                DatoRegistrert = DateTime.Now,
-                DatoEndret = DateTime.Now.AddDays(-1),
-                IndeksGr2Gr3 = 2.5f,
-                TilstandGr2Gr3 = 3,
+                _errorMessage = "Cannot find the survey in the database.";
+                StateHasChanged();
+                return;
+            }
             
-                // DTO properties
-                BStation = new BStationDto
-                {
-                    Id = Guid.NewGuid(),
-                    KoordinatNord = "66",
-                    KoordinatOst = "10",
-                    Dybde = 100
-                    
-                },
+            // Test code
+            // _survey = new EditSurveyDto
+            // {
+            //     Id = Guid.NewGuid(),
+            //     ProsjektId = Guid.NewGuid(),
+            //     PreinfoId = Guid.NewGuid(),
+            //     Feltdato = DateOnly.FromDateTime(DateTime.Now),
+            //     AntallGrabbhugg = 5,
+            //     GrabbhastighetGodkjent = true,
+            //     BlotbunnId = Guid.NewGuid(),
+            //     HardbunnId = null,
+            //     SedimentId = Guid.NewGuid(),
+            //     SensoriskId = Guid.NewGuid(),
+            //     Beggiatoa = true,
+            //     Forrester = false,
+            //     Fekalier = true,
+            //     DyrId = Guid.NewGuid(),
+            //     Merknader = "Simulated survey with some remarks.",
+            //     DatoRegistrert = DateTime.Now,
+            //     DatoEndret = DateTime.Now.AddDays(-1),
+            //     IndeksGr2Gr3 = 2.5f,
+            //     TilstandGr2Gr3 = 3,
+            //
+            //     // DTO properties
+            //     BStation = new BStationDto
+            //     {
+            //         Id = Guid.NewGuid(),
+            //         KoordinatNord = "66",
+            //         KoordinatOst = "10",
+            //         Dybde = 100
+            //         
+            //     },
+            //
+            //     BSoftBase = new BSoftBaseDto
+            //     {
+            //         Id = Guid.NewGuid(),
+            //         Leire = 1,
+            //         Sand = 1,
+            //         Skjellsand = 0
+            //     },
+            //     BAnimal = new BAnimalDto
+            //     {
+            //         Id = Guid.NewGuid(),
+            //         Pigghunder = "14",
+            //         Krepsdyr = "26",
+            //         Arter = "CC, OP"
+            //     },
+            //     
+            //     BHardBase = null,
+            //     
+            //     BSediment = new BSedimentDto
+            //     {
+            //         Id = Guid.NewGuid(),
+            //         Ph = 6,
+            //         Eh = 2,
+            //         Temperatur = 3
+            //     },
+            //     BSensorisk = new BSensoriskDto
+            //     {
+            //         Id = Guid.NewGuid(),
+            //         Farge = 0,
+            //         Lukt = 0,
+            //         Konsistens = 2,
+            //         Grabbvolum = 1,
+            //         Tykkelseslamlag = 1,
+            //         Gassbobler = 0
+            //     }
+            // };
+            // Test code
             
-                BSoftBase = new BSoftBaseDto
-                {
-                    Id = Guid.NewGuid(),
-                    Leire = 1,
-                    Sand = 1,
-                    Skjellsand = 0
-                },
-                BAnimal = new BAnimalDto
-                {
-                    Id = Guid.NewGuid(),
-                    Pigghunder = "14",
-                    Krepsdyr = "26",
-                    Arter = "CC, OP"
-                },
-                
-                BHardBase = null,
-                
-                // BPreInfo = new BPreInfoDto
-                // {
-                //     Id = Guid.NewGuid(),
-                // },
-                BSediment = new BSedimentDto
-                {
-                    Id = Guid.NewGuid(),
-                    Ph = 6,
-                    Eh = 2,
-                    Temperatur = 3
-                },
-                BSensorisk = new BSensoriskDto
-                {
-                    Id = Guid.NewGuid(),
-                    Farge = 0,
-                    Lukt = 0,
-                    Konsistens = 2,
-                    Grabbvolum = 1,
-                    Tykkelseslamlag = 1,
-                    Gassbobler = 0
-                }
-            };
-
             
             if (_survey?.BlotbunnId != null)
                 _selectedBunnType = "blot";
@@ -572,6 +586,6 @@
     
     private void HandleEdit()
     {
-        Navigation.NavigateTo("");
+        Navigation.NavigateTo($"/project/{ProjectId}/station/{StationId}/edit-survey/{SurveyId}");
     }
 }
