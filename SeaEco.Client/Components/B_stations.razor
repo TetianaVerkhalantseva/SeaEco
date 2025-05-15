@@ -211,8 +211,8 @@ else
             return;
         }
         //Må sende brukeren til rett side for undersøkelse.
-        //Navigation.NavigateTo(surveyId == null ? $"project/{Project.Id:D}/station/{stationId:D}/create-survey" 
-            //: $"project/{Project.Id:D}/station/{stationId:D}/edit-survey/{surveyId:D}");
+        var newSurveyId = Guid.NewGuid();
+        Navigation.NavigateTo( $"project/{Project.Id:D}/station/{stationId:D}/survey/{surveyId:D}");
         
     }
 
