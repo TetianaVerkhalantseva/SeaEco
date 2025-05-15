@@ -202,6 +202,7 @@ public class StationService : IStationService
             Station = new StationDto
             {
                 Id = stasjon.Id,
+                ProsjektId = stasjon.ProsjektId,
                 Nummer = stasjon.Nummer,
                 KoordinatNord = stasjon.KoordinatNord,
                 KoordinatOst = stasjon.KoordinatOst,
