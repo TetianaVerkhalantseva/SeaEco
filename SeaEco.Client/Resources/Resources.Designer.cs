@@ -848,5 +848,71 @@ namespace SeaEco.Client.Resources {
                 return ResourceManager.GetString("ModalComment", resourceCulture);
             }
         }
+        
+        internal static string ButtonReGenerateReports {
+            get {
+                return ResourceManager.GetString("ButtonReGenerateReports", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonGenerateReports {
+            get {
+                return ResourceManager.GetString("ButtonGenerateReports", resourceCulture);
+            }
+        }
+        
+        internal static string PageReportNoReport {
+            get {
+                return ResourceManager.GetString("PageReportNoReport", resourceCulture);
+            }
+        }
+        
+        internal static string PageReportDocumentsReport {
+            get {
+                return ResourceManager.GetString("PageReportDocumentsReport", resourceCulture);
+            }
+        }
+        
+        internal static string PageReportPicturesReport {
+            get {
+                return ResourceManager.GetString("PageReportPicturesReport", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextApprovedBy {
+            get {
+                return ResourceManager.GetString("InputTextApprovedBy", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextReportType {
+            get {
+                return ResourceManager.GetString("InputTextReportType", resourceCulture);
+            }
+        }
+        
+        internal static string InputTextReportDateGenerated {
+            get {
+                return ResourceManager.GetString("InputTextReportDateGenerated", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonNotApproved {
+            get {
+                return ResourceManager.GetString("ButtonNotApproved", resourceCulture);
+            }
+        }
+        
+        internal static string HeaderProjectPlan {
+            get {
+                return ResourceManager.GetString("HeaderProjectPlan", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonDownload {
+            get {
+                return ResourceManager.GetString("ButtonDownload", resourceCulture);
+            }
+        }
     }
 }

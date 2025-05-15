@@ -1,6 +1,160 @@
+@using System.Net
+@using SeaEco.Abstractions.Models.Project
+@using SeaEco.Client.Resources
+@using SeaEco.Abstractions.Enums
+@using SeaEco.Abstractions.Models.Report
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@inject IConfiguration Configuration
 
-<h3>Rapport-side er enda ikke utviklet</h3>
+@if (_isLoading)
+{
+}
+else
+{
+    <div class="d-flex mb-5">
+    <div class="d-flex flex-column align-items-center gap-3 mt-5 w-100">
+        
+        <div class="d-flex flex-column align-items-center box-border p-4 min-width-box min-width-box-sm">
+            <div class="d-flex flex-fill w-100">
+                <h5>@Resources.HeaderProjectPlan</h5>
+            </div>
+            @if (_projectPlan == null)
+            {
+                <div class="d-flex flex-fill w-100">
+                    <p>Ingen prosjektplan generert</p>
+                </div>
+            }
+            else
+            {
+                <div class="col mb-2 mt-xxl-4 mt-1 card-col">
+                    <div class="card d-flex">
+                        <div class="card-body">
+                            <div class="d-flex w-100 flex-xxl-row flex-column custom-gap">
+                                <div class="d-flex flex-column">
+                                    <div class="d-flex gap-3">
+                                        <p class="mb-0">@Resources.InputTextReportType</p>
+                                        <div class="flex-grow-1"></div>
+                                        <p class="mb-0 text-nowrap justify-content-end">@_projectPlan.SheetName</p>
+                                    </div>
+                                    <div class="d-flex gap-3">
+                                        <p class="mb-0 text-nowrap">@Resources.InputTextReportDateGenerated</p>
+                                        <div class="flex-grow-1"></div>
+                                        <p class="mb-0 justify-content-end text-nowrap">@DateOnly.FromDateTime(_projectPlan.DateCreated)</p>
+                                    </div>
+                                </div>
+                                    <div class="d-flex justify-content-center flex-xxl-column mt-2 mt-xxl-0">
+                                        <a href="@($"{Configuration["ApiBaseUrl"]?.TrimEnd('/')}/api/Report/{_projectPlan.Id}")" download class="btn custom-btn sm">
+                                            @Resources.ButtonDownload
+                                        </a>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        
+        
+        <div class="d-flex flex-column align-items-center mt-3 mb-3 box-border p-4 min-width-box min-width-box-sm">
+            <div class="d-flex flex-fill w-100 gap-xxl-3 gap-1 flex-xxl-row flex-column">
+                <div class="d-flex flex-column">
+                    <h5>@Resources.PageReportDocumentsReport</h5>
+                    @if (_documentReports == null )
+                    {
+                        <div class="d-flex flex-fill w-100">
+                            <p>@Resources.PageReportNoReport</p>
+                        </div>
+                    }
+                </div>
+                <div class="d-flex flex-grow-1"></div>
+                <div class="d-flex flex-xxl-column justify-content-center align-items-end">
+                    
+                    <span class="d-inline-block" title="@((Project.Prosjektstatus is not Prosjektstatus.Ferdig) ? "Prosjektet må ha status ferdig for å kunne (re)generere rapporter":"")">
+                    <button class="btn custom-btn " type="button" @onclick="GenerateReports" disabled="@(Project.Prosjektstatus is not Prosjektstatus.Ferdig)">
+                        @(_documentReports == null ? Resources.ButtonGenerateReports : Resources.ButtonReGenerateReports)
+                    </button>
+                    </span>
+                </div>
+            </div>
+            
+            @if(_documentReports != null)
+            {
+                <div class="card-container mt-3">
+                    <div class="d-flex justify-content-center flex-column gap-1">
+                        @foreach (var report in _documentReports.Reports)
+                        {
+                            <div class="col mb-2 card-col">
+                                <div class="card d-flex">
+                                    <div class="card-body">
+                                        <div class="d-flex w-100 flex-xxl-row flex-column custom-gap">
+                                            <div class="d-flex flex-column">
+                                                <div class="d-flex gap-3">
+                                                    <p class="mb-0">@Resources.InputTextReportType</p>
+                                                    <div class="flex-grow-1"></div>
+                                                    <p class="mb-0 text-nowrap justify-content-end">@report.SheetName</p>
+                                                </div>
+                                                <div class="d-flex gap-3">
+                                                    <p class="mb-0 text-nowrap">@Resources.InputTextReportDateGenerated</p>
+                                                    <div class="flex-grow-1"></div>
+                                                    <p class="mb-0 justify-content-end text-nowrap">@DateOnly.FromDateTime(report.DateCreated)</p>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-center flex-xxl-column mt-2 mt-xxl-0">
+                                                <a href="@($"{Configuration["ApiBaseUrl"]?.TrimEnd('/')}/api/Report/{report.Id}")" download class="btn custom-btn sm">
+                                                    @Resources.ButtonDownload
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    </div>
+}
+
+
 
 @code {
+    [Parameter] public ProjectDto? Project { get; set; }
+    private bool _isLoading = true;
+    private ReportDto? _projectPlan;
+    private GetReportsDto? _documentReports;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var responseReports = await Http.GetAsync($"/api/Report/{Project.Id:D}/all");  
+        if(responseReports.StatusCode == HttpStatusCode.OK)
+        { 
+            _documentReports = await responseReports.Content.ReadFromJsonAsync<GetReportsDto>();
+            if (_documentReports != null && !_documentReports.Reports.Any())
+            {
+                _documentReports = null;
+            }
+        }
+        var responsePlan = await Http.GetAsync($"/api/Report/{Project.Id:D}/pt-plan");  
+        if(responsePlan.StatusCode == HttpStatusCode.OK)
+        { 
+            _projectPlan = await responsePlan.Content.ReadFromJsonAsync<ReportDto>();
+        }
+
+        _isLoading = false;
+    }
+
+    private async Task GenerateReports()
+    {
+        var responseGenerateReports = await Http.PostAsJsonAsync("/api/Report/generate/all",Project.Id);  
+        if(responseGenerateReports.StatusCode == HttpStatusCode.OK)
+        {   
+            _documentReports = await responseGenerateReports.Content.ReadFromJsonAsync<GetReportsDto>();
+        }
+    }
     
 }
+
+

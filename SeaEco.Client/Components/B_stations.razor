@@ -32,9 +32,11 @@ else
             <span>Ingen feltinformasjon registrert</span>
         }
         <div class="d-flex gap-2 flex-column justify-content-center mt-3 ">
+            <span class="d-inline-block" title="@(_isProjectComplete? "Prosjektet har ikke satus nytt, pågår eller påbegynt" : _isPreInfoDateToday? "Det er allerede registrert preinformasjon for dagens dato":"")">
             <button class="btn custom-btn" type="button" disabled="@(_isPreInfoDateToday || _isProjectComplete)" @onclick="AddPreInfo">
                 + Ny preInfo
             </button>
+            </span>
             <div class="d-flex flex-grow-1"></div>
         </div>
     </div>
@@ -82,14 +84,19 @@ else
                     </div>
                 }
                 <div class="d-flex gap-2 flex-column flex-xxl-row justify-content-center mb-3">
-                    <button class="btn custom-btn" type="button" disabled="@(_isProjectComplete || Project.Prosjektstatus is not (Prosjektstatus.Pagar or Prosjektstatus.Ferdig))" @onclick="AddStation">
+                    <span class="d-inline-block" title="@((Project.Prosjektstatus is not (Prosjektstatus.Pagar))?"Prosjektet har ikke status pågår":"")">
+                    <button class="btn custom-btn" type="button" disabled="@(Project.Prosjektstatus is not (Prosjektstatus.Pagar))" @onclick="AddStation">
                         @Resources.ButtonAddNewStation
                     </button>
+                    </span>
                     <div class="d-flex flex-grow-1"></div>   
                     <AuthorizeView Roles="admin">
-                    <button class="btn custom-btn" type="button" disabled="@(!_isExistingStations)" @onclick="DoneStationRegistration">
-                        @(_isProjectComplete ? "Gjenåpne" : Resources.ButtonComplete)
-                    </button>       
+                        
+                        <span class="d-inline-block" title="@((Project.Prosjektstatus is not (Prosjektstatus.Pagar or Prosjektstatus.Ferdig))?"Prosjektet har ikke status pågår":!_isExistingStations?"Det eksisterer ingen registrerte stasjoner":"")">
+                        <button class="btn custom-btn" type="button" disabled="@(!_isExistingStations)" @onclick="DoneStationRegistration">
+                            @(_isProjectComplete ? "Gjenåpne" : Resources.ButtonComplete)
+                        </button>
+                         </span>
                     </AuthorizeView >
                 </div>
             </div>  
@@ -210,10 +217,12 @@ else
             await Js.InvokeVoidAsync("showModal", "#Modal");
             return;
         }
-        //Må sende brukeren til rett side for undersøkelse.
-        //Navigation.NavigateTo(surveyId == null ? $"project/{Project.Id:D}/station/{stationId:D}/create-survey" 
-            //: $"project/{Project.Id:D}/station/{stationId:D}/edit-survey/{surveyId:D}");
+
+        var newSurveyIdGuid =Guid.NewGuid();
         
+        Navigation.NavigateTo(surveyId == null ? $"project/{Project.Id:D}/station/{stationId:D}/create-survey/{newSurveyIdGuid}": 
+            $"project/{Project.Id:D}/station/{stationId:D}/survey/{surveyId:D}");
+
     }
 
     private async Task AddStation()
@@ -255,7 +264,6 @@ else
         {
             Project.Prosjektstatus = Prosjektstatus.Pagar;
             _updateStatus.Status = Prosjektstatus.Pagar;
-            _updateStatus.Merknad = "test";
             await Http.PutAsJsonAsync($"/api/Project/{Project.Id:D}/status", _updateStatus);
             await EditStationChanged.InvokeAsync(Project);
         }

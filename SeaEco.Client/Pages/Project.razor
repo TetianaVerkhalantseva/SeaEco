@@ -1,6 +1,7 @@
 @page "/project/{ProjectId:guid}"
 @using System.Text.Json
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.WebUtilities
 @using SeaEco.Abstractions.Enums
 @using SeaEco.Abstractions.Extensions
 @using SeaEco.Abstractions.Models.Lokalitet
@@ -11,6 +12,7 @@
 @using SeaEco.Client.Components
 @inject HttpClient Http
 @inject IJSRuntime Js
+@inject NavigationManager NavigationManager
 
 @if (_project == null || _isLoading)
 {
@@ -236,7 +238,7 @@ else
                 <B_stations Project="_projectCopy" EditStationChanged="@OnEditStationChanged"></B_stations>
                 break;
             case "projectReport":
-                <Report></Report>
+                <Report Project="_projectCopy"></Report>
                 break;
         }
 
@@ -296,7 +298,7 @@ else
                 _location = await Http.GetFromJsonAsync<List<LokalitetDto>>($"api/Lokalitet");
                 _editContext = new EditContext(_project);
                 _selectedLocationId = _project.LokalitetsId;
-                _stationDatesString = string.Join(", ", _project.Feltdatoer.Select(d => d.ToString("yyyy-MM-dd")));
+                _stationDatesString = string.Join(", ", _project.Feltdatoer.Select(d => d.ToString("dd.MM.yyyy")));
             }
         }
         catch (Exception ex)
@@ -307,9 +309,23 @@ else
         finally
         {
             _isLoading = false;
-        }
-}
+        } 
+    }
 
+    protected override void OnParametersSet()
+    {
+        var uri   = new Uri(NavigationManager.Uri);
+        var query = QueryHelpers.ParseQuery(uri.Query);
+
+        if (query.TryGetValue("tab", out var tabValue))
+        {
+            _activeTab = tabValue!;
+        }
+        else
+        {
+            _activeTab = "projectPlan";
+        }
+    }
 
     private void OnClickProjectInformation()
     {

@@ -1,3 +1,4 @@
+@using System.Net
 @using System.Text.Json
 @using SeaEco.Abstractions.Enums
 @using SeaEco.Client.Resources
@@ -17,7 +18,7 @@ else
         <EditForm EditContext="_editContext" OnValidSubmit="EditProjectPlan">
             <DataAnnotationsValidator /> 
             <div class="d-flex flex-column gap-3 box-border p-4 min-width-plan">
-                <span>@Resources.HeaderGeneralPlanInfo</span>
+                <h5>@Resources.HeaderGeneralPlanInfo</h5>
                 <div class="d-flex form-floating">
                     <InputSelect @bind-Value="_newPlan.PlanleggerId" id="user1" class="form-control" disabled="@(!EditProjectPlanVar)">
                         <option value=""></option>
@@ -35,10 +36,12 @@ else
                 </div>
                 <div class="d-flex justify-content-end w-100">
                     @if (!EditProjectPlanVar)
-                    {
-                        <button class="btn custom-btn" type="button" @onclick="OnClickProjectPlan" disabled="@(EditProjectStationPlanVar || _isAddingNewStation || Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt))">
-                            @(_isExistingPlan ? Resources.ButtonEdit : Resources.ButtonCreat)
-                        </button>
+                    { 
+                        <span class="d-inline-block" title="@(Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt)? "Prosjektet har ikke satus påbegyn eller nytt" : (EditProjectStationPlanVar || _isAddingNewStation)?"Du holder på å redigere eller legge til informasjon i prosjektplan":"")">
+                            <button class="btn custom-btn" type="button" @onclick="OnClickProjectPlan" disabled="@(EditProjectStationPlanVar || _isAddingNewStation || Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt))">
+                                @(_isExistingPlan ? Resources.ButtonEdit : Resources.ButtonCreat)
+                            </button>
+                            </span>
                     }
                     else
                     {
@@ -68,186 +71,209 @@ else
             </div>
         </EditForm>
         
-        @if (_isExistingPlan) 
-        {
-            foreach(var station in _editStationPlan)
+        @*<div class="d-flex flex-column flex-xxl-row gap-3">*@
+        
+            @if (_isExistingPlan) 
             {
-                <div @key="station.Id">
-                    @if (_editingStationId == station.Id)
-                    {
-                        <EditForm Model="station" OnValidSubmit="@(() => SaveEditedStation(station))">
-                            <DataAnnotationsValidator/>
+                foreach(var station in _editStationPlan)
+                {
+                    <div @key="station.Id">
+                        @if (_editingStationId == station.Id)
+                        {
+                            <EditForm Model="station" OnValidSubmit="@(() => SaveEditedStation(station))">
+                                <DataAnnotationsValidator/>
+                                <div class="d-flex flex-column gap-3 mt-3 box-border p-4">
+                                    <div class="d-flex">
+                                        <h5>@Resources.InputTextStation @station.Nummer</h5>
+                                        <div class="flex-grow-1"></div>
+                                        @if (EditProjectStationPlanVar)
+                                        {
+                                            <span class="bi bi-x-circle show cursor" @onclick="@(() => RemoveStation(station.Id))">
+                                            </span>
+                                        }
+                                    </div>
+
+                                    <div class="d-flex flex-xxl-row flex-column gap-3">
+                                        <div class="d-flex form-floating">
+                                            <InputNumber class="form-control"  TValue="int" id=@($"positionNg_{station.Nummer}")  @bind-Value="station.NorthDegree" disabled="@(!EditProjectStationPlanVar)"/>
+                                            <label for="positionNg_@station.Nummer">@Resources.InputTextNorthDegree</label>
+                                        </div>
+                                        <div class="d-flex form-floating">
+                                            <InputNumber  class="form-control" TValue="float" id=@($"positionNm_{station.Nummer}") @bind-Value="station.NorthMinutes" disabled="@(!EditProjectStationPlanVar)"/>
+                                            <label for="positionNm_@station.Nummer">@Resources.InputTextNorthMinutes</label>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex flex-xxl-row flex-column gap-3">
+                                        <div class="d-flex form-floating">
+                                            <InputNumber  class="form-control" TValue="int" id=@($"positionEg_{station.Nummer}")  @bind-Value="station.EastDegree" disabled="@(!EditProjectStationPlanVar)"/>
+                                            <label for="positionEg_@station.Nummer">@Resources.InputTextEsthDegree</label>
+                                        </div>
+                                        <div class="d-flex form-floating">
+                                            <InputNumber  class="form-control"  TValue="float" id=@($"positionEm_{station.Nummer}") @bind-Value=" station.EastMinutes" disabled="@(!EditProjectStationPlanVar)"/>
+                                            <label for="positionEm_@station.Nummer">@Resources.InputTextEsthMinutes</label>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex form-floating">
+                                        <InputNumber  class="form-control"  TValue="int" id=@($"depth_{station.Nummer}") @bind-Value="station.Dybde" disabled="@(!EditProjectStationPlanVar)"/>
+                                        <label for="depth_@station.Nummer">@Resources.InputTextDepth</label>
+                                    </div>
+                                    <div class="d-flex form-floating">
+                                        <InputText class="form-control" id=@($"method_{station.Nummer}") @bind-Value="station.Analyser" disabled="@(!EditProjectStationPlanVar)"/>
+                                        <label for="method_@station.Nummer">@Resources.InputTextMethod</label>
+                                    </div>
+                                    <div class="d-flex flex-column flex-xxl-row w-100">
+                                        <div class="d-flex flex-grow-1"></div>
+                                        <div class="d-flex gap-2 justify-content-center">
+                                            <button class="btn custom-outline-secondary-btn" type="button" @onclick="CancelEditProjectStationPlan">
+                                                @Resources.ButtonCancel
+                                            </button>
+                                            <button class="btn custom-btn" type="submit">
+                                                @Resources.ButtonSave
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class=" text-center">
+                                        <div class="custom-validation-summary">
+                                            <ValidationSummary/>
+                                        </div>
+                                        @if (!string.IsNullOrEmpty(_errorMessage))
+                                        {
+                                            <p class="text-danger">@_errorMessage</p>
+                                        }
+                                    </div>
+                                </div>
+                            </EditForm>
+                        }
+                        else
+                        {
+                        
                             <div class="d-flex flex-column gap-3 mt-3 box-border p-4">
                                 <div class="d-flex">
-                                    <span>@Resources.InputTextStation @station.Nummer</span>
+                                    <h5>@Resources.InputTextStation @station.Nummer</h5>
                                     <div class="flex-grow-1"></div>
-                                    @if (EditProjectStationPlanVar)
-                                    {
-                                        <span class="bi bi-x-circle show cursor" @onclick="@(() => RemoveStation(station.Id))">
-                                        </span>
-                                    }
-                                </div>
-
-                                <div class="d-flex flex-xxl-row flex-column gap-3">
-                                    <div class="d-flex form-floating">
-                                        <InputNumber class="form-control"  TValue="int" id=@($"positionNg_{station.Nummer}")  @bind-Value="station.NorthDegree" disabled="@(!EditProjectStationPlanVar)"/>
-                                        <label for="positionNg_@station.Nummer">@Resources.InputTextNorthDegree</label>
-                                    </div>
-                                    <div class="d-flex form-floating">
-                                        <InputNumber  class="form-control" TValue="float" id=@($"positionNm_{station.Nummer}") @bind-Value="station.NorthMinutes" disabled="@(!EditProjectStationPlanVar)"/>
-                                        <label for="positionNm_@station.Nummer">@Resources.InputTextNorthMinutes</label>
-                                    </div>
                                 </div>
                                 <div class="d-flex flex-xxl-row flex-column gap-3">
                                     <div class="d-flex form-floating">
-                                        <InputNumber  class="form-control" TValue="int" id=@($"positionEg_{station.Nummer}")  @bind-Value="station.EastDegree" disabled="@(!EditProjectStationPlanVar)"/>
-                                        <label for="positionEg_@station.Nummer">@Resources.InputTextEsthDegree</label>
+                                        <InputText class="form-control" id=@($"positionNg_{station}")  @bind-Value="station.KoordinatNord" disabled/>
+                                        <label for="positionNg_@station">@Resources.InputTextNorthCoordinates</label>
                                     </div>
                                     <div class="d-flex form-floating">
-                                        <InputNumber  class="form-control"  TValue="float" id=@($"positionEm_{station.Nummer}") @bind-Value=" station.EastMinutes" disabled="@(!EditProjectStationPlanVar)"/>
-                                        <label for="positionEm_@station.Nummer">@Resources.InputTextEsthMinutes</label>
+                                        <InputText class="form-control" id=@($"positionEg_{station}")  @bind-Value="station.KoordinatOst" disabled/>
+                                        <label for="positionEg_@station">@Resources.InputTextEsthCoordinates</label>
                                     </div>
                                 </div>
                                 <div class="d-flex form-floating">
-                                    <InputNumber  class="form-control"  TValue="int" id=@($"depth_{station.Nummer}") @bind-Value="station.Dybde" disabled="@(!EditProjectStationPlanVar)"/>
-                                    <label for="depth_@station.Nummer">@Resources.InputTextDepth</label>
+                                    <InputNumber class="form-control" id=@($"depth_{station}") @bind-Value="station.Dybde" disabled/>
+                                    <label for="depth_@station">@Resources.InputTextDepth</label>
                                 </div>
                                 <div class="d-flex form-floating">
-                                    <InputText class="form-control" id=@($"method_{station.Nummer}") @bind-Value="station.Analyser" disabled="@(!EditProjectStationPlanVar)"/>
-                                    <label for="method_@station.Nummer">@Resources.InputTextMethod</label>
+                                    <InputText class="form-control" id=@($"method_{station}") @bind-Value="station.Analyser" disabled/>
+                                    <label for="method_@station">@Resources.InputTextMethod</label>
                                 </div>
-                                <div class="d-flex flex-column flex-xxl-row w-100">
+                        
+                                <div class="d-flex mb-3">
                                     <div class="d-flex flex-grow-1"></div>
-                                    <div class="d-flex gap-2 justify-content-center">
-                                        <button class="btn custom-outline-secondary-btn" type="button" @onclick="CancelEditProjectStationPlan">
-                                            @Resources.ButtonCancel
-                                        </button>
-                                        <button class="btn custom-btn" type="submit">
-                                            @Resources.ButtonSave
-                                        </button>
-                                    </div>
+                                    <span class="d-inline-block" title="@(Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt)? "Prosjektet har ikke satus påbegyn eller nytt" : (EditProjectStationPlanVar || EditProjectPlanVar || _isAddingNewStation)?"Du holder på å redigere eller legge til informasjon i prosjektplan":"")">
+                                    <button class="btn custom-btn" type="button" @onclick="() => OnClickProjectStationPlan(station)" disabled="@(EditProjectStationPlanVar || EditProjectPlanVar || _isAddingNewStation || Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt))">
+                                        @Resources.ButtonEdit
+                                    </button>
+                                    </span>
                                 </div>
-
-                                <div class=" text-center">
-                                    <div class="custom-validation-summary">
-                                        <ValidationSummary/>
-                                    </div>
-                                    @if (!string.IsNullOrEmpty(_errorMessage))
-                                    {
-                                        <p class="text-danger">@_errorMessage</p>
-                                    }
-                                </div>
-                            </div>
-                        </EditForm>
-                    }
-                    else
-                    {
                         
-                    <div class="d-flex flex-column gap-3 mt-3 box-border p-4">
-                        <div class="d-flex">
-                            <span>@Resources.InputTextStation @station.Nummer</span>
-                            <div class="flex-grow-1"></div>
-                        </div>
-                        <div class="d-flex flex-xxl-row flex-column gap-3">
-                            <div class="d-flex form-floating">
-                                <InputText class="form-control" id=@($"positionNg_{station}")  @bind-Value="station.KoordinatNord" disabled/>
-                                <label for="positionNg_@station">@Resources.InputTextNorthCoordinates</label>
                             </div>
-                            <div class="d-flex form-floating">
-                                <InputText class="form-control" id=@($"positionEg_{station}")  @bind-Value="station.KoordinatOst" disabled/>
-                                <label for="positionEg_@station">@Resources.InputTextEsthCoordinates</label>
-                            </div>
-                        </div>
-                        <div class="d-flex form-floating">
-                            <InputNumber class="form-control" id=@($"depth_{station}") @bind-Value="station.Dybde" disabled/>
-                            <label for="depth_@station">@Resources.InputTextDepth</label>
-                        </div>
-                        <div class="d-flex form-floating">
-                            <InputText class="form-control" id=@($"method_{station}") @bind-Value="station.Analyser" disabled/>
-                            <label for="method_@station">@Resources.InputTextMethod</label>
-                        </div>
-                        
-                            <div class="d-flex mb-3">
-                                <div class="d-flex flex-grow-1"></div>
-                                <button class="btn custom-btn" type="button" @onclick="() => OnClickProjectStationPlan(station)" disabled="@(EditProjectStationPlanVar || EditProjectPlanVar || _isAddingNewStation || Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt))">
-                                    @Resources.ButtonEdit
-                                </button>
-                            </div>
-                        
+                        }
                     </div>
                 }
-                </div>
-            }
 
-            if (_isAddingNewStation)
+                if (_isAddingNewStation)
                 {
                     <EditForm Model="_newStationPlan" OnValidSubmit="SaveNewStation">
-                    <DataAnnotationsValidator />
-                    <div class="d-flex flex-column gap-3 mt-3 box-border p-4">
-                        <div class="d-flex">
-                            <span>@Resources.HeaderNewStation</span>
-                            <div class="flex-grow-1"></div>
-                        </div>
-                        <div class="d-flex flex-xxl-row flex-column gap-3">
-                            <div class="d-flex form-floating">
-                                <InputNumber  class="form-control" TValue="int" @bind-Value="_newStationPlan.NorthDegree"/>
-                                <label>@Resources.InputTextNorthDegree</label>
+                        <DataAnnotationsValidator />
+                        <div class="d-flex flex-column gap-3 mt-3 box-border p-4">
+                            <div class="d-flex">
+                                <span>@Resources.HeaderNewStation</span>
+                                <div class="flex-grow-1"></div>
+                            </div>
+                            <div class="d-flex flex-xxl-row flex-column gap-3">
+                                <div class="d-flex form-floating">
+                                    <InputNumber  class="form-control" TValue="int" @bind-Value="_newStationPlan.NorthDegree"/>
+                                    <label>@Resources.InputTextNorthDegree</label>
+                                </div>
+                                <div class="d-flex form-floating">
+                                    <InputNumber  class="form-control" TValue="float" @bind-Value="_newStationPlan.NorthMinutes"/>
+                                    <label>@Resources.InputTextNorthMinutes</label>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-xxl-row flex-column gap-3">
+                                <div class="d-flex form-floating">
+                                    <InputNumber  class="form-control" TValue="int" @bind-Value="_newStationPlan.EastDegree"/>
+                                    <label>@Resources.InputTextEsthDegree</label>
+                                </div>
+                                <div class="d-flex form-floating">
+                                    <InputNumber  class="form-control" TValue="float" @bind-Value="_newStationPlan.EastMinutes"/>
+                                    <label>@Resources.InputTextEsthMinutes</label>
+                                </div>
                             </div>
                             <div class="d-flex form-floating">
-                                <InputNumber  class="form-control" TValue="float" @bind-Value="_newStationPlan.NorthMinutes"/>
-                                <label>@Resources.InputTextNorthMinutes</label>
-                            </div>
-                        </div>
-                        <div class="d-flex flex-xxl-row flex-column gap-3">
-                            <div class="d-flex form-floating">
-                                <InputNumber  class="form-control" TValue="int" @bind-Value="_newStationPlan.EastDegree"/>
-                                <label>@Resources.InputTextEsthDegree</label>
+                                <InputNumber  class="form-control"  TValue="int" @bind-Value="_newStationPlan.Dybde"/>
+                                <label >@Resources.InputTextDepth</label>
                             </div>
                             <div class="d-flex form-floating">
-                                <InputNumber  class="form-control" TValue="float" @bind-Value="_newStationPlan.EastMinutes"/>
-                                <label>@Resources.InputTextEsthMinutes</label>
+                                <InputText class="form-control" @bind-Value="_newStationPlan.Analyser"/>
+                                <label>@Resources.InputTextMethod</label>
                             </div>
-                        </div>
-                        <div class="d-flex form-floating">
-                            <InputNumber  class="form-control"  TValue="int" @bind-Value="_newStationPlan.Dybde"/>
-                            <label >@Resources.InputTextDepth</label>
-                        </div>
-                        <div class="d-flex form-floating">
-                            <InputText class="form-control" @bind-Value="_newStationPlan.Analyser"/>
-                            <label>@Resources.InputTextMethod</label>
-                        </div>
-                        <div class="d-flex flex-column flex-xxl-row w-100">
-                            <div class="d-flex flex-grow-1"></div>
-                            <div class="d-flex gap-2 justify-content-center">
-                                <button class="btn custom-outline-secondary-btn" type="button" @onclick="CancelNewProjectStationPlan">
-                                    @Resources.ButtonCancel
-                                </button>
-                                <button class="btn custom-btn" type="submit">
-                                    @Resources.ButtonSave
-                                </button>
+                            <div class="d-flex flex-column flex-xxl-row w-100">
+                                <div class="d-flex flex-grow-1"></div>
+                                <div class="d-flex gap-2 justify-content-center">
+                                    <button class="btn custom-outline-secondary-btn" type="button" @onclick="CancelNewProjectStationPlan">
+                                        @Resources.ButtonCancel
+                                    </button>
+                                    <button class="btn custom-btn" type="submit">
+                                        @Resources.ButtonSave
+                                    </button>
+                                </div>
                             </div>
-                        </div>
                         
-                        <div class=" text-center">
-                            <div class="custom-validation-summary">
-                                <ValidationSummary/>
+                            <div class=" text-center">
+                                <div class="custom-validation-summary">
+                                    <ValidationSummary/>
+                                </div>
+                                @if (!string.IsNullOrEmpty(_errorMessage))
+                                {
+                                    <p class="text-danger">@_errorMessage</p>
+                                }
                             </div>
-                            @if (!string.IsNullOrEmpty(_errorMessage))
-                            {
-                                <p class="text-danger">@_errorMessage</p>
-                            }
                         </div>
-                    </div>
                     </EditForm>
                 }
-        }
-        <div class="d-flex mb-5 mt-3">
+            }
+        
+        @*</div>*@
+        
+        <div class="d-flex mb-5 mt-3 gap-3 flex-column">
+            <div class="d-flex flex-column flex-xxl-row">
+                <span class="d-inline-block" title="@(Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt)? "Prosjektet har ikke satus påbegyn eller nytt" :!_isExistingPlan? "Generell informasjon er ikke oppretet for planen" :(EditProjectStationPlanVar || EditProjectPlanVar || _isAddingNewStation)?"Du holder på å redigere eller legge til informasjon i prosjektplan":"")">
                 <button class="btn custom-btn" type="button" disabled="@(EditProjectStationPlanVar || EditProjectPlanVar || !_isExistingPlan || _isAddingNewStation || Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt))" @onclick="AddStation">
                     @Resources.ButtonAddStation
                 </button>
+                </span>
                 <div class="d-flex flex-grow-1"></div>
+                <span class="d-inline-block" title="@(Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt)? "Prosjektet har ikke satus påbegyn eller nytt" :!_isExistingPlan? "Generell informasjon er ikke oppretet for planen" :(EditProjectStationPlanVar || EditProjectPlanVar || _isAddingNewStation)?"Du holder på å redigere eller legge til informasjon i prosjektplan":"")">
+                <button class="btn custom-btn" type="button" disabled="@(EditProjectStationPlanVar || EditProjectPlanVar || !_isExistingPlan || _isAddingNewStation || Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt))" @onclick="GenerateProjectPlanReport">
+                    @(!_isPlanGenerated ? "Generer plan" : "Regenerer plan")
+                </button>
+                </span>
+            </div>
+            <div class=" text-center">
+                @if (!string.IsNullOrEmpty(_errorMessagePlanGenerate))
+                {
+                    <p class="text-danger">@_errorMessagePlanGenerate</p>
+                }
+            </div>
         </div>
     </div>
+    
 }
 
 
@@ -269,6 +295,7 @@ else
     private DateOnly _selectedDate;
     private EditContext _editContext;
     private bool _isExistingPlan;
+    private bool _isPlanGenerated = false;
     private string? _errorMessageProjectPlan;
     
     //New station plan
@@ -285,6 +312,7 @@ else
     private List<UpdateStationDto> _editStationPlanBackup = new();
     
     private string? _errorMessage;
+    private string? _errorMessagePlanGenerate;
     
     
     protected override async Task OnInitializedAsync()
@@ -304,12 +332,9 @@ else
             var response2 = await Http.GetAsync($"/api/Project/{Project.Id:D}/sampling-plan/{_existingPlan.Id:D}/stations");
             if (response2.IsSuccessStatusCode)
             {
-                _existingStationPlan = await response2.Content.ReadFromJsonAsync<List<UpdateStationDto>>();
-                var existingStationJason = JsonSerializer.Serialize(_existingStationPlan );
-                _editStationPlan = JsonSerializer.Deserialize<List<UpdateStationDto>>(existingStationJason)!;
-
+                _existingStationPlan = await response2.Content.ReadFromJsonAsync<List<UpdateStationDto>>(); 
+                _editStationPlan = BackUp(_existingStationPlan);
                 _editStationPlan?.Sort((a, b) => a.Nummer.CompareTo(b.Nummer));
-
                 _editStationPlanBackup = BackUp(_editStationPlan);
                 _isExistingStationPlan = true;
             }
@@ -317,6 +342,12 @@ else
         _editContext = new EditContext(_newPlan);
         _editStationPlanContext = new EditContext(_editStationPlan);
         _newStationPlanContext = new EditContext(_newStationPlan);
+        
+        var isPlanGeneratedResponse = await Http.GetAsync($"/api/report/{Project.Id:D}/pt-plan");
+        if (isPlanGeneratedResponse.IsSuccessStatusCode)
+        {
+            _isPlanGenerated = true;
+        }
 
         _isLoading = false;
     }
@@ -487,6 +518,21 @@ else
             _errorMessage = Resources.ErrorMessageUnexpected;
         }
     }
+
+    private async Task GenerateProjectPlanReport()
+    {
+        _errorMessagePlanGenerate = string.Empty;
+        var responseGenerateReports = await Http.PostAsJsonAsync("/api/Report/generate/pt-plan",Project.Id);  
+        if(responseGenerateReports.StatusCode == HttpStatusCode.OK)
+        { 
+            _isPlanGenerated = true;
+        }
+        else
+        {
+            _errorMessagePlanGenerate = "Uventet feil ved generering av plan";
+        }
+    }
+    
 
     private static T BackUp<T>(T source)
     {

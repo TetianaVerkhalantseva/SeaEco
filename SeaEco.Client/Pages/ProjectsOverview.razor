@@ -141,17 +141,20 @@
             </div>
 
             <div class="card-container d-block d-xxl-none">
-                <div class="row" style="justify-content: center;">
+                <div class="row justify-content-center" >
                     @foreach (var project in SortedProjects)
                     {
                         <div class="col mb-3 card-col">
                             <div class="card cursor" @onclick="() => OnRowClick(project.Id)">
                                 <div class="card-body text-center @GetStatus(project.Prosjektstatus.GetDescription())">
                                     <h5 class="card-title">@project.ProsjektIdSe</h5>
-                                    <span class="corner-text">@project.Prosjektstatus.GetDescription()</span>
+                                    <span class="corner-text fw-bold">@project.Prosjektstatus.GetDescription()</span>
                                 </div>
                                 <ul class="list-group list-group-flush">
-                                    <li class="list-group-item">@Resources.TableHeaderLocality: @project.Lokalitetsnavn</li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span>@Resources.TableHeaderLocality:</span>
+                                        <span>@project.Lokalitetsnavn</span>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -266,8 +269,8 @@
             //Default sorting by status and date
             if (string.IsNullOrEmpty(_currentSortColumn))
                 return FilterProjects?.OrderBy(projects => projects.Prosjektstatus).ThenByDescending(projects => projects.StationDatesString).ToList();
-
-
+            
+            
             var sorted = _currentSortColumn switch
             {
                 var col when col == Resources.TableHeaderCustomer => _sortAscending
@@ -284,7 +287,7 @@
                     : FilterProjects.OrderByDescending(p => p.Tilstand),
                 var col when col == Resources.TableHeaderProjectStatus => _sortAscending
                     ? FilterProjects.OrderBy(p => p.Prosjektstatus.GetDescription())
-                    : FilterProjects.OrderByDescending(p => p.Produksjonsstatus.GetDescription()),
+                    : FilterProjects.OrderByDescending(p => p.Prosjektstatus.GetDescription()),
                 var col when col == Resources.TableHeaderProductionStatus => _sortAscending
                     ? FilterProjects.OrderBy(p => p.Produksjonsstatus.GetDescription())
                     : FilterProjects.OrderByDescending(p => p.Produksjonsstatus.GetDescription()),
@@ -336,6 +339,7 @@
     }
 
 }
+
 
 
 

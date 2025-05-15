@@ -460,4 +460,37 @@
     <data name="ModalComment" xml:space="preserve">
         <value>Merknad :</value>
     </data>
+    <data name="ButtonReGenerateReports" xml:space="preserve">
+        <value>+ Regenerer rapporter</value>
+    </data>
+    <data name="ButtonGenerateReports" xml:space="preserve">
+        <value>+ Generer rapport</value>
+    </data>
+    <data name="PageReportNoReport" xml:space="preserve">
+        <value>Ingen rapporter generert</value>
+    </data>
+    <data name="PageReportDocumentsReport" xml:space="preserve">
+        <value>Rapporter</value>
+    </data>
+    <data name="PageReportPicturesReport" xml:space="preserve">
+        <value>Bilderapporter</value>
+    </data>
+    <data name="InputTextApprovedBy" xml:space="preserve">
+        <value>Godkjent av:</value>
+    </data>
+    <data name="InputTextReportType" xml:space="preserve">
+        <value>Rapporttype:</value>
+    </data>
+    <data name="InputTextReportDateGenerated" xml:space="preserve">
+        <value>Dato generert:</value>
+    </data>
+    <data name="ButtonNotApproved" xml:space="preserve">
+        <value>Ikke godkjent</value>
+    </data>
+    <data name="HeaderProjectPlan" xml:space="preserve">
+        <value>Prøvetakingsplan</value>
+    </data>
+    <data name="ButtonDownload" xml:space="preserve">
+        <value>Last ned</value>
+    </data>
 </root>

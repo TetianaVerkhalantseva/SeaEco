@@ -1,0 +1,18 @@
+
+.line {
+    border-top: solid 1px lightgray !important;
+}
+
+@media (min-width: 1400px) {
+.custom-gap {
+    gap: 8rem
+}}
+
+@media (min-width: 1400px) {
+    .min-width-box{
+        min-width:560px;
+    }}
+@media (max-width: 1400px) {
+    .min-width-box-sm{
+        min-width:350px;
+    }}

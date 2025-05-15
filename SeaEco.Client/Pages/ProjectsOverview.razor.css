@@ -78,12 +78,13 @@
 
 .card-body {
     position: relative;
+    min-height:70px;
 }
 
 .card-bottom{
     padding: .3rem;
     background-color: white;
-    border: 1px solid #ccc;
+    border: 1px solid #1f1f1f;
     border-bottom-left-radius: .3rem;
     border-bottom-right-radius: .3rem;
     border-top: none;
