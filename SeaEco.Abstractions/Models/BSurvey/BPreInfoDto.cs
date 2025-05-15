@@ -3,10 +3,10 @@ namespace SeaEco.Abstractions.Models.BSurvey;
 public class BPreInfoDto
 {
     public Guid Id { get; set; }
-
-    public Guid ProsjektId { get; set; }
-
-    public DateTime Feltdato { get; set; }
-
-    public Guid FeltansvarligId { get; set; }
+    
+    public float Ph { get; set; }
+    
+    public float Eh { get; set; }
+    
+    public float Temperatur { get; set; }
 }

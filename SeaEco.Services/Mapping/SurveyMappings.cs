@@ -29,14 +29,6 @@ public static class SurveyMappings
             DatoEndret = entity.DatoEndret,
             IndeksGr2Gr3 = entity.IndeksGr2Gr3,
             TilstandGr2Gr3 = entity.TilstandGr2Gr3,
-            
-            BPreInfo = new BPreInfoDto
-            {
-                Id = entity.Preinfo.Id,
-                ProsjektId = entity.Preinfo.ProsjektId,
-                Feltdato = entity.Preinfo.Feltdato,
-                FeltansvarligId = entity.Preinfo.FeltansvarligId
-            },
 
             BSoftBase = entity.Blotbunn != null ? new BSoftBaseDto
             {
@@ -109,17 +101,6 @@ public static class SurveyMappings
                 Silt = b.Silt,
                 Extension = b.Extension
             }).ToList(),*/
-
-            BSurveyLogs = entity.BUndersokelsesloggs.Select(l => new BSurveyLogDto
-            {
-                Id = l.Id,
-                Felt = l.Felt,
-                GammelVerdi = l.GammelVerdi,
-                NyVerdi = l.NyVerdi,
-                DatoEndret = l.DatoEndret,
-                EndretAv = l.EndretAv,
-                UndersokelseId = l.UndersokelseId
-            }).ToList()
         };
     }
 
@@ -146,7 +127,7 @@ public static class SurveyMappings
             DatoEndret = dto.DatoEndret,
             IndeksGr2Gr3 = dto.IndeksGr2Gr3,
             TilstandGr2Gr3 = dto.TilstandGr2Gr3,
-
+            
             Blotbunn = dto.BSoftBase != null
                 ? new BBlotbunn
                 {
@@ -206,25 +187,6 @@ public static class SurveyMappings
                     Arter = dto.BAnimal.Arter
                 }
                 : null,
-            
-            Preinfo = new BPreinfo
-                {
-                    Id = dto.BPreInfo.Id,
-                    ProsjektId = dto.BPreInfo.ProsjektId,
-                    Feltdato = dto.BPreInfo.Feltdato,
-                    FeltansvarligId = dto.BPreInfo.FeltansvarligId
-                },
-            
-            BUndersokelsesloggs = dto.BSurveyLogs.Select(log => new BUndersokelseslogg
-            {
-                Id = log.Id,
-                Felt = log.Felt,
-                GammelVerdi = log.GammelVerdi,
-                NyVerdi = log.GammelVerdi,
-                DatoEndret = log.DatoEndret,
-                EndretAv = log.EndretAv,
-                UndersokelseId = log.UndersokelseId
-            }).ToList(),
 
             /*BBilders = dto.BBilders.Select(pic => new BBilder
             {
@@ -234,5 +196,130 @@ public static class SurveyMappings
                 Extension = pic.Extension
             }).ToList()*/
         };
+    }
+    
+        public static void ApplyEditSurveyDto(this BUndersokelse entity, EditSurveyDto dto)
+    {
+        if (entity == null || dto == null) return;
+
+        entity.ProsjektId = dto.ProsjektId;
+        entity.PreinfoId = dto.PreinfoId;
+        entity.Feltdato = dto.Feltdato;
+        entity.AntallGrabbhugg = dto.AntallGrabbhugg;
+        entity.GrabbhastighetGodkjent = dto.GrabbhastighetGodkjent;
+        entity.Beggiatoa = dto.Beggiatoa;
+        entity.Forrester = dto.Forrester;
+        entity.Fekalier = dto.Fekalier;
+        entity.Merknader = dto.Merknader;
+        entity.DatoEndret = dto.DatoEndret;
+        entity.IndeksGr2Gr3 = dto.IndeksGr2Gr3;
+        entity.TilstandGr2Gr3 = dto.TilstandGr2Gr3;
+
+        if (entity.BStasjon != null && dto.BStation != null)
+        {
+            entity.BStasjon.KoordinatNord = dto.BStation.KoordinatNord;
+            entity.BStasjon.KoordinatOst = dto.BStation.KoordinatOst;
+            entity.BStasjon.Dybde = dto.BStation.Dybde;
+        }
+
+        if (entity.Blotbunn != null && dto.BSoftBase != null)
+        {
+            entity.Blotbunn.Leire = dto.BSoftBase.Leire;
+            entity.Blotbunn.Silt = dto.BSoftBase.Silt;
+            entity.Blotbunn.Sand = dto.BSoftBase.Sand;
+            entity.Blotbunn.Grus = dto.BSoftBase.Grus;
+            entity.Blotbunn.Skjellsand = dto.BSoftBase.Skjellsand;
+        }
+        else if (dto.BSoftBase != null)
+        {
+            entity.Blotbunn = new BBlotbunn
+            {
+                Leire = dto.BSoftBase.Leire,
+                Silt = dto.BSoftBase.Silt,
+                Sand = dto.BSoftBase.Sand,
+                Grus = dto.BSoftBase.Grus,
+                Skjellsand = dto.BSoftBase.Skjellsand
+            };
+        }
+
+        if (entity.Hardbunn != null && dto.BHardBase != null)
+        {
+            entity.Hardbunn.Steinbunn = dto.BHardBase.Steinbunn;
+            entity.Hardbunn.Fjellbunn = dto.BHardBase.Fjellbunn;
+        }
+        else if (dto.BHardBase != null)
+        {
+            entity.Hardbunn = new BHardbunn
+            {
+                Steinbunn = dto.BHardBase.Steinbunn,
+                Fjellbunn = dto.BHardBase.Fjellbunn
+            };
+        }
+
+        if (entity.Sediment != null && dto.BSediment != null)
+        {
+            entity.Sediment.Ph = dto.BSediment.Ph;
+            entity.Sediment.Eh = dto.BSediment.Eh;
+            entity.Sediment.Temperatur = dto.BSediment.Temperatur;
+            entity.Sediment.KlasseGr2 = dto.BSediment.KlasseGr2;
+            entity.Sediment.TilstandGr2 = dto.BSediment.TilstandGr2;
+        }
+        else if (dto.BSediment != null)
+        {
+            entity.Sediment = new BSediment
+            {
+                Ph = dto.BSediment.Ph,
+                Eh = dto.BSediment.Eh,
+                Temperatur = dto.BSediment.Temperatur,
+                KlasseGr2 = dto.BSediment.KlasseGr2,
+                TilstandGr2 = dto.BSediment.TilstandGr2
+            };
+        }
+
+        if (entity.Sensorisk != null && dto.BSensorisk != null)
+        {
+            entity.Sensorisk.Gassbobler = dto.BSensorisk.Gassbobler;
+            entity.Sensorisk.Farge = dto.BSensorisk.Farge;
+            entity.Sensorisk.Lukt = dto.BSensorisk.Lukt;
+            entity.Sensorisk.Konsistens = dto.BSensorisk.Konsistens;
+            entity.Sensorisk.Grabbvolum = dto.BSensorisk.Grabbvolum;
+            entity.Sensorisk.Tykkelseslamlag = dto.BSensorisk.Tykkelseslamlag;
+            entity.Sensorisk.IndeksGr3 = dto.BSensorisk.IndeksGr3;
+            entity.Sensorisk.TilstandGr3 = dto.BSensorisk.TilstandGr3;
+        }
+        else if (dto.BSensorisk != null)
+        {
+            entity.Sensorisk = new BSensorisk
+            {
+                Gassbobler = dto.BSensorisk.Gassbobler,
+                Farge = dto.BSensorisk.Farge,
+                Lukt = dto.BSensorisk.Lukt,
+                Konsistens = dto.BSensorisk.Konsistens,
+                Grabbvolum = dto.BSensorisk.Grabbvolum,
+                Tykkelseslamlag = dto.BSensorisk.Tykkelseslamlag,
+                IndeksGr3 = dto.BSensorisk.IndeksGr3,
+                TilstandGr3 = dto.BSensorisk.TilstandGr3
+            };
+        }
+
+        if (entity.Dyr != null && dto.BAnimal != null)
+        {
+            entity.Dyr.Pigghunder = dto.BAnimal.Pigghunder;
+            entity.Dyr.Krepsdyr = dto.BAnimal.Krepsdyr;
+            entity.Dyr.Skjell = dto.BAnimal.Skjell;
+            entity.Dyr.Borstemark = dto.BAnimal.Borstemark;
+            entity.Dyr.Arter = dto.BAnimal.Arter;
+        }
+        else if (dto.BAnimal != null)
+        {
+            entity.Dyr = new BDyr
+            {
+                Pigghunder = dto.BAnimal.Pigghunder,
+                Krepsdyr = dto.BAnimal.Krepsdyr,
+                Skjell = dto.BAnimal.Skjell,
+                Borstemark = dto.BAnimal.Borstemark,
+                Arter = dto.BAnimal.Arter
+            };
+        }
     }
 }

@@ -111,14 +111,14 @@ public class PreInfoService : IPreInfoService
                 merknad: null
             );
 
-            // Generer PTP-rapport
+            /*// Generer PTP-rapport
             var ptpResult = await _reportService.GeneratePtpReport(dto.ProsjektId);
             if (ptpResult.IsError)
             {
                 Console.Error.WriteLine(
                     $"PTP-generering feilet for prosjekt {dto.ProsjektId}: {ptpResult.ErrorMessage}"
                 );
-            }
+            }*/
         }
 
         var entity = new BPreinfo
