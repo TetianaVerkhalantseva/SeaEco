@@ -588,12 +588,9 @@ public sealed class ReportService(Report report,
         List<BRapporter> dbRecords = await reportRepository.GetAll()
             .Where(_ => _.ProsjektId == projectId)
             .ToListAsync();
-
-        BRapporter? ptpReport = dbRecords.FirstOrDefault(_ => (SheetName)_.ArkNavn == SheetName.PTP);
         
         return new GetReportsDto()
         {
-            Plan = ptpReport is null ? null : MapReport(ptpReport),
             Reports = dbRecords.Where(_ => (SheetName)_.ArkNavn != SheetName.PTP).OrderBy(_ => _.ArkNavn).Select(MapReport)
         };
     }
