@@ -481,142 +481,6 @@
 </div>
 
 
-@* Last and next button script *@
-<script>
-    let currentIndex = 1;
-    const totalDivs = 3;
-
-    function showDiv(index) {
-        for (let i = 1; i <= totalDivs; i++) {
-            document.getElementById('div' + i).classList.remove('active');
-        }
-        document.getElementById('div' + index).classList.add('active');
-        updateButtons();
-    }
-
-    function showLast() {
-        if (currentIndex > 1) {
-            currentIndex--;
-            showDiv(currentIndex);
-        }
-    }
-
-    function showNext() {
-        if (currentIndex < totalDivs) {
-            currentIndex++;
-            showDiv(currentIndex);
-        }
-    }
-
-    function updateButtons() {
-        const lastBtn = document.getElementById('lastBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const cancelBtn = document.getElementById('cancelBtn');
-        const submitBtn = document.getElementById('submitBtn');
-
-
-        lastBtn.style.display = currentIndex === 1 ? 'none' : 'inline-block';
-        nextBtn.style.display = currentIndex === totalDivs ? 'none' : 'inline-block';
-        cancelBtn.style.display = currentIndex === 1 ? 'inline-block' : 'none';
-        submitBtn.style.display = currentIndex === totalDivs ? 'inline-block' : 'none';
-    }
-
-    updateButtons();
-</script>
-
-<script>
-    const radioSoft = document.getElementById("cbx1");
-    const radioHard = document.getElementById("cbx2");
-    const sensoryQuestion = document.getElementById("sensoryRadio");
-
-    const radioYes = document.getElementById("cbx3");
-    const radioNo = document.getElementById("cbx4");
-    const sensoryInfo = document.getElementById("sensoryInfo");
-
-    const sedimentType = document.getElementById("sedimentType");
-    const hardSediment = document.getElementById("hardSediment");
-    const softSediment = document.getElementById("softSediment");
-
-    const tomGrabb_1 = document.getElementById("tomGrabb_1");
-    const tomGrabb_2 = document.getElementById("tomGrabb_2");
-
-    const animalYes = document.getElementById("cbx5");
-    const animalNo = document.getElementById("cbx6");
-    const animalInfo = document.getElementById("animalInfo");
-    const arterContainer = document.getElementById("arter-container")
-
-    function updateDisplay() {
-        if (radioHard.checked) {
-            sensoryQuestion.style.display = "flex";
-
-            sedimentType.style.display = "flex";
-            hardSediment.style.display = "flex";
-            softSediment.style.display = "none";
-
-            tomGrabb_1.style.display = "flex";
-            tomGrabb_2.style.display = "flex";
-
-            if (radioYes.checked) {
-                sensoryInfo.style.display = "flex";
-
-                document.getElementById("ProvePh").disabled = true;
-                document.getElementById("ProveEh").disabled = true;
-                document.getElementById("ProveTemp").disabled = true;
-                sensoryDataSoft_1.style.opacity = "0.5";
-                sensoryDataSoft_2.style.opacity = "0.5";
-                sensoryDataSoft_3.style.opacity = "0.5";
-            }
-            else {
-                sensoryInfo.style.display = "none";
-            }
-        }
-        else if (radioSoft.checked) {
-            sensoryQuestion.style.display = "none";
-            sensoryInfo.style.display = "flex";
-
-            sedimentType.style.display = "flex";
-            softSediment.style.display = "flex";
-            hardSediment.style.display = "none";
-
-            document.getElementById("ProvePh").disabled = false;
-            document.getElementById("ProveEh").disabled = false;
-            document.getElementById("ProveTemp").disabled = false;
-            sensoryDataSoft_1.style.opacity = "1";
-            sensoryDataSoft_2.style.opacity = "1";
-            sensoryDataSoft_3.style.opacity = "1";
-
-            tomGrabb_1.style.display = "none";
-            tomGrabb_2.style.display = "none";
-        }
-        else {
-            sensoryQuestion.style.display = "none";
-            sensoryInfo.style.display = "none";
-        }
-    }
-
-    function updateDisplay_2() {
-        if (animalYes.checked) {
-            animalInfo.style.display = "flex";
-            arterContainer.style.display = "flex";
-        }
-        else {
-            animalInfo.style.display = "none";
-            arterContainer.style.display = "none";
-        }
-    }
-
-    radioSoft.addEventListener("change", updateDisplay);
-    radioHard.addEventListener("change", updateDisplay);
-    radioYes.addEventListener("change", updateDisplay);
-    radioNo.addEventListener("change", updateDisplay);
-
-    animalYes.addEventListener("change", updateDisplay_2);
-    animalNo.addEventListener("change", updateDisplay_2);
-
-    updateDisplay();
-    updateDisplay_2();
-</script>
-
 @code {
     // Remeber to uncomment this part when not testing
     [Parameter]
@@ -1047,3 +911,140 @@
         NavigationLockService.Unlock();
     }
 }
+
+
+@* Last and next button script *@
+<script>
+    let currentIndex = 1;
+    const totalDivs = 3;
+
+    function showDiv(index) {
+        for (let i = 1; i <= totalDivs; i++) {
+            document.getElementById('div' + i).classList.remove('active');
+        }
+        document.getElementById('div' + index).classList.add('active');
+        updateButtons();
+    }
+
+    function showLast() {
+        if (currentIndex > 1) {
+            currentIndex--;
+            showDiv(currentIndex);
+        }
+    }
+
+    function showNext() {
+        if (currentIndex < totalDivs) {
+            currentIndex++;
+            showDiv(currentIndex);
+        }
+    }
+
+    function updateButtons() {
+        const lastBtn = document.getElementById('lastBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const submitBtn = document.getElementById('submitBtn');
+
+
+        lastBtn.style.display = currentIndex === 1 ? 'none' : 'inline-block';
+        nextBtn.style.display = currentIndex === totalDivs ? 'none' : 'inline-block';
+        cancelBtn.style.display = currentIndex === 1 ? 'inline-block' : 'none';
+        submitBtn.style.display = currentIndex === totalDivs ? 'inline-block' : 'none';
+    }
+
+    updateButtons();
+</script>
+
+<script>
+    const radioSoft = document.getElementById("cbx1");
+    const radioHard = document.getElementById("cbx2");
+    const sensoryQuestion = document.getElementById("sensoryRadio");
+
+    const radioYes = document.getElementById("cbx3");
+    const radioNo = document.getElementById("cbx4");
+    const sensoryInfo = document.getElementById("sensoryInfo");
+
+    const sedimentType = document.getElementById("sedimentType");
+    const hardSediment = document.getElementById("hardSediment");
+    const softSediment = document.getElementById("softSediment");
+
+    const tomGrabb_1 = document.getElementById("tomGrabb_1");
+    const tomGrabb_2 = document.getElementById("tomGrabb_2");
+
+    const animalYes = document.getElementById("cbx5");
+    const animalNo = document.getElementById("cbx6");
+    const animalInfo = document.getElementById("animalInfo");
+    const arterContainer = document.getElementById("arter-container")
+
+    function updateDisplay() {
+        if (radioHard.checked) {
+            sensoryQuestion.style.display = "flex";
+
+            sedimentType.style.display = "flex";
+            hardSediment.style.display = "flex";
+            softSediment.style.display = "none";
+
+            tomGrabb_1.style.display = "flex";
+            tomGrabb_2.style.display = "flex";
+
+            if (radioYes.checked) {
+                sensoryInfo.style.display = "flex";
+
+                document.getElementById("ProvePh").disabled = true;
+                document.getElementById("ProveEh").disabled = true;
+                document.getElementById("ProveTemp").disabled = true;
+                sensoryDataSoft_1.style.opacity = "0.5";
+                sensoryDataSoft_2.style.opacity = "0.5";
+                sensoryDataSoft_3.style.opacity = "0.5";
+            }
+            else {
+                sensoryInfo.style.display = "none";
+            }
+        }
+        else if (radioSoft.checked) {
+            sensoryQuestion.style.display = "none";
+            sensoryInfo.style.display = "flex";
+
+            sedimentType.style.display = "flex";
+            softSediment.style.display = "flex";
+            hardSediment.style.display = "none";
+
+            document.getElementById("ProvePh").disabled = false;
+            document.getElementById("ProveEh").disabled = false;
+            document.getElementById("ProveTemp").disabled = false;
+            sensoryDataSoft_1.style.opacity = "1";
+            sensoryDataSoft_2.style.opacity = "1";
+            sensoryDataSoft_3.style.opacity = "1";
+
+            tomGrabb_1.style.display = "none";
+            tomGrabb_2.style.display = "none";
+        }
+        else {
+            sensoryQuestion.style.display = "none";
+            sensoryInfo.style.display = "none";
+        }
+    }
+
+    function updateDisplay_2() {
+        if (animalYes.checked) {
+            animalInfo.style.display = "flex";
+            arterContainer.style.display = "flex";
+        }
+        else {
+            animalInfo.style.display = "none";
+            arterContainer.style.display = "none";
+        }
+    }
+
+    radioSoft.addEventListener("change", updateDisplay);
+    radioHard.addEventListener("change", updateDisplay);
+    radioYes.addEventListener("change", updateDisplay);
+    radioNo.addEventListener("change", updateDisplay);
+
+    animalYes.addEventListener("change", updateDisplay_2);
+    animalNo.addEventListener("change", updateDisplay_2);
+
+    updateDisplay();
+    updateDisplay_2();
+</script>
