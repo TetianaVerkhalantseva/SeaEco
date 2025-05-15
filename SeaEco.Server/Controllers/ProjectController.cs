@@ -288,8 +288,8 @@ public class ProjectController : ControllerBase
         
         return CreatedAtAction(
             nameof(GetStationById),
-            new { projectId = projectId, stationId = stationDto.Id },
-            stationDto
+            new { projectId, stationId = result.Station.Id },
+            result.Station
         );
     }
     
