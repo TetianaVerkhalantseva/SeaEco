@@ -18,7 +18,7 @@ else
         <EditForm EditContext="_editContext" OnValidSubmit="EditProjectPlan">
             <DataAnnotationsValidator /> 
             <div class="d-flex flex-column gap-3 box-border p-4 min-width-plan">
-                <span>@Resources.HeaderGeneralPlanInfo</span>
+                <h5>@Resources.HeaderGeneralPlanInfo</h5>
                 <div class="d-flex form-floating">
                     <InputSelect @bind-Value="_newPlan.PlanleggerId" id="user1" class="form-control" disabled="@(!EditProjectPlanVar)">
                         <option value=""></option>
@@ -82,7 +82,7 @@ else
                                 <DataAnnotationsValidator/>
                                 <div class="d-flex flex-column gap-3 mt-3 box-border p-4">
                                     <div class="d-flex">
-                                        <span>@Resources.InputTextStation @station.Nummer</span>
+                                        <h5>@Resources.InputTextStation @station.Nummer</h5>
                                         <div class="flex-grow-1"></div>
                                         @if (EditProjectStationPlanVar)
                                         {
@@ -148,7 +148,7 @@ else
                         
                             <div class="d-flex flex-column gap-3 mt-3 box-border p-4">
                                 <div class="d-flex">
-                                    <span>@Resources.InputTextStation @station.Nummer</span>
+                                    <h5>@Resources.InputTextStation @station.Nummer</h5>
                                     <div class="flex-grow-1"></div>
                                 </div>
                                 <div class="d-flex flex-xxl-row flex-column gap-3">
@@ -244,6 +244,7 @@ else
                     </EditForm>
                 }
             }
+        
         @*</div>*@
         
         <div class="d-flex mb-5 mt-3 gap-3 flex-column">
