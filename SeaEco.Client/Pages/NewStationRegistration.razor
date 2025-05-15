@@ -20,7 +20,7 @@
 @attribute [Authorize(Roles = "admin")]
 
 
-<h4>Stasjonsredigering</h4>
+<h4>Registrering</h4>
 
 
 <div id="div1" class="content-div active">
@@ -509,6 +509,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        StateHasChanged();
         NavigationLockService.Lock();
 
         // Create mode
@@ -537,11 +538,14 @@
 
             ParseCoordinateNorth();
             ParseCoordinateEast();
+            
+            StateHasChanged();
         }
         else
         {
             _result = false;
             _resultMessage = $"Cannot find the station with station ID {StationId}";
+            StateHasChanged();
         }
 
 
@@ -575,8 +579,8 @@
         _selectBunnType = null;
         _selectSensorisk = null;
         _selectDyr = null;
-
-        // return Task.CompletedTask;
+        
+        StateHasChanged();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -794,6 +798,7 @@
     private void BackToProjectPage()
     {
         NavigationLockService.Unlock();
+        StateHasChanged();
         Navigation.NavigateTo($"/project/{_surveyDto.ProsjektId}");
     }
 
@@ -898,6 +903,7 @@
             _resultMessage = await response.Content.ReadAsStringAsync();
 
             NavigationLockService.Unlock();
+            StateHasChanged();
             await Task.Delay(2000);
             Navigation.NavigateTo($"/project/{ProjectId:D}?tab=b_stations");
         }
