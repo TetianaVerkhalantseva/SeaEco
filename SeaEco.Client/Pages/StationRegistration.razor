@@ -319,6 +319,9 @@
 
 
 <div class="button-container">
+    <button id="cancelBtn" class="custom-btn" style="display: none;" @onclick="BackToStationsPage">
+        Avbryt
+    </button>
     <button id="lastBtn" onclick="showLast()" class="custom-btn">Forrige</button>
     <button id="nextBtn" onclick="showNext()" class="custom-btn">Neste</button>
     <button id="editBtn" class="custom-btn" style="display: none;" @onclick="HandleEdit">Rediger</button>
@@ -353,10 +356,12 @@
     function updateButtons() {
         const lastBtn = document.getElementById('lastBtn');
         const nextBtn = document.getElementById('nextBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
         const editBtn = document.getElementById('editBtn');
 
         lastBtn.style.display = currentIndex === 1 ? 'none' : 'inline-block';
         nextBtn.style.display = currentIndex === totalDivs ? 'none' : 'inline-block';
+        cancelBtn.style.display = currentIndex === 1 ? 'inline-block' : 'none';
         editBtn.style.display = currentIndex === totalDivs ? 'inline-block' : 'none';
     }
 
@@ -582,6 +587,11 @@
         {
             await Js.InvokeVoidAsync("updateDisplay_2");
         }
+    }
+
+    private void BackToStationsPage()
+    {
+        Navigation.NavigateTo($"/project/{ProjectId:D}?tab=b_stations");
     }
     
     private void HandleEdit()

@@ -1067,8 +1067,7 @@
             NavigationLockService.Unlock();
             await Task.Delay(2000);
             
-            // remember to add address
-            Navigation.NavigateTo($"/project/{ProjectId}");
+            Navigation.NavigateTo($"/project/{ProjectId:D}?tab=b_stations");
         }
         else
         {
