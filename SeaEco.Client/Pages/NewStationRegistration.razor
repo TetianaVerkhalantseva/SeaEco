@@ -1,8 +1,4 @@
-@* if testing, comment out this line *@
 @page "/project/{ProjectId:guid}/station/{StationId:guid}/create-survey/{ReceivedSurveyId:guid}"
-
-@* For testing *@
-@* @page "/project/create-survey" *@
 
 @using Microsoft.AspNetCore.Authorization
 @using SeaEco.Abstractions.Enums
@@ -482,7 +478,6 @@
 
 
 @code {
-    // Remeber to uncomment this part when not testing
     [Parameter]
     public Guid ProjectId { get; set; }
     [Parameter]
@@ -509,7 +504,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        StateHasChanged();
         NavigationLockService.Lock();
 
         // Create mode
@@ -545,42 +539,13 @@
         {
             _result = false;
             _resultMessage = $"Cannot find the station with station ID {StationId}";
+            
             StateHasChanged();
         }
-
-
-        // // Test code
-        // _surveyDto = new EditSurveyDto
-        // {
-        //     Id = Guid.NewGuid(),
-        //     ProsjektId = Guid.NewGuid(),
-        //     BlotbunnId = null,
-        //     HardbunnId = null,
-        //     SedimentId = null,
-        //     SensoriskId = null,
-        //     DyrId = null,
-        //
-        //     BStation = new BStationDto(),
-        //     BSoftBase = new BSoftBaseDto(),
-        //     BAnimal = new BAnimalDto(),
-        //     BHardBase = new BHardBaseDto(),
-        //     BSediment = new BSedimentDto(),
-        //     BSensorisk = new BSensoriskDto(),
-        //
-        // };
-        // if (_surveyDto.BStation != null)
-        // {
-        //     ParseCoordinateNorth();
-        //     ParseCoordinateEast();
-        // }
-        // // Test code
-
 
         _selectBunnType = null;
         _selectSensorisk = null;
         _selectDyr = null;
-        
-        StateHasChanged();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -891,8 +856,6 @@
             return;
         }
 
-
-        // uncomment this part when not testing
         var response = await Http.PostAsJsonAsync(
                 $"api/Project/{ProjectId}/station/{StationId}/survey",
                 _surveyDto);
@@ -919,7 +882,6 @@
 }
 
 
-@* Last and next button script *@
 <script>
     let currentIndex = 1;
     const totalDivs = 3;
