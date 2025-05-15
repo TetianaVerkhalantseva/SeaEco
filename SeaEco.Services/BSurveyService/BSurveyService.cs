@@ -73,22 +73,7 @@ public class BSurveyService: IBSurveyService
                 };
             }
             
-            var station = await _db.BStasjons
-                .FirstOrDefaultAsync(s => s.Id == stationId && s.ProsjektId == projectId);
-
-            if (station == null)
-            {
-                return new EditSurveyResult
-                {
-                    IsSuccess = false,
-                    Message = "Cannot find the station"
-                };
-            }
-            
             var entity = dto.ToEntity();
-            station.UndersokelseId = entity.Id;
-            entity.BStasjon = station;
-
             _db.BUndersokelses.Add(entity);
             await _db.SaveChangesAsync();
             

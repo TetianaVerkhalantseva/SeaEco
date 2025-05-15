@@ -128,6 +128,21 @@ public static class SurveyMappings
             IndeksGr2Gr3 = dto.IndeksGr2Gr3,
             TilstandGr2Gr3 = dto.TilstandGr2Gr3,
             
+            BStasjon = dto.BStation != null
+                ? new BStasjon()
+                {
+                    Id = dto.BStation.Id,
+                    ProsjektId = dto.BStation.ProsjektId,
+                    Nummer = dto.BStation.Nummer,
+                    KoordinatNord = dto.BStation.KoordinatNord,
+                    KoordinatOst = dto.BStation.KoordinatOst,
+                    Dybde = dto.BStation.Dybde,
+                    Analyser = dto.BStation.Analyser,
+                    ProvetakingsplanId = dto.BStation.ProvetakingsplanId,
+                    UndersokelseId = dto.BStation.UndersokelseId,
+                }
+                : null,
+            
             Blotbunn = dto.BSoftBase != null
                 ? new BBlotbunn
                 {
