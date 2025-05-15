@@ -36,10 +36,12 @@ else
                 </div>
                 <div class="d-flex justify-content-end w-100">
                     @if (!EditProjectPlanVar)
-                    {
-                        <button class="btn custom-btn" type="button" @onclick="OnClickProjectPlan" disabled="@(EditProjectStationPlanVar || _isAddingNewStation || Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt))">
-                            @(_isExistingPlan ? Resources.ButtonEdit : Resources.ButtonCreat)
-                        </button>
+                    { 
+                        <span class="d-inline-block" title="@(Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt)? "Prosjektet har ikke satus påbegyn eller nytt" : (EditProjectStationPlanVar || _isAddingNewStation)?"Du holder på å redigere eller legge til informasjon i prosjektplan":"")">
+                            <button class="btn custom-btn" type="button" @onclick="OnClickProjectPlan" disabled="@(EditProjectStationPlanVar || _isAddingNewStation || Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt))">
+                                @(_isExistingPlan ? Resources.ButtonEdit : Resources.ButtonCreat)
+                            </button>
+                            </span>
                     }
                     else
                     {
@@ -172,9 +174,11 @@ else
                         
                                 <div class="d-flex mb-3">
                                     <div class="d-flex flex-grow-1"></div>
+                                    <span class="d-inline-block" title="@(Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt)? "Prosjektet har ikke satus påbegyn eller nytt" : (EditProjectStationPlanVar || EditProjectPlanVar || _isAddingNewStation)?"Du holder på å redigere eller legge til informasjon i prosjektplan":"")">
                                     <button class="btn custom-btn" type="button" @onclick="() => OnClickProjectStationPlan(station)" disabled="@(EditProjectStationPlanVar || EditProjectPlanVar || _isAddingNewStation || Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt))">
                                         @Resources.ButtonEdit
                                     </button>
+                                    </span>
                                 </div>
                         
                             </div>
@@ -249,13 +253,17 @@ else
         
         <div class="d-flex mb-5 mt-3 gap-3 flex-column">
             <div class="d-flex flex-column flex-xxl-row">
+                <span class="d-inline-block" title="@(Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt)? "Prosjektet har ikke satus påbegyn eller nytt" :!_isExistingPlan? "Generell informasjon er ikke oppretet for planen" :(EditProjectStationPlanVar || EditProjectPlanVar || _isAddingNewStation)?"Du holder på å redigere eller legge til informasjon i prosjektplan":"")">
                 <button class="btn custom-btn" type="button" disabled="@(EditProjectStationPlanVar || EditProjectPlanVar || !_isExistingPlan || _isAddingNewStation || Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt))" @onclick="AddStation">
                     @Resources.ButtonAddStation
                 </button>
+                </span>
                 <div class="d-flex flex-grow-1"></div>
+                <span class="d-inline-block" title="@(Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt)? "Prosjektet har ikke satus påbegyn eller nytt" :!_isExistingPlan? "Generell informasjon er ikke oppretet for planen" :(EditProjectStationPlanVar || EditProjectPlanVar || _isAddingNewStation)?"Du holder på å redigere eller legge til informasjon i prosjektplan":"")">
                 <button class="btn custom-btn" type="button" disabled="@(EditProjectStationPlanVar || EditProjectPlanVar || !_isExistingPlan || _isAddingNewStation || Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt))" @onclick="GenerateProjectPlanReport">
                     @(!_isPlanGenerated ? "Generer plan" : "Regenerer plan")
                 </button>
+                </span>
             </div>
             <div class=" text-center">
                 @if (!string.IsNullOrEmpty(_errorMessagePlanGenerate))
@@ -324,12 +332,9 @@ else
             var response2 = await Http.GetAsync($"/api/Project/{Project.Id:D}/sampling-plan/{_existingPlan.Id:D}/stations");
             if (response2.IsSuccessStatusCode)
             {
-                _existingStationPlan = await response2.Content.ReadFromJsonAsync<List<UpdateStationDto>>();
-                var existingStationJason = JsonSerializer.Serialize(_existingStationPlan );
-                _editStationPlan = JsonSerializer.Deserialize<List<UpdateStationDto>>(existingStationJason)!;
-
+                _existingStationPlan = await response2.Content.ReadFromJsonAsync<List<UpdateStationDto>>(); 
+                _editStationPlan = BackUp(_existingStationPlan);
                 _editStationPlan?.Sort((a, b) => a.Nummer.CompareTo(b.Nummer));
-
                 _editStationPlanBackup = BackUp(_editStationPlan);
                 _isExistingStationPlan = true;
             }
