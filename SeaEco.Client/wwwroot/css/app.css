@@ -199,4 +199,6 @@ button:active {
     border-radius: 4px;
 }
 
-
+.custom-gray-text{
+    color: #777777;
+}
