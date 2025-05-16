@@ -10,16 +10,8 @@
 @inject NavigationManager Navigation
 @inject IJSRuntime Js
 
-@* If testing, uncomment these lines *@
-@* @page "/project/survey" *@
-@* @using SeaEco.Abstractions.Enums *@
-@* @using SeaEco.Abstractions.Models.BSurvey *@
 
-
-<h4>Stasjonsregistrering</h4>
-
-
-<div id="div1" class="content-div active">
+<div id="div1" class="content-div">
     @if (_survey?.BStation != null)
     {
         <div class="position-depth-container">
@@ -266,7 +258,7 @@
         </div>
     </div>
 
-    @if (_selectedDyr == "ja" || _survey?.BAnimal != null)
+    @if (_survey?.BAnimal != null)
     {
         <div id="animalInfo" class="animalInfo-container">
             <div class="animalData">
@@ -336,6 +328,8 @@
     [Parameter]
     public Guid SurveyId { get; set; }
 
+    private bool _initialized = false;
+
     private EditSurveyDto? _survey = new();
 
     private string? _selectedBunnType;
@@ -348,90 +342,27 @@
     {
         await LoadSurveyData();
     }
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !_initialized)
+        {
+            _initialized = true;
+            await Task.Delay(300);
+            await Js.InvokeVoidAsync("showDiv", 1);
+        }
+    }
 
     private async Task LoadSurveyData()
     {
         try
         {
-            // If testing, comment out this line
             _survey = await Http.GetFromJsonAsync<EditSurveyDto>($"api/project/{ProjectId}/station/{StationId}/survey/{SurveyId}");
             if (_survey == null)
             {
                 _errorMessage = "Cannot find the survey in the database.";
-                StateHasChanged();
                 return;
             }
-            
-            // Test code
-            // _survey = new EditSurveyDto
-            // {
-            //     Id = Guid.NewGuid(),
-            //     ProsjektId = Guid.NewGuid(),
-            //     PreinfoId = Guid.NewGuid(),
-            //     Feltdato = DateOnly.FromDateTime(DateTime.Now),
-            //     AntallGrabbhugg = 5,
-            //     GrabbhastighetGodkjent = true,
-            //     BlotbunnId = Guid.NewGuid(),
-            //     HardbunnId = null,
-            //     SedimentId = Guid.NewGuid(),
-            //     SensoriskId = Guid.NewGuid(),
-            //     Beggiatoa = true,
-            //     Forrester = false,
-            //     Fekalier = true,
-            //     DyrId = Guid.NewGuid(),
-            //     Merknader = "Simulated survey with some remarks.",
-            //     DatoRegistrert = DateTime.Now,
-            //     DatoEndret = DateTime.Now.AddDays(-1),
-            //     IndeksGr2Gr3 = 2.5f,
-            //     TilstandGr2Gr3 = 3,
-            //
-            //     // DTO properties
-            //     BStation = new BStationDto
-            //     {
-            //         Id = Guid.NewGuid(),
-            //         KoordinatNord = "66",
-            //         KoordinatOst = "10",
-            //         Dybde = 100
-            //         
-            //     },
-            //
-            //     BSoftBase = new BSoftBaseDto
-            //     {
-            //         Id = Guid.NewGuid(),
-            //         Leire = 1,
-            //         Sand = 1,
-            //         Skjellsand = 0
-            //     },
-            //     BAnimal = new BAnimalDto
-            //     {
-            //         Id = Guid.NewGuid(),
-            //         Pigghunder = "14",
-            //         Krepsdyr = "26",
-            //         Arter = "CC, OP"
-            //     },
-            //     
-            //     BHardBase = null,
-            //     
-            //     BSediment = new BSedimentDto
-            //     {
-            //         Id = Guid.NewGuid(),
-            //         Ph = 6,
-            //         Eh = 2,
-            //         Temperatur = 3
-            //     },
-            //     BSensorisk = new BSensoriskDto
-            //     {
-            //         Id = Guid.NewGuid(),
-            //         Farge = 0,
-            //         Lukt = 0,
-            //         Konsistens = 2,
-            //         Grabbvolum = 1,
-            //         Tykkelseslamlag = 1,
-            //         Gassbobler = 0
-            //     }
-            // };
-            // Test code
-            
             
             if (_survey?.BlotbunnId != null)
                 _selectedBunnType = "blot";
@@ -439,20 +370,11 @@
                 _selectedBunnType = "hard";
 
             _selectedSensorisk = _survey?.SensoriskId != null ? "ja" : "nei";
-            
             _selectedDyr = _survey?.DyrId != null ? "ja" : "nei";
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
-        }
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await Js.InvokeVoidAsync("updateDisplay_2");
         }
     }
 
@@ -478,6 +400,11 @@
         }
         document.getElementById('div' + index).classList.add('active');
         updateButtons();
+
+        setTimeout(() => {
+            updateDisplay();
+            updateDisplay_2();
+        }, 100);
     }
 
     function showLast() {
@@ -507,97 +434,5 @@
     }
 
     updateButtons();
-</script>
-
-<script>
-    const radioSoft = document.getElementById("cbx1");
-    const radioHard = document.getElementById("cbx2");
-    const sensoryQuestion = document.getElementById("sensoryRadio");
-
-    const radioYes = document.getElementById("cbx3");
-    const radioNo = document.getElementById("cbx4");
-    const sensoryInfo = document.getElementById("sensoryInfo");
-
-    const sedimentType = document.getElementById("sedimentType");
-    const hardSediment = document.getElementById("hardSediment");
-    const softSediment = document.getElementById("softSediment");
-
-    const tomGrabb_1 = document.getElementById("tomGrabb_1");
-    const tomGrabb_2 = document.getElementById("tomGrabb_2");
-
-    const animalYes = document.getElementById("cbx5");
-    const animalNo = document.getElementById("cbx6");
-    const animalInfo = document.getElementById("animalInfo");
-    const arterContainer = document.getElementById("arter-container")
-
-    function updateDisplay() {
-        if (radioHard.checked) {
-            sensoryQuestion.style.display = "flex";
-
-            sedimentType.style.display = "flex";
-            hardSediment.style.display = "flex";
-            softSediment.style.display = "none";
-
-            tomGrabb_1.style.display = "flex";
-            tomGrabb_2.style.display = "flex";
-
-            if (radioYes.checked) {
-                sensoryInfo.style.display = "flex";
-
-                document.getElementById("ProvePh").disabled = true;
-                document.getElementById("ProveEh").disabled = true;
-                document.getElementById("ProveTemp").disabled = true;
-                sensoryDataSoft_1.style.opacity = "0.5";
-                sensoryDataSoft_2.style.opacity = "0.5";
-                sensoryDataSoft_3.style.opacity = "0.5";
-            }
-            else {
-                sensoryInfo.style.display = "none";
-            }
-        }
-        else if (radioSoft.checked) {
-            sensoryQuestion.style.display = "none";
-            sensoryInfo.style.display = "flex";
-
-            sedimentType.style.display = "flex";
-            softSediment.style.display = "flex";
-            hardSediment.style.display = "none";
-
-            document.getElementById("ProvePh").disabled = false;
-            document.getElementById("ProveEh").disabled = false;
-            document.getElementById("ProveTemp").disabled = false;
-            sensoryDataSoft_1.style.opacity = "1";
-            sensoryDataSoft_2.style.opacity = "1";
-            sensoryDataSoft_3.style.opacity = "1";
-
-            tomGrabb_1.style.display = "none";
-            tomGrabb_2.style.display = "none";
-        }
-        else {
-            sensoryQuestion.style.display = "none";
-            sensoryInfo.style.display = "none";
-        }
-    }
-
-    function updateDisplay_2() {
-        if (animalYes.checked) {
-            animalInfo.style.display = "flex";
-            arterContainer.style.display = "flex";
-        }
-        else {
-            animalInfo.style.display = "none";
-            arterContainer.style.display = "none";
-        }
-    }
-
-    radioSoft.addEventListener("change", updateDisplay);
-    radioHard.addEventListener("change", updateDisplay);
-    radioYes.addEventListener("change", updateDisplay);
-    radioNo.addEventListener("change", updateDisplay);
-
-    animalYes.addEventListener("change", updateDisplay_2);
-    animalNo.addEventListener("change", updateDisplay_2);
-
-    updateDisplay();
-    updateDisplay_2();
+    showDiv(currentIndex);
 </script>

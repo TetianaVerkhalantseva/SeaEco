@@ -131,7 +131,7 @@ public static class SurveyMappings
             Blotbunn = dto.BSoftBase != null
                 ? new BBlotbunn
                 {
-                    Id = dto.BSoftBase.Id,
+                    Id = dto.BSoftBase.Id == Guid.Empty ? Guid.NewGuid() : dto.BSoftBase.Id,
                     Leire = dto.BSoftBase.Leire,
                     Silt = dto.BSoftBase.Silt,
                     Sand = dto.BSoftBase.Sand,
@@ -143,7 +143,7 @@ public static class SurveyMappings
             Hardbunn = dto.BHardBase != null
                 ? new BHardbunn
                 {
-                    Id = dto.BHardBase.Id,
+                    Id = dto.BHardBase.Id == Guid.Empty ? Guid.NewGuid() : dto.BHardBase.Id,
                     Steinbunn = dto.BHardBase.Steinbunn,
                     Fjellbunn = dto.BHardBase.Fjellbunn
                 }
@@ -152,7 +152,7 @@ public static class SurveyMappings
             Sediment = dto.BSediment != null
                 ? new BSediment
                 {
-                    Id = dto.BSediment.Id,
+                    Id = dto.BSediment.Id == Guid.Empty ? Guid.NewGuid() : dto.BSediment.Id,
                     Ph = dto.BSediment.Ph,
                     Eh = dto.BSediment.Eh,
                     Temperatur = dto.BSediment.Temperatur,
@@ -164,7 +164,7 @@ public static class SurveyMappings
             Sensorisk = dto.BSensorisk != null
                 ? new BSensorisk
                 {
-                    Id = dto.BSensorisk.Id,
+                    Id = dto.BSensorisk.Id == Guid.Empty ? Guid.NewGuid() : dto.BSensorisk.Id,
                     Gassbobler = dto.BSensorisk.Gassbobler,
                     Farge = dto.BSensorisk.Farge,
                     Lukt = dto.BSensorisk.Lukt,
@@ -179,7 +179,7 @@ public static class SurveyMappings
             Dyr = dto.BAnimal != null
                 ? new BDyr
                 {
-                    Id = dto.BAnimal.Id,
+                    Id = dto.BAnimal.Id == Guid.Empty ? Guid.NewGuid() : dto.BAnimal.Id,
                     Pigghunder = dto.BAnimal.Pigghunder,
                     Krepsdyr = dto.BAnimal.Krepsdyr,
                     Skjell = dto.BAnimal.Skjell,
