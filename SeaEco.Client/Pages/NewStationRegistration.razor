@@ -506,7 +506,6 @@
     {
         NavigationLockService.Lock();
 
-        // Create mode
         _surveyDto = new EditSurveyDto
         {
             Id = ReceivedSurveyId,
@@ -763,7 +762,6 @@
     private void BackToProjectPage()
     {
         NavigationLockService.Unlock();
-        StateHasChanged();
         Navigation.NavigateTo($"/project/{_surveyDto.ProsjektId}");
     }
 
@@ -866,7 +864,6 @@
             _resultMessage = await response.Content.ReadAsStringAsync();
 
             NavigationLockService.Unlock();
-            StateHasChanged();
             await Task.Delay(2000);
             Navigation.NavigateTo($"/project/{ProjectId:D}?tab=b_stations");
         }
@@ -874,7 +871,6 @@
         {
             _result = false;
             _resultMessage = await response.Content.ReadAsStringAsync();
-            StateHasChanged();
         }
 
         NavigationLockService.Unlock();

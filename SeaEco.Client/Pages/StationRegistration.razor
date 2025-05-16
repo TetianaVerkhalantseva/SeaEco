@@ -341,7 +341,6 @@
     protected override async Task OnInitializedAsync()
     {
         await LoadSurveyData();
-        StateHasChanged();
     }
     
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -362,7 +361,6 @@
             if (_survey == null)
             {
                 _errorMessage = "Cannot find the survey in the database.";
-                StateHasChanged();
                 return;
             }
             
@@ -373,8 +371,6 @@
 
             _selectedSensorisk = _survey?.SensoriskId != null ? "ja" : "nei";
             _selectedDyr = _survey?.DyrId != null ? "ja" : "nei";
-
-            StateHasChanged();
         }
         catch (Exception ex)
         {

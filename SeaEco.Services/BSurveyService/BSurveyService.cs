@@ -3,6 +3,7 @@ using SeaEco.Abstractions.Enums;
 using SeaEco.Abstractions.Models.BSurvey;
 using SeaEco.Abstractions.Models.Bundersokelse;
 using SeaEco.EntityFramework.Contexts;
+using SeaEco.EntityFramework.Entities;
 using SeaEco.Services.Mapping;
 using SeaEco.Services.ProjectServices;
 using SeaEco.Services.ReportServices;
@@ -74,6 +75,20 @@ public class BSurveyService: IBSurveyService
             }
             
             var entity = dto.ToEntity();
+            
+            if (dto.BStation != null && dto.BStation.Id != Guid.Empty)
+            {
+                var existingStation = new BStasjon { Id = dto.BStation.Id };
+                _db.BStasjons.Attach(existingStation);
+                
+                existingStation.KoordinatNord = dto.BStation.KoordinatNord;
+                existingStation.KoordinatOst = dto.BStation.KoordinatOst;
+                existingStation.Dybde = dto.BStation.Dybde;
+                existingStation.Analyser = dto.BStation.Analyser;
+                
+                entity.BStasjon = existingStation;
+            }
+            
             _db.BUndersokelses.Add(entity);
             await _db.SaveChangesAsync();
             
