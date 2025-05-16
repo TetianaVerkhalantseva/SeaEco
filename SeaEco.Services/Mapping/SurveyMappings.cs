@@ -220,6 +220,7 @@ public static class SurveyMappings
             entity.BStasjon.KoordinatNord = dto.BStation.KoordinatNord;
             entity.BStasjon.KoordinatOst = dto.BStation.KoordinatOst;
             entity.BStasjon.Dybde = dto.BStation.Dybde;
+            entity.BStasjon.Analyser = dto.BStation.Analyser;
         }
 
         if (entity.Blotbunn != null && dto.BSoftBase != null)
