@@ -914,5 +914,11 @@ namespace SeaEco.Client.Resources {
                 return ResourceManager.GetString("ButtonDownload", resourceCulture);
             }
         }
+        
+        internal static string ModalTextDeactivationWhenEditing {
+            get {
+                return ResourceManager.GetString("ModalTextDeactivationWhenEditing", resourceCulture);
+            }
+        }
     }
 }

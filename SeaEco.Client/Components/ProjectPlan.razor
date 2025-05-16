@@ -37,8 +37,8 @@ else
                 <div class="d-flex justify-content-end w-100">
                     @if (!EditProjectPlanVar)
                     { 
-                        <span class="d-inline-block" title="@(Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt)? "Prosjektet har ikke satus påbegyn eller nytt" : (EditProjectStationPlanVar || _isAddingNewStation)?"Du holder på å redigere eller legge til informasjon i prosjektplan":"")">
-                            <button class="btn custom-btn" type="button" @onclick="OnClickProjectPlan" disabled="@(EditProjectStationPlanVar || _isAddingNewStation || Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt))">
+                        <span class="d-inline-block" title="@(Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt)? "Prosjektet har ikke satus påbegyn eller nytt" : (EditProjectStationPlanVar || NewProjectStationPlanVar)?"Du holder på å redigere eller legge til informasjon i prosjektplan":"")">
+                            <button class="btn custom-btn" type="button" @onclick="OnClickProjectPlan" disabled="@(EditProjectStationPlanVar || NewProjectStationPlanVar || Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt))">
                                 @(_isExistingPlan ? Resources.ButtonEdit : Resources.ButtonCreat)
                             </button>
                             </span>
@@ -174,8 +174,8 @@ else
                         
                                 <div class="d-flex mb-3">
                                     <div class="d-flex flex-grow-1"></div>
-                                    <span class="d-inline-block" title="@(Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt)? "Prosjektet har ikke satus påbegyn eller nytt" : (EditProjectStationPlanVar || EditProjectPlanVar || _isAddingNewStation)?"Du holder på å redigere eller legge til informasjon i prosjektplan":"")">
-                                    <button class="btn custom-btn" type="button" @onclick="() => OnClickProjectStationPlan(station)" disabled="@(EditProjectStationPlanVar || EditProjectPlanVar || _isAddingNewStation || Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt))">
+                                    <span class="d-inline-block" title="@(Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt)? "Prosjektet har ikke satus påbegyn eller nytt" : (EditProjectStationPlanVar || EditProjectPlanVar || NewProjectStationPlanVar)?"Du holder på å redigere eller legge til informasjon i prosjektplan":"")">
+                                    <button class="btn custom-btn" type="button" @onclick="() => OnClickProjectStationPlan(station)" disabled="@(EditProjectStationPlanVar || EditProjectPlanVar || NewProjectStationPlanVar || Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt))">
                                         @Resources.ButtonEdit
                                     </button>
                                     </span>
@@ -186,7 +186,7 @@ else
                     </div>
                 }
 
-                if (_isAddingNewStation)
+                if (NewProjectStationPlanVar)
                 {
                     <EditForm Model="_newStationPlan" OnValidSubmit="SaveNewStation">
                         <DataAnnotationsValidator />
@@ -253,14 +253,14 @@ else
         
         <div class="d-flex mb-5 mt-3 gap-3 flex-column">
             <div class="d-flex flex-column flex-xxl-row">
-                <span class="d-inline-block" title="@(Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt)? "Prosjektet har ikke satus påbegyn eller nytt" :!_isExistingPlan? "Generell informasjon er ikke oppretet for planen" :(EditProjectStationPlanVar || EditProjectPlanVar || _isAddingNewStation)?"Du holder på å redigere eller legge til informasjon i prosjektplan":"")">
-                <button class="btn custom-btn" type="button" disabled="@(EditProjectStationPlanVar || EditProjectPlanVar || !_isExistingPlan || _isAddingNewStation || Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt))" @onclick="AddStation">
+                <span class="d-inline-block" title="@(Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt)? "Prosjektet har ikke satus påbegyn eller nytt" :!_isExistingPlan? "Generell informasjon er ikke oppretet for planen" :(EditProjectStationPlanVar || EditProjectPlanVar || NewProjectStationPlanVar)?"Du holder på å redigere eller legge til informasjon i prosjektplan":"")">
+                <button class="btn custom-btn" type="button" disabled="@(EditProjectStationPlanVar || EditProjectPlanVar || !_isExistingPlan || NewProjectStationPlanVar || Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt))" @onclick="AddStation">
                     @Resources.ButtonAddStation
                 </button>
                 </span>
                 <div class="d-flex flex-grow-1"></div>
-                <span class="d-inline-block" title="@(Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt)? "Prosjektet har ikke satus påbegyn eller nytt" :!_isExistingPlan? "Generell informasjon er ikke oppretet for planen" :(EditProjectStationPlanVar || EditProjectPlanVar || _isAddingNewStation)?"Du holder på å redigere eller legge til informasjon i prosjektplan":"")">
-                <button class="btn custom-btn" type="button" disabled="@(EditProjectStationPlanVar || EditProjectPlanVar || !_isExistingPlan || _isAddingNewStation || Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt))" @onclick="GenerateProjectPlanReport">
+                <span class="d-inline-block" title="@(Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt)? "Prosjektet har ikke satus påbegyn eller nytt" :!_isExistingPlan? "Generell informasjon er ikke oppretet for planen" :(EditProjectStationPlanVar || EditProjectPlanVar || NewProjectStationPlanVar)?"Du holder på å redigere eller legge til informasjon i prosjektplan":"")">
+                <button class="btn custom-btn" type="button" disabled="@(EditProjectStationPlanVar || EditProjectPlanVar || !_isExistingPlan || NewProjectStationPlanVar || Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt))" @onclick="GenerateProjectPlanReport">
                     @(!_isPlanGenerated ? "Generer plan" : "Regenerer plan")
                 </button>
                 </span>
@@ -281,8 +281,10 @@ else
     [Parameter] public ProjectDto? Project { get; set; }
     [Parameter] public bool EditProjectPlanVar { get; set; }
     [Parameter] public bool EditProjectStationPlanVar { get; set; }
+    [Parameter] public bool NewProjectStationPlanVar { get; set; }
     [Parameter] public EventCallback<bool> EditProjectPlanChanged { get; set; }
     [Parameter] public EventCallback<bool> EditProjectStationPlanChanged { get; set; }
+    [Parameter] public EventCallback<bool> NewProjectStationPlanChanged { get; set; }
     
     private bool _isLoading = true;
     private List<UserDto> _users = new ();
@@ -300,7 +302,7 @@ else
     
     //New station plan
     private NewStationDto _newStationPlan = new();
-    private bool _isAddingNewStation = false;
+    //private bool _isAddingNewStation = false;
     private EditContext _newStationPlanContext;
     
     //Edit station plan
@@ -401,17 +403,19 @@ else
     {
         _newPlan = BackUp(_newPlanBackup);
         _editContext = new EditContext(_newPlan);
-        StateHasChanged();
         EditProjectPlanVar = false;
+        StateHasChanged();
         await EditProjectPlanChanged.InvokeAsync(EditProjectPlanVar);
     }
     
        
     //New station plan
     
-    private void AddStation()
+    private async Task AddStation()
     {
-        _isAddingNewStation = true;
+        NewProjectStationPlanVar = true;
+        StateHasChanged();
+        await NewProjectStationPlanChanged.InvokeAsync(NewProjectStationPlanVar);
     }
     
     private async Task SaveNewStation()
@@ -428,9 +432,10 @@ else
                 EditProjectStationPlanVar = false;
                 _isExistingStationPlan = true;
                 _newStationPlan = new NewStationDto();
-                _isAddingNewStation = false;
+                NewProjectStationPlanVar = false;
                 StateHasChanged();
                 await EditProjectStationPlanChanged.InvokeAsync(EditProjectStationPlanVar);
+                await NewProjectStationPlanChanged.InvokeAsync(NewProjectStationPlanVar);
             }
             else
             {
@@ -443,10 +448,12 @@ else
         } 
     }
 
-    private void CancelNewProjectStationPlan()
+    private async Task CancelNewProjectStationPlan()
     {
-        _isAddingNewStation = false;
         _newStationPlan = new NewStationDto();
+        NewProjectStationPlanVar = false;
+        StateHasChanged();
+        await NewProjectStationPlanChanged.InvokeAsync(NewProjectStationPlanVar);
     }
     
     
@@ -455,6 +462,7 @@ else
     private async Task OnClickProjectStationPlan(UpdateStationDto station)
     {
         EditProjectStationPlanVar = true;
+        StateHasChanged();
         await EditProjectStationPlanChanged.InvokeAsync(EditProjectStationPlanVar);
         _editingStationId = station.Id;
     }
@@ -476,9 +484,10 @@ else
                 }
                 
                 _editingStationId = null;
-                EditProjectStationPlanVar = false;
                 _isExistingStationPlan = false;
+                EditProjectStationPlanVar = false;
                 StateHasChanged();
+                await EditProjectStationPlanChanged.InvokeAsync(EditProjectStationPlanVar);
             }
             else
             {
@@ -500,6 +509,7 @@ else
     }
         _editingStationId = null;
         EditProjectStationPlanVar = false;
+        StateHasChanged();
         await EditProjectStationPlanChanged.InvokeAsync(EditProjectStationPlanVar);
     }
 
@@ -511,6 +521,7 @@ else
             _editStationPlan.RemoveAll(s => s.Id == stationId);
             _editingStationId = null;
             EditProjectStationPlanVar = false;
+            StateHasChanged();
             await EditProjectStationPlanChanged.InvokeAsync(EditProjectStationPlanVar);
         }
         else
@@ -541,4 +552,3 @@ else
     }
 
 }
-

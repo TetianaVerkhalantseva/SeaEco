@@ -9,7 +9,7 @@ public class EditSurveyDto
     public Guid ProsjektId { get; set; }
 
     public Guid PreinfoId { get; set; }
-
+    
     public DateOnly Feltdato { get; set; }
 
     public int? AntallGrabbhugg { get; set; }

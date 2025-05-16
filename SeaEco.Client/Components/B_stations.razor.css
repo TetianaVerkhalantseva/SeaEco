@@ -70,10 +70,12 @@
     border-top: solid 1px lightgray !important;
 }
 
+@media (min-width: 1400px) {
+    .min-width-preInfo{
+        min-width:560px;
+    }}
 
-
-
-
+ 
 
 
 

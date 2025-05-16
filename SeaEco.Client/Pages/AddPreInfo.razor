@@ -190,7 +190,7 @@
             _resultMessage = "Preinfo er opprettet.";
             StateHasChanged();
             await Task.Delay(2000);
-            Navigation.NavigateTo($"/project/{ProjectId}");
+            Navigation.NavigateTo($"/project/{ProjectId:D}?tab=b_stations");
         }
         else
         {

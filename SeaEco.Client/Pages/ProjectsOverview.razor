@@ -195,8 +195,8 @@
     
     private string? _currentSortColumn;
     private bool _sortAscending = true;
-    
-   
+
+
     protected override async Task OnInitializedAsync()
     {
         
@@ -269,8 +269,7 @@
             //Default sorting by status and date
             if (string.IsNullOrEmpty(_currentSortColumn))
                 return FilterProjects?.OrderBy(projects => projects.Prosjektstatus).ThenByDescending(projects => projects.StationDatesString).ToList();
-            
-            
+
             var sorted = _currentSortColumn switch
             {
                 var col when col == Resources.TableHeaderCustomer => _sortAscending
@@ -339,7 +338,6 @@
     }
 
 }
-
 
 
 

@@ -493,4 +493,7 @@
     <data name="ButtonDownload" xml:space="preserve">
         <value>Last ned</value>
     </data>
+    <data name="ModalTextDeactivationWhenEditing" xml:space="preserve">
+        <value>Du holder på å redigere en plan. Du må enten lagre planen eller avbryte redigeringen for å deakivere prosjekt.</value>
+    </data>
 </root>

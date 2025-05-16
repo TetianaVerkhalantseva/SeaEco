@@ -14,8 +14,11 @@
 else
 {   
     //PreInfo
-    <div class="d-flex gap-2 flex-column align-items-center mt-5 mb-3 box-border p-4">
-        <h5>Feltinformasjon</h5>
+    <div class="d-flex gap-2 flex-column align-items-center mt-5 mb-3 box-border min-width-preInfo p-4">
+        <div class="d-flex flex-fill w-100">
+            <h5>Feltinformasjon</h5>
+        </div>
+       
         @if (_isExistingPreInfo)
         {
             <div class="d-flex gap-2 flex-column flex-xxl-row justify-content-center">
@@ -28,8 +31,10 @@ else
             </div>
         }
         else
-        {
-            <span>Ingen feltinformasjon registrert</span>
+        {<div class="d-flex flex-fill w-100">
+                <span>Ingen feltinformasjon registrert</span>
+            </div>
+            
         }
         <div class="d-flex gap-2 flex-column justify-content-center mt-3 ">
             <span class="d-inline-block" title="@(_isProjectComplete? "Prosjektet har ikke satus nytt, pågår eller påbegynt" : _isPreInfoDateToday? "Det er allerede registrert preinformasjon for dagens dato":"")">
@@ -40,12 +45,13 @@ else
             <div class="d-flex flex-grow-1"></div>
         </div>
     </div>
-
-    <div class="d-flex flex-column align-items-center line w-100"></div>  
     
     //Station
-    <div class="d-flex flex-column align-items-center mt-5 gap-3">  
-    <h5>Stasjoner</h5> 
+    <div class="d-flex flex-column align-items-center mt-5 mb-5 gap-3 ">
+        
+            <h5>Stasjoner</h5>
+        
+        
     <div class="d-flex justify-content-center w-100">
         <div class="d-flex flex-column align-items-center projects-container">
             <div class="d-flex flex-column gap-3 card-container w-100">
@@ -65,14 +71,15 @@ else
                                     <div class="card cursor" @onclick="() => OnStationClick(station.Id, station.UndersokelseId)">
                                         <div class="card-body text-center @GetStatus(station.UndersokelseId) ">
                                             <h5 class="card-title">@Resources.InputTextStation @station.Nummer</h5>
-                                            <span class="corner-text">@(station.UndersokelseId != null ? "Utfylt" : "Ikke utfylt")</span>
+                                            <span class="corner-text fw-bold">@(station.UndersokelseId == null && Project.Prosjektstatus is Prosjektstatus.Ferdig?
+                                                                              "Planlagt": station.UndersokelseId != null ? "Utfylt" : "Ikke utfylt")</span>
                                         </div>
                                         <ul class="list-group list-group-flush">
-                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <li class="list-group-item d-flex justify-content-between align-items-center border-0">
                                                 <span>@Resources.InputTextNorthCoordinates:</span>
                                                 <span>@station.KoordinatNord</span>
                                             </li>
-                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <li class="list-group-item d-flex justify-content-between align-items-center border-0">
                                                 <span>@Resources.InputTextEsthCoordinates:</span>
                                                 <span>@station.KoordinatOst</span>
                                             </li>
@@ -83,7 +90,7 @@ else
                         </div>
                     </div>
                 }
-                <div class="d-flex gap-2 flex-column flex-xxl-row justify-content-center mb-3">
+                <div class="d-flex gap-2 flex-column flex-xxl-row justify-content-center">
                     <span class="d-inline-block" title="@((Project.Prosjektstatus is not (Prosjektstatus.Pagar))?"Prosjektet har ikke status pågår":"")">
                     <button class="btn custom-btn" type="button" disabled="@(Project.Prosjektstatus is not (Prosjektstatus.Pagar))" @onclick="AddStation">
                         @Resources.ButtonAddNewStation
@@ -206,8 +213,7 @@ else
     private async Task viewPreInfo(Guid preInfoId)
     {
         Navigation.NavigateTo($"project/{Project.Id:D}/preInfo/{preInfoId:D}");
-
-    }   
+    }
 
     private async Task OnStationClick(Guid stationId, Guid? surveyId)
     {
@@ -218,10 +224,9 @@ else
             return;
         }
 
-        var newSurveyIdGuid =Guid.NewGuid();
-        
-        Navigation.NavigateTo(surveyId == null ? $"project/{Project.Id:D}/station/{stationId:D}/create-survey/{newSurveyIdGuid}": 
-            $"project/{Project.Id:D}/station/{stationId:D}/survey/{surveyId:D}");
+        var newSurveyIdGuid = Guid.NewGuid();
+
+        Navigation.NavigateTo(surveyId == null ? $"project/{Project.Id:D}/station/{stationId:D}/create-survey/{newSurveyIdGuid}" : $"project/{Project.Id:D}/station/{stationId:D}/survey/{surveyId:D}");
 
     }
 
@@ -232,9 +237,10 @@ else
         if (response.IsSuccessStatusCode)
         {
             var newStation = await response.Content.ReadFromJsonAsync<StationDto>();
+            _stationData ??= [];
             _stationData.Add(newStation);
+            _isExistingStations = true;
         }
-
     }
 
     private void AddPreInfo()
