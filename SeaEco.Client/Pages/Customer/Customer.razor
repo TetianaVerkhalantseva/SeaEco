@@ -37,9 +37,8 @@
             foreach (var customerName in _customerNames)
             {
                 <div class="col-md-5 col-lg-4 mb-4">
-                    <div class="card shadow-sm p-4 rounded-3 hover-effect d-flex align-items-center justify-content-center position-relative">
-                        <h5 class="customer-name mb-0">@customerName.CustomerName</h5>
-                        <a class="stretched-link" href="CustomerInfo/@customerName.Id"></a> 
+                    <div class="card shadow-sm p-4 rounded-3 hover-effect d-flex align-items-center justify-content-center">
+                        <a class="stretched-link" href="CustomerInfo/@customerName.Id"><h5 class="customer-name">@customerName.CustomerName</h5></a>
                     </div>
                 </div>
             }
