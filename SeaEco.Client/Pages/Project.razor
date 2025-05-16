@@ -30,9 +30,11 @@ else
         </div>
 
         <div class="d-flex w-100 justify-content-end p-1">
-            <button type="button" class="btn custom-outline-secondary-btn" @onclick="ModalDeactivate">
-                Deakiver
-            </button>
+            <span class="d-inline-block" title="@( _project.Prosjektstatus is Prosjektstatus.Deaktivert ? Resources.TooltipDeactivated : "")">
+                <button type="button" class="btn custom-outline-secondary-btn" @onclick="ModalDeactivate" disabled="@(_project.Prosjektstatus is Prosjektstatus.Deaktivert)">
+                    @Resources.ButtonDeactivate
+                    </button>
+                </span>
         </div>
         
         
@@ -179,7 +181,7 @@ else
                     <div class="d-flex justify-content-end mt-3">
                         @if (!_editProjectInfo)
                         {
-                            <span class="d-inline-block" title="@(_modalDeactivate || _project.Prosjektstatus is Prosjektstatus.Deaktivert ? "Prosjektet er deaktivert." : "")">
+                            <span class="d-inline-block" title="@(_modalDeactivate || _project.Prosjektstatus is Prosjektstatus.Deaktivert ? Resources.TooltipDeactivated : "")">
                             <button class="btn custom-btn" type="button" @onclick="OnClickProjectInformation" disabled="@(_modalDeactivate || _project.Prosjektstatus is Prosjektstatus.Deaktivert)">
                                 @Resources.ButtonEdit
                             </button>
@@ -252,7 +254,7 @@ else
         }
 
 
-        <div class="modal fade" id="Modal" tabindex="-1" aria-hidden="true">
+        <div class="modal fade" id="Modal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content ">
                     
@@ -271,7 +273,7 @@ else
                     else
                     {
                         <div class="modal-body">
-                            <p>Du er i ferd med å deaktivere prosjektet. Det er ikke mulig å aktivere et deaktivert prosjekt.</p>
+                            <p>@Resources.ModalTextDeactivation</p>
                             <div class="mb-3">
                                 <label for="message-text" class="col-form-label">@Resources.ModalComment</label>
                                 <textarea class="form-control" id="message-text" @bind-value="_comment.Merknad" @bind-value:event="oninput"></textarea>
@@ -280,7 +282,7 @@ else
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="ClearComment">@Resources.ButtonCancel</button>
                             <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="Deactivate" disabled="@string.IsNullOrWhiteSpace(_comment.Merknad)">
-                                Deakiver
+                                @Resources.ButtonDeactivate 
                             </button>
                         </div>
                     }
@@ -288,7 +290,7 @@ else
             </div>
         </div>
 
-        <div class="modal fade" id="ModalTab" tabindex="-1" aria-hidden="true">
+        <div class="modal fade" id="ModalTab" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content ">
 
@@ -524,6 +526,7 @@ else
         _projectCopy.Prosjektstatus = Prosjektstatus.Deaktivert;
         _project.Merknad = string.IsNullOrEmpty(_project.Merknad) ? _comment.Merknad : $"{_project.Merknad}{Environment.NewLine}{_comment.Merknad}";
         _updateStatus.Merknad = _comment.Merknad;
+        _updateStatus.Status = Prosjektstatus.Deaktivert;
         await Http.PutAsJsonAsync($"/api/Project/{_project.Id:D}/status", _updateStatus);
     }
     

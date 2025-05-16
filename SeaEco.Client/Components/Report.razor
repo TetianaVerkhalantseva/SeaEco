@@ -22,7 +22,7 @@ else
             @if (_projectPlan == null)
             {
                 <div class="d-flex flex-fill w-100">
-                    <p>Ingen prosjektplan generert</p>
+                    <p>@Resources.ReportPageNoProjectPlanGenerated</p>
                 </div>
             }
             else
@@ -70,7 +70,7 @@ else
                 <div class="d-flex flex-grow-1"></div>
                 <div class="d-flex flex-xxl-column justify-content-center align-items-end">
                     
-                    <span class="d-inline-block" title="@((Project.Prosjektstatus is not Prosjektstatus.Ferdig) ? "Prosjektet må ha status ferdig for å kunne (re)generere rapporter":"")">
+                    <span class="d-inline-block" title="@(Project.Prosjektstatus is (Prosjektstatus.Deaktivert) ? Resources.TooltipDeactivated: Project.Prosjektstatus is not Prosjektstatus.Ferdig ? Resources.TooltipStatusHasToBeDoneToGenerateReport:"")">
                     <button class="btn custom-btn " type="button" @onclick="GenerateReports" disabled="@(Project.Prosjektstatus is not Prosjektstatus.Ferdig)">
                         @(_documentReports == null ? Resources.ButtonGenerateReports : Resources.ButtonReGenerateReports)
                     </button>
