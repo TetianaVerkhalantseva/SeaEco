@@ -914,5 +914,125 @@ namespace SeaEco.Client.Resources {
                 return ResourceManager.GetString("ButtonDownload", resourceCulture);
             }
         }
+        
+        internal static string ModalTextDeactivationWhenEditing {
+            get {
+                return ResourceManager.GetString("ModalTextDeactivationWhenEditing", resourceCulture);
+            }
+        }
+        
+        internal static string ModalTextDateNotToday {
+            get {
+                return ResourceManager.GetString("ModalTextDateNotToday", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonReOpen {
+            get {
+                return ResourceManager.GetString("ButtonReOpen", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonAddFildInfo {
+            get {
+                return ResourceManager.GetString("ButtonAddFildInfo", resourceCulture);
+            }
+        }
+        
+        internal static string B_StationPageNoFild {
+            get {
+                return ResourceManager.GetString("B_StationPageNoFild", resourceCulture);
+            }
+        }
+        
+        internal static string B_StationPageHeaderFildInfo {
+            get {
+                return ResourceManager.GetString("B_StationPageHeaderFildInfo", resourceCulture);
+            }
+        }
+        
+        internal static string TooltipStatusNotNyttPaapebyntOrPaagar {
+            get {
+                return ResourceManager.GetString("TooltipStatusNotNyttPaapebyntOrPaagar", resourceCulture);
+            }
+        }
+        
+        internal static string TooltipFildDateNotToday {
+            get {
+                return ResourceManager.GetString("TooltipFildDateNotToday", resourceCulture);
+            }
+        }
+        
+        internal static string TooltipDeactivated {
+            get {
+                return ResourceManager.GetString("TooltipDeactivated", resourceCulture);
+            }
+        }
+        
+        internal static string TooltipStatusNotPaagar {
+            get {
+                return ResourceManager.GetString("TooltipStatusNotPaagar", resourceCulture);
+            }
+        }
+        
+        internal static string TooltipStatusNotStations {
+            get {
+                return ResourceManager.GetString("TooltipStatusNotStations", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonDeactivate {
+            get {
+                return ResourceManager.GetString("ButtonDeactivate", resourceCulture);
+            }
+        }
+        
+        internal static string ModalTextDeactivation {
+            get {
+                return ResourceManager.GetString("ModalTextDeactivation", resourceCulture);
+            }
+        }
+        
+        internal static string TooltipStatusNotNyttOrPaapebynt {
+            get {
+                return ResourceManager.GetString("TooltipStatusNotNyttOrPaapebynt", resourceCulture);
+            }
+        }
+        
+        internal static string TooltipEditingPlan {
+            get {
+                return ResourceManager.GetString("TooltipEditingPlan", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonGeneratePlan {
+            get {
+                return ResourceManager.GetString("ButtonGeneratePlan", resourceCulture);
+            }
+        }
+        
+        internal static string ButtonReGeneratePlan {
+            get {
+                return ResourceManager.GetString("ButtonReGeneratePlan", resourceCulture);
+            }
+        }
+        
+        internal static string TooltipNoGeneralPlan {
+            get {
+                return ResourceManager.GetString("TooltipNoGeneralPlan", resourceCulture);
+            }
+        }
+        
+        internal static string TooltipStatusHasToBeDoneToGenerateReport {
+            get {
+                return ResourceManager.GetString("TooltipStatusHasToBeDoneToGenerateReport", resourceCulture);
+            }
+        }
+        
+        internal static string ReportPageNoProjectPlanGenerated {
+            get {
+                return ResourceManager.GetString("ReportPageNoProjectPlanGenerated", resourceCulture);
+            }
+        }
     }
 }
