@@ -24,8 +24,8 @@ else
             <div class="row row-cols-2 g-2 justify-content-center">
                 @foreach (var preInfo in _preInfoData)
                 {
-                    <div class="col d-grid">
-                        <button class="btn custom-btn " type="button" @onclick="() => ViewPreInfo(preInfo.Id)">
+                    <div class="col">
+                        <button class="btn custom-btn w-100" type="button" @onclick="() => ViewPreInfo(preInfo.Id)">
                             @DateOnly.FromDateTime(preInfo.Feltdato)
                         </button>
                     </div>
