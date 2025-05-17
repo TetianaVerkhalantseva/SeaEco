@@ -35,5 +35,11 @@ public class ImageController(IImageService imageService) : ApiControllerBase
             ? AsBadRequest(response.ErrorMessage)
             : AsOk(response.Value);
     }
-
+    
+    [HttpGet("all/{undersokelseId:guid}")]
+    public async Task<IActionResult> GetByUndersokelseId([FromRoute] Guid undersokelseId)
+    {
+        IEnumerable<ImageDto> response = await imageService.GetImagesByUndersokelse(undersokelseId);
+        return AsOk(response);
+    }
 }

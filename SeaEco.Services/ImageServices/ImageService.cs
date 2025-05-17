@@ -83,7 +83,7 @@ public sealed class ImageService : IImageService
             RemoveImage(dbRecords.Undersokelse.Prosjekt.ProsjektIdSe, uploadResult.Value.Name);
         }
         
-        string projectIdSe = dbRecord.Undersokelse.Prosjekt.ProsjektIdSe;
+        string projectIdSe = undersokelse.Prosjekt.ProsjektIdSe;
         return Response<ImageDto>.Ok(new ImageDto()
         {
             Id = imageId,
@@ -134,6 +134,23 @@ public sealed class ImageService : IImageService
             UploadDate = dbRecord.Datogenerert,
             Silt = dbRecord.Silt,
             Path = Path.Combine("/images", projectIdSe, $"{dbRecord.Id.ToString()}.{dbRecord.Extension}"),
+        });
+    }
+
+    public async Task<IEnumerable<ImageDto>> GetImagesByUndersokelse(Guid undersokelId)
+    {
+        List<BBilder> images = await _imageRepository.GetAll()
+            .Include(_ => _.Undersokelse)
+            .ThenInclude(_ => _.Prosjekt)
+            .Where(_ => _.UndersokelseId == undersokelId)
+            .ToListAsync();
+
+        return images.Select(_ => new ImageDto()
+        {
+            Id = _.Id,
+            UploadDate = _.Datogenerert,
+            Silt = _.Silt,
+            Path = Path.Combine("/images", _.Undersokelse.Prosjekt.ProsjektIdSe, $"{_.Id.ToString()}.{_.Extension}")
         });
     }
     
