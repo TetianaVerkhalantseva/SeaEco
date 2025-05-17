@@ -71,6 +71,11 @@
                         Annen posisjon og dybde
                     </button>
                 </div>
+
+                <div class="form-floating mb-3">
+                    <InputText id="analyser" class="form-control" @bind-Value="_surveyDto.BStation.Analyser" placeholder="Analyser"/>
+                    <label for="analyser">Analyser</label>
+                </div>
             </div>
         }
 
@@ -444,16 +449,12 @@
             
             <InputText class="form-control" id="merknader" placeholder="Merknader" @bind-Value="_surveyDto.Merknader"/>
         </div>
-
-        @switch (_result)
-        {
-            case true:
-                <div class="alert alert-success">@_resultMessage</div>
-                break;
-            case false:
-                <div class="alert alert-danger">@_resultMessage</div>
-                break;
-        }
+        
+        <div class="form-floating mb-3 user-input">
+            @* <InputText class="form-control" id="comment" placeholder="Korrigering" @bind-Value="" /> *@
+            <input type="text" class="form-control" id="comment" value="">
+            <label for="comment">Korrigering</label>
+        </div>
 
         <div class="row justify-content-center">
             @if (_validationMessage != null)
@@ -464,6 +465,16 @@
             }
         </div>
     </div>
+    
+    @switch (_result)
+    {
+        case true:
+            <div class="alert alert-success" style="display: flex; margin: 1rem auto; width: 60%;">@_resultMessage</div>
+            break;
+        case false:
+            <div class="alert alert-danger" style="display: flex; margin: 1rem auto; width: 60%;">@_resultMessage</div>
+            break;
+    }
 }
 
 @if (!string.IsNullOrWhiteSpace(_errorMessage))
