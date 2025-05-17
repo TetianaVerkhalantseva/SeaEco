@@ -2,50 +2,69 @@
 
 @using Microsoft.AspNetCore.Authorization
 @using SeaEco.Abstractions.Models.Image
+@using SeaEco.Services.NavigationLockService
+@inject NavigationLockService NavigationLockService
+@inject NavigationManager Navigation
+@inject IJSRuntime Js
 @inject HttpClient Http
 @attribute [Authorize]
 
 <h4>Bilder registrering</h4>
 
-
 <div class="picture-container">
-    <h5>Silt: </h5>
-    <InputFile
-        @key="usiltKey"
-        OnChange="OnUsiltImageSelect"
-        accept="image/*"
-        class="picture-button"/>
-    <button class="btn btn-danger"
-            @onclick="RemoveUsiltImage"
-            disabled="@(usiltPreviewUrl is null)">
-        Remove
-    </button>
-    @if (usiltPreviewUrl != null)
-    {
-        <div class="mt-2">
-            <img src="@usiltPreviewUrl" style="max-width:200px; max-height:200px;"/>
-        </div>
-    }
+    <div class="picture-card">
+        <h5>Silt:</h5>
+        <InputFile
+            @key="usiltKey"
+            OnChange="OnUsiltImageSelect"
+            accept="image/*"
+            class="picture-button" />
+
+        <button class="btn btn-danger mt-2"
+                @onclick="RemoveUsiltImage"
+                disabled="@(usiltPreviewUrl is null)">
+            Remove
+        </button>
+
+        @if (usiltPreviewUrl != null)
+        {
+            <div class="mt-3">
+                <img src="@usiltPreviewUrl" alt="Silt image preview" />
+            </div>
+        }
+    </div>
+
+    <div class="picture-card">
+        <h5>Usilt:</h5>
+        <InputFile
+            @key="siltKey"
+            OnChange="OnSiltImageSelect"
+            accept="image/*"
+            class="picture-button" />
+
+        <button class="btn btn-danger mt-2"
+                @onclick="RemoveSiltImage"
+                disabled="@(siltPreviewUrl is null)">
+            Remove
+        </button>
+
+        @if (siltPreviewUrl != null)
+        {
+            <div class="mt-3">
+                <img src="@siltPreviewUrl" alt="Usilt image preview" />
+            </div>
+        }
+    </div>
 </div>
 
-<div class="picture-container">
-    <h5>Usilt: </h5>
-    <InputFile
-        @key="siltKey"
-        OnChange="OnSiltImageSelect"
-        accept="image/*"
-        class="picture-button"/>
-    <button class="btn btn-danger"
-            @onclick="RemoveSiltImage"
-            disabled="@(siltPreviewUrl is null)">
-        Remove
+<div class="button-container">
+    <button id="cancelBtn" class="custom-btn" @onclick="ConfirmCancel">
+        Avbryt
     </button>
-    @if (siltPreviewUrl != null)
-    {
-        <div class="mt-2">
-            <img src="@siltPreviewUrl" style="max-width:200px; max-height:200px;"/>
-        </div>
-    }
+    
+    <button id="submitBtn" class="custom-btn" @onclick="ConfirmSubmit">
+        Ferdig
+    </button>
 </div>
 
 
@@ -134,6 +153,8 @@
 
     protected override async Task OnInitializedAsync()
     {
+        NavigationLockService.Lock();
+
         var images = await Http.GetFromJsonAsync<IEnumerable<ImageDto>>(
             $"/api/images/all/{SurveyId}");
         _usiltImage = images?.FirstOrDefault(x => x.Silt == false);
@@ -141,5 +162,29 @@
 
         if (_usiltImage != null) usiltPreviewUrl = "https://localhost:7096" + _usiltImage.Path;
         if (_siltImage  != null) siltPreviewUrl  = "https://localhost:7096" + _siltImage.Path;
+    }
+    
+    private async Task ConfirmCancel()
+    {
+        bool confirmed = await Js.InvokeAsync<bool>("confirm", "Er du sikker på at du vil avbryte?");
+        if (confirmed)
+        {
+            BackToProjectPage();
+        }
+    }
+
+    private async Task ConfirmSubmit()
+    {
+        bool confirmed = await Js.InvokeAsync<bool>("confirm", "Er du sikker på at du vil registrere undersøkelsen?");
+        if (confirmed)
+        {
+            BackToProjectPage();
+        }
+    }
+    
+    private void BackToProjectPage()
+    {
+        NavigationLockService.Unlock();
+        Navigation.NavigateTo($"/project/{ProjectId:D}?tab=b_stations");
     }
 }

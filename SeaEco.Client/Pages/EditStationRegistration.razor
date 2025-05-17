@@ -868,7 +868,7 @@
     private void BackToProjectPage()
     {
         NavigationLockService.Unlock();
-        Navigation.NavigateTo($"/project/{_surveyDto.ProsjektId}");
+        Navigation.NavigateTo($"/project/{ProjectId:D}?tab=b_stations");
     }
 
     private async Task SubmitSurvey()
@@ -970,7 +970,6 @@
             _resultMessage = await response.Content.ReadAsStringAsync();
             
             NavigationLockService.Unlock();
-            await Task.Delay(2000);
             Navigation.NavigateTo($"/project/{ProjectId:D}?tab=b_stations");
         }
         else
@@ -978,8 +977,6 @@
             _result = false;
             _resultMessage = await response.Content.ReadAsStringAsync();
         }
-        
-        NavigationLockService.Unlock();
     }
 }
 
