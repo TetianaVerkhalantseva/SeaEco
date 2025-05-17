@@ -496,7 +496,6 @@
     public Guid SurveyId { get; set; }
 
     private EditSurveyDto? _surveyDto;
-    private BStationDto? _station;
 
     private string _coordinateNorthGrade = "";
     private string _coordinateNorthMinute = "";
@@ -524,18 +523,13 @@
             var existingSurvey = await Http.GetFromJsonAsync<EditSurveyDto>(
                 $"api/Project/{ProjectId}/station/{StationId}/survey/{SurveyId}");
 
-            var existingStation = await Http.GetFromJsonAsync<BStationDto>(
-                $"api/Project/{ProjectId}/station/{StationId}");
-
-            if (existingSurvey == null || existingStation == null)
+            if (existingSurvey == null && existingSurvey?.BStation != null)
             {
                 _errorMessage = "Survey or station could not be found.";
                 return;
             }
 
             _surveyDto = existingSurvey;
-            _station = existingStation;
-            _surveyDto.BStation = _station ?? new BStationDto();
 
             ParseCoordinateNorth();
             ParseCoordinateEast();
