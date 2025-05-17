@@ -295,10 +295,12 @@
 
         @* TODO: Picture usilt and tom grabb container *@
         <div class="picture-container">
-            
-            <label class="form-text"><span>Usilt</span></label>
-            <InputFile OnChange="OnUsiltImageSelect" class="picture-button"/>
-            <input type="button" class="btn btn-danger" value="Remove" @onclick="RemoveUsiltImage" />
+
+               <InputFile
+                       @key="usiltKey"
+                       OnChange="OnUsiltImageSelect"
+                       class="picture-button" />
+               <button class="btn btn-danger" @onclick="RemoveUsiltImage">Remove</button>
             
             @*<button class="picture-button" style="vertical-align:middle"><span>Usilt</span></button>*@
             <div class="tom-grabb-container" id="tomGrabb_1">
@@ -317,8 +319,11 @@
         <div class="picture-container">
 
             <label class="form-text"><span>Silt</span></label>
-            <InputFile OnChange="OnSiltImageSelect" class="picture-button" />
-            <input type="button" class="btn btn-danger" value="Remove" @onclick="RemoveSiltImage" />
+               <InputFile
+                       @key="siltKey"
+                       OnChange="OnSiltImageSelect"
+                       class="picture-button" />
+               <button class="btn btn-danger" @onclick="RemoveSiltImage">Remove</button>
             @*<button class="picture-button" style="vertical-align:middle"><span>Silt</span></button>*@
 
             <div class="tom-grabb-container" id="tomGrabb_2">
@@ -329,7 +334,7 @@
                 </label>
             </div>
         </div>
-        @* TODO: Picture usilt and tom grabb container *@
+        @* TODO: Picture silt and tom grabb container *@
 
         <div class="checkbox-1-container">
             <label class="custom-checkbox" for="beggiatoa">
@@ -530,8 +535,10 @@
     private string? _validationMessage;
     
     private const int MaxAllowedImageSize = 5120000; // 5 mb
-    private ImageDto? _siltImage = null;
-    private ImageDto? _usiltImage = null;
+    private ImageDto? _siltImage;
+    private ImageDto? _usiltImage;
+    private Guid usiltKey = Guid.NewGuid();
+    private Guid siltKey  = Guid.NewGuid();
 
     private Task OnSiltImageSelect(InputFileChangeEventArgs args) => SaveImage(args.File, true);
     private Task OnUsiltImageSelect(InputFileChangeEventArgs args) => SaveImage(args.File, false);
@@ -570,25 +577,21 @@
 
     private async Task RemoveUsiltImage()
     {
-        if (_usiltImage is not null)
+        if (_usiltImage == null) return;
+        if (await RemoveImage(_usiltImage.Id))
         {
-            bool result = await RemoveImage(_usiltImage.Id);
-            if (result)
-            {
-                _usiltImage = null;
-            }
+            _usiltImage = null;
+            usiltKey = Guid.NewGuid();
         }
     }
-    
+
     private async Task RemoveSiltImage()
     {
-        if (_siltImage is not null)
+        if (_siltImage == null) return;
+        if (await RemoveImage(_siltImage.Id))
         {
-            bool result = await RemoveImage(_siltImage.Id);
-            if (result)
-            {
-                _siltImage = null;
-            }
+            _siltImage = null;
+            siltKey = Guid.NewGuid();
         }
     }
     
