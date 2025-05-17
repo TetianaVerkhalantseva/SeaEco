@@ -295,12 +295,23 @@
 
         @* TODO: Picture usilt and tom grabb container *@
         <div class="picture-container">
-
-               <InputFile
-                       @key="usiltKey"
-                       OnChange="OnUsiltImageSelect"
-                       class="picture-button" />
-               <button class="btn btn-danger" @onclick="RemoveUsiltImage">Remove</button>
+            <label class="form-text">Usilt</label>
+            <InputFile
+                @key="usiltKey"
+                OnChange="OnUsiltImageSelect"
+                accept="image/*"
+                class="picture-button" />
+            <button class="btn btn-danger"
+                    @onclick="RemoveUsiltImage"
+                    disabled="@(usiltPreviewUrl is null)">
+                Remove
+            </button>
+            @if (usiltPreviewUrl != null)
+            {
+            <div class="mt-2">
+                <img src="@usiltPreviewUrl" style="max-width:200px; max-height:200px;" />
+            </div>
+            }
             
             @*<button class="picture-button" style="vertical-align:middle"><span>Usilt</span></button>*@
             <div class="tom-grabb-container" id="tomGrabb_1">
@@ -317,13 +328,24 @@
     <div id="div3" class="content-div">
         @* TODO: Picture silt and tom grabb container *@
         <div class="picture-container">
-
-            <label class="form-text"><span>Silt</span></label>
-               <InputFile
-                       @key="siltKey"
-                       OnChange="OnSiltImageSelect"
-                       class="picture-button" />
-               <button class="btn btn-danger" @onclick="RemoveSiltImage">Remove</button>
+            <label class="form-text">Silt</label>
+            <InputFile
+                @key="siltKey"
+                OnChange="OnSiltImageSelect"
+                accept="image/*"
+                class="picture-button" />
+            <button class="btn btn-danger"
+                    @onclick="RemoveSiltImage"
+                    disabled="@(siltPreviewUrl is null)">
+                Remove
+            </button>
+            @if (siltPreviewUrl != null)
+            {
+            <div class="mt-2">
+                <img src="@siltPreviewUrl" style="max-width:200px; max-height:200px;" />
+            </div>
+            }
+            
             @*<button class="picture-button" style="vertical-align:middle"><span>Silt</span></button>*@
 
             <div class="tom-grabb-container" id="tomGrabb_2">
@@ -535,74 +557,83 @@
     private string? _validationMessage;
     
     private const int MaxAllowedImageSize = 5120000; // 5 mb
-    private ImageDto? _siltImage;
     private ImageDto? _usiltImage;
+    private ImageDto? _siltImage;
+    private string? usiltPreviewUrl;
+    private string? siltPreviewUrl;
     private Guid usiltKey = Guid.NewGuid();
     private Guid siltKey  = Guid.NewGuid();
 
-    private Task OnSiltImageSelect(InputFileChangeEventArgs args) => SaveImage(args.File, true);
-    private Task OnUsiltImageSelect(InputFileChangeEventArgs args) => SaveImage(args.File, false);
+    private bool HasUsilt => _usiltImage != null || usiltPreviewUrl != null;
+    private bool HasSilt  => _siltImage  != null || siltPreviewUrl  != null;
 
-    private async Task SaveImage(IBrowserFile file, bool silt)
+    private Task OnUsiltImageSelect(InputFileChangeEventArgs e)
+        => UploadAndPreview(e.File, false);
+
+    private Task OnSiltImageSelect(InputFileChangeEventArgs e)
+        => UploadAndPreview(e.File, true);
+
+    private async Task UploadAndPreview(IBrowserFile file, bool isSilt)
     {
-        if (file is null)
+        using var ms = new MemoryStream();
+        await file.OpenReadStream(MaxAllowedImageSize).CopyToAsync(ms);
+        var preview = $"data:{file.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}";
+
+        if (isSilt)
+            siltPreviewUrl = preview;
+        else
+            usiltPreviewUrl = preview;
+
+        var form = new MultipartFormDataContent {
+            { new StreamContent(new MemoryStream(ms.ToArray())), "Image", file.Name },
+            { new StringContent(SurveyId.ToString()), "UndersokelseId" },
+            { new StringContent(isSilt.ToString()),     "Silt" }
+        };
+        var resp = await Http.PostAsync("/api/images/upload", form);
+        if (!resp.IsSuccessStatusCode) return;
+        var dto = await resp.Content.ReadFromJsonAsync<ImageDto>();
+        if (dto == null) return;
+
+        if (isSilt)
         {
-            return;
+            _siltImage     = dto;
+            siltPreviewUrl = "https://localhost:7096" + dto.Path;
         }
-        
-        StreamContent content = new StreamContent(file.OpenReadStream(MaxAllowedImageSize));
-        content.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
-
-        MultipartFormDataContent form = new MultipartFormDataContent();
-        
-        form.Add(content, "Image", file.Name);
-        form.Add(new StringContent(SurveyId.ToString(), Encoding.UTF8), "UndersokelseId");
-        form.Add(new StringContent(silt.ToString(), Encoding.UTF8), "Silt");
-
-        HttpResponseMessage response = await Http.PostAsync("/api/images/upload", form);
-        if (response.IsSuccessStatusCode)
+        else
         {
-            string jsonResponse = await response.Content.ReadAsStringAsync();
-
-            if (silt)
-            {
-                _siltImage = JsonConvert.DeserializeObject<ImageDto>(jsonResponse);
-            }
-            else
-            {
-                _usiltImage = JsonConvert.DeserializeObject<ImageDto>(jsonResponse);
-            }
+            _usiltImage      = dto;
+            usiltPreviewUrl  = "https://localhost:7096" + dto.Path;
         }
     }
 
     private async Task RemoveUsiltImage()
     {
-        if (_usiltImage == null) return;
-        if (await RemoveImage(_usiltImage.Id))
-        {
+        if (_usiltImage != null && await RemoveImage(_usiltImage.Id))
             _usiltImage = null;
-            usiltKey = Guid.NewGuid();
-        }
+
+        usiltPreviewUrl = null;
+        usiltKey        = Guid.NewGuid();
     }
 
     private async Task RemoveSiltImage()
     {
-        if (_siltImage == null) return;
-        if (await RemoveImage(_siltImage.Id))
-        {
+        if (_siltImage != null && await RemoveImage(_siltImage.Id))
             _siltImage = null;
-            siltKey = Guid.NewGuid();
-        }
+
+        siltPreviewUrl = null;
+        siltKey        = Guid.NewGuid();
     }
-    
-    private async Task<bool> RemoveImage(Guid imageId)
+
+    private async Task<bool> RemoveImage(Guid id)
     {
-        HttpResponseMessage response = await Http.DeleteAsync($"/api/images/{imageId}/remove");
-        return response.IsSuccessStatusCode;
+        var r = await Http.DeleteAsync($"/api/images/{id}/remove");
+        return r.IsSuccessStatusCode;
     }
 
     protected override async Task OnInitializedAsync()
     {
+        
+        
         NavigationLockService.Lock();
 
         try
@@ -632,6 +663,14 @@
         {
             _errorMessage = $"Error loading data: {ex.Message}";
         }
+        
+        var images = await Http.GetFromJsonAsync<IEnumerable<ImageDto>>(
+            $"/api/images/all/{SurveyId}");
+        _usiltImage = images?.FirstOrDefault(x => x.Silt == false);
+        _siltImage  = images?.FirstOrDefault(x => x.Silt == true);
+
+        if (_usiltImage != null) usiltPreviewUrl = "https://localhost:7096" + _usiltImage.Path;
+        if (_siltImage  != null) siltPreviewUrl  = "https://localhost:7096" + _siltImage.Path;
 
         StateHasChanged();
         
