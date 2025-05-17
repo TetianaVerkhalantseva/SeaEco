@@ -535,22 +535,19 @@
             ParseCoordinateEast();
 
             _isLoaded = true;
+            
+            if (_surveyDto.BlotbunnId != null)
+                _selectBunnType = "blot";
+            else if (_surveyDto.HardbunnId != null)
+                _selectBunnType = "hard";
+        
+            _selectSensorisk = _surveyDto.SensoriskId != null ? "ja" : "nei";
+            _selectDyr = _surveyDto.DyrId != null ? "ja" : "nei";
         }
         catch (Exception ex)
         {
             _errorMessage = $"Error loading data: {ex.Message}";
         }
-
-        StateHasChanged();
-        
-        if (_surveyDto.BlotbunnId != null)
-            _selectBunnType = "blot";
-        else if (_surveyDto.HardbunnId != null)
-            _selectBunnType = "hard";
-        
-        _selectSensorisk = _surveyDto.SensoriskId != null ? "ja" : "nei";
-        
-        _selectDyr = _surveyDto.DyrId != null ? "ja" : "nei";
     }
     
     protected override async Task OnAfterRenderAsync(bool firstRender)
