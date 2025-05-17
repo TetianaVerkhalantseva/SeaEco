@@ -9,7 +9,7 @@ public class EditSurveyDto
     public Guid ProsjektId { get; set; }
 
     public Guid PreinfoId { get; set; }
-
+    
     public DateOnly Feltdato { get; set; }
 
     public int? AntallGrabbhugg { get; set; }
@@ -46,15 +46,11 @@ public class EditSurveyDto
     
     public BStationDto? BStation { get; set; }
     
-    public List<BSurveyLogDto> BSurveyLogs { get; set; } = new();
-    
     public BSoftBaseDto? BSoftBase { get; set; }
     
     public BAnimalDto? BAnimal { get; set; }
     
     public BHardBaseDto? BHardBase { get; set; }
-    
-    public BPreInfoDto BPreInfo { get; set; } = new();
     
     public BSedimentDto? BSediment { get; set; }
     

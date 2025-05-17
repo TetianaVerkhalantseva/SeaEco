@@ -3,6 +3,7 @@ using SeaEco.Abstractions.Enums;
 using SeaEco.Abstractions.Models.BSurvey;
 using SeaEco.Abstractions.Models.Bundersokelse;
 using SeaEco.EntityFramework.Contexts;
+using SeaEco.EntityFramework.Entities;
 using SeaEco.Services.Mapping;
 using SeaEco.Services.ProjectServices;
 using SeaEco.Services.ReportServices;
@@ -31,9 +32,7 @@ public class BSurveyService: IBSurveyService
     {
         var survey = await _db.BUndersokelses
             .Include(s => s.Preinfo)
-            .Include(s => s.BBilders)
             .Include(s => s.BStasjon)
-            .Include(s => s.BUndersokelsesloggs)
             .Include(s => s.Blotbunn)
             .Include(s => s.Hardbunn)
             .Include(s => s.Sediment)
@@ -48,19 +47,22 @@ public class BSurveyService: IBSurveyService
     {
         try
         {
-            dto.DatoRegistrert ??= DateTime.Now;
-            dto.DatoEndret ??= DateTime.Now;
-            
-            var targetDate = DateTime.Today;
+            var now = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
+            dto.DatoRegistrert = DateTime.SpecifyKind(dto.DatoRegistrert ?? now, DateTimeKind.Unspecified);
+            dto.DatoEndret = DateTime.SpecifyKind(dto.DatoEndret ?? now, DateTimeKind.Unspecified);
+
+            dto.Feltdato = DateOnly.FromDateTime(DateTime.Today);
+
+            var searchDate = dto.Feltdato.ToDateTime(TimeOnly.MinValue);
 
             var preInfo = await _db.BPreinfos
                 .FirstOrDefaultAsync(p =>
                     p.ProsjektId == projectId &&
-                    p.Feltdato.Date == targetDate);
-            
+                    p.Feltdato.Date == searchDate.Date);
+
             if (preInfo != null)
             {
-                dto.Feltdato = DateOnly.FromDateTime(preInfo.Feltdato);
+                dto.Feltdato = DateOnly.FromDateTime(DateTime.SpecifyKind(preInfo.Feltdato, DateTimeKind.Unspecified));
                 dto.PreinfoId = preInfo.Id;
             }
             else
@@ -71,28 +73,22 @@ public class BSurveyService: IBSurveyService
                     Message = "Cannot find the preinfo with the same date"
                 };
             }
-
-            // foreach (var log in dto.BSurveyLogs)
-            // {
-            //     log.Id = Guid.NewGuid();
-            // }
-            
-            var station = await _db.BStasjons
-                .FirstOrDefaultAsync(s => s.Id == stationId && s.ProsjektId == projectId);
-
-            if (station == null)
-            {
-                return new EditSurveyResult
-                {
-                    IsSuccess = false,
-                    Message = "Cannot find the station"
-                };
-            }
             
             var entity = dto.ToEntity();
-            station.UndersokelseId = entity.Id;
-            entity.BStasjon = station;
-
+            
+            if (dto.BStation != null && dto.BStation.Id != Guid.Empty)
+            {
+                var existingStation = new BStasjon { Id = dto.BStation.Id };
+                _db.BStasjons.Attach(existingStation);
+                
+                existingStation.KoordinatNord = dto.BStation.KoordinatNord;
+                existingStation.KoordinatOst = dto.BStation.KoordinatOst;
+                existingStation.Dybde = dto.BStation.Dybde;
+                existingStation.Analyser = dto.BStation.Analyser;
+                
+                entity.BStasjon = existingStation;
+            }
+            
             _db.BUndersokelses.Add(entity);
             await _db.SaveChangesAsync();
             
@@ -117,16 +113,30 @@ public class BSurveyService: IBSurveyService
     {
         try
         {
-            dto.DatoEndret ??= DateTime.Now;
-            
-            // foreach (var log in dto.BSurveyLogs)
-            // {
-            // }
-            
-            var entity = dto.ToEntity();
-            _db.BUndersokelses.Update(entity);
+            var now = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Unspecified);
+            dto.DatoEndret = DateTime.SpecifyKind(dto.DatoEndret ?? now, DateTimeKind.Unspecified);
+
+            var existing = await _db.BUndersokelses
+                .Include(x => x.BStasjon)
+                .Include(x => x.Blotbunn)
+                .Include(x => x.Hardbunn)
+                .Include(x => x.Sediment)
+                .Include(x => x.Sensorisk)
+                .Include(x => x.Dyr)
+                .FirstOrDefaultAsync(x => x.Id == dto.Id);
+
+            if (existing == null)
+            {
+                return new EditSurveyResult
+                {
+                    IsSuccess = false,
+                    Message = "Survey not found."
+                };
+            }
+
+            existing.ApplyEditSurveyDto(dto);
             await _db.SaveChangesAsync();
-            
+
             return new EditSurveyResult
             {
                 IsSuccess = true,
@@ -135,12 +145,13 @@ public class BSurveyService: IBSurveyService
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
+            Console.WriteLine(ex);
             return new EditSurveyResult
             {
                 IsSuccess = false,
-                Message = "An error occured while updating the survey."
+                Message = "An error occurred while updating the survey."
             };
         }
     }
+
 }
