@@ -12,10 +12,10 @@ public class ImageController(IImageService imageService) : ApiControllerBase
     [HttpPost("upload")]
     public async Task<IActionResult> UploadImage([FromForm] AddImageDto dto)
     {
-        Response response = await imageService.AddImage(dto);
+        Response<ImageDto> response = await imageService.AddImage(dto);
         return response.IsError
             ? AsBadRequest(response.ErrorMessage)
-            : AsOk();
+            : AsOk(response.Value);
     }
 
     [HttpDelete("{id:guid}/remove")]

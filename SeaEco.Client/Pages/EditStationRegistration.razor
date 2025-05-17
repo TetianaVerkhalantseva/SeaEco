@@ -4,13 +4,19 @@
 @* For testing *@
 @* @page "/project/edit-survey" *@
 
+@using System.Net.Http.Headers
+@using System.Text
+@using System.Text.Json.Serialization
 @using Microsoft.AspNetCore.Authorization
+@using Newtonsoft.Json
 @using SeaEco.Abstractions.Enums
 @using SeaEco.Abstractions.Enums.Bsensorisk
 @using SeaEco.Abstractions.Extensions
 @using SeaEco.Abstractions.Models.BSurvey
+@using SeaEco.Abstractions.Models.Image
 @using SeaEco.Abstractions.ValueObjects
 @using SeaEco.Services.NavigationLockService
+@using JsonConverter = System.Text.Json.Serialization.JsonConverter
 @inject NavigationLockService NavigationLockService
 @inject HttpClient Http
 @inject IJSRuntime Js
@@ -289,8 +295,12 @@
 
         @* TODO: Picture usilt and tom grabb container *@
         <div class="picture-container">
-            <button class="picture-button" style="vertical-align:middle"><span>Usilt</span></button>
-
+            
+            <label class="form-text"><span>Usilt</span></label>
+            <InputFile OnChange="OnUsiltImageSelect" class="picture-button"/>
+            <input type="button" class="btn btn-danger" value="Remove" @onclick="RemoveUsiltImage" />
+            
+            @*<button class="picture-button" style="vertical-align:middle"><span>Usilt</span></button>*@
             <div class="tom-grabb-container" id="tomGrabb_1">
                 <label class="custom-checkbox" for="tom-grabb-1">
                     <span class="custom-label">Tom grabb</span>
@@ -305,7 +315,11 @@
     <div id="div3" class="content-div">
         @* TODO: Picture silt and tom grabb container *@
         <div class="picture-container">
-            <button class="picture-button" style="vertical-align:middle"><span>Silt</span></button>
+
+            <label class="form-text"><span>Silt</span></label>
+            <InputFile OnChange="OnSiltImageSelect" class="picture-button" />
+            <input type="button" class="btn btn-danger" value="Remove" @onclick="RemoveSiltImage" />
+            @*<button class="picture-button" style="vertical-align:middle"><span>Silt</span></button>*@
 
             <div class="tom-grabb-container" id="tomGrabb_2">
                 <label class="custom-checkbox" for="tom-grabb-2">
@@ -514,6 +528,75 @@
 
     private string? _errorMessage;
     private string? _validationMessage;
+    
+    private const int MaxAllowedImageSize = 5120000; // 5 mb
+    private ImageDto? _siltImage = null;
+    private ImageDto? _usiltImage = null;
+
+    private Task OnSiltImageSelect(InputFileChangeEventArgs args) => SaveImage(args.File, true);
+    private Task OnUsiltImageSelect(InputFileChangeEventArgs args) => SaveImage(args.File, false);
+
+    private async Task SaveImage(IBrowserFile file, bool silt)
+    {
+        if (file is null)
+        {
+            return;
+        }
+        
+        StreamContent content = new StreamContent(file.OpenReadStream(MaxAllowedImageSize));
+        content.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+
+        MultipartFormDataContent form = new MultipartFormDataContent();
+        
+        form.Add(content, "Image", file.Name);
+        form.Add(new StringContent(SurveyId.ToString(), Encoding.UTF8), "UndersokelseId");
+        form.Add(new StringContent(silt.ToString(), Encoding.UTF8), "Silt");
+
+        HttpResponseMessage response = await Http.PostAsync("/api/images/upload", form);
+        if (response.IsSuccessStatusCode)
+        {
+            string jsonResponse = await response.Content.ReadAsStringAsync();
+
+            if (silt)
+            {
+                _siltImage = JsonConvert.DeserializeObject<ImageDto>(jsonResponse);
+            }
+            else
+            {
+                _usiltImage = JsonConvert.DeserializeObject<ImageDto>(jsonResponse);
+            }
+        }
+    }
+
+    private async Task RemoveUsiltImage()
+    {
+        if (_usiltImage is not null)
+        {
+            bool result = await RemoveImage(_usiltImage.Id);
+            if (result)
+            {
+                _usiltImage = null;
+            }
+        }
+    }
+    
+    private async Task RemoveSiltImage()
+    {
+        if (_siltImage is not null)
+        {
+            bool result = await RemoveImage(_siltImage.Id);
+            if (result)
+            {
+                _siltImage = null;
+            }
+        }
+    }
+    
+    private async Task<bool> RemoveImage(Guid imageId)
+    {
+        HttpResponseMessage response = await Http.DeleteAsync($"/api/images/{imageId}/remove");
+        return response.IsSuccessStatusCode;
+    }
 
     protected override async Task OnInitializedAsync()
     {
