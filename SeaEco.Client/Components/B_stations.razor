@@ -21,13 +21,15 @@ else
        
         @if (_isExistingPreInfo)
         {
-            <div class="row row-cols-2 gap-2 justify-content-center">
+            <div class="d-flex flex-column gap-2 justify-content-center">
                 
                 @foreach (var preInfo in _preInfoData)
                 {
-                    <button class="btn custom-btn" type="button" @onclick="() => ViewPreInfo(preInfo.Id)">
-                        @DateOnly.FromDateTime(preInfo.Feltdato)
-                    </button>
+                    <div class="d-flex">
+                        <button class="btn custom-btn" type="button" @onclick="() => ViewPreInfo(preInfo.Id)">
+                            @DateOnly.FromDateTime(preInfo.Feltdato)
+                        </button>
+                    </div>
                 }
                 
             </div>
@@ -263,7 +265,7 @@ else
         if (!_isProjectComplete && anyPlannedStationsNotRegistered)
         {
             _modalCompleat = true;
-            await Js.InvokeVoidAsync("showModal", "#Modal");
+            await Js.InvokeVoidAsync("showModal", "#ModalFiled");
             return;
         }
 
@@ -285,7 +287,18 @@ else
             var anyPlannedStationsNotRegistered = _stationData.Any(station => station.UndersokelseId == null && station.ProvetakingsplanId == null);
             if (anyPlannedStationsNotRegistered)
             {
-                //endepunkt som sletter alle stasjoner som skal slettes
+                foreach (var station in _stationData.Where(station => station.UndersokelseId == null && station.ProvetakingsplanId == null))
+                {
+                    await Http.DeleteAsync($"/api/Project/{Project.Id:D}/station/{station.Id:D}");
+                }
+                
+                var responseStations = await Http.GetAsync($"/api/Project/{Project.Id:D}/stations");
+                if (responseStations.IsSuccessStatusCode)
+                {
+                    _stationData = await responseStations.Content.ReadFromJsonAsync<List<StationDto>>();
+                    _stationData?.Sort((a, b) => a.Nummer.CompareTo(b.Nummer));
+                    _isExistingStations = true;
+                }
             }
 
             Project.Prosjektstatus = Prosjektstatus.Ferdig;
