@@ -93,14 +93,6 @@ public static class SurveyMappings
                 ProvetakingsplanId = entity.BStasjon.ProvetakingsplanId,
                 UndersokelseId = entity.BStasjon.UndersokelseId,
             } : null,
-
-            /*BBilders = entity.BBilders.Select(b => new ImageDto
-            {
-                Id = b.Id,
-                UndersokelseId = b.UndersokelseId,
-                Silt = b.Silt,
-                Extension = b.Extension
-            }).ToList(),*/
         };
     }
 
@@ -187,14 +179,6 @@ public static class SurveyMappings
                     Arter = dto.BAnimal.Arter
                 }
                 : null,
-
-            /*BBilders = dto.BBilders.Select(pic => new BBilder
-            {
-                Id = pic.Id,
-                UndersokelseId = pic.UndersokelseId,
-                Silt = pic.Silt,
-                Extension = pic.Extension
-            }).ToList()*/
         };
     }
     

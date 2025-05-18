@@ -196,35 +196,39 @@
         }
     </div>
     <div class="picture-container">
-        <h5>Usilt: </h5>
-        @if (usiltPreviewUrl != null)
-        {
-            <img src="@usiltPreviewUrl"
-                 alt="Usilt image"
-                 style="max-width:200px; max-height:200px;"/>
-        }
-        else
-        {
-            <span>Ingen Usilt-bilder lastet opp.</span>
-        }
+        <div class="picture-card">
+            <h5>Usilt: </h5>
+            
+            @if (usiltPreviewUrl != null)
+            {
+                <img src="@usiltPreviewUrl"
+                     alt="Usilt image"
+                     style="max-width:200px; max-height:200px;"/>
+            }
+            else
+            {
+                <span>Ingen Usilt-bilder lastet opp.</span>
+            }
+        </div>
+        
+        <div class="picture-card">
+            <h5>Silt: </h5>
+            
+            @if (siltPreviewUrl != null)
+            {
+                <img src="@siltPreviewUrl"
+                     alt="Silt image"
+                     style="max-width:200px; max-height:200px;"/>
+            }
+            else
+            {
+                <span>Ingen Silt-bilder lastet opp.</span>
+            }
+        </div>
     </div>
 </div>
 
 <div id="div3" class="content-div">
-    <div class="picture-container mt-4">
-        <h5>Silt: </h5>
-        @if (siltPreviewUrl != null)
-        {
-            <img src="@siltPreviewUrl"
-                 alt="Silt image"
-                 style="max-width:200px; max-height:200px;"/>
-        }
-        else
-        {
-            <span>Ingen Silt-bilder lastet opp.</span>
-        }
-    </div>
-
     <div class="checkbox-1-container">
         <label class="custom-checkbox" for="beggiatoa">
             <span class="custom-label">Beggiatoa</span>
@@ -304,6 +308,10 @@
         </div>
     }
 
+    <div class="form-floating mb-3 user-input">
+        <input type="text" class="form-control" id="comment" value="">
+        <label for="comment">Korrigering</label>
+    </div>
 </div>
 
 @if (!string.IsNullOrWhiteSpace(_errorMessage))
