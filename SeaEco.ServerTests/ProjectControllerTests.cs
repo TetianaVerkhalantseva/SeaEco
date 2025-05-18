@@ -1201,18 +1201,21 @@ public class ProjectControllerTests
         }
 
         [Fact]
-        public async Task CreateSurvey_StationNull_ReturnsBadRequest()
+        public async Task CreateSurvey_WhenServiceReturnsError_ReturnsBadRequestWithMessage()
         {
             // Arrange
             var projId    = Guid.NewGuid();
             var stationId = Guid.NewGuid();
             var dto       = new EditSurveyDto();
+
             _projectMock
                 .Setup(s => s.GetProjectByIdAsync(projId))
                 .ReturnsAsync(new ProjectDto());
-            _stationMock
-                .Setup(s => s.GetBStationDtoByStationId(projId, stationId))
-                .ReturnsAsync((BStationDto?)null);
+
+            var errorMessage = "Station does not exist";
+            _surveyMock
+                .Setup(s => s.CreateSurvey(projId, stationId, dto))
+                .ReturnsAsync(new EditSurveyResult { IsSuccess = false, Message = errorMessage });
 
             // Act
             var result = await _ctrl.CreateSurvey(projId, stationId, dto);
@@ -1220,7 +1223,7 @@ public class ProjectControllerTests
             // Assert
             var bad = result as BadRequestObjectResult;
             bad.Should().NotBeNull();
-            bad!.Value.Should().Be("Station does not exist");
+            bad!.Value.Should().Be(errorMessage);
         }
 
         [Fact]
@@ -1315,19 +1318,21 @@ public class ProjectControllerTests
         }
 
         [Fact]
-        public async Task UpdateSurvey_StationNull_ReturnsBadRequest()
+        public async Task UpdateSurvey_WhenSurveyNotFound_ReturnsBadRequestWithCorrectMessage()
         {
             // Arrange
             var projId    = Guid.NewGuid();
             var stationId = Guid.NewGuid();
             var surveyId  = Guid.NewGuid();
-            var dto       = new EditSurveyDto();
+            var dto       = new EditSurveyDto { Id = surveyId };
+
             _projectMock
                 .Setup(s => s.GetProjectByIdAsync(projId))
                 .ReturnsAsync(new ProjectDto());
-            _stationMock
-                .Setup(s => s.GetBStationDtoByStationId(projId, stationId))
-                .ReturnsAsync((BStationDto?)null);
+            
+            _surveyMock
+                .Setup(s => s.GetSurveyById(surveyId))
+                .ReturnsAsync((EditSurveyDto?)null);
 
             // Act
             var result = await _ctrl.UpdateSurvey(projId, stationId, surveyId, dto);
@@ -1335,7 +1340,7 @@ public class ProjectControllerTests
             // Assert
             var bad = result as BadRequestObjectResult;
             bad.Should().NotBeNull();
-            bad!.Value.Should().Be("Station does not exist");
+            bad!.Value.Should().Be($"No survey with id {surveyId}");
         }
 
         [Fact]
