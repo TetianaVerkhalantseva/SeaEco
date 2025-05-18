@@ -210,9 +210,11 @@ else
             await Js.InvokeVoidAsync("showModal", "#Modal");
             return;
         }
+
+        var newSurveyId = Guid.NewGuid();
         //Må sende brukeren til rett side for undersøkelse.
-        //Navigation.NavigateTo(surveyId == null ? $"project/{Project.Id:D}/station/{stationId:D}/create-survey" 
-            //: $"project/{Project.Id:D}/station/{stationId:D}/edit-survey/{surveyId:D}");
+        Navigation.NavigateTo(surveyId == null ? $"project/{Project.Id:D}/station/{stationId:D}/create-survey/{newSurveyId}" 
+            : $"project/{Project.Id:D}/station/{stationId:D}/survey/{surveyId:D}");
         
     }
 

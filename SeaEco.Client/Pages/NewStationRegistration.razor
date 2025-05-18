@@ -1,9 +1,6 @@
-@* if testing, comment out this line *@
-@* @page "/project/{ProjectId:guid}/station/{StationId:guid}/create-survey/{ReceivedSurveyId:guid}" *@
+@page "/project/{ProjectId:guid}/station/{StationId:guid}/create-survey/{ReceivedSurveyId:guid}"
 
-@page "/project/create-survey"
-
-@* @using Microsoft.AspNetCore.Authorization *@
+@using Microsoft.AspNetCore.Authorization
 @using SeaEco.Abstractions.Enums
 @using SeaEco.Abstractions.Enums.Bsensorisk
 @using SeaEco.Abstractions.Extensions
@@ -15,11 +12,11 @@
 @inject HttpClient Http
 @inject IJSRuntime Js
 @inject NavigationManager Navigation
-@* @attribute [Authorize] *@
-@* @attribute [Authorize(Roles = "admin")] *@
+@attribute [Authorize]
+@attribute [Authorize(Roles = "admin")]
 
 
-<h4>Stasjonsredigering</h4>
+<h4>Stasjonsregistrering</h4>
 
 
 <div id="div1" class="content-div active">
@@ -33,7 +30,7 @@
                            placeholder="Grader"/>
                 <label for="position_n_deg">Nordlig grader</label>
             </div>
-    
+
             <div class="form-floating mb-3">
                 <InputText id="position_n_min" class="form-control"
                            @bind-Value="_coordinateNorthMinute"
@@ -41,8 +38,8 @@
                            placeholder="Minutter"/>
                 <label for="position_n_min">Nordlig minutter</label>
             </div>
-    
-    
+
+
             <div class="form-floating mb-3">
                 <InputText id="position_e_deg" class="form-control"
                            @bind-Value="_coordinateEastGrade"
@@ -50,7 +47,7 @@
                            placeholder="Grader"/>
                 <label for="position_e_deg">Østlig grader</label>
             </div>
-    
+
             <div class="form-floating mb-3">
                 <InputText id="position_e_min" class="form-control"
                            @bind-Value="_coordinateEastMinute"
@@ -58,17 +55,22 @@
                            placeholder="Minutter"/>
                 <label for="position_e_min">Østlig minutter</label>
             </div>
-    
+
             <div class="form-floating mb-3">
                 <InputNumber id="depth" class="form-control" @bind-Value="_surveyDto.BStation.Dybde" placeholder="M"/>
                 <label for="depth">Dybde</label>
             </div>
-    
+
             <div class="position-depth-button-container">
                 <button class="btn btn-outline-primary clear-data @(_surveyDto.BStation.Dybde == 0 ? "active" : "")"
                         @onclick="() => ClearPositionAndDepth(0)">
                     Annen posisjon og dybde
                 </button>
+            </div>
+
+            <div class="form-floating mb-3">
+                <InputText id="analyser" class="form-control" @bind-Value="_surveyDto.BStation.Analyser" placeholder="Analyser"/>
+                <label for="analyser">Analyser</label>
             </div>
         </div>
     }
@@ -126,9 +128,9 @@
         <h5>Er sensorisk utført?</h5>
 
         <div class="cntr">
-            <input type="radio" 
-                   name="sensorisk" 
-                   id="cbx3" 
+            <input type="radio"
+                   name="sensorisk"
+                   id="cbx3"
                    class="hidden-xs-up"
                    @onchange="@(() => _selectSensorisk = "ja")"
                    checked="@(_selectSensorisk == "ja")"
@@ -239,14 +241,14 @@
     <div class="sedimentType-container" id="sedimentType">
         <div class="hardSediment-container" id="hardSediment">
             <h5>Bunntype:</h5>
-            
+
             <div class="checkbox-container">
                 <button class="toggle-btn" data-level="@(_surveyDto.BHardBase?.Steinbunn.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
                         @onclick="() => ToggleZeroOneValue(_surveyDto.BHardBase, nameof(_surveyDto.BHardBase.Steinbunn))"
                         disabled="@(_surveyDto.BHardBase == null || _surveyDto.BHardBase.Fjellbunn == 1f)">
                     Steinbunn
                 </button>
-                
+
                 <button class="toggle-btn" data-level="@(_surveyDto.BHardBase?.Fjellbunn.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
                         @onclick="() => ToggleZeroOneValue(_surveyDto.BHardBase, nameof(_surveyDto.BHardBase.Fjellbunn))"
                         disabled="@(_surveyDto.BHardBase == null || _surveyDto.BHardBase.Steinbunn == 1f)">
@@ -257,7 +259,7 @@
 
         <div class="softSediment-container" id="softSediment">
             <h5>Sedimenttype:</h5>
-            
+
             <div class="checkbox-container">
                 <button class="toggle-btn" data-level="@(_surveyDto.BSoftBase?.Sand.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
                         @onclick="() => CycleValue(_surveyDto.BSoftBase, nameof(_surveyDto.BSoftBase.Sand))"
@@ -287,39 +289,11 @@
             </div>
         </div>
     </div>
-
-    @* TODO: Picture usilt and tom grabb container *@
-    <div class="picture-container">
-        <button class="picture-button" style="vertical-align:middle"><span>Usilt</span></button>
-
-        <div class="tom-grabb-container" id="tomGrabb_1">
-            <label class="custom-checkbox" for="tom-grabb-1">
-                <span class="custom-label">Tom grabb</span>
-                <input id="tom-grabb-1" type="checkbox">
-                <span class="custom-checkmark"></span>
-            </label>
-        </div>
-    </div>
-    @* TODO: Picture usilt and tom grabb container *@
 </div>
 
 
 
 <div id="div3" class="content-div">
-    @* TODO: Picture silt and tom grabb container *@
-    <div class="picture-container">
-        <button class="picture-button" style="vertical-align:middle"><span>Silt</span></button>
-
-        <div class="tom-grabb-container" id="tomGrabb_2">
-            <label class="custom-checkbox" for="tom-grabb-2">
-                <span class="custom-label">Tom grabb</span>
-                <input id="tom-grabb-2" type="checkbox">
-                <span class="custom-checkmark"></span>
-            </label>
-        </div>
-    </div>
-    @* TODO: Picture usilt and tom grabb container *@
-
     <div class="checkbox-1-container">
         <label class="custom-checkbox" for="beggiatoa">
             <span class="custom-label">Beggiatoa</span>
@@ -345,8 +319,8 @@
 
         <div class="cntr">
             <input type="radio"
-                   name="dyr" 
-                   id="cbx5" 
+                   name="dyr"
+                   id="cbx5"
                    class="hidden-xs-up"
                    @onchange="@(() => _selectDyr = "ja")"
                    checked="@(_selectDyr == "ja")"
@@ -357,8 +331,8 @@
 
         <div class="cntr">
             <input type="radio"
-                   name="dyr" 
-                   id="cbx6" 
+                   name="dyr"
+                   id="cbx6"
                    class="hidden-xs-up"
                    @onchange="@(() => _selectDyr = "nei")"
                    checked="@(_selectDyr == "nei")"
@@ -396,7 +370,7 @@
                         @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Krepsdyr = v)'>50+</button>
             </div>
 
-            <div class="form-floating mb-3">                
+            <div class="form-floating mb-3">
                 <InputText id="skjell" class="form-control"
                            @bind-Value="_surveyDto.BAnimal.Skjell"
                            placeholder="Skjell"/>
@@ -444,19 +418,9 @@
                 @note.GetDescription()
             </button>
         }
-        
+
         <InputText class="form-control" id="merknader" placeholder="Merknader" @bind-Value="_surveyDto.Merknader"/>
     </div>
-
-    @switch (_result)
-    {
-        case true:
-            <div class="alert alert-success">@_resultMessage</div>
-            break;
-        case false:
-            <div class="alert alert-danger">@_resultMessage</div>
-            break;
-    }
 
     <div class="row justify-content-center">
         @if (_validationMessage != null)
@@ -468,6 +432,15 @@
     </div>
 </div>
 
+@switch (_result)
+{
+    case true:
+        <div class="alert alert-success" style="width: 60%;">@_resultMessage</div>
+        break;
+    case false:
+        <div class="alert alert-danger" style="width: 60%;">@_resultMessage</div>
+        break;
+}
 
 <div class="button-container">
     <button id="cancelBtn" class="custom-btn" style="display: none;" @onclick="ConfirmCancel">
@@ -481,145 +454,8 @@
 </div>
 
 
-@* Last and next button script *@
-<script>
-    let currentIndex = 1;
-    const totalDivs = 3;
-
-    function showDiv(index) {
-        for (let i = 1; i <= totalDivs; i++) {
-            document.getElementById('div' + i).classList.remove('active');
-        }
-        document.getElementById('div' + index).classList.add('active');
-        updateButtons();
-    }
-
-    function showLast() {
-        if (currentIndex > 1) {
-            currentIndex--;
-            showDiv(currentIndex);
-        }
-    }
-
-    function showNext() {
-        if (currentIndex < totalDivs) {
-            currentIndex++;
-            showDiv(currentIndex);
-        }
-    }
-
-    function updateButtons() {
-        const lastBtn = document.getElementById('lastBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const cancelBtn = document.getElementById('cancelBtn');
-        const submitBtn = document.getElementById('submitBtn');
-
-        
-        lastBtn.style.display = currentIndex === 1 ? 'none' : 'inline-block';
-        nextBtn.style.display = currentIndex === totalDivs ? 'none' : 'inline-block';
-        cancelBtn.style.display = currentIndex === 1 ? 'inline-block' : 'none';
-        submitBtn.style.display = currentIndex === totalDivs ? 'inline-block' : 'none';
-    }
-
-    updateButtons();
-</script>
-
-<script>
-    const radioSoft = document.getElementById("cbx1");
-    const radioHard = document.getElementById("cbx2");
-    const sensoryQuestion = document.getElementById("sensoryRadio");
-    
-    const radioYes = document.getElementById("cbx3");
-    const radioNo = document.getElementById("cbx4");
-    const sensoryInfo = document.getElementById("sensoryInfo");
-    
-    const sedimentType = document.getElementById("sedimentType");
-    const hardSediment = document.getElementById("hardSediment");
-    const softSediment = document.getElementById("softSediment");
-    
-    const tomGrabb_1 = document.getElementById("tomGrabb_1");
-    const tomGrabb_2 = document.getElementById("tomGrabb_2");
-    
-    const animalYes = document.getElementById("cbx5");
-    const animalNo = document.getElementById("cbx6");
-    const animalInfo = document.getElementById("animalInfo");
-    const arterContainer = document.getElementById("arter-container")
-    
-    function updateDisplay() {
-        if (radioHard.checked) {
-            sensoryQuestion.style.display = "flex";
-
-            sedimentType.style.display = "flex";
-            hardSediment.style.display = "flex";
-            softSediment.style.display = "none";
-            
-            tomGrabb_1.style.display = "flex";
-            tomGrabb_2.style.display = "flex";
-            
-            if (radioYes.checked) {
-                sensoryInfo.style.display = "flex";
-
-                document.getElementById("ProvePh").disabled = true;
-                document.getElementById("ProveEh").disabled = true;
-                document.getElementById("ProveTemp").disabled = true;
-                sensoryDataSoft_1.style.opacity = "0.5";
-                sensoryDataSoft_2.style.opacity = "0.5";
-                sensoryDataSoft_3.style.opacity = "0.5";
-            }
-            else {
-                sensoryInfo.style.display = "none";
-            }
-        }
-        else if (radioSoft.checked) {
-            sensoryQuestion.style.display = "none";
-            sensoryInfo.style.display = "flex";
-
-            sedimentType.style.display = "flex";
-            softSediment.style.display = "flex";
-            hardSediment.style.display = "none";
-
-            document.getElementById("ProvePh").disabled = false;
-            document.getElementById("ProveEh").disabled = false;
-            document.getElementById("ProveTemp").disabled = false;
-            sensoryDataSoft_1.style.opacity = "1";
-            sensoryDataSoft_2.style.opacity = "1";
-            sensoryDataSoft_3.style.opacity = "1";
-
-            tomGrabb_1.style.display = "none";
-            tomGrabb_2.style.display = "none";
-        }
-        else {
-            sensoryQuestion.style.display = "none";
-            sensoryInfo.style.display = "none";
-        }
-    }
-    
-    function updateDisplay_2() {
-        if (animalYes.checked) {
-            animalInfo.style.display = "flex";
-            arterContainer.style.display = "flex";
-        }
-        else {
-            animalInfo.style.display = "none";
-            arterContainer.style.display = "none";
-        }
-    }
-    
-    radioSoft.addEventListener("change", updateDisplay);
-    radioHard.addEventListener("change", updateDisplay);
-    radioYes.addEventListener("change", updateDisplay);
-    radioNo.addEventListener("change", updateDisplay);
-
-    animalYes.addEventListener("change", updateDisplay_2);
-    animalNo.addEventListener("change", updateDisplay_2);
-    
-    updateDisplay();
-    updateDisplay_2();
-</script>
-
 @code {
-    // Remeber to uncomment this part when not testing
-    [Parameter] 
+    [Parameter]
     public Guid ProjectId { get; set; }
     [Parameter]
     public Guid StationId { get; set; }
@@ -637,85 +473,57 @@
     private string? _selectBunnType;
     private string? _selectSensorisk;
     private string? _selectDyr;
-    
+
     private bool? _result;
     private string? _resultMessage;
 
     private string? _validationMessage;
 
-    // Remember to add word "async" when not testing
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         NavigationLockService.Lock();
-        
-        // // Create mode
-        // _surveyDto = new EditSurveyDto
-        // {
-        //     Id = ReceivedSurveyId,
-        //     ProsjektId = ProjectId,
-        //     BlotbunnId = Guid.NewGuid(),
-        //     HardbunnId = Guid.NewGuid(),
-        //     SedimentId = Guid.NewGuid(),
-        //     SensoriskId = Guid.NewGuid(),
-        //     DyrId = Guid.NewGuid(),
-        //     
-        //     BSoftBase = new BSoftBaseDto(),
-        //     BHardBase = new BHardBaseDto(),
-        //     BSediment = new BSedimentDto(),
-        //     BAnimal = new BAnimalDto(),
-        //     BSensorisk = new BSensoriskDto(),
-        // };
-        //
-        // _station = await Http.GetFromJsonAsync<BStationDto>($"api/Project/{ProjectId}/station/{StationId}");
-        //
-        // if (_station != null)
-        // {
-        //     _surveyDto.BStation = _station;
-        //     
-        //     ParseCoordinateNorth();
-        //     ParseCoordinateEast();
-        // }
-        // else
-        // {
-        //     _result = false;
-        //     _resultMessage = $"Cannot find the station with station ID {StationId}";
-        // }
-        
-        
-        // Test code
+
         _surveyDto = new EditSurveyDto
         {
-            Id = Guid.NewGuid(),
-            ProsjektId = Guid.NewGuid(),
-            BlotbunnId = null,
-            HardbunnId = null,
-            SedimentId = null,
-            SensoriskId = null,
-            DyrId = null,
-            
-            BStation = new BStationDto(),
+            Id = ReceivedSurveyId,
+            ProsjektId = ProjectId,
+            BlotbunnId = Guid.NewGuid(),
+            HardbunnId = Guid.NewGuid(),
+            SedimentId = Guid.NewGuid(),
+            SensoriskId = Guid.NewGuid(),
+            DyrId = Guid.NewGuid(),
+
             BSoftBase = new BSoftBaseDto(),
-            BAnimal = new BAnimalDto(),
             BHardBase = new BHardBaseDto(),
             BSediment = new BSedimentDto(),
+            BAnimal = new BAnimalDto(),
             BSensorisk = new BSensoriskDto(),
-            
         };
-        if (_surveyDto.BStation != null)
+
+        _station = await Http.GetFromJsonAsync<BStationDto>($"api/Project/{ProjectId}/station/{StationId}");
+        if (_station != null)
         {
+            _surveyDto.BStation = _station;
+            _station.UndersokelseId = _surveyDto.Id;
+
             ParseCoordinateNorth();
             ParseCoordinateEast();
+            
+            StateHasChanged();
         }
-        // Test code
-        
+        else
+        {
+            _result = false;
+            _resultMessage = $"Cannot find the station with station ID {StationId}";
+            
+            StateHasChanged();
+        }
 
         _selectBunnType = null;
         _selectSensorisk = null;
         _selectDyr = null;
-
-        return Task.CompletedTask;
     }
-    
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -737,7 +545,7 @@
             }
         }
     }
-    
+
     private void ParseCoordinateEast()
     {
         if (!string.IsNullOrEmpty(_surveyDto.BStation.KoordinatOst))
@@ -750,7 +558,7 @@
             }
         }
     }
-    
+
     // Merge the value
     private void UpdateCoordinateNorth()
     {
@@ -766,7 +574,7 @@
             }
         }
     }
-    
+
     private void UpdateCoordinateEast()
     {
         if (!string.IsNullOrWhiteSpace(_coordinateEastGrade) && !string.IsNullOrWhiteSpace(_coordinateEastMinute))
@@ -781,7 +589,7 @@
             }
         }
     }
-    
+
     private void ClearPositionAndDepth(int value)
     {
         if (_surveyDto.BStation != null)
@@ -790,7 +598,7 @@
             _coordinateNorthMinute = "0";
             _coordinateEastGrade = "0";
             _coordinateEastMinute = "0";
-            
+
             UpdateCoordinateNorth();
             UpdateCoordinateEast();
 
@@ -801,25 +609,25 @@
     private void CycleValue(object target, string propertyName)
     {
         if (target == null) return;
-        
+
         var property = target.GetType().GetProperty(propertyName);
         if (property != null)
         {
             var currentValue = (float)(property.GetValue(target) ?? 0f);
-            
+
             if (currentValue == 0)
-                property.SetValue(target, 0.5f);
-            else if (currentValue == 0.5f)
                 property.SetValue(target, 1f);
+            else if (currentValue == 1f)
+                property.SetValue(target, 0.5f);
             else
                 property.SetValue(target, 0f);
         }
     }
-    
+
     private void ToggleZeroOneValue(object target, string propertyName)
     {
         if (target == null) return;
-    
+
         var property = target.GetType().GetProperty(propertyName);
         if (property != null && property.PropertyType == typeof(float))
         {
@@ -828,7 +636,7 @@
             property.SetValue(target, currentValue == 0f ? 1f : 0f);
         }
     }
-    
+
     private void SetAntallDyrVerdi(string verdi, Action<string> setValue)
     {
         try
@@ -841,7 +649,7 @@
             _resultMessage = ex.Message;
         }
     }
-    
+
     private void AddArter(Arter arter)
     {
         var newValue = arter.ToString();
@@ -855,7 +663,7 @@
             _surveyDto.BAnimal.Arter += $", {newValue}";
         }
     }
-    
+
     private void AddMerknad(Merknader merknad)
     {
         var newValue = merknad.ToString();
@@ -869,7 +677,7 @@
             _surveyDto.Merknader += $", {newValue}";
         }
     }
-    
+
     bool IsAllZeroOrNull<T>(T obj)
     {
         if (obj == null) return true;
@@ -936,14 +744,11 @@
 
     private async Task SubmitSurvey()
     {
-        // _surveyDto.ProsjektId = ProjectId;
-        _surveyDto.Feltdato = DateOnly.FromDateTime(DateTime.Today);
-        
         if (_selectBunnType == "blot")
         {
             _surveyDto.BlotbunnId = Guid.NewGuid();
             _surveyDto.BSoftBase.Id = _surveyDto.BlotbunnId.Value;
-            
+
             _surveyDto.HardbunnId = null;
             _surveyDto.BHardBase = null;
 
@@ -967,9 +772,9 @@
         }
         else if (_selectBunnType == "hard")
         {
-            _surveyDto.HardbunnId = Guid.NewGuid(); 
+            _surveyDto.HardbunnId = Guid.NewGuid();
             _surveyDto.BHardBase.Id = _surveyDto.HardbunnId.Value;
-            
+
             _surveyDto.BlotbunnId = null;
             _surveyDto.BSoftBase = null;
 
@@ -984,7 +789,7 @@
             _validationMessage = "Valg av bunntype er påkrevd";
             return;
         }
-        
+
         if (_selectSensorisk == "ja")
         {
             _surveyDto.SensoriskId = Guid.NewGuid();
@@ -1002,7 +807,7 @@
             _surveyDto.SensoriskId = null;
             _surveyDto.BSensorisk = null;
         }
-        
+
         if (_selectDyr == "ja")
         {
             _surveyDto.DyrId = Guid.NewGuid();
@@ -1025,34 +830,162 @@
             _validationMessage = "Valg av dyr er påkrevd";
             return;
         }
-        
-        _surveyDto.DatoRegistrert = DateTime.Now;
-        _surveyDto.DatoEndret = DateTime.Now;
-        
-        
-        // uncomment this part when not testing
-        // var response = await Http.PostAsJsonAsync(
-        //         $"api/Project/{ProjectId}/station/{StationId}/survey",
-        //         _surveyDto);
-        //
-        // if (response.IsSuccessStatusCode)
-        // {
-        //     _result = true;
-        //     _resultMessage = await response.Content.ReadAsStringAsync();
-        //
-        //     NavigationLockService.Unlock();
-        //     await Task.Delay(2000);
-        //     
-        //     // remember to add address
-        //     Navigation.NavigateTo($"");
-        // }
-        // else
-        // {
-        //     _result = false;
-        //     _resultMessage = await response.Content.ReadAsStringAsync();
-        //     StateHasChanged();
-        // }
-        
+
+        var response = await Http.PostAsJsonAsync(
+                $"api/Project/{ProjectId}/station/{StationId}/survey",
+                _surveyDto);
+
+        if (response.IsSuccessStatusCode)
+        {
+            _result = true;
+            _resultMessage = await response.Content.ReadAsStringAsync();
+
+            NavigationLockService.Unlock();
+            await Task.Delay(2000);
+            Navigation.NavigateTo($"/project/{ProjectId:D}?tab=b_stations");
+        }
+        else
+        {
+            _result = false;
+            _resultMessage = await response.Content.ReadAsStringAsync();
+        }
+
         NavigationLockService.Unlock();
     }
 }
+
+
+<script>
+    let currentIndex = 1;
+    const totalDivs = 3;
+
+    function showDiv(index) {
+        for (let i = 1; i <= totalDivs; i++) {
+            document.getElementById('div' + i).classList.remove('active');
+        }
+        document.getElementById('div' + index).classList.add('active');
+        updateButtons();
+    }
+
+    function showLast() {
+        if (currentIndex > 1) {
+            currentIndex--;
+            showDiv(currentIndex);
+        }
+    }
+
+    function showNext() {
+        if (currentIndex < totalDivs) {
+            currentIndex++;
+            showDiv(currentIndex);
+        }
+    }
+
+    function updateButtons() {
+        const lastBtn = document.getElementById('lastBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const submitBtn = document.getElementById('submitBtn');
+
+
+        lastBtn.style.display = currentIndex === 1 ? 'none' : 'inline-block';
+        nextBtn.style.display = currentIndex === totalDivs ? 'none' : 'inline-block';
+        cancelBtn.style.display = currentIndex === 1 ? 'inline-block' : 'none';
+        submitBtn.style.display = currentIndex === totalDivs ? 'inline-block' : 'none';
+    }
+
+    updateButtons();
+</script>
+
+<script>
+    const radioSoft = document.getElementById("cbx1");
+    const radioHard = document.getElementById("cbx2");
+    const sensoryQuestion = document.getElementById("sensoryRadio");
+
+    const radioYes = document.getElementById("cbx3");
+    const radioNo = document.getElementById("cbx4");
+    const sensoryInfo = document.getElementById("sensoryInfo");
+
+    const sedimentType = document.getElementById("sedimentType");
+    const hardSediment = document.getElementById("hardSediment");
+    const softSediment = document.getElementById("softSediment");
+
+    const tomGrabb_1 = document.getElementById("tomGrabb_1");
+    const tomGrabb_2 = document.getElementById("tomGrabb_2");
+
+    const animalYes = document.getElementById("cbx5");
+    const animalNo = document.getElementById("cbx6");
+    const animalInfo = document.getElementById("animalInfo");
+    const arterContainer = document.getElementById("arter-container")
+
+    function updateDisplay() {
+        if (radioHard.checked) {
+            sensoryQuestion.style.display = "flex";
+
+            sedimentType.style.display = "flex";
+            hardSediment.style.display = "flex";
+            softSediment.style.display = "none";
+
+            tomGrabb_1.style.display = "flex";
+            tomGrabb_2.style.display = "flex";
+
+            if (radioYes.checked) {
+                sensoryInfo.style.display = "flex";
+
+                document.getElementById("ProvePh").disabled = true;
+                document.getElementById("ProveEh").disabled = true;
+                document.getElementById("ProveTemp").disabled = true;
+                sensoryDataSoft_1.style.opacity = "0.5";
+                sensoryDataSoft_2.style.opacity = "0.5";
+                sensoryDataSoft_3.style.opacity = "0.5";
+            }
+            else {
+                sensoryInfo.style.display = "none";
+            }
+        }
+        else if (radioSoft.checked) {
+            sensoryQuestion.style.display = "none";
+            sensoryInfo.style.display = "flex";
+
+            sedimentType.style.display = "flex";
+            softSediment.style.display = "flex";
+            hardSediment.style.display = "none";
+
+            document.getElementById("ProvePh").disabled = false;
+            document.getElementById("ProveEh").disabled = false;
+            document.getElementById("ProveTemp").disabled = false;
+            sensoryDataSoft_1.style.opacity = "1";
+            sensoryDataSoft_2.style.opacity = "1";
+            sensoryDataSoft_3.style.opacity = "1";
+
+            tomGrabb_1.style.display = "none";
+            tomGrabb_2.style.display = "none";
+        }
+        else {
+            sensoryQuestion.style.display = "none";
+            sensoryInfo.style.display = "none";
+        }
+    }
+
+    function updateDisplay_2() {
+        if (animalYes.checked) {
+            animalInfo.style.display = "flex";
+            arterContainer.style.display = "flex";
+        }
+        else {
+            animalInfo.style.display = "none";
+            arterContainer.style.display = "none";
+        }
+    }
+
+    radioSoft.addEventListener("change", updateDisplay);
+    radioHard.addEventListener("change", updateDisplay);
+    radioYes.addEventListener("change", updateDisplay);
+    radioNo.addEventListener("change", updateDisplay);
+
+    animalYes.addEventListener("change", updateDisplay_2);
+    animalNo.addEventListener("change", updateDisplay_2);
+
+    updateDisplay();
+    updateDisplay_2();
+</script>

@@ -12,10 +12,10 @@ public class ImageController(IImageService imageService) : ApiControllerBase
     [HttpPost("upload")]
     public async Task<IActionResult> UploadImage([FromForm] AddImageDto dto)
     {
-        Response response = await imageService.AddImage(dto);
+        Response<ImageDto> response = await imageService.AddImage(dto);
         return response.IsError
             ? AsBadRequest(response.ErrorMessage)
-            : AsOk();
+            : AsOk(response.Value);
     }
 
     [HttpDelete("{id:guid}/remove")]
@@ -35,5 +35,11 @@ public class ImageController(IImageService imageService) : ApiControllerBase
             ? AsBadRequest(response.ErrorMessage)
             : AsOk(response.Value);
     }
-
+    
+    [HttpGet("all/{undersokelseId:guid}")]
+    public async Task<IActionResult> GetByUndersokelseId([FromRoute] Guid undersokelseId)
+    {
+        IEnumerable<ImageDto> response = await imageService.GetImagesByUndersokelse(undersokelseId);
+        return AsOk(response);
+    }
 }

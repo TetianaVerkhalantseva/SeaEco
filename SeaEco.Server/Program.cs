@@ -24,6 +24,7 @@ using SeaEco.Services.ImageServices;
 using SeaEco.Services.JwtServices;
 using SeaEco.Services.LokalitetServices;
 using SeaEco.Services.PreInfo;
+using SeaEco.Services.ProgramVersionServices;
 using SeaEco.Services.ProjectServices;
 using SeaEco.Services.ReportServices;
 using SeaEco.Services.SamplingPlanServices;
@@ -121,6 +122,7 @@ services.AddTransient<IJwtService, JwtService>();
 services.AddTransient<IAuthService, AuthService>();
 services.AddTransient<ITokenService, TokenService>();
 services.AddTransient<IUserService, UserService>();
+services.AddTransient<IProgramVersionService, ProgramVersionService>();
 services.AddScoped<ICustomerService, CustomerService>();
 services.AddScoped<IProjectService, ProjectService>();
 services.AddScoped<IPreInfoService, PreInfoService>();
@@ -177,5 +179,5 @@ void SeedData(IServiceProvider serviceProvider)
 {
     using var scope = serviceProvider.CreateScope();
     DbSeeder seeder = new DbSeeder();
-    //seeder.SeedData(scope.ServiceProvider.GetRequiredService<AppDbContext>(), true).GetAwaiter().GetResult();
+    seeder.SeedData(scope.ServiceProvider.GetRequiredService<AppDbContext>(), true).GetAwaiter().GetResult();
 }
