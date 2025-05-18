@@ -123,18 +123,7 @@
                                           {
                                               _surveyDto.BlotbunnId = Guid.NewGuid();
                                               _surveyDto.HardbunnId = null;
-                                          }
-                                          if (_surveyDto.BSediment == null && _surveyDto.BSensorisk == null)
-                                          {
-                                              _surveyDto.BSediment = new BSedimentDto
-                                              {
-                                                  Id = Guid.NewGuid(),
-                                                  Ph = 0,
-                                                  Eh = 0,
-                                                  Temperatur = 0
-                                              };
-                                              _surveyDto.BSensorisk = new BSensoriskDto();
-
+                                              
                                               if (_surveyDto.BSoftBase == null)
                                               {
                                                   _surveyDto.BSoftBase = new BSoftBaseDto
@@ -147,7 +136,19 @@
                                                       Skjellsand = 0f
                                                   };
                                                   _surveyDto.BHardBase = null;
-                                              }                                          }
+                                              }    
+                                          }
+                                          if (_surveyDto.BSediment == null && _surveyDto.BSensorisk == null)
+                                          {
+                                              _surveyDto.BSediment = new BSedimentDto
+                                              {
+                                                  Id = Guid.NewGuid(),
+                                                  Ph = 0,
+                                                  Eh = 0,
+                                                  Temperatur = 0
+                                              };
+                                              _surveyDto.BSensorisk = new BSensoriskDto();
+                                          }
                                           else if (_surveyDto.BSediment != null && _surveyDto.BSensorisk == null)
                                           {
                                               _surveyDto.BSensorisk = new BSensoriskDto();
@@ -156,6 +157,7 @@
                                           {
                                               _surveyDto.BSediment = new BSedimentDto
                                               {
+                                                  Id = Guid.NewGuid(),
                                                   Ph = 0,
                                                   Eh = 0,
                                                   Temperatur = 0
@@ -214,6 +216,7 @@
                                           _selectSensorisk = "ja";
                                           if (_surveyDto.BSensorisk == null)
                                           {
+                                              _surveyDto.BSediment = null;
                                               _surveyDto.BSensorisk = new BSensoriskDto();
                                           }
                                       })"
@@ -481,6 +484,7 @@
                                           if (_surveyDto.BAnimal == null)
                                           {
                                               _surveyDto.BAnimal = new BAnimalDto();
+                                              _surveyDto.BAnimal.Arter = "";
                                           }
                                       })"
                            checked="@(_selectDyr == "ja")"/>
