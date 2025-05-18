@@ -301,6 +301,18 @@ public class ProjectController : ControllerBase
         return result.IsSuccess ? Ok(result.Message) : BadRequest(result.Message);
     }
     
+    //Delete station from project if BU-Id AND PTP-Id is null
+    [HttpDelete("{projectId:guid}/station/{stationId:guid}")]
+    public async Task<IActionResult> DeleteProjectStation(Guid projectId, Guid stationId)
+    {
+        var result = await _stationService.DeleteStationFromProjectAsync(projectId, stationId);
+
+        if (result.IsSuccess)
+            return NoContent();
+        
+        return BadRequest(new { result.Message });
+    }
+    
     // BUndersøkelse operasjoner
     [HttpGet("{projectId:guid}/station/{stationId:guid}/survey/{surveyId:guid}")]
     public async Task<IActionResult> GetSurvey(Guid projectId, Guid stationId, Guid surveyId)

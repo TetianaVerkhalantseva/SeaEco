@@ -246,4 +246,41 @@ public class StationService : IStationService
 
         return new StationResult { IsSuccess = true, Message = "Stasjon slettet." };
     }
+
+    public async Task<StationResult> DeleteStationFromProjectAsync(Guid projectId, Guid stationId)
+    {
+        var station = await _db.BStasjons
+            .FirstOrDefaultAsync(s => s.Id == stationId);
+
+        if (station == null)
+            return new StationResult
+            {
+                IsSuccess = false,
+                Message = "Stasjon ikke funnet."
+            };
+
+        if (station.ProsjektId != projectId)
+            return new StationResult
+            {
+                IsSuccess = false,
+                Message = "Stasjon tilhører ikke dette prosjektet."
+            };
+
+        // Sjekk at hverken undersøkelse eller prøvetakingsplan er opprettet på stasjon
+        if (station.UndersokelseId != null || station.ProvetakingsplanId != null)
+            return new StationResult
+            {
+                IsSuccess = false,
+                Message = "Kan ikke slette stasjon med tilknyttet undersøkelse eller prøvetakingsplan."
+            };
+
+        _db.BStasjons.Remove(station);
+        await _db.SaveChangesAsync();
+
+        return new StationResult
+        {
+            IsSuccess = true,
+            Message = "Stasjon slettet."
+        };
+    }
 }
