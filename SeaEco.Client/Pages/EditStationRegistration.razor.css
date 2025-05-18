@@ -159,7 +159,7 @@
 }
 
 .sensoryRadio-container {
-    display: none;
+    display: flex;
     align-items: center;
     padding: 10px;
     gap: 40px;
@@ -198,7 +198,7 @@
 /* grid lay out */
 
 .sedimentType-container {
-    display: none;
+    display: flex;
     position: relative;
     padding: 10px;
     margin: 1rem auto 1rem auto;
@@ -245,58 +245,12 @@
     background-color: green;
 }
 
-/* Hide default checkbox */
-.checkbox-container input[type="checkbox"] {
-    appearance: none;
-    -webkit-appearance: none;
-    background-color: #fff;
-    margin: 0;
-    font: inherit;
-    color: rgb(100, 151, 177);
-    width: 20px;
-    height: 20px;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-    display: grid;
-    place-content: center;
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    transition: border 0.2s ease, background-color 0.2s ease;
-}
-
-/* Checked state */
-.checkbox-container input[type="checkbox"]:checked {
-    background-color: rgb(100, 151, 177);
-    border-color: rgb(100, 151, 177);
-}
-
-/* Checkmark */
-.checkbox-container input[type="checkbox"]:checked::after {
-    content: '✔';
-    color: white;
-    font-size: 14px;
-    position: absolute;
-    left: 3px;
-    top: -1px;
-}
-
 @media (max-width: 1024px) {
     .checkbox-container {
         flex-flow: wrap;
         row-gap: 1rem;
     }
 }
-
-/*.picture-container {*/
-/*    display: flex;*/
-/*    align-items: center;*/
-/*    justify-content: center;*/
-/*    margin: 3rem auto;*/
-/*    gap: 2rem;*/
-/*}*/
 
 .custom-checkbox {
     display: flex;
@@ -384,7 +338,7 @@
 }
 
 .animalInfo-container {
-    display: none;
+    display: flex;
     margin: 0 auto;
     justify-content: center;
 }
@@ -451,7 +405,7 @@
     gap: 2rem;
     justify-content: center;
     margin: 3rem auto;
-    max-width: 100%;
+    max-width: 80%;
     padding: 0 1rem;
 }
 

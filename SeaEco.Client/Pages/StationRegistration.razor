@@ -113,24 +113,6 @@
             @if (_survey?.BSensorisk != null)
             {
                 <div class="form-floating mb-3">
-                    <input class="form-control" id="Farge"
-                           value="@(_survey.BSensorisk.Farge.ToEnumDescription<Farge>())" />
-                    <label for="Farge">Farge</label>
-                </div>
-
-                <div class="form-floating mb-3">
-                    <input class="form-control" id="Lukt"
-                           value="@(_survey.BSensorisk.Lukt.ToEnumDescription<Lukt>())" />
-                    <label for="Lukt">Lukt</label>
-                </div>
-
-                <div class="form-floating mb-3">
-                    <input class="form-control" id="Konsistens"
-                           value="@(_survey.BSensorisk.Konsistens.ToEnumDescription<Konsistens>())" />
-                    <label for="Konsistens">Konsistens</label>
-                </div>
-
-                <div class="form-floating mb-3">
                     <input class="form-control" id="GrabbVolum"
                            value="@(_survey.BSensorisk.Grabbvolum.ToEnumDescription<Grabbvolum>())" />
                     <label for="GrabbVolum">GrabbVolum</label>
@@ -147,6 +129,24 @@
                            value="@(_survey.BSensorisk.Gassbobler.ToEnumDescription<Gassbobler>())" />
                     <label for="Gassbobler">Gassbobler</label>
                 </div>
+                
+                <div class="form-floating mb-3">
+                    <input class="form-control" id="Farge"
+                           value="@(_survey.BSensorisk.Farge.ToEnumDescription<Farge>())" />
+                    <label for="Farge">Farge</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input class="form-control" id="Lukt"
+                           value="@(_survey.BSensorisk.Lukt.ToEnumDescription<Lukt>())" />
+                    <label for="Lukt">Lukt</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input class="form-control" id="Konsistens"
+                           value="@(_survey.BSensorisk.Konsistens.ToEnumDescription<Konsistens>())" />
+                    <label for="Konsistens">Konsistens</label>
+                </div>
             }
         </div>
     </div>
@@ -158,14 +158,13 @@
                 <h5>Bunntype:</h5>
 
                 <div class="checkbox-container">
-                    <label>
-                        <input type="checkbox" checked="@(_survey.BHardBase.Steinbunn != 0)" />
+                    <button class="toggle-btn" data-level="@(_survey.BHardBase?.Steinbunn.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")">
                         Steinbunn
-                    </label>
-                    <label>
-                        <input type="checkbox" checked="@(_survey.BHardBase.Fjellbunn != 0)" />
+                    </button>
+
+                    <button class="toggle-btn" data-level="@(_survey.BHardBase?.Fjellbunn.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")">
                         Fjellbunn
-                    </label>
+                    </button>
                 </div>
             </div>
         }
@@ -176,21 +175,25 @@
                 <h5>Sedimenttype:</h5>
 
                 <div class="checkbox-container">
-                    <label>
-                        <input type="checkbox" checked="@(_survey.BSoftBase.Sand != 0)" /> Sand
-                    </label>
-                    <label>
-                        <input type="checkbox" checked="@(_survey.BSoftBase.Leire != 0)" /> Leire
-                    </label>
-                    <label>
-                        <input type="checkbox" checked="@(_survey.BSoftBase.Silt != 0)" /> Silt
-                    </label>
-                    <label>
-                        <input type="checkbox" checked="@(_survey.BSoftBase.Grus != 0)" /> Grus
-                    </label>
-                    <label>
-                        <input type="checkbox" checked="@(_survey.BSoftBase.Skjellsand != 0)" /> Skjellsand
-                    </label>
+                    <button class="toggle-btn" data-level="@(_survey.BSoftBase?.Sand.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")">
+                        Sand
+                    </button>
+
+                    <button class="toggle-btn" data-level="@(_survey.BSoftBase?.Leire.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")">
+                        Leire
+                    </button>
+
+                    <button class="toggle-btn" data-level="@(_survey.BSoftBase?.Silt.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")">
+                        Silt
+                    </button>
+
+                    <button class="toggle-btn" data-level="@(_survey.BSoftBase?.Grus.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")">
+                        Grus
+                    </button>
+
+                    <button class="toggle-btn" data-level="@(_survey.BSoftBase?.Skjellsand.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")">
+                        Skjellsand
+                    </button>
                 </div>
             </div>
         }

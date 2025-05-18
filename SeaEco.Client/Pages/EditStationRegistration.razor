@@ -254,9 +254,9 @@
         </div>
 
         <div class="sedimentType-container" id="sedimentType">
-            <div class="hardSediment-container" id="hardSediment">
-                @if (_surveyDto.BHardBase != null)
-                {
+            @if (_surveyDto.BHardBase != null)
+            {
+                <div class="hardSediment-container" id="hardSediment">
                     <h5>Bunntype:</h5>
 
                     <div class="checkbox-container">
@@ -271,13 +271,13 @@
                                 disabled="@(_surveyDto.BHardBase == null || _surveyDto.BHardBase.Steinbunn == 1f)">
                             Fjellbunn
                         </button>
-                    </div>   
-                }
-            </div>
+                    </div>
+                </div>
+            }
 
-            <div class="softSediment-container" id="softSediment">
-                @if (_surveyDto.BSoftBase != null)
-                {
+            @if (_surveyDto.BSoftBase != null)
+            {
+                <div class="softSediment-container" id="softSediment">
                     <h5>Sedimenttype:</h5>
 
                     <div class="checkbox-container">
@@ -306,9 +306,9 @@
                                 disabled="@(_surveyDto.BSoftBase == null)">
                             Skjellsand
                         </button>
-                    </div>   
-                }
-            </div>
+                    </div>
+                </div>
+            }
         </div>
         
         <div class="picture-container">
@@ -414,7 +414,7 @@
         </div>
 
         <div id="animalInfo" class="animalInfo-container">
-            @if (_surveyDto.BAnimal != null)
+            @if (_selectDyr == "ja")
             { 
                 <div class="animalData">
                     <div class="form-floating mb-3">
