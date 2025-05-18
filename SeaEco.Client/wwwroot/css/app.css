@@ -113,7 +113,6 @@ a, .btn-link {
 
 
 /*  buttons  */
-
 .custom-btn {
     background-color: rgb(100,151,177);
     color: white;
@@ -121,6 +120,10 @@ a, .btn-link {
     padding: 10px 20px;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.custom-btn.sm {
+    padding: 5px 10px;
 }
 
 .custom-btn:hover {
@@ -192,6 +195,8 @@ button:active {
 
 
 .box-border {
-    border: 1px solid lightgray;
+    border: 1px solid #bababa;
     border-radius: 4px;
 }
+
+

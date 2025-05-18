@@ -1,13 +1,16 @@
 @page "/project/{ProjectId:guid}/preInfo/{PreInfoId:guid}"
 @using Microsoft.AspNetCore.Authorization
+@using SeaEco.Abstractions.Enums
 @using SeaEco.Abstractions.Models.PreInfo
+@using SeaEco.Abstractions.Models.Project
 @using SeaEco.Abstractions.Models.User
 @inject HttpClient Http
 @attribute [Authorize]
 @inject NavigationManager Navigation
+@using SeaEco.Client.Resources
 
 
-<h3>Preinformasjon</h3>
+<h3>Feltinformasjon</h3>
 
 
 @if (_isLoaded)
@@ -16,7 +19,7 @@
         <div class="form-floating mb-3">
             <input type="date" id="date" class="form-control" disabled
                    value="@_preInfo.Feltdato.ToString("yyyy-MM-dd")">
-            <label for="date">Dato</label>
+            <label for="date">Feltdato</label>
         </div>
         
         <div class="form-floating mb-3">
@@ -87,9 +90,11 @@ else
     </NavLink>
     @if (_preInfo != null)
     {
-        <NavLink class="btn custom-btn me-2" href="@($"project/{ProjectId:D}/preInfo/{PreInfoId:D}/edit")">
-            Rediger
-        </NavLink>
+        <span class="d-inline-block" title="@(_project.Prosjektstatus is (Prosjektstatus.Deaktivert) ? Resources.TooltipDeactivated : "")">
+            <button class=" btn custom-btn"  @onclick="ToEditPreInfo" disabled="@(_project.Prosjektstatus is (Prosjektstatus.Deaktivert) )">
+                Rediger
+            </button>
+        </span>
     }
 </div>
 
@@ -100,6 +105,7 @@ else
 
     private PreInfoDto? _preInfo = new();
     private UserDto? _user = new();
+    private ProjectDto? _project = new();
     private List<UserDto?> _samplers = [];
 
     private bool _isLoaded = false;
@@ -112,6 +118,7 @@ else
 
     private async Task LoadPreInfoData()
     {
+        _project = await Http.GetFromJsonAsync<ProjectDto>($"api/Project/{ProjectId:D}");
         _preInfo = await Http.GetFromJsonAsync<PreInfoDto>($"api/PreInfo/{PreInfoId}");
         if (_preInfo != null)
         {
@@ -127,4 +134,10 @@ else
             }
         }
     }
+
+    private void ToEditPreInfo()
+    {
+        Navigation.NavigateTo($"project/{ProjectId:D}/preInfo/{PreInfoId:D}/edit");
+    }
+
 }

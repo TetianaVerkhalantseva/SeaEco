@@ -45,7 +45,7 @@
                 <div class="mt-3 text-center">
                     @if (_result.HasValue)
                     {
-                        @if (_result.Value)
+                        if (_result.Value)
                         {
                             <div class="alert alert-success">@Resources.PageCustomerInfoDeleteCustomerSuccess</div>
                         }
@@ -88,16 +88,12 @@
     <div class="row justify-content-center">
         @if (_selectedProjects != null)
         {
-            @foreach (var project in _selectedProjects)
+            foreach (var project in _selectedProjects)
             {
                 <div class="col-md-5 col-lg-4 mb-4">
                     <div class="card shadow-sm p-4 rounded-3 hover-effect d-flex align-items-center justify-content-center">
-                        
-                        <!-- href to project detail page -->
-                        <a href="/project/@project.Id"><h5 class="project-info">@project.PoId</h5></a>
-                        <a href="/project/@project.Id">
-                            <p>@(project.Prosjektstatus.GetDescription())</p>
-                        </a>
+                        <a class="stretched-link" href="/project/@project.Id"><h5 class="project-info">@project.ProsjektIdSe</h5></a>
+                        <p>@(project.Prosjektstatus.GetDescription())</p>
                     </div>
                 </div>
             }

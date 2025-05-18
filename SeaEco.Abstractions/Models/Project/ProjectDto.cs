@@ -49,5 +49,5 @@ public class ProjectDto
     public string StationDatesString 
         => string.Join(", ",
             Feltdatoer
-                .Select(d => d.ToString("yyyy-MM-dd")));
+                .Select(d => d.ToString("dd.MM.yyyy")));
 }

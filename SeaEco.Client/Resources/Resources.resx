@@ -460,4 +460,97 @@
     <data name="ModalComment" xml:space="preserve">
         <value>Merknad :</value>
     </data>
+    <data name="ButtonReGenerateReports" xml:space="preserve">
+        <value>+ Regenerer rapporter</value>
+    </data>
+    <data name="ButtonGenerateReports" xml:space="preserve">
+        <value>+ Generer rapport</value>
+    </data>
+    <data name="PageReportNoReport" xml:space="preserve">
+        <value>Ingen rapporter generert</value>
+    </data>
+    <data name="PageReportDocumentsReport" xml:space="preserve">
+        <value>Rapporter</value>
+    </data>
+    <data name="PageReportPicturesReport" xml:space="preserve">
+        <value>Bilderapporter</value>
+    </data>
+    <data name="InputTextApprovedBy" xml:space="preserve">
+        <value>Godkjent av:</value>
+    </data>
+    <data name="InputTextReportType" xml:space="preserve">
+        <value>Rapporttype:</value>
+    </data>
+    <data name="InputTextReportDateGenerated" xml:space="preserve">
+        <value>Dato generert:</value>
+    </data>
+    <data name="ButtonNotApproved" xml:space="preserve">
+        <value>Ikke godkjent</value>
+    </data>
+    <data name="HeaderProjectPlan" xml:space="preserve">
+        <value>Prøvetakingsplan</value>
+    </data>
+    <data name="ButtonDownload" xml:space="preserve">
+        <value>Last ned</value>
+    </data>
+    <data name="ModalTextDeactivationWhenEditing" xml:space="preserve">
+        <value>Du holder på å redigere en plan. Du må enten lagre planen eller avbryte redigeringen for å deakivere prosjekt.</value>
+    </data>
+    <data name="ModalTextDateNotToday" xml:space="preserve">
+        <value>Du må registrere feltinformasjon for dagens dato før du kan regisrere data på en ny stasjonen</value>
+    </data>
+    <data name="ButtonReOpen" xml:space="preserve">
+        <value>Gjenåpne</value>
+    </data>
+    <data name="ButtonAddFildInfo" xml:space="preserve">
+        <value>+ Ny feltinformasjon </value>
+    </data>
+    <data name="B_StationPageNoFild" xml:space="preserve">
+        <value>Ingen feltinformasjon registrer</value>
+    </data>
+    <data name="B_StationPageHeaderFildInfo" xml:space="preserve">
+        <value>Feltinformasjon</value>
+    </data>
+    <data name="TooltipStatusNotNyttPaapebyntOrPaagar" xml:space="preserve">
+        <value>Prosjektet har ikke satus nytt, påbegynt eller pågår</value>
+    </data>
+    <data name="TooltipFildDateNotToday" xml:space="preserve">
+        <value>Det er allerede registrert feltinformasjon for dagens dato</value>
+    </data>
+    <data name="TooltipDeactivated" xml:space="preserve">
+        <value>Prosjektet er deaktivert</value>
+    </data>
+    <data name="TooltipStatusNotPaagar" xml:space="preserve">
+        <value>Prosjektet har ikke status pågår</value>
+    </data>
+    <data name="TooltipStatusNotStations" xml:space="preserve">
+        <value>Det eksisterer ingen registrerte stasjoner</value>
+    </data>
+    <data name="ButtonDeactivate" xml:space="preserve">
+        <value>Deakiver</value>
+    </data>
+    <data name="ModalTextDeactivation" xml:space="preserve">
+        <value>Du er i ferd med å deaktivere prosjektet. Det er ikke mulig å aktivere et deaktivert prosjekt.</value>
+    </data>
+    <data name="TooltipStatusNotNyttOrPaapebynt" xml:space="preserve">
+        <value>Prosjektet har ikke satus nytt eller påbegynt</value>
+    </data>
+    <data name="TooltipEditingPlan" xml:space="preserve">
+        <value>Du holder på å redigere eller legge til informasjon i prosjektplan</value>
+    </data>
+    <data name="ButtonGeneratePlan" xml:space="preserve">
+        <value>Generer plan</value>
+    </data>
+    <data name="ButtonReGeneratePlan" xml:space="preserve">
+        <value>Regenerer plan</value>
+    </data>
+    <data name="TooltipNoGeneralPlan" xml:space="preserve">
+        <value>Generell informasjon er ikke oppretet for planen</value>
+    </data>
+    <data name="TooltipStatusHasToBeDoneToGenerateReport" xml:space="preserve">
+        <value>Prosjektet må ha status ferdig for å kunne (re)generere rapporter</value>
+    </data>
+    <data name="ReportPageNoProjectPlanGenerated" xml:space="preserve">
+        <value>Ingen prosjektplan generert</value>
+    </data>
 </root>
