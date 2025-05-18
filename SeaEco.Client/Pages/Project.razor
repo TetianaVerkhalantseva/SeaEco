@@ -55,7 +55,7 @@ else
                                         <label for="prosjektIdSe">@Resources.InputTextProjectIdSe</label>
                                     </div>
                                     <div class="d-flex form-floating">
-                                        <InputText class="form-control" id="poid" @bind-Value="_project.PoId" disabled/>
+                                        <InputText class="form-control" id="poid" @bind-Value="_project.PoId" @key="_numberInputKey" @oninput="() => _errorMessage = null" disabled="@(!_editProjectInfo)"/>
                                         <label for="poid">@Resources.InputTextPoId</label>
                                     </div>
                                     <div class="d-flex form-floating flex-fill">

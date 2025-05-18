@@ -7,6 +7,8 @@ namespace SeaEco.Abstractions.Models.Project;
 public class ProjectDto
 {
     public Guid Id { get; set; }
+    [Required(ErrorMessageResourceName = "ErrorMessagePoId", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
+    [RegularExpression(@"^\d+$", ErrorMessageResourceName = "ErrorMessagePoIdIdNumber", ErrorMessageResourceType = typeof(ResourcesAbstractions))]
     public string PoId { get; set; } = null!;
     public Guid KundeId { get; set; }
     public string Oppdragsgiver        { get; set; } = null!;

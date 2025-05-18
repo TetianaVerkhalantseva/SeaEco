@@ -215,7 +215,7 @@ else
         if (response.IsSuccessStatusCode)
         {
             _result = true;
-            _resultMessage = "Preinfo er redigert.";
+            _resultMessage = "Feltinformasjon er redigert.";
             StateHasChanged();
             await Task.Delay(2000);
             Navigation.NavigateTo($"/project/{ProjectId}");

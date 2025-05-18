@@ -4,207 +4,278 @@
 @using SeaEco.Client.Resources
 @attribute [Authorize]
 @inject NavigationManager Navigation
-@using SeaEco.EntityFramework.Entities
-@using Microsoft.AspNetCore.Components.Authorization
-@using SeaEco.Abstractions.Enums
 @using SeaEco.Abstractions.Extensions
 @using SeaEco.Abstractions.Models.Customer
 @using SeaEco.Abstractions.Models.Project
+@using SeaEco.Client.Components
 
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        @if (_customer != null)
-        {
-            <div class="col-md-8 col-lg-6">
-                <div class="customer-card shadow-lg p-4 rounded-3">
-                    <div class="card-body text-center">
-                        <h4 class="customer-title">@Resources.PageCustomerInfoCustomerName</h4>
-                        <p class="customer-info">@_customer.Oppdragsgiver</p>
+<div class="d-flex justify-content-center mb-5">
+    <div class="d-flex flex-column align-items-center projects-container">
+        <div class="container">
+            <div class="row justify-content-center">
+                @if (_customer != null)
+                {
+                    <div class="col-md-8 col-lg-6">
+                        <div class="customer-card shadow-lg p-4 rounded-3">
+                            <div class="card-body text-center">
+                                <h4 class="customer-title">@Resources.PageCustomerInfoCustomerName</h4>
+                                <p class="customer-info">@_customer.Oppdragsgiver</p>
 
-                        <h4 class="customer-title">@Resources.PageCustomerInfoContactPerson</h4>
-                        <p class="customer-info">@_customer.Kontaktperson</p>
+                                <h4 class="customer-title">@Resources.PageCustomerInfoContactPerson</h4>
+                                <p class="customer-info">@_customer.Kontaktperson</p>
 
-                        <h4 class="customer-title">@Resources.PageCustomerInfoCustomerNumber</h4>
-                        <p class="customer-info">@_customer.Telefon</p>
+                                <h4 class="customer-title">@Resources.PageCustomerInfoCustomerNumber</h4>
+                                <p class="customer-info">@_customer.Telefon</p>
+                            </div>
+
+                            <div class="position-absolute bottom-0 start-0 mb-3 ms-3">
+                                <button class="btn custom-outline-secondary-btn me-2" @onclick="BackToCustomerPage">@Resources.ButtonCancel</button>
+                            </div>
+
+                            <div class="position-absolute bottom-0 end-0 mb-3 me-3">
+                                <button class="btn custom-btn" @onclick="EditCustomerPage">@Resources.ButtonEdit</button>
+                            </div>
+                        </div>
+
+                        <div class="mt-3 text-center">
+                            @if (_result.HasValue)
+                            {
+                                if (_result.Value)
+                                {
+                                    <div class="alert alert-success">@Resources.PageCustomerInfoDeleteCustomerSuccess</div>
+                                }
+                                else
+                                {
+                                    <div class="alert alert-danger">@Resources.PageCustomerInfoDeleteCustomerFailed</div>
+                                }
+                            }
+                        </div>
                     </div>
-
-                    <div class="position-absolute bottom-0 start-0 mb-3 ms-3">
-                        <button class="btn custom-outline-secondary-btn me-2" @onclick="BackToCustomerPage">@Resources.ButtonCancel</button>
-                    </div>
-
-                    <div class="position-absolute bottom-0 end-0 mb-3 me-3">
-                        @* <AuthorizeView Roles="admin"> *@
-                        @*     <button class="btn custom-outline-secondary-btn" @onclick="DeleteCustomer">@Resources.ButtonDelete</button> *@
-                        @* </AuthorizeView> *@
-
-                        <button class="btn custom-btn" @onclick="EditCustomerPage">@Resources.ButtonEdit</button>
-                    </div>
-                </div>
-
-                <div class="mt-3 text-center">
-                    @if (_result.HasValue)
-                    {
-                        if (_result.Value)
-                        {
-                            <div class="alert alert-success">@Resources.PageCustomerInfoDeleteCustomerSuccess</div>
-                        }
-                        else
-                        {
-                            <div class="alert alert-danger">@Resources.PageCustomerInfoDeleteCustomerFailed</div>
-                        }
-                    }
-                </div>
+                }
             </div>
-        }
-    </div>
-
-    <div class="container mt-3">
-        <h2 class="text-center mt-4 page-title">@Resources.PageCustomerInfoProjects</h2>
-        
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <div class="w-50">
-                <select class="form-select" @onchange="OnSortChanged">
-                    <option value="all">Alle</option>
-                    <option value="status-started">Påbegynt</option>
-                    <option value="status-new">Nytt</option>
-                    <option value="status-ongoing">Pågår</option>
-                    <option value="status-done">Ferdig</option>
-                    <option value="status-deactivated">Deaktivert</option>
-                    <option value="name-asc">Sorter etter navn: A-Z</option>
-                    <option value="name-desc">Sorter etter navn: Z-A</option>
-                    <option value="date-asc">Sorter etter dato: eldst først</option>
-                    <option value="date-desc">Sorter etter dato: nyest først</option>
-                </select>
-            </div>
-
-            <!-- onclick to create new project page -->
-            <button class="btn custom-btn ms-3" @onclick="ToNewProjectPage"> 
-                @Resources.ButtonAddNewProject
-            </button>
         </div>
-    </div>
-    
-    <div class="row justify-content-center">
-        @if (_selectedProjects != null)
+        
+        <h2 class="text-center mt-4 mb-3">@Resources.PageCustomerInfoProjects</h2>
+
+        @if (_isLoading)
         {
-            foreach (var project in _selectedProjects)
-            {
-                <div class="col-md-5 col-lg-4 mb-4">
-                    <div class="card shadow-sm p-4 rounded-3 hover-effect d-flex align-items-center justify-content-center">
-                        <a class="stretched-link" href="/project/@project.Id"><h5 class="project-info">@project.ProsjektIdSe</h5></a>
-                        <p>@(project.Prosjektstatus.GetDescription())</p>
-                    </div>
-                </div>
-            }
         }
         else
         {
-            <div class="col-md-5 col-lg-4 mb-4">
-                <p>@Resources.PageCustomerInfoNoProject</p>
+                
+            <div class="d-flex flex-xxl-row flex-column w-100 mb-5 gap-3 ">
+                <div class="d-flex justify-content-lg-start">
+                    <details class="filter-panel shadow-lg">
+                        <summary>@Resources.PageProjectsOverviewFilter</summary>
+                        <div class="filter-options">
+                            <div class="d-flex flex-column flex-xxl-row gap-3">
+                                <div class="d-flex flex-column gap-2">
+                                    <div class="form-group">
+                                        <label class="p-1">@Resources.TableHeaderProjectStatus</label>
+                                        <MultipleSelectionDropdown
+                                            Options="@_allStatuses"
+                                            @bind-SelectedOptions="SelectedStatuses"/>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-column gap-2">
+                                    <div class="form-group">
+                                        <label for="locationSelected" class="p-1">@Resources.TableHeaderLocality</label>
+                                        <select id="locationSelected" class="form-select" @bind="SelectedLocation">
+                                            <option value="">@Resources.OptionAll</option>
+                                            @foreach (var location in _allLocations!)
+                                            {
+                                                <option value="@location">@location</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-column gap-2">
+                                    <div class="form-group">
+                                        <label for="yearSelect" class="p-1">@Resources.TableHeaderYear</label>
+                                        <select id="yearSelect" class="form-select" @bind="SelectedYear">
+                                            <option value="">@Resources.OptionAll</option>
+                                            @for (var year = DateTime.Now.Year; year >= 2012; year--)
+                                            {
+                                                <option value="@year">@year</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-column gap-2">
+                                    <div class="form-group">
+                                        <label for="mndSelect" class="p-1">@Resources.TableHeaderMonth</label>
+                                        <select id="mndSelect" class="form-select" @bind="SelectedMnd">
+                                            <option value="">@Resources.OptionAll</option>
+                                            @for (var month = 1; month <= 12; month++)
+                                            {
+                                                <option value="@month">@month</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1"></div>
+                                <div class="d-flex flex-xxl-column flex-row align-self-end">
+                                    <button class="btn btn-secondary" type="button" @onclick="ResetFilter">
+                                        @Resources.ButtonReset
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+                <div class="d-flex flex-grow-1"></div>
+                <div class="d-flex justify-content-center align-items-center">
+                    <button class="btn custom-btn ms-3" @onclick="ToNewProjectPage">
+                        @Resources.ButtonAddNewProject
+                    </button>
+                </div>
+
             </div>
-        }
+            
+               
+                <div class="table-responsive justify-content-center d-none d-xxl-block">
+                    <table class="table table-hover fixed-width-table">
+                        <colgroup>
+                            <col style="width: 180px;">
+                            <col style="width: 140px;">
+                            <col style="width: 85px;">
+                            <col style="width: 80px;">
+                            <col style="width: 110px;">
+                            <col style="width: 100px;">
+                            <col style="width: 165px;">
+                            <col style="width: 90px;">
+                            <col style="width: 140px;">
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            @foreach (var tableHeader in _listTableHeader)
+                            {
+                                <th class="cursor" @onclick="() => SortBy(tableHeader)">
+                                    @tableHeader
+
+                                    @if (_currentSortColumn == @tableHeader)
+                                    {
+                                        <i class="bi @(_sortAscending ? "bi-arrow-down" : "bi-arrow-up")"></i>
+                                    }
+
+                                </th>
+                            }
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var project in SortedProjects!)
+                        {
+                            <tr class="cursor" @onclick="() => OnRowClick(project.Id)">
+                                <td>@project.Oppdragsgiver</td>
+                                <td>@project.Lokalitetsnavn</td>
+                                <td>@project.LokalitetsId</td>
+                                <td>@project.PoId</td>
+                                <td>@project.ProsjektIdSe</td>
+                                <td>@project.StationDatesString</td>
+                                <td>@project.Produksjonsstatus.GetDescription()</td>
+                                <td class="text-center align-middle" style=";background-color:@(project.Tilstand?.GetDisplay() ?? "")">@(project.Tilstand.HasValue ? ((int)project.Tilstand.Value).ToString() : string.Empty)</td>
+                                <td>@project.Prosjektstatus.GetDescription()</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card-container d-block d-xxl-none">
+                    <div class="row justify-content-center">
+                        @foreach (var project in SortedProjects)
+                        {
+                            <div class="col mb-3 card-col">
+                                <div class="card cursor" @onclick="() => OnRowClick(project.Id)">
+                                    <div class="card-body text-center @GetStatus(project.Prosjektstatus.GetDescription())">
+                                        <h5 class="card-title">@project.ProsjektIdSe</h5>
+                                        <span class="corner-text fw-bold">@project.Prosjektstatus.GetDescription()</span>
+                                    </div>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span>@Resources.TableHeaderLocality:</span>
+                                            <span>@project.Lokalitetsnavn</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
     </div>
 </div>
 
-
 @code {
+    
+    
+    
+    
+    
+    
     [Parameter]
     public Guid CustomerId { get; set; }
     
     private CustomerDto? _customer = new();
     private bool? _result;
-    private string _currentSort = "all";
-    private List<ProjectDto>? _allProjects;
-    private List<ProjectDto>? _selectedProjects;
+    private List<ProjectDto>? _projects;
+    private List<string>? _allLocations;
+    private List<string>? _allCustomers;
+    private bool _isLoading = true;
+    private readonly List<string> _allStatuses = ["Nytt", "Påbegynt", "Pågår", "Deaktivert", "Ferdig"];
+    private readonly List<string> _listTableHeader =
+    [
+        Resources.TableHeaderCustomer,
+        Resources.TableHeaderLocality,
+        Resources.TableHeaderLocalityId,
+        Resources.TableHeaderPoId,
+        Resources.TableHeaderProjectId,
+        Resources.TableHeaderDate,
+        Resources.TableHeaderProductionStatus,
+        Resources.TableHeaderStatus,
+        Resources.TableHeaderProjectStatus
+    ];
+    
+    private int? SelectedYear { get; set; }
+    private int? SelectedMnd { get; set; }
+    private string? SelectedCustomer { get; set; }
+    private string? SelectedLocation { get; set; }
+    private List<string> SelectedStatuses { get; set; } = ["Nytt", "Påbegynt", "Pågår", "Ferdig"];
+    
+    private string? _currentSortColumn;
+    private bool _sortAscending = true;
+
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadCustomerInfoData();
-    }
-
-    private async Task LoadCustomerInfoData()
-    {
+        
         try
         {
             _customer = await Http.GetFromJsonAsync<CustomerDto>($"api/Customer/{CustomerId}");
-            
-            _allProjects = await Http.GetFromJsonAsync<List<ProjectDto>>($"api/Project/Customer/{CustomerId}");
-            
-            SortProjectList(_currentSort);
+            _projects = await Http.GetFromJsonAsync<List<ProjectDto>>($"api/Project/Customer/{CustomerId}");
+
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Console.WriteLine(e);
+            Console.WriteLine($@"{Resources.ErrorMessageLoadingInitiaData} {ex.Message}");
         }
-    }
-
-    private void OnSortChanged(ChangeEventArgs e)
-    {
-        _currentSort = e.Value?.ToString() ?? "all";
-        SortProjectList(_currentSort);
-    }
-
-    private void SortProjectList(string sortOption)
-    {
-        if (_allProjects == null) return;
-
-        _selectedProjects = _allProjects.ToList();
-
-        switch (sortOption)
+        finally
         {
-            case "all":
-                break;
-                
-            case "status-new":
-                _selectedProjects = _selectedProjects
-                    .Where(p => p.Prosjektstatus == Prosjektstatus.Nytt)
-                    .ToList();
-                break;
-            case "status-started":
-                _selectedProjects = _selectedProjects
-                    .Where(p => p.Prosjektstatus == Prosjektstatus.Pabegynt)
-                    .ToList();
-                break;
-            case "status-ongoing":
-                _selectedProjects = _selectedProjects
-                    .Where(p => p.Prosjektstatus == Prosjektstatus.Pagar)
-                    .ToList();
-                break;
-            case "status-done":
-                _selectedProjects = _selectedProjects
-                    .Where(p => p.Prosjektstatus == Prosjektstatus.Ferdig)
-                    .ToList();
-                break;
-            case "status-deactivated":
-                _selectedProjects = _selectedProjects
-                    .Where(p => p.Prosjektstatus == Prosjektstatus.Deaktivert)
-                    .ToList();
-                break;
-            case "name-asc":
-                _selectedProjects = _selectedProjects
-                    .OrderBy(p => p.PoId)
-                    .ToList();
-                break;
-            case "name-desc":
-                _selectedProjects = _selectedProjects
-                    .OrderByDescending(p => p.PoId)
-                    .ToList();
-                break;
-            case "date-asc":
-                _selectedProjects = _selectedProjects
-                    .OrderBy(p => p.Id)
-                    .ToList();
-                break;
-            case "date-desc":
-                _selectedProjects = _selectedProjects
-                    .OrderByDescending(p => p.Id)
-                    .ToList();
-                break;
+            _isLoading = false;
         }
-        StateHasChanged();
+        
+        _allLocations = _projects?
+            .Select(p => p.Lokalitetsnavn)
+            .Distinct()
+            .ToList();
+        
+        _allCustomers = _projects?
+            .Select(p => p.Oppdragsgiver)
+            .Distinct()
+            .ToList();
     }
-
+    
     private void BackToCustomerPage()
     {
         Navigation.NavigateTo("Customer");
@@ -220,19 +291,118 @@
         Navigation.NavigateTo($"/newProject/{CustomerId}");
     }
 
-    private async Task DeleteCustomer()
+
+
+    private void OnRowClick(Guid projectId)
     {
-        var response = await Http.DeleteAsync($"api/Customer/Delete-customer/{CustomerId}");
-        if (response.IsSuccessStatusCode)
+        Navigation.NavigateTo($"project/{projectId:D}");
+    }
+    
+    private static string GetStatus(string? status)
+    {
+        return status switch
         {
-            _result = true;
-            StateHasChanged();
-            await Task.Delay(2000);
-            Navigation.NavigateTo("Customer");
+            "Nytt" => "card-status-new",
+            "Ferdig" => "card-status-done",
+            "Påbegynt" => "card-status-started",
+            "Pågår" => "card-status-paagar",
+            "Deaktivert" => "card-status-deactivated",
+            _ => throw new ArgumentOutOfRangeException(nameof(status), status, null)
+        };
+    }
+    
+    private IEnumerable<ProjectDto>? FilterProjects
+    {
+        get
+        {
+            if (_projects != null)
+                return _projects.Where(p =>
+                    (!SelectedStatuses.Any() || SelectedStatuses.Contains(p.Prosjektstatus.GetDescription())) &&
+                    (!SelectedYear.HasValue || p.Feltdatoer.Any(d => d.Year == SelectedYear.Value)) &&
+                    (!SelectedMnd.HasValue || p.Feltdatoer.Any(d => d.Month == SelectedMnd.Value)) &&
+                    (string.IsNullOrEmpty(SelectedLocation) || p.Lokalitetsnavn == SelectedLocation) &&
+                    (string.IsNullOrEmpty(SelectedCustomer) || p.Oppdragsgiver == SelectedCustomer)
+                );
+            return _projects;
+        }
+    }
+    
+    private IEnumerable<ProjectDto>? SortedProjects
+    {
+        get
+        {
+            if (FilterProjects == null)
+                return null;
+            
+            //Default sorting by status and date
+            if (string.IsNullOrEmpty(_currentSortColumn))
+                return FilterProjects?.OrderBy(projects => projects.Prosjektstatus).ThenByDescending(projects => projects.StationDatesString).ToList();
+
+            var sorted = _currentSortColumn switch
+            {
+                var col when col == Resources.TableHeaderCustomer => _sortAscending
+                    ? FilterProjects.OrderBy(p => p.Oppdragsgiver)
+                    : FilterProjects.OrderByDescending(p => p.Oppdragsgiver),
+                var col when col == Resources.TableHeaderLocality => _sortAscending
+                    ? FilterProjects.OrderBy(p => p.Lokalitetsnavn)
+                    : FilterProjects.OrderByDescending(p => p.Lokalitetsnavn),
+                var col when col == Resources.TableHeaderDate => _sortAscending
+                    ? FilterProjects.OrderBy(p => p.StationDatesString)
+                    : FilterProjects.OrderByDescending(p => p.StationDatesString),
+                var col when col == Resources.TableHeaderStatus => _sortAscending
+                    ? FilterProjects.OrderBy(p => p.Tilstand)
+                    : FilterProjects.OrderByDescending(p => p.Tilstand),
+                var col when col == Resources.TableHeaderProjectStatus => _sortAscending
+                    ? FilterProjects.OrderBy(p => p.Prosjektstatus.GetDescription())
+                    : FilterProjects.OrderByDescending(p => p.Prosjektstatus.GetDescription()),
+                var col when col == Resources.TableHeaderProductionStatus => _sortAscending
+                    ? FilterProjects.OrderBy(p => p.Produksjonsstatus.GetDescription())
+                    : FilterProjects.OrderByDescending(p => p.Produksjonsstatus.GetDescription()),
+                var col when col == Resources.TableHeaderProjectId => _sortAscending
+                    ? FilterProjects.OrderBy(p => p.ProsjektIdSe)
+                    : FilterProjects.OrderByDescending(p => p.ProsjektIdSe),
+                var col when col == Resources.TableHeaderPoId => _sortAscending
+                    ? FilterProjects.OrderBy(p => p.PoId)
+                    : FilterProjects.OrderByDescending(p => p.PoId),
+                var col when col == Resources.TableHeaderLocalityId => _sortAscending
+                    ? FilterProjects.OrderBy(p => p.LokalitetsId)
+                    : FilterProjects.OrderByDescending(p => p.LokalitetsId),
+                _ => FilterProjects
+                    
+            };
+
+            return sorted;
+        }
+    }
+    
+    private void SortBy(string columnName)
+    {
+        if (_currentSortColumn == columnName)
+        {
+            if (!_sortAscending)
+            {
+                _currentSortColumn = null;
+                _sortAscending = true;
+            }
+            else
+            {
+                _sortAscending = !_sortAscending;
+            }
         }
         else
         {
-            _result = false;
+            _currentSortColumn = columnName;
+            _sortAscending = true;
         }
     }
+    
+    private void ResetFilter()
+    {
+        SelectedYear = null;
+        SelectedMnd = null;
+        SelectedCustomer = null;
+        SelectedLocation = null;
+        SelectedStatuses = ["Nytt", "Påbegynt", "Pågår", "Ferdig"];
+    }
+    
 }

@@ -158,6 +158,14 @@ a, .btn-link {
     border-color: gray;
 }
 
+.btn:focus,
+.btn:active,
+button:focus,
+button:active {
+    outline: 0;
+    box-shadow: none;
+}
+
 /*  checkbox  */
 
 .form-check-input:checked {
@@ -183,14 +191,6 @@ a, .btn-link {
 .form-check-input:focus {
     outline: 0;
     box-shadow: none;
-}
-
-.btn:focus,                 
-.btn:active,                 
-button:focus,
-button:active {
-    outline: 0;          
-    box-shadow: none;       
 }
 
 

@@ -1,0 +1,145 @@
+@page "/project/{ProjectId:guid}/station/{StationId:guid}/survey/{SurveyId:guid}/upload-images"
+
+@using Microsoft.AspNetCore.Authorization
+@using SeaEco.Abstractions.Models.Image
+@inject HttpClient Http
+@attribute [Authorize]
+
+<h4>Bilder registrering</h4>
+
+
+<div class="picture-container">
+    <h5>Silt: </h5>
+    <InputFile
+        @key="usiltKey"
+        OnChange="OnUsiltImageSelect"
+        accept="image/*"
+        class="picture-button"/>
+    <button class="btn btn-danger"
+            @onclick="RemoveUsiltImage"
+            disabled="@(usiltPreviewUrl is null)">
+        Remove
+    </button>
+    @if (usiltPreviewUrl != null)
+    {
+        <div class="mt-2">
+            <img src="@usiltPreviewUrl" style="max-width:200px; max-height:200px;"/>
+        </div>
+    }
+</div>
+
+<div class="picture-container">
+    <h5>Usilt: </h5>
+    <InputFile
+        @key="siltKey"
+        OnChange="OnSiltImageSelect"
+        accept="image/*"
+        class="picture-button"/>
+    <button class="btn btn-danger"
+            @onclick="RemoveSiltImage"
+            disabled="@(siltPreviewUrl is null)">
+        Remove
+    </button>
+    @if (siltPreviewUrl != null)
+    {
+        <div class="mt-2">
+            <img src="@siltPreviewUrl" style="max-width:200px; max-height:200px;"/>
+        </div>
+    }
+</div>
+
+
+@code {
+
+    [Parameter]
+    public Guid ProjectId { get; set; }
+    [Parameter]
+    public Guid StationId { get; set; }
+    [Parameter]
+    public Guid SurveyId { get; set; }
+
+    private const int MaxAllowedImageSize = 5120000; // 5 mb
+    private ImageDto? _usiltImage;
+    private ImageDto? _siltImage;
+    private string? usiltPreviewUrl;
+    private string? siltPreviewUrl;
+    private Guid usiltKey = Guid.NewGuid();
+    private Guid siltKey  = Guid.NewGuid();
+
+    private bool HasUsilt => _usiltImage != null || usiltPreviewUrl != null;
+    private bool HasSilt  => _siltImage  != null || siltPreviewUrl  != null;
+
+    private Task OnUsiltImageSelect(InputFileChangeEventArgs e)
+        => UploadAndPreview(e.File, false);
+
+    private Task OnSiltImageSelect(InputFileChangeEventArgs e)
+        => UploadAndPreview(e.File, true);
+
+    private async Task UploadAndPreview(IBrowserFile file, bool isSilt)
+    {
+        using var ms = new MemoryStream();
+        await file.OpenReadStream(MaxAllowedImageSize).CopyToAsync(ms);
+        var preview = $"data:{file.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}";
+
+        if (isSilt)
+            siltPreviewUrl = preview;
+        else
+            usiltPreviewUrl = preview;
+
+        var form = new MultipartFormDataContent {
+            { new StreamContent(new MemoryStream(ms.ToArray())), "Image", file.Name },
+            { new StringContent(SurveyId.ToString()), "UndersokelseId" },
+            { new StringContent(isSilt.ToString()),     "Silt" }
+        };
+        var resp = await Http.PostAsync("/api/images/upload", form);
+        if (!resp.IsSuccessStatusCode) return;
+        var dto = await resp.Content.ReadFromJsonAsync<ImageDto>();
+        if (dto == null) return;
+
+        if (isSilt)
+        {
+            _siltImage     = dto;
+            siltPreviewUrl = "https://localhost:7096" + dto.Path;
+        }
+        else
+        {
+            _usiltImage      = dto;
+            usiltPreviewUrl  = "https://localhost:7096" + dto.Path;
+        }
+    }
+
+    private async Task RemoveUsiltImage()
+    {
+        if (_usiltImage != null && await RemoveImage(_usiltImage.Id))
+            _usiltImage = null;
+
+        usiltPreviewUrl = null;
+        usiltKey        = Guid.NewGuid();
+    }
+
+    private async Task RemoveSiltImage()
+    {
+        if (_siltImage != null && await RemoveImage(_siltImage.Id))
+            _siltImage = null;
+
+        siltPreviewUrl = null;
+        siltKey        = Guid.NewGuid();
+    }
+
+    private async Task<bool> RemoveImage(Guid id)
+    {
+        var r = await Http.DeleteAsync($"/api/images/{id}/remove");
+        return r.IsSuccessStatusCode;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var images = await Http.GetFromJsonAsync<IEnumerable<ImageDto>>(
+            $"/api/images/all/{SurveyId}");
+        _usiltImage = images?.FirstOrDefault(x => x.Silt == false);
+        _siltImage  = images?.FirstOrDefault(x => x.Silt == true);
+
+        if (_usiltImage != null) usiltPreviewUrl = "https://localhost:7096" + _usiltImage.Path;
+        if (_siltImage  != null) siltPreviewUrl  = "https://localhost:7096" + _siltImage.Path;
+    }
+}

@@ -21,13 +21,15 @@ else
        
         @if (_isExistingPreInfo)
         {
-            <div class="row row-cols-2 g-2 justify-content-center">
+            <div class="row row-cols-2 g-2 ">
                 @foreach (var preInfo in _preInfoData)
                 {
                     <div class="col">
-                        <button class="btn custom-btn w-100" type="button" @onclick="() => ViewPreInfo(preInfo.Id)">
-                            @DateOnly.FromDateTime(preInfo.Feltdato)
-                        </button>
+                        <div class="w-100">
+                            <button class="btn custom-btn " type="button" @onclick="() => ViewPreInfo(preInfo.Id)">
+                                @DateOnly.FromDateTime(preInfo.Feltdato)
+                            </button>
+                        </div>
                     </div>
                 }
             </div>
