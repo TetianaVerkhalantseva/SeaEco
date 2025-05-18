@@ -21,17 +21,15 @@ else
        
         @if (_isExistingPreInfo)
         {
-            <div class="row row-cols-2 g-2 ">
+            <div class="row row-cols-2 gap-2 justify-content-center">
+                
                 @foreach (var preInfo in _preInfoData)
                 {
-                    <div class="col">
-                        <div class="w-100">
-                            <button class="btn custom-btn " type="button" @onclick="() => ViewPreInfo(preInfo.Id)">
-                                @DateOnly.FromDateTime(preInfo.Feltdato)
-                            </button>
-                        </div>
-                    </div>
+                    <button class="btn custom-btn" type="button" @onclick="() => ViewPreInfo(preInfo.Id)">
+                        @DateOnly.FromDateTime(preInfo.Feltdato)
+                    </button>
                 }
+                
             </div>
         }
         else
@@ -67,7 +65,7 @@ else
                           @if (_isExistingStations)
                           {
                               <div class="card-container">
-                                  <div class="row" style="justify-content: center;">
+                                  <div class="row justify-content-center" >
                                       @foreach (var station in _stationData)
                                       {
                                           <div class="col mb-3 card-col">
@@ -177,45 +175,45 @@ else
     {
         try
         {
-        _newStation = new NewStationDto
-        {
-            ProsjektId = Project.Id,
-        };
-
-        //PreInfo
-        var responsePreInfo = await Http.GetAsync($"/api/PreInfo/project/{Project.Id:D}");
-        if (responsePreInfo.IsSuccessStatusCode)
-        {
-            _preInfoData = await responsePreInfo.Content.ReadFromJsonAsync<List<PreInfoDto>>();
-            _preInfoData?.Sort((a, b) => a.Feltdato.CompareTo(b.Feltdato));
-            _isExistingPreInfo = true;
-            foreach (var preInfo in _preInfoData.Where(preInfo => DateOnly.FromDateTime(preInfo.Feltdato) == DateOnly.FromDateTime(DateTime.Today)))
+            _newStation = new NewStationDto
             {
-                _isPreInfoDateToday = true;
-                _todaysServeyId = preInfo.Id;
+                ProsjektId = Project.Id,
+            };
+
+            //PreInfo
+            var responsePreInfo = await Http.GetAsync($"/api/PreInfo/project/{Project.Id:D}");
+            if (responsePreInfo.IsSuccessStatusCode)
+            {
+                _preInfoData = await responsePreInfo.Content.ReadFromJsonAsync<List<PreInfoDto>>();
+                _preInfoData?.Sort((a, b) => a.Feltdato.CompareTo(b.Feltdato));
+                _isExistingPreInfo = true;
+                foreach (var preInfo in _preInfoData.Where(preInfo => DateOnly.FromDateTime(preInfo.Feltdato) == DateOnly.FromDateTime(DateTime.Today)))
+                {
+                    _isPreInfoDateToday = true;
+                    _todaysServeyId = preInfo.Id;
+                }
+            }
+
+            //Station
+            var responseStations = await Http.GetAsync($"/api/Project/{Project.Id:D}/stations");
+            if (responseStations.IsSuccessStatusCode)
+            {
+                _stationData = await responseStations.Content.ReadFromJsonAsync<List<StationDto>>();
+                _stationData?.Sort((a, b) => a.Nummer.CompareTo(b.Nummer));
+                _isExistingStations = true;
+            }
+
+            if (Project.Prosjektstatus == Prosjektstatus.Ferdig)
+            {
+                _isProjectComplete = true;
             }
         }
-
-        //Station
-        var responseStations = await Http.GetAsync($"/api/Project/{Project.Id:D}/stations");
-        if (responseStations.IsSuccessStatusCode)
+        catch (Exception e)
         {
-            _stationData = await responseStations.Content.ReadFromJsonAsync<List<StationDto>>();
-            _stationData?.Sort((a, b) => a.Nummer.CompareTo(b.Nummer));
-            _isExistingStations = true;
+            Console.WriteLine(e);
+            throw;
         }
 
-        if (Project.Prosjektstatus == Prosjektstatus.Ferdig)
-        {
-            _isProjectComplete = true;
-        }
-        }                              
-        catch (Exception e)            
-        {                              
-            Console.WriteLine(e);      
-            throw;                     
-        }                             
-        
         _isLoading = false;
     }
 
