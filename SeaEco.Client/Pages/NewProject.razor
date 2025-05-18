@@ -172,10 +172,17 @@ else
                     KundeId =  CustomerId,
                 };
             }
+            
+            var usersList = await Http.GetFromJsonAsync<List<UserDto>>("api/users?isActive=true");
+            _users = usersList?.OrderBy(user => user.FullName).ToList();
+        
+            _location = await Http.GetFromJsonAsync<List<LokalitetDto>>("api/Lokalitet");  
+            
+            
         }
         catch (Exception ex)
         {
-            Console.WriteLine($@"{Resources.ErrorMessageLoadingCustomer} {ex.Message}");
+            Console.WriteLine($@"{Resources.ErrorMessageLoadingInitiaData} {ex.Message}");
         }
         finally
         {
@@ -183,11 +190,6 @@ else
         }
         
         _newProject.ProsjektansvarligId = null;
-        
-        var usersList = await Http.GetFromJsonAsync<List<UserDto>>("api/users?isActive=true");
-        _users = usersList?.OrderBy(user => user.FullName).ToList();
-        
-        _location = await Http.GetFromJsonAsync<List<LokalitetDto>>("api/Lokalitet");
         
         _editContext = new EditContext(_newProject);
     }

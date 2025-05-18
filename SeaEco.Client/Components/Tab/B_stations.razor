@@ -173,6 +173,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        try
+        {
         _newStation = new NewStationDto
         {
             ProsjektId = Project.Id,
@@ -205,7 +207,13 @@ else
         {
             _isProjectComplete = true;
         }
-
+        }                              
+        catch (Exception e)            
+        {                              
+            Console.WriteLine(e);      
+            throw;                     
+        }                             
+        
         _isLoading = false;
     }
 

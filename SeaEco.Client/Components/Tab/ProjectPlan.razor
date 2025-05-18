@@ -315,36 +315,46 @@ else
     
     protected override async Task OnInitializedAsync()
     {
-        var usersList = await Http.GetFromJsonAsync<List<UserDto>>("api/users");
-        _users = usersList?.OrderBy(user => user.FullName).ToList();
-        var response = await Http.GetAsync($"/api/Project/{Project.Id:D}/sampling-plan");
-        
-        if (response.IsSuccessStatusCode)
+        try
         {
-            _existingPlan = await response.Content.ReadFromJsonAsync<SamplingPlanDto>();
-            var existingPlanJason = JsonSerializer.Serialize(_existingPlan);
-            _newPlan = JsonSerializer.Deserialize<EditSamplingPlanDto>(existingPlanJason)!;
-            _newPlanBackup = BackUp(_newPlan);
-            _isExistingPlan = true;
-            
-            var response2 = await Http.GetAsync($"/api/Project/{Project.Id:D}/sampling-plan/{_existingPlan.Id:D}/stations");
-            if (response2.IsSuccessStatusCode)
+            var usersList = await Http.GetFromJsonAsync<List<UserDto>>("api/users");
+
+            _users = usersList?.OrderBy(user => user.FullName).ToList();
+            var response = await Http.GetAsync($"/api/Project/{Project.Id:D}/sampling-plan");
+
+            if (response.IsSuccessStatusCode)
             {
-                _existingStationPlan = await response2.Content.ReadFromJsonAsync<List<UpdateStationDto>>(); 
-                _editStationPlan = BackUp(_existingStationPlan);
-                _editStationPlan?.Sort((a, b) => a.Nummer.CompareTo(b.Nummer));
-                _editStationPlanBackup = BackUp(_editStationPlan);
-                _isExistingStationPlan = true;
+                _existingPlan = await response.Content.ReadFromJsonAsync<SamplingPlanDto>();
+                var existingPlanJason = JsonSerializer.Serialize(_existingPlan);
+                _newPlan = JsonSerializer.Deserialize<EditSamplingPlanDto>(existingPlanJason)!;
+                _newPlanBackup = BackUp(_newPlan);
+                _isExistingPlan = true;
+
+                var response2 = await Http.GetAsync($"/api/Project/{Project.Id:D}/sampling-plan/{_existingPlan.Id:D}/stations");
+                if (response2.IsSuccessStatusCode)
+                {
+                    _existingStationPlan = await response2.Content.ReadFromJsonAsync<List<UpdateStationDto>>();
+                    _editStationPlan = BackUp(_existingStationPlan);
+                    _editStationPlan?.Sort((a, b) => a.Nummer.CompareTo(b.Nummer));
+                    _editStationPlanBackup = BackUp(_editStationPlan);
+                    _isExistingStationPlan = true;
+                }
+            }
+
+            _editContext = new EditContext(_newPlan);
+            _editStationPlanContext = new EditContext(_editStationPlan);
+            _newStationPlanContext = new EditContext(_newStationPlan);
+
+            var isPlanGeneratedResponse = await Http.GetAsync($"/api/report/{Project.Id:D}/pt-plan");
+            if (isPlanGeneratedResponse.IsSuccessStatusCode)
+            {
+                _isPlanGenerated = true;
             }
         }
-        _editContext = new EditContext(_newPlan);
-        _editStationPlanContext = new EditContext(_editStationPlan);
-        _newStationPlanContext = new EditContext(_newStationPlan);
-        
-        var isPlanGeneratedResponse = await Http.GetAsync($"/api/report/{Project.Id:D}/pt-plan");
-        if (isPlanGeneratedResponse.IsSuccessStatusCode)
+        catch (Exception ex)
         {
-            _isPlanGenerated = true;
+            Console.WriteLine($@"{Resources.ErrorMessageLoadingInitiaData} {ex.Message}");
+            throw;
         }
 
         _isLoading = false;

@@ -128,8 +128,10 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        try
+        {
         var responseReports = await Http.GetAsync($"/api/Report/{Project.Id:D}/all");  
-        if(responseReports.StatusCode == HttpStatusCode.OK)
+        if(responseReports.IsSuccessStatusCode)
         { 
             _documentReports = await responseReports.Content.ReadFromJsonAsync<GetReportsDto>();
             if (_documentReports != null && !_documentReports.Reports.Any())
@@ -138,11 +140,17 @@ else
             }
         }
         var responsePlan = await Http.GetAsync($"/api/Report/{Project.Id:D}/pt-plan");  
-        if(responsePlan.StatusCode == HttpStatusCode.OK)
+        if(responsePlan.IsSuccessStatusCode)
         { 
             _projectPlan = await responsePlan.Content.ReadFromJsonAsync<ReportDto>();
         }
-
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($@"{Resources.ErrorMessageLoadingInitiaData} {ex.Message}");
+        throw;
+    }
+        
         _isLoading = false;
     }
 

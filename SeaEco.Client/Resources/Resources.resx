@@ -553,4 +553,7 @@
     <data name="ReportPageNoProjectPlanGenerated" xml:space="preserve">
         <value>Ingen prosjektplan generert</value>
     </data>
+    <data name="ErrorMessageLoadingInitiaData" xml:space="preserve">
+        <value>Feil ved lasting av initialdata:</value>
+    </data>
 </root>
