@@ -5,6 +5,7 @@
 @using SeaEco.Abstractions.Enums.Bsensorisk
 @using SeaEco.Abstractions.Extensions
 @using SeaEco.Abstractions.Models.BSurvey
+@using SeaEco.Abstractions.Models.Bundersokelse
 @using SeaEco.Abstractions.Models.Image
 @using SeaEco.Abstractions.ValueObjects
 @using SeaEco.Services.NavigationLockService
@@ -114,7 +115,53 @@
                            name="bunntype"
                            id="cbx1"
                            class="hidden-xs-up"
-                           @onchange="@(() => _selectBunnType = "blot")"
+                           @onchange="@(() =>
+                                      {
+                                          _selectBunnType = "blot";
+                                          _selectSensorisk = "";
+                                          if (_surveyDto.BlotbunnId == null)
+                                          {
+                                              _surveyDto.BlotbunnId = Guid.NewGuid();
+                                              _surveyDto.HardbunnId = null;
+                                          }
+                                          if (_surveyDto.BSediment == null && _surveyDto.BSensorisk == null)
+                                          {
+                                              _surveyDto.BSediment = new BSedimentDto
+                                              {
+                                                  Id = Guid.NewGuid(),
+                                                  Ph = 0,
+                                                  Eh = 0,
+                                                  Temperatur = 0
+                                              };
+                                              _surveyDto.BSensorisk = new BSensoriskDto();
+
+                                              if (_surveyDto.BSoftBase == null)
+                                              {
+                                                  _surveyDto.BSoftBase = new BSoftBaseDto
+                                                  {
+                                                      Id = Guid.NewGuid(),
+                                                      Leire = 0f,
+                                                      Grus = 0f,
+                                                      Sand = 0f,
+                                                      Silt = 0f,
+                                                      Skjellsand = 0f
+                                                  };
+                                                  _surveyDto.BHardBase = null;
+                                              }                                          }
+                                          else if (_surveyDto.BSediment != null && _surveyDto.BSensorisk == null)
+                                          {
+                                              _surveyDto.BSensorisk = new BSensoriskDto();
+                                          }
+                                          else if (_surveyDto.BSediment == null && _surveyDto.BSensorisk != null)
+                                          {
+                                              _surveyDto.BSediment = new BSedimentDto
+                                              {
+                                                  Ph = 0,
+                                                  Eh = 0,
+                                                  Temperatur = 0
+                                              };
+                                          }
+                                      })"
                            checked="@(_selectBunnType == "blot")" />
                     <label for="cbx1" class="cbx"></label>
                     <label for="cbx1" class="lbl">Bløt</label>
@@ -125,7 +172,26 @@
                            name="bunntype"
                            id="cbx2"
                            class="hidden-xs-up"
-                           @onchange="@(() => _selectBunnType = "hard")"
+                           @onchange="@(() =>
+                                      {
+                                          _selectBunnType = "hard";
+                                          _selectSensorisk = "none";
+                                          if (_surveyDto.HardbunnId == null)
+                                          {
+                                              _surveyDto.HardbunnId = Guid.NewGuid();
+                                              _surveyDto.BlotbunnId = null;
+                                          }
+                                          if (_surveyDto.BHardBase == null)
+                                          {
+                                              _surveyDto.BHardBase = new BHardBaseDto
+                                              {
+                                                  Id = Guid.NewGuid(),
+                                                  Fjellbunn = 0f,
+                                                  Steinbunn = 0f
+                                              };
+                                              _surveyDto.BSoftBase = null;
+                                          }
+                                      })"
                            checked="@(_selectBunnType == "hard")" />
                     <label for="cbx2" class="cbx"></label>
                     <label for="cbx2" class="lbl">Hard</label>
@@ -134,7 +200,7 @@
         </div>
 
         <div id="sensoryRadio" class="sensoryRadio-container">
-            @if (_selectSensorisk != "")
+            @if (_selectSensorisk != "" || _selectSensorisk == "none")
             {
                 <h5>Er sensorisk utført?</h5>
 
@@ -143,7 +209,14 @@
                            name="sensorisk"
                            id="cbx3"
                            class="hidden-xs-up"
-                           @onchange="@(() => _selectSensorisk = "ja")"
+                           @onchange="@(() =>
+                                      {
+                                          _selectSensorisk = "ja";
+                                          if (_surveyDto.BSensorisk == null)
+                                          {
+                                              _surveyDto.BSensorisk = new BSensoriskDto();
+                                          }
+                                      })"
                            checked="@(_selectSensorisk == "ja")"/>
                     <label for="cbx3" class="cbx"></label>
                     <label for="cbx3" class="lbl">Ja</label>
@@ -154,7 +227,15 @@
                            name="sensorisk"
                            id="cbx4"
                            class="hidden-xs-up"
-                           @onchange="@(() => _selectSensorisk = "nei")"
+                           @onchange="@(() =>
+                                      {
+                                          _selectSensorisk = "nei";
+                                          if (_surveyDto.BSensorisk != null)
+                                          {
+                                              _surveyDto.BSediment = null;
+                                              _surveyDto.BSensorisk = null;
+                                          }
+                                      })"
                            checked="@(_selectSensorisk == "nei")"/>
                     <label for="cbx4" class="cbx"></label>
                     <label for="cbx4" class="lbl">Nei</label>
@@ -394,7 +475,14 @@
                            name="dyr"
                            id="cbx5"
                            class="hidden-xs-up"
-                           @onchange="@(() => _selectDyr = "ja")"
+                           @onchange="@(() =>
+                                      {
+                                          _selectDyr = "ja";
+                                          if (_surveyDto.BAnimal == null)
+                                          {
+                                              _surveyDto.BAnimal = new BAnimalDto();
+                                          }
+                                      })"
                            checked="@(_selectDyr == "ja")"/>
                     <label for="cbx5" class="cbx"></label>
                     <label for="cbx5" class="lbl">Ja</label>
@@ -405,7 +493,14 @@
                            name="dyr"
                            id="cbx6"
                            class="hidden-xs-up"
-                           @onchange="@(() => _selectDyr = "nei")"
+                           @onchange="@(() =>
+                                      {
+                                          _selectDyr = "nei";
+                                          if (_surveyDto.BAnimal != null)
+                                          {
+                                              _surveyDto.BAnimal = null;
+                                          }
+                                      })"
                            checked="@(_selectDyr == "nei")"/>
                     <label for="cbx6" class="cbx"></label>
                     <label for="cbx6" class="lbl">Nei</label>
@@ -584,9 +679,6 @@
     private string? siltPreviewUrl;
     private Guid usiltKey = Guid.NewGuid();
     private Guid siltKey  = Guid.NewGuid();
-
-    //private bool HasUsilt => _usiltImage != null || usiltPreviewUrl != null;
-    //private bool HasSilt  => _siltImage  != null || siltPreviewUrl  != null;
 
     private Task OnUsiltImageSelect(InputFileChangeEventArgs e)
         => UploadAndPreview(e.File, false);
@@ -918,9 +1010,6 @@
     {
         if (_selectBunnType == "blot")
         {
-            _surveyDto.BlotbunnId = Guid.NewGuid();
-            _surveyDto.BSoftBase.Id = _surveyDto.BlotbunnId.Value;
-            
             _surveyDto.HardbunnId = null;
             _surveyDto.BHardBase = null;
 
@@ -944,29 +1033,28 @@
         }
         else if (_selectBunnType == "hard")
         {
-            _surveyDto.HardbunnId = Guid.NewGuid(); 
-            _surveyDto.BHardBase.Id = _surveyDto.HardbunnId.Value;
-            
             _surveyDto.BlotbunnId = null;
             _surveyDto.BSoftBase = null;
+            _surveyDto.BSediment = null;
 
             if (_selectSensorisk != "ja" && _selectSensorisk != "nei")
             {
                 _validationMessage = "Valg av sensorisk er påkrevd";
                 return;
             }
-        }
-        else
-        {
-            _validationMessage = "Valg av bunntype er påkrevd";
-            return;
+
+            if (_selectSensorisk == "nei")
+            {
+                _surveyDto.BlotbunnId = null;
+                _surveyDto.BSoftBase = null;
+                _surveyDto.BSediment = null;
+                _surveyDto.SensoriskId = null;
+                _surveyDto.BSensorisk = null;
+            }
         }
         
         if (_selectSensorisk == "ja")
         {
-            _surveyDto.SensoriskId = Guid.NewGuid();
-            _surveyDto.BSensorisk.Id = _surveyDto.SensoriskId.Value;
-
             bool defaultValues = IsAllZeroOrNull(_surveyDto.BSensorisk);
             if (defaultValues)
             {
@@ -976,15 +1064,13 @@
         }
         else if (_selectSensorisk == "nei")
         {
+            _surveyDto.BSediment = null;
             _surveyDto.SensoriskId = null;
             _surveyDto.BSensorisk = null;
         }
         
         if (_selectDyr == "ja")
         {
-            _surveyDto.DyrId = Guid.NewGuid();
-            _surveyDto.BAnimal.Id = _surveyDto.DyrId.Value;
-
             bool defaultAttributes = IsAllZeroOrNull(_surveyDto.BAnimal);
             if (defaultAttributes)
             {
@@ -996,11 +1082,6 @@
         {
             _surveyDto.DyrId = null;
             _surveyDto.BAnimal = null;
-        }
-        else
-        {
-            _validationMessage = "Valg av dyr er påkrevd";
-            return;
         }
         
          var response = await Http.PutAsJsonAsync(
