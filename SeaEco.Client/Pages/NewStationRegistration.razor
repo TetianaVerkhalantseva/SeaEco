@@ -435,10 +435,10 @@
 @switch (_result)
 {
     case true:
-        <div class="alert alert-success" style="width: 60%;">@_resultMessage</div>
+        <div class="alert alert-success" style="display: flex; margin: 1rem auto; width: 60%;">@_resultMessage</div>
         break;
     case false:
-        <div class="alert alert-danger" style="width: 60%;">@_resultMessage</div>
+        <div class="alert alert-danger" style="display: flex; margin: 1rem auto; width: 60%;">@_resultMessage</div>
         break;
 }
 
@@ -739,7 +739,7 @@
     private void BackToProjectPage()
     {
         NavigationLockService.Unlock();
-        Navigation.NavigateTo($"/project/{_surveyDto.ProsjektId}");
+        Navigation.NavigateTo($"/project/{ProjectId:D}?tab=b_stations");
     }
 
     private async Task SubmitSurvey()
@@ -841,16 +841,13 @@
             _resultMessage = await response.Content.ReadAsStringAsync();
 
             NavigationLockService.Unlock();
-            await Task.Delay(2000);
-            Navigation.NavigateTo($"/project/{ProjectId:D}?tab=b_stations");
+            Navigation.NavigateTo($"/project/{ProjectId}/station/{StationId}/survey/{_surveyDto.Id}/upload-images");
         }
         else
         {
             _result = false;
             _resultMessage = await response.Content.ReadAsStringAsync();
         }
-
-        NavigationLockService.Unlock();
     }
 }
 
