@@ -1,10 +1,10 @@
-@* if testing, comment out this line *@
 @page "/project/{ProjectId:guid}/station/{StationId:guid}/survey/{SurveyId:guid}"
 
 @using Microsoft.AspNetCore.Authorization
 @using SeaEco.Abstractions.Enums.Bsensorisk
 @using SeaEco.Abstractions.Extensions
 @using SeaEco.Abstractions.Models.BSurvey
+@using SeaEco.Abstractions.Models.Image
 @inject HttpClient Http
 @attribute [Authorize]
 @inject NavigationManager Navigation
@@ -28,6 +28,11 @@
             <div class="form-floating mb-3">
                 <input id="depth" class="form-control" value="@_survey.BStation.Dybde" />
                 <label for="depth">Dybde</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input id="analyser" class="form-control" value="@_survey.BStation.Analyser" />
+                <label for="analyser">Analyser</label>
             </div>
         </div>
     }
@@ -190,51 +195,52 @@
             </div>
         }
     </div>
-    
-    @* TODO: Picture usilt and tom grabb container *@
-    @* <div class="picture-container"> *@
-    @*     <button class="picture-button" style="vertical-align:middle"><span>Usilt</span></button> *@
-    @* *@
-    @*     <div class="tom-grabb-container" id="tomGrabb_1"> *@
-    @*         <label class="custom-checkbox" for="tom-grabb-1"> *@
-    @*             <span class="custom-label">Tom grabb</span> *@
-    @*             <input id="tom-grabb-1" type="checkbox"> *@
-    @*             <span class="custom-checkmark"></span> *@
-    @*         </label> *@
-    @*     </div> *@
-    @* </div> *@
+    <div class="picture-container">
+        <h5>Usilt: </h5>
+        @if (usiltPreviewUrl != null)
+        {
+            <img src="@usiltPreviewUrl"
+                 alt="Usilt image"
+                 style="max-width:200px; max-height:200px;"/>
+        }
+        else
+        {
+            <span>Ingen Usilt-bilder lastet opp.</span>
+        }
+    </div>
 </div>
 
 <div id="div3" class="content-div">
-    @* TODO: Picture silt and tom grabb container *@
-    @* <div class="picture-container"> *@
-    @*     <button class="picture-button" style="vertical-align:middle"><span>Silt</span></button> *@
-    @* *@
-    @*     <div class="tom-grabb-container" id="tomGrabb_2"> *@
-    @*         <label class="custom-checkbox" for="tom-grabb-2"> *@
-    @*             <span class="custom-label">Tom grabb</span> *@
-    @*             <input id="tom-grabb-2" type="checkbox"> *@
-    @*             <span class="custom-checkmark"></span> *@
-    @*         </label> *@
-    @*     </div> *@
-    @* </div> *@
+    <div class="picture-container mt-4">
+        <h5>Silt: </h5>
+        @if (siltPreviewUrl != null)
+        {
+            <img src="@siltPreviewUrl"
+                 alt="Silt image"
+                 style="max-width:200px; max-height:200px;"/>
+        }
+        else
+        {
+            <span>Ingen Silt-bilder lastet opp.</span>
+        }
+    </div>
 
     <div class="checkbox-1-container">
         <label class="custom-checkbox" for="beggiatoa">
             <span class="custom-label">Beggiatoa</span>
-            <input type="checkbox" id="beggiatoa" checked="@_survey?.Beggiatoa" />
+            <input type="checkbox" id="beggiatoa" checked="@_survey?.Beggiatoa"/>
             <span class="custom-checkmark"></span>
         </label>
 
         <label class="custom-checkbox" for="forrester">
             <span class="custom-label">Forrester</span>
-            <input type="checkbox" id="forrester" checked="@_survey?.Forrester" />
+            <input type="checkbox" id="forrester" checked="@_survey?.Forrester"/>
             <span class="custom-checkmark"></span>
         </label>
 
         <label class="custom-checkbox" for="fekalier">
             <span class="custom-label">Fekalier</span>
-            <input type="checkbox" id="fekalier" checked="@_survey?.Fekalier" />
+            <input type="checkbox" id="fekalier" checked="@_survey?.Fekalier"/>
             <span class="custom-checkmark"></span>
         </label>
     </div>
@@ -245,14 +251,14 @@
 
         <div class="cntr">
             <input type="radio" name="dyr" id="cbx5" class="hidden-xs-up"
-                   value="ja" checked="@("ja" == _selectedDyr)" />
+                   value="ja" checked="@("ja" == _selectedDyr)"/>
             <label for="cbx5" class="cbx"></label>
             <label for="cbx5" class="lbl">Ja</label>
         </div>
 
         <div class="cntr">
             <input type="radio" name="dyr" id="cbx6" class="hidden-xs-up"
-                   value="nei" checked="@("nei" == _selectedDyr)" />
+                   value="nei" checked="@("nei" == _selectedDyr)"/>
             <label for="cbx6" class="cbx"></label>
             <label for="cbx6" class="lbl">Nei</label>
         </div>
@@ -263,29 +269,29 @@
         <div id="animalInfo" class="animalInfo-container">
             <div class="animalData">
                 <div class="form-floating mb-3">
-                    <input id="pigghuder" class="form-control" value="@_survey.BAnimal.Pigghunder" />
+                    <input id="pigghuder" class="form-control" value="@_survey.BAnimal.Pigghunder"/>
                     <label for="pigghuder">Pigghuder</label>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <input id="krepsdyr" class="form-control" value="@_survey.BAnimal.Krepsdyr" />
+                    <input id="krepsdyr" class="form-control" value="@_survey.BAnimal.Krepsdyr"/>
                     <label for="krepsdyr">Krepsdyr</label>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <input id="skjell" class="form-control" value="@_survey.BAnimal.Skjell" />
+                    <input id="skjell" class="form-control" value="@_survey.BAnimal.Skjell"/>
                     <label for="skjell">Skjell</label>
                 </div>
 
                 <div class="form-floating mb-3">
-                    <input id="borstemark" class="form-control" value="@_survey.BAnimal.Borstemark" />
+                    <input id="borstemark" class="form-control" value="@_survey.BAnimal.Borstemark"/>
                     <label for="borstemark">Børstemark</label>
                 </div>
             </div>
         </div>
 
         <div class="form-floating mb-3 user-input" id="arter-container">
-            <input class="form-control" id="arter" value="@_survey.BAnimal.Arter" />
+            <input class="form-control" id="arter" value="@_survey.BAnimal.Arter"/>
             <label for="arter">Arter</label>
         </div>
     }
@@ -293,7 +299,7 @@
     @if (_survey?.Merknader != null)
     {
         <div class="form-floating mb-3 user-input">
-            <input class="form-control" id="merknader" value="@_survey.Merknader" />
+            <input class="form-control" id="merknader" value="@_survey.Merknader"/>
             <label for="merknader">Merknader</label>
         </div>
     }
@@ -338,9 +344,22 @@
 
     private string? _errorMessage;
     
+    private ImageDto? _usiltImage;
+    private ImageDto? _siltImage;
+    private string? usiltPreviewUrl;
+    private string? siltPreviewUrl;
+    
     protected override async Task OnInitializedAsync()
     {
         await LoadSurveyData();
+        
+        var images = await Http.GetFromJsonAsync<IEnumerable<ImageDto>>(
+            $"/api/images/all/{SurveyId}");
+        _usiltImage = images?.FirstOrDefault(x => x.Silt == false);
+        _siltImage  = images?.FirstOrDefault(x => x.Silt == true);
+
+        if (_usiltImage != null) usiltPreviewUrl = "https://localhost:7096" + _usiltImage.Path;
+        if (_siltImage  != null) siltPreviewUrl  = "https://localhost:7096" + _siltImage.Path;
     }
     
     protected override async Task OnAfterRenderAsync(bool firstRender)

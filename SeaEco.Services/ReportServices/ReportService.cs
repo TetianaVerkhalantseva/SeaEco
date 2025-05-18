@@ -558,14 +558,24 @@ public sealed class ReportService(Report report,
             tilstandService.CalculateUndersokelseTilstand(undersokelse);
         }
         
-        Response updateUndersResult = await undersokelseRepository.UpdateRange(undersokelses);
-        if (updateUndersResult.IsError)
+        Response updateUndersokelseResult = await undersokelseRepository.UpdateRange(undersokelses);
+        if (updateUndersokelseResult.IsError)
         {
-            return Response<IEnumerable<Response<string>>>.Error(updateUndersResult.ErrorMessage);
+            return Response<IEnumerable<Response<string>>>.Error(updateUndersokelseResult.ErrorMessage);
         }
         
         // Calculate Prosjekts Tilstand
-        BTilstand tilstand = tilstandService.CalculateProsjektTilstand(dbRecord.BUndersokelses, dbRecord.Id);
+        BTilstand? tilstand = await tilstandRepository.GetBy(_ => _.ProsjektId == dbRecord.Id);
+        if (tilstand is not null)
+        {
+            Response removeResult = await tilstandRepository.Delete(tilstand);
+            if (removeResult.IsError)
+            {
+                return Response<IEnumerable<Response<string>>>.Error(removeResult.ErrorMessage);
+            }
+        }
+        
+        tilstand = tilstandService.CalculateProsjektTilstand(dbRecord.BUndersokelses, dbRecord.Id);
         
         Response createTilstandResult = await tilstandRepository.Add(tilstand);
         if (createTilstandResult.IsError)

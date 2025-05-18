@@ -34,7 +34,7 @@ public sealed class ImageService : IImageService
         }
     }
     
-    public async Task<Response> AddImage(AddImageDto dto)
+    public async Task<Response<ImageDto>> AddImage(AddImageDto dto)
     {
         Guid imageId = Guid.NewGuid();
         
@@ -49,7 +49,7 @@ public sealed class ImageService : IImageService
             Response removeResult = await DeleteImage(dbRecords.Id);
             if (removeResult.IsError)
             {
-                return removeResult;
+                return Response<ImageDto>.Error(removeResult.ErrorMessage);
             }
         }
         
@@ -59,13 +59,13 @@ public sealed class ImageService : IImageService
         
         if (undersokelse is null)
         {
-            return Response.Error(PROJECT_NOT_FDOUND_ERROR);
+            return Response<ImageDto>.Error(PROJECT_NOT_FDOUND_ERROR);
         }
         
         Response<ImageModel> uploadResult = SaveImage(dto.Image, undersokelse.Prosjekt.ProsjektIdSe, imageId.ToString());
         if (uploadResult.IsError)
         {
-            return Response.Error(uploadResult.ErrorMessage);
+            return Response<ImageDto>.Error(uploadResult.ErrorMessage);
         }
 
         BBilder dbRecord = new BBilder()
@@ -82,7 +82,15 @@ public sealed class ImageService : IImageService
         {
             RemoveImage(dbRecords.Undersokelse.Prosjekt.ProsjektIdSe, uploadResult.Value.Name);
         }
-        return addResult;
+        
+        string projectIdSe = undersokelse.Prosjekt.ProsjektIdSe;
+        return Response<ImageDto>.Ok(new ImageDto()
+        {
+            Id = imageId,
+            UploadDate = dbRecord.Datogenerert,
+            Silt = dbRecord.Silt,
+            Path = Path.Combine("/images", projectIdSe, $"{dbRecord.Id.ToString()}.{dbRecord.Extension}"),
+        });
     }
 
     public async Task<Response> DeleteImage(Guid id)
@@ -126,6 +134,23 @@ public sealed class ImageService : IImageService
             UploadDate = dbRecord.Datogenerert,
             Silt = dbRecord.Silt,
             Path = Path.Combine("/images", projectIdSe, $"{dbRecord.Id.ToString()}.{dbRecord.Extension}"),
+        });
+    }
+
+    public async Task<IEnumerable<ImageDto>> GetImagesByUndersokelse(Guid undersokelId)
+    {
+        List<BBilder> images = await _imageRepository.GetAll()
+            .Include(_ => _.Undersokelse)
+            .ThenInclude(_ => _.Prosjekt)
+            .Where(_ => _.UndersokelseId == undersokelId)
+            .ToListAsync();
+
+        return images.Select(_ => new ImageDto()
+        {
+            Id = _.Id,
+            UploadDate = _.Datogenerert,
+            Silt = _.Silt,
+            Path = Path.Combine("/images", _.Undersokelse.Prosjekt.ProsjektIdSe, $"{_.Id.ToString()}.{_.Extension}")
         });
     }
     

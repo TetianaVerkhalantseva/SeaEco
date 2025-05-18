@@ -15,6 +15,49 @@ public sealed class DbSeeder
             context.TruncateAllTablesPostgres();
         }
         
+        // ProgramVersjon
+        Guid programversjonId1 = Guid.Parse("6a1c5580-6594-4e46-9149-e85c80186a1a");
+        Guid programversjonId2 = Guid.Parse("73a93d1e-375f-454a-b48d-fe85e6bd0f5d");
+        Guid programversjonId3 = Guid.Parse("d6653d1c-017f-47fa-b0da-f4f7024f0e7e");
+
+        List<Programversjon> programversjons =
+        [
+            new Programversjon
+            {
+                Id = programversjonId1,
+                Utgivelsesdato = new DateOnly(2025, 3, 21),
+                Versjonsnummer = "0.1-beta",
+                Forbedringer = @"
+                - Første betautgivelse av applikasjonen
+                - Implementert grunnleggende navigasjon mellom seksjoner
+                - Lagt til påloggings-/registreringsside
+                ".Trim()
+            },
+            new Programversjon
+            {
+                Id = programversjonId2,
+                Utgivelsesdato = new DateOnly(2025, 3, 30),
+                Versjonsnummer = "0.2-beta",
+                Forbedringer = @"
+                - Integrasjon med database via EF Core
+                - Lagt til brukerprofilside
+                - Forbedret validering av skjemaer (passord, e-post)                
+                ".Trim()
+            },
+            new Programversjon
+            {
+                Id = programversjonId3,
+                Utgivelsesdato = new DateOnly(2025, 4, 1),
+                Versjonsnummer = "0.3-beta",
+                Forbedringer = @"
+                - Rettet kritiske feil i autorisasjonsmodulen
+                ".Trim()
+            }
+        ];
+
+        await context.Programversjons.AddRangeAsync(programversjons);
+        await context.SaveChangesAsync();
+        
         // Seed Bruker
         Guid adminId1 = Guid.Parse("8fffdaa4-7dfe-4d78-a28b-b80558d542b6");
         Guid brukerId1 = Guid.Parse("9ec86e55-78d5-4463-8fdd-782006b74dd0");

@@ -16,7 +16,7 @@
 @attribute [Authorize(Roles = "admin")]
 
 
-<h4>Registrering</h4>
+<h4>Stasjonsregistrering</h4>
 
 
 <div id="div1" class="content-div active">
@@ -66,6 +66,11 @@
                         @onclick="() => ClearPositionAndDepth(0)">
                     Annen posisjon og dybde
                 </button>
+            </div>
+
+            <div class="form-floating mb-3">
+                <InputText id="analyser" class="form-control" @bind-Value="_surveyDto.BStation.Analyser" placeholder="Analyser"/>
+                <label for="analyser">Analyser</label>
             </div>
         </div>
     }
@@ -284,39 +289,11 @@
             </div>
         </div>
     </div>
-
-    @* TODO: Picture usilt and tom grabb container *@
-    <div class="picture-container">
-        <button class="picture-button" style="vertical-align:middle"><span>Usilt</span></button>
-
-        <div class="tom-grabb-container" id="tomGrabb_1">
-            <label class="custom-checkbox" for="tom-grabb-1">
-                <span class="custom-label">Tom grabb</span>
-                <input id="tom-grabb-1" type="checkbox">
-                <span class="custom-checkmark"></span>
-            </label>
-        </div>
-    </div>
-    @* TODO: Picture usilt and tom grabb container *@
 </div>
 
 
 
 <div id="div3" class="content-div">
-    @* TODO: Picture silt and tom grabb container *@
-    <div class="picture-container">
-        <button class="picture-button" style="vertical-align:middle"><span>Silt</span></button>
-
-        <div class="tom-grabb-container" id="tomGrabb_2">
-            <label class="custom-checkbox" for="tom-grabb-2">
-                <span class="custom-label">Tom grabb</span>
-                <input id="tom-grabb-2" type="checkbox">
-                <span class="custom-checkmark"></span>
-            </label>
-        </div>
-    </div>
-    @* TODO: Picture usilt and tom grabb container *@
-
     <div class="checkbox-1-container">
         <label class="custom-checkbox" for="beggiatoa">
             <span class="custom-label">Beggiatoa</span>
@@ -639,9 +616,9 @@
             var currentValue = (float)(property.GetValue(target) ?? 0f);
 
             if (currentValue == 0)
-                property.SetValue(target, 0.5f);
-            else if (currentValue == 0.5f)
                 property.SetValue(target, 1f);
+            else if (currentValue == 1f)
+                property.SetValue(target, 0.5f);
             else
                 property.SetValue(target, 0f);
         }
