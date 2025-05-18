@@ -77,386 +77,429 @@
         }
 
         <div class="equipment-container">
-            <div class="form-floating mb-3">
-                <InputSelect id="equip-1" class="form-control" @bind-Value="_surveyDto.AntallGrabbhugg">
-                    <option value="">Velg antall grabbhugg</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                </InputSelect>
-                <label for="equip-1">Antall grabbhugg</label>
-            </div>
-
-            <div class="checkbox-3-container">
-                <label class="custom-checkbox" for="equip-2">
-                    <span class="custom-label">Gokjent grabbhastighet</span>
-                    <input id="equip-2" type="checkbox" checked="@_surveyDto.GrabbhastighetGodkjent">
-                    <span class="custom-checkmark"></span>
-                </label>
-            </div>
+            @if (_surveyDto?.AntallGrabbhugg <= 3 && _surveyDto.AntallGrabbhugg >= 0)
+            {
+                <div class="form-floating mb-3">
+                    <InputSelect id="equip-1" class="form-control" @bind-Value="_surveyDto.AntallGrabbhugg">
+                        <option value="">Velg antall grabbhugg</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </InputSelect>
+                    <label for="equip-1">Antall grabbhugg</label>
+                </div>
+            }
+            
+            @if (_surveyDto.GrabbhastighetGodkjent)
+            {
+                <div class="checkbox-3-container">
+                    <label class="custom-checkbox" for="equip-2">
+                        <span class="custom-label">Godkjent grabbhastighet</span>
+                        <input id="equip-2" type="checkbox" @bind="_surveyDto.GrabbhastighetGodkjent" />
+                        <span class="custom-checkmark"></span>
+                    </label>
+                </div>
+            }
         </div>
     </div>
 
     <div id="div2" class="content-div">
         <div class="typeRadio-container">
-            <h5>Bunntype: </h5>
+            @if (_selectBunnType != "")
+            {
+                <h5>Bunntype: </h5>
 
-            <div class="cntr">
-                <input type="radio"
-                       name="bunntype"
-                       id="cbx1"
-                       class="hidden-xs-up"
-                       @onchange="@(() => _selectBunnType = "blot")"
-                       checked="@(_selectBunnType == "blot")" />
-                <label for="cbx1" class="cbx"></label>
-                <label for="cbx1" class="lbl">Bløt</label>
-            </div>
-
-            <div class="cntr">
-                <input type="radio"
-                       name="bunntype"
-                       id="cbx2"
-                       class="hidden-xs-up"
-                       @onchange="@(() => _selectBunnType = "hard")"
-                       checked="@(_selectBunnType == "hard")" />
-                <label for="cbx2" class="cbx"></label>
-                <label for="cbx2" class="lbl">Hard</label>
-            </div>
+                <div class="cntr">
+                    <input type="radio"
+                           name="bunntype"
+                           id="cbx1"
+                           class="hidden-xs-up"
+                           @onchange="@(() => _selectBunnType = "blot")"
+                           checked="@(_selectBunnType == "blot")" />
+                    <label for="cbx1" class="cbx"></label>
+                    <label for="cbx1" class="lbl">Bløt</label>
+                </div>    
+                
+                <div class="cntr">
+                    <input type="radio"
+                           name="bunntype"
+                           id="cbx2"
+                           class="hidden-xs-up"
+                           @onchange="@(() => _selectBunnType = "hard")"
+                           checked="@(_selectBunnType == "hard")" />
+                    <label for="cbx2" class="cbx"></label>
+                    <label for="cbx2" class="lbl">Hard</label>
+                </div>
+            }
         </div>
 
         <div id="sensoryRadio" class="sensoryRadio-container">
-            <h5>Er sensorisk utført?</h5>
+            @if (_selectSensorisk != "")
+            {
+                <h5>Er sensorisk utført?</h5>
 
-            <div class="cntr">
-                <input type="radio" 
-                       name="sensorisk" 
-                       id="cbx3" 
-                       class="hidden-xs-up"
-                       @onchange="@(() => _selectSensorisk = "ja")"
-                       checked="@(_selectSensorisk == "ja")"
-                />
-                <label for="cbx3" class="cbx"></label>
-                <label for="cbx3" class="lbl">Ja</label>
-            </div>
+                <div class="cntr">
+                    <input type="radio"
+                           name="sensorisk"
+                           id="cbx3"
+                           class="hidden-xs-up"
+                           @onchange="@(() => _selectSensorisk = "ja")"
+                           checked="@(_selectSensorisk == "ja")"/>
+                    <label for="cbx3" class="cbx"></label>
+                    <label for="cbx3" class="lbl">Ja</label>
+                </div>
 
-            <div class="cntr">
-                <input type="radio"
-                       name="sensorisk"
-                       id="cbx4"
-                       class="hidden-xs-up"
-                       @onchange="@(() => _selectSensorisk = "nei")"
-                       checked="@(_selectSensorisk == "nei")"
-                />
-                <label for="cbx4" class="cbx"></label>
-                <label for="cbx4" class="lbl">Nei</label>
-            </div>
+                <div class="cntr">
+                    <input type="radio"
+                           name="sensorisk"
+                           id="cbx4"
+                           class="hidden-xs-up"
+                           @onchange="@(() => _selectSensorisk = "nei")"
+                           checked="@(_selectSensorisk == "nei")"/>
+                    <label for="cbx4" class="cbx"></label>
+                    <label for="cbx4" class="lbl">Nei</label>
+                </div> 
+            }
         </div>
 
         <div id="sensoryInfo" class="sensoryInfo-container">
             <div class="sensoryData">
-                <div class="form-floating mb-3" id="sensoryDataSoft_1">
-                    <InputNumber id="ProvePh" class="form-control" @bind-Value="_surveyDto.BSediment.Ph" placeholder="pH" />
-                    <label for="ProvePh">pH</label>
-                </div>
+                @if (_surveyDto.BSediment != null)
+                {
+                    <div class="form-floating mb-3" id="sensoryDataSoft_1">
+                        <InputNumber id="ProvePh" class="form-control" @bind-Value="_surveyDto.BSediment.Ph" placeholder="pH"/>
+                        <label for="ProvePh">pH</label>
+                    </div>
 
-                <div class="form-floating mb-3" id="sensoryDataSoft_2">
-                    <InputNumber id="ProveEh" class="form-control" @bind-Value="_surveyDto.BSediment.Eh" placeholder="Eh" />
-                    <label for="ProveEh">EH</label>
-                </div>
+                    <div class="form-floating mb-3" id="sensoryDataSoft_2">
+                        <InputNumber id="ProveEh" class="form-control" @bind-Value="_surveyDto.BSediment.Eh" placeholder="Eh"/>
+                        <label for="ProveEh">EH</label>
+                    </div>
 
-                <div class="form-floating mb-3" id="sensoryDataSoft_3">
-                    <InputNumber id="ProveTemp" class="form-control" @bind-Value="_surveyDto.BSediment.Temperatur" placeholder="Temp" />
-                    <label for="ProveTemp">Temp</label>
-                </div>
+                    <div class="form-floating mb-3" id="sensoryDataSoft_3">
+                        <InputNumber id="ProveTemp" class="form-control" @bind-Value="_surveyDto.BSediment.Temperatur" placeholder="Temp"/>
+                        <label for="ProveTemp">Temp</label>
+                    </div>
+                }
 
-                <div class="form-floating mb-3">
-                    <InputSelect id="GrabbVolum" class="form-select" @bind-Value="_surveyDto.BSensorisk.Grabbvolum">
-                        <option value="" disabled>Velg grabbvolum</option>
-                        @foreach (Grabbvolum g in Enum.GetValues(typeof(Grabbvolum)))
-                        {
-                            <option value="@( (int)g )">@g.GetDescription()</option>
-                        }
-                    </InputSelect>
-                    <label for="GrabbVolum">GrabbVolum</label>
-                </div>
+                @if (_surveyDto.BSensorisk != null)
+                {
+                    <div class="form-floating mb-3">
+                        <InputSelect id="GrabbVolum" class="form-select" @bind-Value="_surveyDto.BSensorisk.Grabbvolum">
+                            <option value="" disabled>Velg grabbvolum</option>
+                            @foreach (Grabbvolum g in Enum.GetValues(typeof(Grabbvolum)))
+                            {
+                                <option value="@((int)g)">@g.GetDescription()</option>
+                            }
+                        </InputSelect>
+                        <label for="GrabbVolum">GrabbVolum</label>
+                    </div>
 
-                <div class="form-floating mb-3">
-                    <InputSelect id="Tykkelse" class="form-select" @bind-Value="_surveyDto.BSensorisk.Tykkelseslamlag">
-                        <option value="" disabled>Velg tykkelseslamlag</option>
-                        @foreach (Tykkelseslamlag t in Enum.GetValues(typeof(Tykkelseslamlag)))
-                        {
-                            <option value="@( (int)t )">@t.GetDescription()</option>
-                        }
-                    </InputSelect>
-                    <label for="Tykkelse">Tykkelseslamlag</label>
-                </div>
+                    <div class="form-floating mb-3">
+                        <InputSelect id="Tykkelse" class="form-select" @bind-Value="_surveyDto.BSensorisk.Tykkelseslamlag">
+                            <option value="" disabled>Velg tykkelseslamlag</option>
+                            @foreach (Tykkelseslamlag t in Enum.GetValues(typeof(Tykkelseslamlag)))
+                            {
+                                <option value="@((int)t)">@t.GetDescription()</option>
+                            }
+                        </InputSelect>
+                        <label for="Tykkelse">Tykkelseslamlag</label>
+                    </div>
 
-                <div class="form-floating mb-3">
-                    <InputSelect id="Gassbobler" class="form-select" @bind-Value="_surveyDto.BSensorisk.Gassbobler">
-                        <option value="" disabled>Velg gassbobler</option>
-                        @foreach (Gassbobler gass in Enum.GetValues(typeof(Gassbobler)))
-                        {
-                            <option value="@( (int)gass )">@gass.GetDescription()</option>
-                        }
-                    </InputSelect>
-                    <label for="Gassbobler">Gassbobler</label>
-                </div>
+                    <div class="form-floating mb-3">
+                        <InputSelect id="Gassbobler" class="form-select" @bind-Value="_surveyDto.BSensorisk.Gassbobler">
+                            <option value="" disabled>Velg gassbobler</option>
+                            @foreach (Gassbobler gass in Enum.GetValues(typeof(Gassbobler)))
+                            {
+                                <option value="@((int)gass)">@gass.GetDescription()</option>
+                            }
+                        </InputSelect>
+                        <label for="Gassbobler">Gassbobler</label>
+                    </div>
 
-                <div class="form-floating mb-3">
-                    <InputSelect id="Farge" class="form-select" @bind-Value="_surveyDto.BSensorisk.Farge">
-                        <option value="" disabled>Velg farge</option>
-                        @foreach (Farge f in Enum.GetValues(typeof(Farge)))
-                        {
-                            <option value="@( (int)f )">@f.GetDescription()</option>
-                        }
-                    </InputSelect>
-                    <label for="Farge">Farge</label>
-                </div>
+                    <div class="form-floating mb-3">
+                        <InputSelect id="Farge" class="form-select" @bind-Value="_surveyDto.BSensorisk.Farge">
+                            <option value="" disabled>Velg farge</option>
+                            @foreach (Farge f in Enum.GetValues(typeof(Farge)))
+                            {
+                                <option value="@((int)f)">@f.GetDescription()</option>
+                            }
+                        </InputSelect>
+                        <label for="Farge">Farge</label>
+                    </div>
 
-                <div class="form-floating mb-3">
-                    <InputSelect id="Lukt" class="form-select" @bind-Value="_surveyDto.BSensorisk.Lukt">
-                        <option value="" disabled>Velg lukt</option>
-                        @foreach (Lukt l in Enum.GetValues(typeof(Lukt)))
-                        {
-                            <option value="@( (int)l )">@l.GetDescription()</option>
-                        }
-                    </InputSelect>
-                    <label for="Lukt">Lukt</label>
-                </div>
+                    <div class="form-floating mb-3">
+                        <InputSelect id="Lukt" class="form-select" @bind-Value="_surveyDto.BSensorisk.Lukt">
+                            <option value="" disabled>Velg lukt</option>
+                            @foreach (Lukt l in Enum.GetValues(typeof(Lukt)))
+                            {
+                                <option value="@((int)l)">@l.GetDescription()</option>
+                            }
+                        </InputSelect>
+                        <label for="Lukt">Lukt</label>
+                    </div>
 
-                <div class="form-floating mb-3">
-                    <InputSelect id="Konsistens" class="form-select" @bind-Value="_surveyDto.BSensorisk.Konsistens">
-                        <option value="" disabled>Velg konsistens</option>
-                        @foreach (Konsistens k in Enum.GetValues(typeof(Konsistens)))
-                        {
-                            <option value="@( (int)k )">@k.GetDescription()</option>
-                        }
-                    </InputSelect>
-                    <label for="Konsistens">Konsistens</label>
-                </div>
+                    <div class="form-floating mb-3">
+                        <InputSelect id="Konsistens" class="form-select" @bind-Value="_surveyDto.BSensorisk.Konsistens">
+                            <option value="" disabled>Velg konsistens</option>
+                            @foreach (Konsistens k in Enum.GetValues(typeof(Konsistens)))
+                            {
+                                <option value="@((int)k)">@k.GetDescription()</option>
+                            }
+                        </InputSelect>
+                        <label for="Konsistens">Konsistens</label>
+                    </div>
+                }
             </div>
         </div>
 
         <div class="sedimentType-container" id="sedimentType">
             <div class="hardSediment-container" id="hardSediment">
-                <h5>Bunntype:</h5>
-                
-                <div class="checkbox-container">
-                    <button class="toggle-btn" data-level="@(_surveyDto.BHardBase?.Steinbunn.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
-                            @onclick="() => ToggleZeroOneValue(_surveyDto.BHardBase, nameof(_surveyDto.BHardBase.Steinbunn))"
-                            disabled="@(_surveyDto.BHardBase == null || _surveyDto.BHardBase.Fjellbunn == 1f)">
-                        Steinbunn
-                    </button>
-                    
-                    <button class="toggle-btn" data-level="@(_surveyDto.BHardBase?.Fjellbunn.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
-                            @onclick="() => ToggleZeroOneValue(_surveyDto.BHardBase, nameof(_surveyDto.BHardBase.Fjellbunn))"
-                            disabled="@(_surveyDto.BHardBase == null || _surveyDto.BHardBase.Steinbunn == 1f)">
-                        Fjellbunn
-                    </button>
-                </div>
+                @if (_surveyDto.BHardBase != null)
+                {
+                    <h5>Bunntype:</h5>
+
+                    <div class="checkbox-container">
+                        <button class="toggle-btn" data-level="@(_surveyDto.BHardBase?.Steinbunn.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
+                                @onclick="() => ToggleZeroOneValue(_surveyDto.BHardBase, nameof(_surveyDto.BHardBase.Steinbunn))"
+                                disabled="@(_surveyDto.BHardBase == null || _surveyDto.BHardBase.Fjellbunn == 1f)">
+                            Steinbunn
+                        </button>
+
+                        <button class="toggle-btn" data-level="@(_surveyDto.BHardBase?.Fjellbunn.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
+                                @onclick="() => ToggleZeroOneValue(_surveyDto.BHardBase, nameof(_surveyDto.BHardBase.Fjellbunn))"
+                                disabled="@(_surveyDto.BHardBase == null || _surveyDto.BHardBase.Steinbunn == 1f)">
+                            Fjellbunn
+                        </button>
+                    </div>   
+                }
             </div>
 
             <div class="softSediment-container" id="softSediment">
-                <h5>Sedimenttype:</h5>
-                
-                <div class="checkbox-container">
-                    <button class="toggle-btn" data-level="@(_surveyDto.BSoftBase?.Sand.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
-                            @onclick="() => CycleValue(_surveyDto.BSoftBase, nameof(_surveyDto.BSoftBase.Sand))"
-                            disabled="@(_surveyDto.BSoftBase == null)">
-                        Sand
-                    </button>
-                    <button class="toggle-btn" data-level="@(_surveyDto.BSoftBase?.Leire.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
-                            @onclick="() => CycleValue(_surveyDto.BSoftBase, nameof(_surveyDto.BSoftBase.Leire))"
-                            disabled="@(_surveyDto.BSoftBase == null)">
-                        Leire
-                    </button>
-                    <button class="toggle-btn" data-level="@(_surveyDto.BSoftBase?.Silt.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
-                            @onclick="() => CycleValue(_surveyDto.BSoftBase, nameof(_surveyDto.BSoftBase.Silt))"
-                            disabled="@(_surveyDto.BSoftBase == null)">
-                        Silt
-                    </button>
-                    <button class="toggle-btn" data-level="@(_surveyDto.BSoftBase?.Grus.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
-                            @onclick="() => CycleValue(_surveyDto.BSoftBase, nameof(_surveyDto.BSoftBase.Grus))"
-                            disabled="@(_surveyDto.BSoftBase == null)">
-                        Grus
-                    </button>
-                    <button class="toggle-btn" data-level="@(_surveyDto.BSoftBase?.Skjellsand.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
-                            @onclick="() => CycleValue(_surveyDto.BSoftBase, nameof(_surveyDto.BSoftBase.Skjellsand))"
-                            disabled="@(_surveyDto.BSoftBase == null)">
-                        Skjellsand
-                    </button>
-                </div>
+                @if (_surveyDto.BSoftBase != null)
+                {
+                    <h5>Sedimenttype:</h5>
+
+                    <div class="checkbox-container">
+                        <button class="toggle-btn" data-level="@(_surveyDto.BSoftBase?.Sand.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
+                                @onclick="() => CycleValue(_surveyDto.BSoftBase, nameof(_surveyDto.BSoftBase.Sand))"
+                                disabled="@(_surveyDto.BSoftBase == null)">
+                            Sand
+                        </button>
+                        <button class="toggle-btn" data-level="@(_surveyDto.BSoftBase?.Leire.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
+                                @onclick="() => CycleValue(_surveyDto.BSoftBase, nameof(_surveyDto.BSoftBase.Leire))"
+                                disabled="@(_surveyDto.BSoftBase == null)">
+                            Leire
+                        </button>
+                        <button class="toggle-btn" data-level="@(_surveyDto.BSoftBase?.Silt.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
+                                @onclick="() => CycleValue(_surveyDto.BSoftBase, nameof(_surveyDto.BSoftBase.Silt))"
+                                disabled="@(_surveyDto.BSoftBase == null)">
+                            Silt
+                        </button>
+                        <button class="toggle-btn" data-level="@(_surveyDto.BSoftBase?.Grus.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
+                                @onclick="() => CycleValue(_surveyDto.BSoftBase, nameof(_surveyDto.BSoftBase.Grus))"
+                                disabled="@(_surveyDto.BSoftBase == null)">
+                            Grus
+                        </button>
+                        <button class="toggle-btn" data-level="@(_surveyDto.BSoftBase?.Skjellsand.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")"
+                                @onclick="() => CycleValue(_surveyDto.BSoftBase, nameof(_surveyDto.BSoftBase.Skjellsand))"
+                                disabled="@(_surveyDto.BSoftBase == null)">
+                            Skjellsand
+                        </button>
+                    </div>   
+                }
             </div>
         </div>
         
         <div class="picture-container">
-            <h5>Usilt: </h5>
-            <InputFile
-                @key="usiltKey"
-                OnChange="OnUsiltImageSelect"
-                accept="image/*"
-                class="picture-button" />
-            <button class="btn btn-danger"
-                    @onclick="RemoveUsiltImage"
-                    disabled="@(usiltPreviewUrl is null)">
-                Remove
-            </button>
-            @if (usiltPreviewUrl != null)
-            {
-            <div class="mt-2">
-                <img src="@usiltPreviewUrl" style="max-width:200px; max-height:200px;" />
+            <div class="picture-card">
+                <h5>Usilt: </h5>
+                
+                <InputFile
+                    @key="usiltKey"
+                    OnChange="OnUsiltImageSelect"
+                    accept="image/*"
+                    class="picture-button"/>
+                
+                <button class="btn btn-danger"
+                        @onclick="RemoveUsiltImage"
+                        disabled="@(usiltPreviewUrl is null)">
+                    Remove
+                </button>
+                
+                @if (usiltPreviewUrl != null)
+                {
+                    <div class="mt-2">
+                        <img src="@usiltPreviewUrl" style="max-width:200px; max-height:200px;"/>
+                    </div>
+                }
             </div>
-            }
+            
+            <div class="picture-card">
+                <h5>Silt: </h5>
+
+                <InputFile
+                    @key="siltKey"
+                    OnChange="OnSiltImageSelect"
+                    accept="image/*"
+                    class="picture-button" />
+
+                <button class="btn btn-danger"
+                        @onclick="RemoveSiltImage"
+                        disabled="@(siltPreviewUrl is null)">
+                    Remove
+                </button>
+
+                @if (siltPreviewUrl != null)
+                {
+                    <div class="mt-2">
+                        <img src="@siltPreviewUrl" style="max-width:200px; max-height:200px;" />
+                    </div>
+                }
+            </div>
         </div>
     </div>
 
     <div id="div3" class="content-div">
-        <div class="picture-container">
-            <h5>Silt: </h5>
-            <InputFile
-                @key="siltKey"
-                OnChange="OnSiltImageSelect"
-                accept="image/*"
-                class="picture-button" />
-            <button class="btn btn-danger"
-                    @onclick="RemoveSiltImage"
-                    disabled="@(siltPreviewUrl is null)">
-                Remove
-            </button>
-            @if (siltPreviewUrl != null)
-            {
-            <div class="mt-2">
-                <img src="@siltPreviewUrl" style="max-width:200px; max-height:200px;" />
-            </div>
-            }
-        </div>
-
         <div class="checkbox-1-container">
-            <label class="custom-checkbox" for="beggiatoa">
-                <span class="custom-label">Beggiatoa</span>
-                <input type="checkbox" id="beggiatoa" @bind="_surveyDto.Beggiatoa"/>
-                <span class="custom-checkmark"></span>
-            </label>
-
-            <label class="custom-checkbox" for="forrester">
-                <span class="custom-label">Forrester</span>
-                <input type="checkbox" id="forrester" @bind="_surveyDto.Forrester"/>
-                <span class="custom-checkmark"></span>
-            </label>
-
-            <label class="custom-checkbox" for="fekalier">
-                <span class="custom-label">Fekalier</span>
-                <input type="checkbox" id="fekalier" @bind="_surveyDto.Fekalier"/>
-                <span class="custom-checkmark"></span>
-            </label>
+            @if (_surveyDto.Beggiatoa || _surveyDto.Forrester || _surveyDto.Fekalier)
+            {
+                <label class="custom-checkbox" for="beggiatoa">
+                    <span class="custom-label">Beggiatoa</span>
+                    <input type="checkbox" id="beggiatoa" @bind="_surveyDto.Beggiatoa"/>
+                    <span class="custom-checkmark"></span>
+                </label>
+                
+                <label class="custom-checkbox" for="forrester">
+                    <span class="custom-label">Forrester</span>
+                    <input type="checkbox" id="forrester" @bind="_surveyDto.Forrester"/>
+                    <span class="custom-checkmark"></span>
+                </label>
+                
+                <label class="custom-checkbox" for="fekalier">
+                    <span class="custom-label">Fekalier</span>
+                    <input type="checkbox" id="fekalier" @bind="_surveyDto.Fekalier"/>
+                    <span class="custom-checkmark"></span>
+                </label>
+            }
         </div>
 
         <div class="animalRadio-container">
-            <h5>Dyr: </h5>
+            @if (_selectDyr != "")
+            {
+                <h5>Dyr: </h5>
 
-            <div class="cntr">
-                <input type="radio"
-                       name="dyr" 
-                       id="cbx5" 
-                       class="hidden-xs-up"
-                       @onchange="@(() => _selectDyr = "ja")"
-                       checked="@(_selectDyr == "ja")"
-                />
-                <label for="cbx5" class="cbx"></label>
-                <label for="cbx5" class="lbl">Ja</label>
-            </div>
+                <div class="cntr">
+                    <input type="radio"
+                           name="dyr"
+                           id="cbx5"
+                           class="hidden-xs-up"
+                           @onchange="@(() => _selectDyr = "ja")"
+                           checked="@(_selectDyr == "ja")"/>
+                    <label for="cbx5" class="cbx"></label>
+                    <label for="cbx5" class="lbl">Ja</label>
+                </div>
 
-            <div class="cntr">
-                <input type="radio"
-                       name="dyr" 
-                       id="cbx6" 
-                       class="hidden-xs-up"
-                       @onchange="@(() => _selectDyr = "nei")"
-                       checked="@(_selectDyr == "nei")"
-                />
-                <label for="cbx6" class="cbx"></label>
-                <label for="cbx6" class="lbl">Nei</label>
-            </div>
+                <div class="cntr">
+                    <input type="radio"
+                           name="dyr"
+                           id="cbx6"
+                           class="hidden-xs-up"
+                           @onchange="@(() => _selectDyr = "nei")"
+                           checked="@(_selectDyr == "nei")"/>
+                    <label for="cbx6" class="cbx"></label>
+                    <label for="cbx6" class="lbl">Nei</label>
+                </div>
+            }
         </div>
 
         <div id="animalInfo" class="animalInfo-container">
-            <div class="animalData">
-                <div class="form-floating mb-3">
-                    <InputText id="pigghuder" class="form-control"
-                               @bind-Value="_surveyDto.BAnimal.Pigghunder"
-                               placeholder="Pigghuder" />
-                    <label for="pigghuder">Pigghuder</label>
-                </div>
-                <div class="btn-group mb-3" role="group">
-                    <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Pigghunder == "30+" ? "active" : "")"
-                            @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Pigghunder = v)'>30+</button>
-                    <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Pigghunder == "50+" ? "active" : "")"
-                            @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Pigghunder = v)'>50+</button>
-                </div>
+            @if (_surveyDto.BAnimal != null)
+            { 
+                <div class="animalData">
+                    <div class="form-floating mb-3">
+                        <InputText id="pigghuder" class="form-control"
+                                   @bind-Value="_surveyDto.BAnimal.Pigghunder"
+                                   placeholder="Pigghuder"/>
+                        <label for="pigghuder">Pigghuder</label>
+                    </div>
+                    <div class="btn-group mb-3" role="group">
+                        <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Pigghunder == "30+" ? "active" : "")"
+                                @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Pigghunder = v)'>30+</button>
+                        <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Pigghunder == "50+" ? "active" : "")"
+                                @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Pigghunder = v)'>50+</button>
+                    </div>
 
-                <div class="form-floating mb-3">
-                    <InputText id="krepsdyr" class="form-control"
-                               @bind-Value="_surveyDto.BAnimal.Krepsdyr"
-                               placeholder="Krepsdyr" />
-                    <label for="krepsdyr">Krepsdyr</label>
-                </div>
-                <div class="btn-group mb-3" role="group">
-                    <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Krepsdyr == "30+" ? "active" : "")"
-                            @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Krepsdyr = v)'>30+</button>
-                    <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Krepsdyr == "50+" ? "active" : "")"
-                            @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Krepsdyr = v)'>50+</button>
-                </div>
+                    <div class="form-floating mb-3">
+                        <InputText id="krepsdyr" class="form-control"
+                                   @bind-Value="_surveyDto.BAnimal.Krepsdyr"
+                                   placeholder="Krepsdyr"/>
+                        <label for="krepsdyr">Krepsdyr</label>
+                    </div>
+                    <div class="btn-group mb-3" role="group">
+                        <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Krepsdyr == "30+" ? "active" : "")"
+                                @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Krepsdyr = v)'>30+</button>
+                        <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Krepsdyr == "50+" ? "active" : "")"
+                                @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Krepsdyr = v)'>50+</button>
+                    </div>
 
-                <div class="form-floating mb-3">                
-                    <InputText id="skjell" class="form-control"
-                               @bind-Value="_surveyDto.BAnimal.Skjell"
-                               placeholder="Skjell"/>
-                    <label for="skjell">Skjell</label>
-                </div>
-                <div class="btn-group mb-3" role="group">
-                    <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Skjell == "30+" ? "active" : "")"
-                            @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Skjell = v)'>30+</button>
-                    <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Skjell == "50+" ? "active" : "")"
-                            @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Skjell = v)'>50+</button>
-                </div>
+                    <div class="form-floating mb-3">
+                        <InputText id="skjell" class="form-control"
+                                   @bind-Value="_surveyDto.BAnimal.Skjell"
+                                   placeholder="Skjell"/>
+                        <label for="skjell">Skjell</label>
+                    </div>
+                    <div class="btn-group mb-3" role="group">
+                        <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Skjell == "30+" ? "active" : "")"
+                                @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Skjell = v)'>30+</button>
+                        <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Skjell == "50+" ? "active" : "")"
+                                @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Skjell = v)'>50+</button>
+                    </div>
 
-                <div class="form-floating mb-3">
-                    <InputText id="borstemark" class="form-control"
-                               @bind-Value="_surveyDto.BAnimal.Borstemark"
-                               placeholder="Børstemark"/>
-                    <label for="borstemark">Børstemark</label>
+                    <div class="form-floating mb-3">
+                        <InputText id="borstemark" class="form-control"
+                                   @bind-Value="_surveyDto.BAnimal.Borstemark"
+                                   placeholder="Børstemark"/>
+                        <label for="borstemark">Børstemark</label>
+                    </div>
+                    <div class="btn-group mb-3" role="group">
+                        <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Borstemark == "30+" ? "active" : "")"
+                                @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Borstemark = v)'>30+</button>
+                        <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Borstemark == "50+" ? "active" : "")"
+                                @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Borstemark = v)'>50+</button>
+                    </div>
                 </div>
-                <div class="btn-group mb-3" role="group">
-                    <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Borstemark == "30+" ? "active" : "")"
-                            @onclick='() => SetAntallDyrVerdi("30+", v => _surveyDto.BAnimal.Borstemark = v)'>30+</button>
-                    <button class="btn btn-outline-primary @(_surveyDto.BAnimal.Borstemark == "50+" ? "active" : "")"
-                            @onclick='() => SetAntallDyrVerdi("50+", v => _surveyDto.BAnimal.Borstemark = v)'>50+</button>
-                </div>
-            </div>
+            }
         </div>
 
         <div class="form-floating mb-3 user-input" id="arter-container">
-            @foreach (Arter art in Enum.GetValues(typeof(Arter)))
+            @if (_surveyDto?.BAnimal?.Arter != null)
             {
-                <button type="button" class="btn btn-outline-secondary btn-sm me-1 mb-1"
-                        @onclick="() => AddArter(art)">
-                    @art.ToString()
-                </button>
+                @foreach (Arter art in Enum.GetValues(typeof(Arter)))
+                {
+                    <button type="button" class="btn btn-outline-secondary btn-sm me-1 mb-1"
+                            @onclick="() => AddArter(art)">
+                        @art.ToString()
+                    </button>
+                }
+                
+                <InputText class="form-control" id="arter" placeholder="Arter" @bind-Value="_surveyDto.BAnimal.Arter"/>
             }
-
-            <InputText class="form-control" id="arter" placeholder="Arter" @bind-Value="_surveyDto.BAnimal.Arter"/>
         </div>
 
         <div class="form-floating mb-3 user-input" id="merknader-container">
-            @foreach (Merknader note in Enum.GetValues(typeof(Merknader)))
+            @if (_surveyDto.Merknader != null)
             {
-                <button type="button" class="btn btn-outline-secondary btn-sm me-1 mb-1"
-                        @onclick="() => AddMerknad(note)">
-                    @note.GetDescription()
-                </button>
+                @foreach (Merknader note in Enum.GetValues(typeof(Merknader)))
+                {
+                    <button type="button" class="btn btn-outline-secondary btn-sm me-1 mb-1"
+                            @onclick="() => AddMerknad(note)">
+                        @note.GetDescription()
+                    </button>
+                }
+
+                <InputText class="form-control" id="merknader" placeholder="Merknader" @bind-Value="_surveyDto.Merknader"/>  
             }
-            
-            <InputText class="form-control" id="merknader" placeholder="Merknader" @bind-Value="_surveyDto.Merknader"/>
         </div>
         
         <div class="form-floating mb-3 user-input">
@@ -465,7 +508,7 @@
             <label for="comment">Korrigering</label>
         </div>
 
-        <div class="row justify-content-center">
+        <div class="row justify-content-center" style="display: flex; margin: 1rem auto;">
             @if (_validationMessage != null)
             {
                 <div class="col-12 text-center alert alert-danger mb-2" style="width: 60%;">
@@ -617,7 +660,7 @@
             var existingSurvey = await Http.GetFromJsonAsync<EditSurveyDto>(
                 $"api/Project/{ProjectId}/station/{StationId}/survey/{SurveyId}");
 
-            if (existingSurvey == null && existingSurvey?.BStation != null)
+            if (existingSurvey == null || existingSurvey?.BStation == null)
             {
                 _errorMessage = "Survey or station could not be found.";
                 return;
@@ -629,27 +672,27 @@
             ParseCoordinateEast();
 
             _isLoaded = true;
+            
+            var images = await Http.GetFromJsonAsync<IEnumerable<ImageDto>>(
+                $"/api/images/all/{SurveyId}");
+            _usiltImage = images?.FirstOrDefault(x => x.Silt == false);
+            _siltImage  = images?.FirstOrDefault(x => x.Silt == true);
+
+            if (_usiltImage != null) usiltPreviewUrl = "https://localhost:7096" + _usiltImage.Path;
+            if (_siltImage  != null) siltPreviewUrl  = "https://localhost:7096" + _siltImage.Path;
+        
+            if (_surveyDto.BlotbunnId != null)
+                _selectBunnType = "blot";
+            else if (_surveyDto.HardbunnId != null)
+                _selectBunnType = "hard";
+
+            _selectSensorisk = _surveyDto.SensoriskId != null ? "ja" : "nei";
+            _selectDyr = _surveyDto.DyrId != null ? "ja" : "nei";
         }
         catch (Exception ex)
         {
             _errorMessage = $"Error loading data: {ex.Message}";
         }
-        
-        var images = await Http.GetFromJsonAsync<IEnumerable<ImageDto>>(
-            $"/api/images/all/{SurveyId}");
-        _usiltImage = images?.FirstOrDefault(x => x.Silt == false);
-        _siltImage  = images?.FirstOrDefault(x => x.Silt == true);
-
-        if (_usiltImage != null) usiltPreviewUrl = "https://localhost:7096" + _usiltImage.Path;
-        if (_siltImage  != null) siltPreviewUrl  = "https://localhost:7096" + _siltImage.Path;
-        
-        if (_surveyDto.BlotbunnId != null)
-            _selectBunnType = "blot";
-        else if (_surveyDto.HardbunnId != null)
-            _selectBunnType = "hard";
-
-        _selectSensorisk = _surveyDto.SensoriskId != null ? "ja" : "nei";
-        _selectDyr = _surveyDto.DyrId != null ? "ja" : "nei";
     }
     
     protected override async Task OnAfterRenderAsync(bool firstRender)

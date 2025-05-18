@@ -10,10 +10,6 @@
 
 .picture-card {
     padding: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    background-color: #fff;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
     text-align: center;
 }
 
@@ -37,7 +33,7 @@
 
     .picture-button,
     .btn-danger {
-        width: 100%;
+        width: 45%;
         max-width: 300px;
         margin: 0 auto;
     }
