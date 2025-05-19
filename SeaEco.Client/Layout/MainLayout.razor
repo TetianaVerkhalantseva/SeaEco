@@ -1,4 +1,8 @@
-﻿@inherits LayoutComponentBase
+﻿@using SeaEco.Abstractions.Models.ProgramVersion
+@inherits LayoutComponentBase
+@using SeaEco.Client.Resources
+@inject HttpClient Http
+
 <div class="page">
     <div class="sidebar">
         <NavMenu />
@@ -6,7 +10,7 @@
 
     <main>
         <div class="top-row px-4" >
-            <h6>Sea Eco</h6>
+            <h6></h6>
         </div>
 
         <article class="content px-4">
@@ -14,3 +18,30 @@
         </article>
     </main>
 </div>
+<footer class="app-footer fixed-bottom text-end py-2 p-4 mb-1">
+    @if (_version != null)
+    {
+        <small>Sea Eco – Versjon @_version.Versjonsnummer</small> 
+    }
+</footer>
+
+@code {
+
+    private ProgramVersionDto? _version;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        try
+        {
+            _version = await Http.GetFromJsonAsync<ProgramVersionDto>("/api/version");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($@"{Resources.ErrorMessageLoadingInitiaData} {ex.Message}");
+        }
+
+    }
+
+}
+

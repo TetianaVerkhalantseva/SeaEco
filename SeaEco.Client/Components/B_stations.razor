@@ -249,6 +249,8 @@ else
             _stationData ??= [];
             _stationData.Add(newStation);
             _isExistingStations = true;
+            Project.AntallStasjoner = _stationData?.Count() ?? 0;
+            await EditStationChanged.InvokeAsync(Project);
         }
     }
 
@@ -298,6 +300,8 @@ else
                     _stationData = await responseStations.Content.ReadFromJsonAsync<List<StationDto>>();
                     _stationData?.Sort((a, b) => a.Nummer.CompareTo(b.Nummer));
                     _isExistingStations = true;
+                    Project.AntallStasjoner = _stationData?.Count() ?? 0;
+                    await EditStationChanged.InvokeAsync(Project);
                 }
             }
 
