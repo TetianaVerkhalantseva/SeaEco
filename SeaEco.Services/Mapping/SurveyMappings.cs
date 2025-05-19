@@ -226,6 +226,10 @@ public static class SurveyMappings
                 Skjellsand = dto.BSoftBase.Skjellsand
             };
         }
+        else if (entity.Blotbunn != null)
+        {
+            entity.Blotbunn = null;
+        }
 
         if (entity.Hardbunn != null && dto.BHardBase != null)
         {
@@ -239,6 +243,10 @@ public static class SurveyMappings
                 Steinbunn = dto.BHardBase.Steinbunn,
                 Fjellbunn = dto.BHardBase.Fjellbunn
             };
+        }
+        else if (entity.Hardbunn != null)
+        {
+            entity.Hardbunn = null;
         }
 
         if (entity.Sediment != null && dto.BSediment != null)
@@ -259,6 +267,10 @@ public static class SurveyMappings
                 KlasseGr2 = dto.BSediment.KlasseGr2,
                 TilstandGr2 = dto.BSediment.TilstandGr2
             };
+        }
+        else if (entity.Sediment != null)
+        {
+            entity.Sediment = null;
         }
 
         if (entity.Sensorisk != null && dto.BSensorisk != null)
@@ -286,6 +298,10 @@ public static class SurveyMappings
                 TilstandGr3 = dto.BSensorisk.TilstandGr3
             };
         }
+        else if (entity.Sensorisk != null)
+        {
+            entity.Sensorisk = null;
+        }
 
         if (entity.Dyr != null && dto.BAnimal != null)
         {
@@ -305,6 +321,10 @@ public static class SurveyMappings
                 Borstemark = dto.BAnimal.Borstemark,
                 Arter = dto.BAnimal.Arter
             };
+        }
+        else if (entity.Dyr != null)
+        {
+            entity.Dyr = null;
         }
     }
 }

@@ -127,7 +127,7 @@
 }
 
 .sensoryRadio-container {
-    display: none;
+    display: flex;
     align-items: center;
     padding: 10px;
     gap: 40px;
@@ -166,7 +166,7 @@
 /* grid lay out */
 
 .sedimentType-container {
-    display: none;
+    display: flex;
     position: relative;
     padding: 10px;
     margin: 1rem auto 1rem auto;
@@ -211,46 +211,6 @@
 
 .toggle-btn[data-level='1'] {
     background-color: green;
-}
-
-/* Hide default checkbox */
-.checkbox-container input[type="checkbox"] {
-    appearance: none;
-    -webkit-appearance: none;
-    background-color: #fff;
-    margin: 0;
-    font: inherit;
-    color: rgb(100, 151, 177);
-    width: 20px;
-    height: 20px;
-    border: 2px solid gray;
-    border-radius: 4px;
-    display: grid;
-    place-content: center;
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    transition: border 0.2s ease, background-color 0.2s ease;
-}
-
-
-/* Checked state */
-.checkbox-container input[type="checkbox"]:checked {
-    background-color: rgb(100, 151, 177);
-    border-color: rgb(100, 151, 177);
-}
-
-/* Checkmark */
-.checkbox-container input[type="checkbox"]:checked::after {
-    content: '';
-    color: white;
-    position: absolute;
-    top: 55%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='white' d='M13.485 1.929a.75.75 0 0 1 0 1.06l-7.07 7.071-2.828-2.828a.75.75 0 0 1 1.06-1.06L6.415 8.47l6.514-6.514a.75.75 0 0 1 1.06 0Z'/%3E%3C/svg%3E");
 }
 
 @media (max-width: 1024px) {
@@ -328,14 +288,6 @@
     margin: 1rem auto 1rem auto;
 }
 
-/*.picture-container {*/
-/*    display: flex;*/
-/*    align-items: center;*/
-/*    justify-content: center;*/
-/*    margin: 3rem auto;*/
-/*    gap: 2rem;*/
-/*}*/
-
 @media (max-width: 1024px) {
     .checkbox-1-container {
         width: 100%;
@@ -352,7 +304,7 @@
 }
 
 .animalInfo-container {
-    display: none;
+    display: flex;
     margin: 0 auto;
     justify-content: center;
 }
@@ -419,7 +371,7 @@
     gap: 2rem;
     justify-content: center;
     margin: 3rem auto;
-    max-width: 100%;
+    max-width: 80%;
     padding: 0 1rem;
 }
 
