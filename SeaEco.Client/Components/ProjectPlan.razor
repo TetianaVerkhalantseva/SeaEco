@@ -249,7 +249,7 @@ else
             }
         
         <div class="d-flex mb-5 mt-3 gap-3 flex-column">
-            <div class="d-flex flex-column flex-xxl-row">
+            <div class="d-flex flex-column gap-1 justify-content-center align-items-center flex-xxl-row">
                 <span class="d-inline-block" title="@(Project.Prosjektstatus is Prosjektstatus.Deaktivert? Resources.TooltipDeactivated: Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt)? Resources.TooltipStatusNotNyttOrPaapebynt :!_isExistingPlan? Resources.TooltipNoGeneralPlan :(EditProjectStationPlanVar || EditProjectPlanVar || NewProjectStationPlanVar)?Resources.TooltipEditingPlan:"")">
                 <button class="btn custom-btn" type="button" disabled="@(EditProjectStationPlanVar || EditProjectPlanVar || !_isExistingPlan || NewProjectStationPlanVar || Project.Prosjektstatus is not (Prosjektstatus.Nytt or Prosjektstatus.Pabegynt))" @onclick="AddStation">
                     @Resources.ButtonAddStation
@@ -282,6 +282,7 @@ else
     [Parameter] public EventCallback<bool> EditProjectPlanChanged { get; set; }
     [Parameter] public EventCallback<bool> EditProjectStationPlanChanged { get; set; }
     [Parameter] public EventCallback<bool> NewProjectStationPlanChanged { get; set; }
+    [Parameter] public EventCallback<ProjectDto> NewProjectPlanChanged { get; set; }
     
     private bool _isLoading = true;
     private List<UserDto> _users = new ();
@@ -380,7 +381,9 @@ else
                     EditProjectPlanVar = false;
                     _isExistingPlan = true;
                     _newPlanBackup = BackUp(_newPlan);
+                    Project.Prosjektstatus = Prosjektstatus.Pabegynt; 
                     await EditProjectPlanChanged.InvokeAsync(EditProjectPlanVar);
+                    await NewProjectPlanChanged.InvokeAsync(Project);
                 }
                 else
                 {

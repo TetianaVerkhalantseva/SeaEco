@@ -240,10 +240,10 @@ else
         @switch (_activeTab)
         {
             case "projectPlan":
-                <ProjectPlan Project="_projectCopy" EditProjectPlanVar="_editProjectPlan" EditProjectStationPlanVar="_editProjectStationPlan" NewProjectStationPlanVar="_newProjectStationPlan" EditProjectPlanChanged="@OnEditPlanChanged" EditProjectStationPlanChanged="@OnEditStationPlanChanged" NewProjectStationPlanChanged="@OnNewStationPlanChanged" ></ProjectPlan>
+                <ProjectPlan Project="_projectCopy" EditProjectPlanVar="_editProjectPlan" EditProjectStationPlanVar="_editProjectStationPlan" NewProjectStationPlanVar="_newProjectStationPlan" EditProjectPlanChanged="@OnEditPlanChanged" EditProjectStationPlanChanged="@OnEditStationPlanChanged" NewProjectStationPlanChanged="@OnNewStationPlanChanged" NewProjectPlanChanged ="@OnEditChanged"></ProjectPlan>
                 break;
             case "b_stations":
-                <B_stations Project="_projectCopy" EditStationChanged="@OnEditStationChanged"></B_stations>
+                <B_stations Project="_projectCopy" EditStationChanged="@OnEditChanged"></B_stations>
                 break;
             case "projectReport":
                 <Report Project="_projectCopy"></Report>
@@ -506,7 +506,7 @@ else
         StateHasChanged();
     }
 
-    private void OnEditStationChanged(ProjectDto project)
+    private void OnEditChanged(ProjectDto project)
     {
         if (_project != null)
         {

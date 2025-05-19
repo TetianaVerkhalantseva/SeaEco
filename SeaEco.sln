@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeaEco.Abstractions", "SeaE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeaEco.Reporter", "SeaEco.Reporter\SeaEco.Reporter.csproj", "{80F629FE-FADB-4EA4-8DCB-51A2A6D354BD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeaEco.ServerTests", "SeaEco.ServerTests\SeaEco.ServerTests.csproj", "{881E2266-830B-437A-BB52-1C1ABB4FDC27}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{80F629FE-FADB-4EA4-8DCB-51A2A6D354BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80F629FE-FADB-4EA4-8DCB-51A2A6D354BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80F629FE-FADB-4EA4-8DCB-51A2A6D354BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{881E2266-830B-437A-BB52-1C1ABB4FDC27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{881E2266-830B-437A-BB52-1C1ABB4FDC27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{881E2266-830B-437A-BB52-1C1ABB4FDC27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{881E2266-830B-437A-BB52-1C1ABB4FDC27}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
