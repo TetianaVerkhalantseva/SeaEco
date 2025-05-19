@@ -1,5 +1,4 @@
 @page "/project/{ProjectId:guid}/station/{StationId:guid}/survey/{SurveyId:guid}"
-
 @using Microsoft.AspNetCore.Authorization
 @using SeaEco.Abstractions.Enums.Bsensorisk
 @using SeaEco.Abstractions.Extensions
@@ -425,7 +424,6 @@
         Navigation.NavigateTo($"/project/{ProjectId}/station/{StationId}/edit-survey/{SurveyId}", forceLoad: true);
     }
 }
-
 
 <script>
     let currentIndex = 1;

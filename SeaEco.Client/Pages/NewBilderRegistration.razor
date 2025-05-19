@@ -1,5 +1,4 @@
 @page "/project/{ProjectId:guid}/station/{StationId:guid}/survey/{SurveyId:guid}/upload-images"
-
 @using Microsoft.AspNetCore.Authorization
 @using SeaEco.Abstractions.Models.Image
 @using SeaEco.Services.NavigationLockService
@@ -8,6 +7,7 @@
 @inject IJSRuntime Js
 @inject HttpClient Http
 @attribute [Authorize]
+
 
 <h4>Bilder registrering</h4>
 
@@ -69,7 +69,6 @@
 
 
 @code {
-
     [Parameter]
     public Guid ProjectId { get; set; }
     [Parameter]

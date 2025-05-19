@@ -7,10 +7,9 @@ using SeaEco.Services.UserServices;
 
 namespace SeaEco.Server.Controllers;
 
-[Route("/api/users")]
+
 [Authorize]
-
-
+[Route("/api/users")]
 public class UserController(IUserService userService, ICurrentUserContext currentUserContext) : ApiControllerBase
 {
     [HttpGet]

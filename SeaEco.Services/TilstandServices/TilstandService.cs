@@ -4,6 +4,7 @@ using SeaEco.EntityFramework.Entities;
 
 namespace SeaEco.Services.TilstandServices;
 
+
 public sealed class TilstandService
 {
     public Response CalculateSedimentTilstand(BSediment sediment)

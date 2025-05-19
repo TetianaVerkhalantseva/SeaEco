@@ -1,6 +1,7 @@
 @page "/editUser/{userId:guid}"
 @using Microsoft.AspNetCore.Authorization
 @inject HttpClient Http
+@attribute [Authorize]
 @attribute [Authorize(Roles = "admin")]
 @using SeaEco.Abstractions.Models.User
 @using SeaEco.Client.Resources

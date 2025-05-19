@@ -19,6 +19,7 @@ using SeaEco.Reporter.Models.PTP;
 
 namespace SeaEco.Reporter;
 
+
 public sealed class Report
 {
     private const string DocumentNotFoundError = "Document not found";

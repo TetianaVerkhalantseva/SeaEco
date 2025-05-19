@@ -4,6 +4,7 @@ using SeaEco.Services.JwtServices;
 
 namespace SeaEco.Services.UserServices;
 
+
 public class CurrentUserContext(IHttpContextAccessor contextAccessor) : ICurrentUserContext
 {
     private const string UnauthorizedError = "Unauthorized.";

@@ -9,7 +9,6 @@
 @inject HttpClient Http
 
 
-
 <div class="d-flex justify-content-center">
 <div class="d-flex flex-column align-items-center projects-container">
     <div class="mb-3">
@@ -167,7 +166,6 @@
 </div>
 
 
-
 @code {
     private List<ProjectDto>? _projects;
     private List<string>? _allLocations;
@@ -196,7 +194,6 @@
     private string? _currentSortColumn;
     private bool _sortAscending = true;
 
-
     protected override async Task OnInitializedAsync()
     {
         
@@ -223,7 +220,6 @@
             .Distinct()
             .ToList();
     }
-
 
     private void OnRowClick(Guid projectId)
     {
@@ -266,7 +262,6 @@
             if (FilterProjects == null)
                 return null;
             
-            //Default sorting by status and date
             if (string.IsNullOrEmpty(_currentSortColumn))
                 return FilterProjects?.OrderBy(projects => projects.Prosjektstatus).ThenByDescending(projects => projects.StationDatesString).ToList();
 
@@ -336,8 +331,4 @@
         SelectedLocation = null;
         SelectedStatuses = ["Nytt", "Påbegynt", "Pågår", "Ferdig"];
     }
-
 }
-
-
-

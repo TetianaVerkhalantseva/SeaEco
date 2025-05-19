@@ -11,7 +11,10 @@ using SeaEco.Services.JwtServices;
 using SeaEco.Services.TokenServices;
 using SeaEco.Services.UserServices;
 
+
 namespace SeaEco.Services.AuthServices;
+
+
 public sealed class AuthService(
     IHttpContextAccessor httpContextAccessor,
     IGenericRepository<Bruker> userRepository,
@@ -77,7 +80,6 @@ public sealed class AuthService(
         Response deactivateResult = await tokenService.DeactivateAll(userResult.Value.Id);
         if (deactivateResult.IsError)
         {
-            // TODO logg error
         }
         
         return AuthenticationProcess(userResult.Value);

@@ -11,5 +11,4 @@ public sealed class EmailMessageManager
         string html = await reader.ReadToEndAsync();
         return html.Replace("{0}", url);
     }
-
 }

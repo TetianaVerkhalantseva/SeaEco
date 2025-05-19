@@ -6,6 +6,7 @@ using SeaEco.EntityFramework.Entities;
 
 namespace SeaEco.Services.ProjectServices;
 
+
 public class ProjectService : IProjectService
 {
     private readonly AppDbContext _context;
@@ -17,8 +18,6 @@ public class ProjectService : IProjectService
     
     public async Task<Guid> CreateProjectAsync(NewProjectDto dto)
     {
-        
-        // Check if Lokalitet exists, Add if not
         var lokalitet = await _context.Lokalitets
             .FirstOrDefaultAsync(l => l.Lokalitetsnavn == dto.Lokalitetsnavn || l.LokalitetsId == dto.LokalitetsId);
 
@@ -146,17 +145,14 @@ public class ProjectService : IProjectService
         
         var status = (Prosjektstatus)p.Prosjektstatus; 
         
-        // Count Stations based on Project Status
         int antallStasjoner;
         if (status == Prosjektstatus.Ferdig || status == Prosjektstatus.Deaktivert)
         {
-            // Finish -> Count stations with BSurveyID
             antallStasjoner = await _context.BUndersokelses
                 .CountAsync(u => u.ProsjektId == p.Id);
         }
         else
         {
-            // New, started or ongoing -> count all stations in project
             antallStasjoner = await _context.BStasjons
                 .CountAsync(s => s.ProsjektId == p.Id);
         }
@@ -276,24 +272,19 @@ public class ProjectService : IProjectService
         var prosjekt = await _context.BProsjekts.FindAsync(prosjektId)
                        ?? throw new InvalidOperationException("Prosjekt ikke funnet");
 
-        // Hvis allerede satt, returner eksisterende:
         if (!string.IsNullOrEmpty(prosjekt.ProsjektIdSe))
             return prosjekt.ProsjektIdSe;
 
-        // Hent år (to siste siffer) fra feltdato:
         var yearSuffix = feltdato.ToString("yy");
 
-        // Finn antall andre prosjekter for samme år som har minst én preinfo:
         var countThisYear = await _context.BPreinfos
             .Where(p => p.Feltdato.Year == feltdato.Year)
             .Select(p => p.ProsjektId)
             .Distinct()
             .CountAsync();
 
-        // Løpenummer = antall + 1
         var løpenummer = countThisYear + 1;
 
-        // Formater: SE-25-BU-1
         var idSe = $"SE-{yearSuffix}-BU-{løpenummer}";
         
         prosjekt.ProsjektIdSe = idSe;

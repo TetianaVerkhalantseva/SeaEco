@@ -1,5 +1,4 @@
 @page "/project/{ProjectId:guid}/station/{StationId:guid}/create-survey/{ReceivedSurveyId:guid}"
-
 @using Microsoft.AspNetCore.Authorization
 @using SeaEco.Abstractions.Enums
 @using SeaEco.Abstractions.Enums.Bsensorisk
@@ -14,8 +13,9 @@
 @inject NavigationManager Navigation
 @attribute [Authorize]
 
+
 <div class="d-flex justify-content-center mb-5 mt-4">
-<h2>Stasjonsregistrering</h2>
+    <h2>Stasjonsregistrering</h2>
 </div>
 
 
@@ -213,7 +213,6 @@
                 <label for="Farge">Farge</label>
             </div>
 
-
             <div class="form-floating mb-3">
                 <InputSelect id="Lukt" class="form-select" @bind-Value="_surveyDto.BSensorisk.Lukt">
                     <option value="" disabled>Velg lukt</option>
@@ -290,8 +289,6 @@
         </div>
     </div>
 </div>
-
-
 
 <div id="div3" class="content-div">
     <div class="checkbox-1-container">
@@ -532,7 +529,6 @@
         }
     }
 
-    // Split the value
     private void ParseCoordinateNorth()
     {
         if (!string.IsNullOrEmpty(_surveyDto.BStation.KoordinatNord))
@@ -559,7 +555,6 @@
         }
     }
 
-    // Merge the value
     private void UpdateCoordinateNorth()
     {
         if (!string.IsNullOrWhiteSpace(_coordinateNorthGrade) && !string.IsNullOrWhiteSpace(_coordinateNorthMinute))

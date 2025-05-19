@@ -4,24 +4,21 @@ using SeaEco.Abstractions.Models.PreInfo;
 using SeaEco.EntityFramework.Contexts;
 using SeaEco.EntityFramework.Entities;
 using SeaEco.Services.ProjectServices;
-using SeaEco.Services.ReportServices;
 
 namespace SeaEco.Services.PreInfo;
+
 
 public class PreInfoService : IPreInfoService
 {
     private readonly AppDbContext _db;
     private readonly IProjectService _projectService;
-    private readonly IReportService    _reportService;
 
     public PreInfoService(
         AppDbContext db, 
-        IProjectService projectService,
-        IReportService reportService)
+        IProjectService projectService)
     {
         _db = db;
         _projectService = projectService;
-        _reportService   = reportService;
     }
     
     public async Task<PreInfoDto?> GetByIdAsync(Guid preInfoId)
@@ -97,10 +94,8 @@ public class PreInfoService : IPreInfoService
         if (prosjekt == null)
             throw new KeyNotFoundException($"Prosjekt {dto.ProsjektId} ikke funnet.");
         
-        // Generer ProsjektIdSe dersom nødvendig
         await _projectService.GenerateAndSetProsjektIdSeAsync(dto.ProsjektId, dto.Feltdato);
         
-        // Sett status til Pågår om prosjektstatus var Nytt eller Påbegynt
         var tidligereStatus = (Prosjektstatus)prosjekt.Prosjektstatus;
         if (tidligereStatus == Prosjektstatus.Nytt 
             || tidligereStatus == Prosjektstatus.Pabegynt)
@@ -110,15 +105,6 @@ public class PreInfoService : IPreInfoService
                 Prosjektstatus.Pagar,
                 merknad: null
             );
-
-            /*// Generer PTP-rapport
-            var ptpResult = await _reportService.GeneratePtpReport(dto.ProsjektId);
-            if (ptpResult.IsError)
-            {
-                Console.Error.WriteLine(
-                    $"PTP-generering feilet for prosjekt {dto.ProsjektId}: {ptpResult.ErrorMessage}"
-                );
-            }*/
         }
 
         var entity = new BPreinfo
@@ -139,7 +125,6 @@ public class PreInfoService : IPreInfoService
             Kalibreringsdato = dto.Kalibreringsdato
         };
 
-        // Knytt prøvetakere
         if (dto.ProvetakerIds?.Any() == true)
         {
             var users = await _db.Brukers
@@ -177,7 +162,6 @@ public class PreInfoService : IPreInfoService
         existing.PhMeter          = dto.PhMeter;
         existing.Kalibreringsdato = dto.Kalibreringsdato;
 
-        // Oppdater prøvetakere
         existing.Provetakers.Clear();
         if (dto.ProvetakerIds?.Any() == true)
         {

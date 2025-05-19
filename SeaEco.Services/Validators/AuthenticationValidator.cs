@@ -4,6 +4,7 @@ using SeaEco.Abstractions.Models.Authentication;
 
 namespace SeaEco.Services.Validators;
 
+
 public sealed class LoginDtoValidator : AbstractValidator<LoginDto>
 {
     private const string EmailValidationPattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";

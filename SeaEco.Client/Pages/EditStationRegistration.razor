@@ -1,5 +1,4 @@
 @page "/project/{ProjectId:guid}/station/{StationId:guid}/edit-survey/{SurveyId:guid}"
-
 @using Microsoft.AspNetCore.Authorization
 @using SeaEco.Abstractions.Enums
 @using SeaEco.Abstractions.Enums.Bsensorisk
@@ -801,7 +800,6 @@
         }
     }
 
-    // Split the value
     private void ParseCoordinateNorth()
     {
         if (!string.IsNullOrEmpty(_surveyDto.BStation.KoordinatNord))
@@ -828,7 +826,6 @@
         }
     }
     
-    // Merge the value
     private void UpdateCoordinateNorth()
     {
         if (!string.IsNullOrWhiteSpace(_coordinateNorthGrade) && !string.IsNullOrWhiteSpace(_coordinateNorthMinute))

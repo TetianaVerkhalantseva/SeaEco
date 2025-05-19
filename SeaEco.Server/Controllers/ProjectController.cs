@@ -35,6 +35,7 @@ public class ProjectController : ControllerBase
         _surveyService = bSurveyService;
     }
     
+    [RoleAccessor(true)]
     [HttpPost]
     public async Task<IActionResult> CreateProject([FromBody] NewProjectDto dto)
     {
@@ -80,6 +81,7 @@ public class ProjectController : ControllerBase
         return Ok(project);
     }
     
+    [RoleAccessor(true)]
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> UpdateProject(Guid id, [FromBody] EditProjectDto dto)
     {
@@ -136,7 +138,6 @@ public class ProjectController : ControllerBase
     }
     
     
-    // Operasjoner for prøvtakningsplan
     [HttpGet("{projectId:guid}/sampling-plan")]
     public async Task<IActionResult> GetProjectSamplingPlan(Guid projectId)
     {
@@ -206,7 +207,7 @@ public class ProjectController : ControllerBase
         return result.IsSuccess ? Ok(result.Message) : BadRequest(result.Message);
     }
     
-    // Stasjonsoperasjoner
+    
     [HttpGet("{projectId:guid}/stations")]
     public async Task<IActionResult> GetAllStations(Guid projectId)
     {
@@ -238,7 +239,6 @@ public class ProjectController : ControllerBase
         return result;
     }
 
-    [RoleAccessor(true)]
     [HttpPut("{projectId:guid}/sampling-plan/station/{stationId:guid}")]
     public async Task<IActionResult> UpdateStation(Guid projectId, Guid stationId, [FromBody] UpdateStationDto dto)
     {
@@ -249,8 +249,6 @@ public class ProjectController : ControllerBase
         return result.IsSuccess ? Ok(result.Message) : NotFound(result.Message);
     }
     
-    //Legg til ekstra stasjon i PTP
-    [RoleAccessor(true)]
     [HttpPost("{projectId:guid}/sampling-plan/{samplingPlanId:guid}/station")]
     public async Task<IActionResult> AddStation(Guid projectId, Guid samplingPlanId, [FromBody] NewStationDto dto)
     {
@@ -270,8 +268,6 @@ public class ProjectController : ControllerBase
         );
     }
     
-    // Legg til ekstra stasjon direkte på prosjekt
-    [RoleAccessor(true)]
     [HttpPost("{projectId:guid}/station")]
     public async Task<IActionResult> AddStationToProject(Guid projectId, [FromBody] NewStationDto dto)
     {
@@ -301,7 +297,7 @@ public class ProjectController : ControllerBase
         return result.IsSuccess ? Ok(result.Message) : BadRequest(result.Message);
     }
     
-    //Delete station from project if BU-Id AND PTP-Id is null
+    [RoleAccessor(true)]
     [HttpDelete("{projectId:guid}/station/{stationId:guid}")]
     public async Task<IActionResult> DeleteProjectStation(Guid projectId, Guid stationId)
     {
@@ -313,7 +309,6 @@ public class ProjectController : ControllerBase
         return BadRequest(new { result.Message });
     }
     
-    // BUndersøkelse operasjoner
     [HttpGet("{projectId:guid}/station/{stationId:guid}/survey/{surveyId:guid}")]
     public async Task<IActionResult> GetSurvey(Guid projectId, Guid stationId, Guid surveyId)
     {
@@ -334,7 +329,6 @@ public class ProjectController : ControllerBase
         return Ok(survey);
     }
 
-    [RoleAccessor(true)]
     [HttpPost("{projectId:guid}/station/{stationId:guid}/survey")]
     public async Task<IActionResult> CreateSurvey(Guid projectId, Guid stationId, [FromBody] EditSurveyDto dto)
     {
@@ -351,7 +345,6 @@ public class ProjectController : ControllerBase
         return result.IsSuccess ? Ok(result.Message) : BadRequest(result.Message);
     }
 
-    [RoleAccessor(true)]
     [HttpPut("{projectId:guid}/station/{stationId:guid}/survey/{surveyId:guid}")]
     public async Task<IActionResult> UpdateSurvey(Guid projectId, Guid stationId, Guid surveyId,
         [FromBody] EditSurveyDto dto)

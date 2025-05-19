@@ -7,6 +7,7 @@ using SeaEco.Services.JwtServices;
 
 namespace SeaEco.Services.TokenServices;
 
+
 public class TokenService(IJwtService jwtService, IGenericRepository<Token> tokenRepository) : ITokenService
 {
     private const string CreateTokenError = "Error while generated token";

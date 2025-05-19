@@ -22,6 +22,7 @@ using SeaEco.Services.TilstandServices;
 
 namespace SeaEco.Services.ReportServices;
 
+
 public sealed class ReportService(Report report,
     TilstandService tilstandService,
     IGenericRepository<BProsjekt> projectRepository,

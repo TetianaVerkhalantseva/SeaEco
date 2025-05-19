@@ -4,7 +4,9 @@
 @using SeaEco.Client.Resources
 @inject HttpClient Http
 @inject NavigationManager Navigation
+@attribute [Authorize]
 @attribute [Authorize(Roles = "admin")]
+
 
 <EditForm Model="newUser" OnValidSubmit="UserRegistration">
     <DataAnnotationsValidator />
@@ -50,7 +52,7 @@
 
 @code {
     
-    private RegisterUserDto newUser = new RegisterUserDto();
+    private RegisterUserDto newUser = new();
     private string? _errorMessage;
 
     private async Task UserRegistration()

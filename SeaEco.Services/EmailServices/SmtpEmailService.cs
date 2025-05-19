@@ -7,6 +7,7 @@ using SeaEco.Services.EmailServices.Models;
 
 namespace SeaEco.Services.EmailServices;
 
+
 public sealed class SmtpEmailService : IEmailService
 {
     private const string UnexpectedError = "Unexpected error. The email was not sent";

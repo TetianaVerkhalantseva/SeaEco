@@ -5,6 +5,7 @@
 @using SeaEco.Abstractions.Extensions
 @using SeaEco.Abstractions.Models.Lokalitet
 @using SeaEco.Abstractions.Models.Project
+@attribute [Authorize]
 @attribute [Authorize(Roles = "admin")]
 @using SeaEco.Client.Resources
 @using SeaEco.Abstractions.Models.User

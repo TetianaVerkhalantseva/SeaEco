@@ -140,7 +140,6 @@
     justify-content: center;
 }
 
-/* grid lay out */
 .sensoryData {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -163,7 +162,6 @@
         width: 100%;
     }
 }
-/* grid lay out */
 
 .sedimentType-container {
     display: none;
