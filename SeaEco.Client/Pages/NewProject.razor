@@ -21,7 +21,7 @@ else
     <EditForm EditContext="_editContext" OnValidSubmit="AddNewProject">
     <DataAnnotationsValidator />
 
-    <div class="d-flex flex-column align-items-center gap-3 mb-3">
+    <div class="d-flex flex-column align-items-center gap-3 mb-5">
         <div class="mb-3">
             <h2>@Resources.PageNewProjectNewProject</h2>
             <h6 class="custom-gray-text">- @_customer.Oppdragsgiver</h6>
@@ -132,8 +132,7 @@ else
                 @Resources.ButtonSave
             </button>
         </div>
-    </div>
-        <div class=" text-center">
+        <div class=" text-center mt-3">
             <div class="custom-validation-summary">
                 <ValidationSummary/>
             </div>
@@ -142,6 +141,8 @@ else
                 <p class="text-danger">@_errorMessage</p>
             }
         </div>
+    </div>
+        
     </EditForm>
 }
 
@@ -234,7 +235,7 @@ else
             _newProject.Lokalitetsnavn = string.Empty;
             _newProject.LokalitetsId = string.Empty;
         }
-        _editContext.Validate();  
+
     }
 
     private void ToggleLocalityButton()
@@ -251,8 +252,7 @@ else
             _selectedLocationId = string.Empty;
             LocationChanged(_selectedLocationId);
         }
-        
-        _editContext.Validate();  
+
     }
     
     public class ResponseId
