@@ -213,7 +213,7 @@ public sealed class DbSeeder
                 Kundekontaktperson = "Ole Kristiansen",
                 Kundetlf = "11111111",
                 Kundeepost = "test@test.no",
-                LokalitetId = lokalitetId2,
+                LokalitetId = lokalitetId1,
                 Mtbtillatelse = 210,
                 ProsjektansvarligId = Guid.Parse("8fffdaa4-7dfe-4d78-a28b-b80558d542b6"),
                 Produksjonsstatus = 1,
@@ -230,7 +230,7 @@ public sealed class DbSeeder
                 Kundekontaktperson = "Lars Johansen",
                 Kundetlf = "11111111",
                 Kundeepost = "test@seaeco.no",
-                LokalitetId = lokalitetId1,
+                LokalitetId = lokalitetId2,
                 Mtbtillatelse = 150,
                 ProsjektansvarligId = Guid.Parse("8fffdaa4-7dfe-4d78-a28b-b80558d542b6"),
                 Produksjonsstatus = 2,
@@ -247,7 +247,7 @@ public sealed class DbSeeder
                 Kundekontaktperson = "Lars Johansen",
                 Kundetlf = "11111111",
                 Kundeepost = "test@seaeco.no",
-                LokalitetId = lokalitetId1,
+                LokalitetId = lokalitetId2,
                 Mtbtillatelse = 180,
                 ProsjektansvarligId = Guid.Parse("8fffdaa4-7dfe-4d78-a28b-b80558d542b6"),
                 Produksjonsstatus = 4,
@@ -281,9 +281,10 @@ public sealed class DbSeeder
         // Seed BPreinfo
         Guid preinfoId1 = Guid.Parse("cc2642ba-0cd4-49a6-92cb-cb7eb2f15e7d");
         Guid preinfoId2 = Guid.Parse("a7ad11e6-edb4-40bf-b7af-51fefb215788");
-        Guid preinfoId3 = Guid.Parse("b7b68448-06b7-4ac3-ab0d-87706cf1a1f8");
-
-
+        Guid preinfoId3 = Guid.Parse("3fc3210c-8e04-4058-a2c1-3dfed7a8f522");
+        Guid preinfoId4 = Guid.Parse("054ec9b6-16d6-4423-bd44-2ee648bafd9c");
+        Guid preinfoId5 = Guid.Parse("71a858c5-6662-41e5-a290-d3d4ee63073f");
+        
         Guid feltansvarligId = Guid.Parse("8fffdaa4-7dfe-4d78-a28b-b80558d542b6");
 
         IEnumerable<BPreinfo> preinfos =
@@ -332,7 +333,37 @@ public sealed class DbSeeder
                 Sil = "3",
                 PhMeter = "2",
                 Kalibreringsdato = new DateOnly(2025, 4, 24)
-            }
+            },
+            new BPreinfo()
+            {
+                Id = preinfoId4,
+                ProsjektId = prosjektId2,
+                Feltdato = new DateTime(2025, 5, 15, 10, 0, 0),
+                FeltansvarligId = feltansvarligId,
+                PhSjo = 6.94f,
+                EhSjo = 182.0f,
+                SjoTemperatur = 11.1f,
+                RefElektrode = 0,
+                Grabb = "2",
+                Sil = "3",
+                PhMeter = "2",
+                Kalibreringsdato = new DateOnly(2025, 5, 10)
+            },
+            new BPreinfo()
+            {
+                Id = preinfoId5,
+                ProsjektId = prosjektId2,
+                Feltdato = new DateTime(2025, 5, 1, 9, 0, 0),
+                FeltansvarligId = feltansvarligId,
+                PhSjo = 6.94f,
+                EhSjo = 182.0f,
+                SjoTemperatur = 11.1f,
+                RefElektrode = 0,
+                Grabb = "2",
+                Sil = "3",
+                PhMeter = "2",
+                Kalibreringsdato = new DateOnly(2025, 4, 30)
+            },
         ];
 
         await context.BPreinfos.AddRangeAsync(preinfos);
