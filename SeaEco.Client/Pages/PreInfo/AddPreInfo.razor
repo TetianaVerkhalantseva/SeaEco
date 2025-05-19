@@ -7,7 +7,7 @@
 @inject NavigationManager Navigation
 
 
-<h3>Opprett preinformasjon</h3>
+<h3>Opprett feltinformasjon</h3>
 
 <EditForm Model="_preInfo" OnValidSubmit="CreatePreInfo">
     <DataAnnotationsValidator/>
@@ -16,7 +16,7 @@
             <InputDate id="date" class="form-control"
                        @bind-Value="_preInfo.Feltdato">
             </InputDate>
-            <label for="date">Dato</label>
+            <label for="date">Feltdato</label>
         </div>
         
         <div class="form-floating mb-3">
@@ -187,7 +187,7 @@
         if (response.IsSuccessStatusCode)
         {
             _result = true;
-            _resultMessage = "Preinfo er opprettet.";
+            _resultMessage = "Feltinformasjon er opprettet.";
             StateHasChanged();
             await Task.Delay(2000);
             Navigation.NavigateTo($"/project/{ProjectId:D}?tab=b_stations");

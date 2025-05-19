@@ -14,10 +14,11 @@
 @inject IJSRuntime Js
 @inject NavigationManager Navigation
 @attribute [Authorize]
-@attribute [Authorize(Roles = "admin")]
 
 
-<h4>Stasjonsredigering</h4>
+<div class="d-flex justify-content-center mb-5 mt-4">
+    <h2>Stasjonsredigering</h2>
+</div>
 
 @if (_isLoaded)
 {
@@ -638,12 +639,12 @@
 }
 
 <div class="button-container">
-    <button id="cancelBtn" class="custom-btn" style="display: none;" @onclick="ConfirmCancel">
+    <button id="cancelBtn" class="btn custom-outline-secondary-btn" style="display: none;" @onclick="ConfirmCancel">
         Avbryt
     </button>
-    <button id="lastBtn" onclick="showLast()" class="custom-btn">Forrige</button>
-    <button id="nextBtn" onclick="showNext()" class="custom-btn">Neste</button>
-    <button id="submitBtn" class="custom-btn" style="display: none;" @onclick="ConfirmSubmit">
+    <button id="lastBtn" onclick="showLast()" class="btn custom-btn">Forrige</button>
+    <button id="nextBtn" onclick="showNext()" class="btn custom-btn">Neste</button>
+    <button id="submitBtn" class="btn custom-btn" style="display: none;" @onclick="ConfirmSubmit">
         Oppdater
     </button>
 </div>

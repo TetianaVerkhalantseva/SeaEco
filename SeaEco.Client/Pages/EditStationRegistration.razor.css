@@ -90,72 +90,40 @@
     position: relative;
     width: 27px;
     height: 27px;
-    border: 1px solid #c8ccd4;
+    border: 1px solid gray;
     border-radius: 3px;
     transition: background 0.1s ease;
     cursor: pointer;
-    display: inline-block;
     margin-right: 8px;
 }
 
-.cbx:after {
-    content: '';
-    position: absolute;
-    top: 2px;
-    left: 8px;
-    width: 7px;
-    height: 14px;
-    opacity: 0;
-    transform: rotate(45deg) scale(0);
-    border-right: 2px solid #fff;
-    border-bottom: 2px solid #fff;
-    transition: all 0.3s ease;
-    transition-delay: 0.15s;
-}
-
 .cntr input[type="radio"]:checked + .cbx {
-    border-color: transparent;
-    background: rgb(100, 151, 177);
-    animation: jelly 0.6s ease;
+    background-color: rgb(100, 151, 177);
+    border-color: rgb(100, 151, 177);
 }
 
 .cntr input[type="radio"]:checked + .cbx:after {
-    opacity: 1;
-    transform: rotate(45deg) scale(1);
+    content: '';
+    color: white;
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width:20px;
+    height: 20px;
+    background-repeat:  no-repeat;
+    background-size:    contain;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='white' d='M13.485 1.929a.75.75 0 0 1 0 1.06l-7.07 7.071-2.828-2.828a.75.75 0 0 1 1.06-1.06L6.415 8.47l6.514-6.514a.75.75 0 0 1 1.06 0Z'/%3E%3C/svg%3E");
+}
+
+
+.cntr input:not(:checked) + .cbx:hover {
+    background-color: lightgrey;
+    border-color:     gray;
 }
 
 .lbl {
     cursor: pointer;
-}
-
-@keyframes jelly {
-    from {
-        transform: scale(1, 1);
-    }
-
-    30% {
-        transform: scale(1.25, 0.75);
-    }
-
-    40% {
-        transform: scale(0.75, 1.25);
-    }
-
-    50% {
-        transform: scale(1.15, 0.85);
-    }
-
-    65% {
-        transform: scale(0.95, 1.05);
-    }
-
-    75% {
-        transform: scale(1.05, 0.95);
-    }
-
-    to {
-        transform: scale(1, 1);
-    }
 }
 
 .sensoryRadio-container {
@@ -266,42 +234,40 @@
 .custom-checkbox .custom-checkmark {
     width: 28px;
     height: 28px;
-    border-radius: 10px;
-    background-color: #ffffff2b;
-    box-shadow: 
-        rgba(0, 0, 0, 0.62) 0 0 5px inset,
-        rgba(0, 0, 0, 0.21) 0 0 0 24px inset,
-        dodgerblue 0 0 0 0 inset,
-        rgba(224, 224, 224, 0.45) 0 1px 0 0;
+    border: 1px solid gray;
+    border-radius:4px;
     cursor: pointer;
     position: relative;
-}
-
-.custom-checkbox .custom-checkmark::after {
-    content: "";
-    width: 18px;
-    height: 18px;
-    border-radius: 5px;
-    background-color: #e3e3e3;
-    box-shadow: transparent 0 0 0 2px, rgba(0, 0, 0, 0.3) 0 6px 6px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    transition: background-color 0.3s ease-in-out;
+    appearance: none;
+    -webkit-appearance: none;
+    transition: border 0.2s ease, background-color 0.2s ease;
 }
 
 .custom-checkbox input:checked + .custom-checkmark {
-    background-color: dodgerblue;
-    box-shadow: 
-        rgba(0, 0, 0, 0.62) 0 0 5px inset,
-        dodgerblue 0 0 0 2px inset,
-        dodgerblue 0 0 0 24px inset,
-        rgba(224, 224, 224, 0.45) 0 1px 0 0;
+    background-color:rgb(100,151,177);
+    border-color:rgb(100,151,177);
 }
 
 .custom-checkbox input:checked + .custom-checkmark::after {
-    background-color: white;
+    position: absolute;
+    content: "";
+    width:20px;
+    height:20px;
+    top:55%; left:50%;
+    transform:translate(-50%,-50%);
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='white' d='M13.485 1.929a.75.75 0 0 1 0 1.06l-7.07 7.071-2.828-2.828a.75.75 0 0 1 1.06-1.06L6.415 8.47l6.514-6.514a.75.75 0 0 1 1.06 0Z'/%3E%3C/svg%3E")
+    center/contain no-repeat;
+    pointer-events:none;
+}
+
+.custom-checkbox input:checked + .custom-checkmark:hover {
+    background-color: rgb(0,91,150);
+    border-color:     rgb(0,91,150);
+}
+
+.custom-checkbox input:not(:checked) + .custom-checkmark:hover {
+    background-color: lightgrey;
+    border-color:     gray;
 }
 
 .custom-checkbox .custom-label {

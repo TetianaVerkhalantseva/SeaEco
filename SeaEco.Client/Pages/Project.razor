@@ -1,6 +1,7 @@
 @page "/project/{ProjectId:guid}"
 @using System.Text.Json
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.WebUtilities
 @using SeaEco.Abstractions.Enums
 @using SeaEco.Abstractions.Extensions
 @using SeaEco.Abstractions.Models.Lokalitet
@@ -11,6 +12,7 @@
 @using SeaEco.Client.Components
 @inject HttpClient Http
 @inject IJSRuntime Js
+@inject NavigationManager NavigationManager
 
 @if (_project == null || _isLoading)
 {
@@ -20,12 +22,21 @@ else
     <div class="d-flex flex-column align-items-center gap-3 p-1">
         <div class="mb-3">
             <h2>@_projectCopy.Lokalitetsnavn</h2>
-            <p class="text-secondary mb-0">- @Resources.TableHeaderProjectStatus: @_project.Prosjektstatus.GetDescription()</p>
+            <p class="custom-gray-text mb-0">- @Resources.TableHeaderProjectStatus: @_project.Prosjektstatus.GetDescription()</p>
             @if (_project.Tilstand != null)
             {
                 <p class=" mt-0" style="@($"color:{_project.Tilstand.GetDisplay()}")">- @Resources.TableHeaderStatus: @((int)_project.Tilstand.Value)</p> 
             }
         </div>
+
+        <div class="d-flex w-100 justify-content-end p-1">
+            <span class="d-inline-block" title="@( _project.Prosjektstatus is Prosjektstatus.Deaktivert ? Resources.TooltipDeactivated : "")">
+                <button type="button" class="btn custom-outline-secondary-btn" @onclick="ModalDeactivate" disabled="@(_project.Prosjektstatus is Prosjektstatus.Deaktivert)">
+                    @Resources.ButtonDeactivate
+                    </button>
+                </span>
+        </div>
+        
         
         <details class=" filter-panel shadow-lg w-100">
             <summary class="fs-6">@Resources.ButtonProjectInfoView</summary>
@@ -44,7 +55,7 @@ else
                                         <label for="prosjektIdSe">@Resources.InputTextProjectIdSe</label>
                                     </div>
                                     <div class="d-flex form-floating">
-                                        <InputText class="form-control" id="poid" @bind-Value="_project.PoId" disabled/>
+                                        <InputText class="form-control" id="poid" @bind-Value="_project.PoId" @key="_numberInputKey" @oninput="() => _errorMessage = null" disabled="@(!_editProjectInfo)"/>
                                         <label for="poid">@Resources.InputTextPoId</label>
                                     </div>
                                     <div class="d-flex form-floating flex-fill">
@@ -170,9 +181,11 @@ else
                     <div class="d-flex justify-content-end mt-3">
                         @if (!_editProjectInfo)
                         {
-                            <button class="btn custom-btn" type="button" @onclick="OnClickProjectInformation">
+                            <span class="d-inline-block" title="@(_modalDeactivate || _project.Prosjektstatus is Prosjektstatus.Deaktivert ? Resources.TooltipDeactivated : "")">
+                            <button class="btn custom-btn" type="button" @onclick="OnClickProjectInformation" disabled="@(_modalDeactivate || _project.Prosjektstatus is Prosjektstatus.Deaktivert)">
                                 @Resources.ButtonEdit
                             </button>
+                            </span>
                         }
                         else
                         {
@@ -230,23 +243,61 @@ else
         @switch (_activeTab)
         {
             case "projectPlan":
-                <ProjectPlan Project="_projectCopy" EditProjectPlanVar="_editProjectPlan" EditProjectPlanChanged="@OnEditPlanChanged" EditProjectStationPlanChanged="@OnEditStationPlanChanged" EditProjectStationPlanVar="_editProjectStationPlan"></ProjectPlan>
+                <ProjectPlan Project="_projectCopy" EditProjectPlanVar="_editProjectPlan" EditProjectStationPlanVar="_editProjectStationPlan" NewProjectStationPlanVar="_newProjectStationPlan" EditProjectPlanChanged="@OnEditPlanChanged" EditProjectStationPlanChanged="@OnEditStationPlanChanged" NewProjectStationPlanChanged="@OnNewStationPlanChanged" ></ProjectPlan>
                 break;
             case "b_stations":
                 <B_stations Project="_projectCopy" EditStationChanged="@OnEditStationChanged"></B_stations>
                 break;
             case "projectReport":
-                <Report></Report>
+                <Report Project="_projectCopy"></Report>
                 break;
         }
 
 
-        <div class="modal fade" id="EditPlanMode" tabindex="-1" aria-hidden="true">
+        <div class="modal fade" id="Modal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content ">
+                    
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="ClearComment"></button>
+                    </div>
+                    @if (_modalDeactivate && (_editProjectInfo || _editProjectPlan || _editProjectStationPlan || _newProjectStationPlan))
+                    {
+                        <div class="modal-body">
+                            <p>@Resources.ModalTextDeactivationWhenEditing</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@Resources.ButtonOK</button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="modal-body">
+                            <p>@Resources.ModalTextDeactivation</p>
+                            <div class="mb-3">
+                                <label for="message-text" class="col-form-label">@Resources.ModalComment</label>
+                                <textarea class="form-control" id="message-text" @bind-value="_comment.Merknad" @bind-value:event="oninput"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="ClearComment">@Resources.ButtonCancel</button>
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="Deactivate" disabled="@string.IsNullOrWhiteSpace(_comment.Merknad)">
+                                @Resources.ButtonDeactivate 
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="ModalTab" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content ">
+
                     <div class="modal-header">
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
+
                     <div class="modal-body">
                         <p>@Resources.ModalTextEditingProjectPlan</p>
                     </div>
@@ -256,8 +307,8 @@ else
                 </div>
             </div>
         </div>
+    </div>
 
-            </div>
 
 }
 
@@ -274,13 +325,16 @@ else
     private string _activeTab = "projectPlan";
     private bool _editProjectPlan;
     private bool _editProjectStationPlan;
-    private bool _editStation;
+    private bool _newProjectStationPlan;
     private string? _errorMessage;
     private bool _isNewLocality;
     private EditContext _editContext;
     private string? _selectedLocationId;
     private string? _stationDatesString;
+    private MerknadDto _comment = new();
+    private UpdateStatusDto _updateStatus = new();
     private bool _isLoading = true;
+    private bool _modalDeactivate = false;
     
     
     protected override async Task OnInitializedAsync()
@@ -296,7 +350,7 @@ else
                 _location = await Http.GetFromJsonAsync<List<LokalitetDto>>($"api/Lokalitet");
                 _editContext = new EditContext(_project);
                 _selectedLocationId = _project.LokalitetsId;
-                _stationDatesString = string.Join(", ", _project.Feltdatoer.Select(d => d.ToString("yyyy-MM-dd")));
+                _stationDatesString = string.Join(", ", _project.Feltdatoer.Select(d => d.ToString("dd.MM.yyyy")));
             }
         }
         catch (Exception ex)
@@ -307,9 +361,23 @@ else
         finally
         {
             _isLoading = false;
-        }
-}
+        } 
+    }
 
+    protected override void OnParametersSet()
+    {
+        var uri   = new Uri(NavigationManager.Uri);
+        var query = QueryHelpers.ParseQuery(uri.Query);
+
+        if (query.TryGetValue("tab", out var tabValue))
+        {
+            _activeTab = tabValue!;
+        }
+        else
+        {
+            _activeTab = "projectPlan";
+        }
+    }
 
     private void OnClickProjectInformation()
     {
@@ -370,19 +438,22 @@ else
     {
         _selectedLocationId = id;
 
-        var selected = _location.FirstOrDefault(l => l.LokalitetKode == id);
-
-        if (_project != null)
+        if (_location != null)
         {
-            if (selected != null)
+            var selected = _location.FirstOrDefault(l => l.LokalitetKode == id);
+
+            if (_project != null)
             {
-                _project.Lokalitetsnavn = selected.Navn;
-                _project.LokalitetsId = selected.LokalitetKode;
-            }
-            else
-            {
-                _project.Lokalitetsnavn = string.Empty;
-                _project.LokalitetsId = string.Empty;
+                if (selected != null)
+                {
+                    _project.Lokalitetsnavn = selected.Navn;
+                    _project.LokalitetsId = selected.LokalitetKode;
+                }
+                else
+                {
+                    _project.Lokalitetsnavn = string.Empty;
+                    _project.LokalitetsId = string.Empty;
+                }
             }
         }
 
@@ -415,9 +486,9 @@ else
 
     private async Task SelectedTabWithModal(string tab)
     {
-        if (_editProjectPlan || _editProjectStationPlan)
+        if (_editProjectPlan || _editProjectStationPlan || _newProjectStationPlan)
         {
-            await Js.InvokeVoidAsync("showModal", "#EditPlanMode");
+            await Js.InvokeVoidAsync("showModal", "#ModalTab");
         }
         else
         {
@@ -437,13 +508,48 @@ else
         _editProjectStationPlan = value;
         StateHasChanged();
     }
+    
+    private void OnNewStationPlanChanged(bool value)
+    {
+        _newProjectStationPlan = value;
+        StateHasChanged();
+    }
 
     private void OnEditStationChanged(ProjectDto project)
     {
-        _project.Prosjektstatus = project.Prosjektstatus;
-        _project.Merknad= project.Merknad;
-        _projectCopy = BackUp(_project);
+        if (_project != null)
+        {
+            _project.Prosjektstatus = project.Prosjektstatus;
+            _project.Merknad = project.Merknad;
+            _projectCopy = BackUp(_project);
+        }
+
         StateHasChanged();
+    }
+
+    private async Task Deactivate()
+    {
+        if (_project != null)
+        {
+            _project.Prosjektstatus = Prosjektstatus.Deaktivert;
+            _projectCopy.Prosjektstatus = Prosjektstatus.Deaktivert;
+            _project.Merknad = string.IsNullOrEmpty(_project.Merknad) ? _comment.Merknad : $"{_project.Merknad}{Environment.NewLine}{_comment.Merknad}";
+            _updateStatus.Merknad = _comment.Merknad;
+            _updateStatus.Status = Prosjektstatus.Deaktivert;
+            await Http.PutAsJsonAsync($"/api/Project/{_project.Id:D}/status", _updateStatus);
+        }
+    }
+    
+    private async Task ModalDeactivate()
+    {
+        _modalDeactivate = true;
+        await Js.InvokeVoidAsync("showModal", "#Modal");
+    }
+    
+    private void ClearComment()
+    {
+        _modalDeactivate = false;
+        _comment.Merknad = string.Empty;
     }
     
     private static T BackUp<T>(T source)
@@ -451,6 +557,5 @@ else
         var json = JsonSerializer.Serialize(source);
         return JsonSerializer.Deserialize<T>(json)!;
     }
-
 
 }

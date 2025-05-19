@@ -220,6 +220,7 @@ public class ProjectService : IProjectService
             prosjekt.LokalitetId = lokalitet.Id;
         }
         
+        prosjekt.PoId = dto.PoId;
         prosjekt.Kundekontaktperson = dto.Kundekontaktperson;
         prosjekt.Kundetlf = dto.Kundetlf;
         prosjekt.Kundeepost = dto.Kundeepost;

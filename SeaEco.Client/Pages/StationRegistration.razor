@@ -11,6 +11,10 @@
 @inject IJSRuntime Js
 
 
+<div class="d-flex justify-content-center mb-5 mt-4">
+    <h2>Stasjonsoversikt</h2>
+</div>
+
 <div id="div1" class="content-div">
     @if (_survey?.BStation != null)
     {
@@ -45,7 +49,7 @@
 
         <div class="checkbox-3-container">
             <label class="custom-checkbox" for="equip-2">
-                <span class="custom-label">Gokjent grabbhastighet</span>
+                <span class="custom-label">Godkjent grabbhastighet</span>
                 <input id="equip-2" type="checkbox" checked="@_survey?.GrabbhastighetGodkjent" />
                 <span class="custom-checkmark"></span>
             </label>
@@ -328,12 +332,12 @@
 
 
 <div class="button-container">
-    <button id="cancelBtn" class="custom-btn" style="display: none;" @onclick="BackToStationsPage">
+    <button id="cancelBtn" class="btn custom-outline-secondary-btn" style="display: none;" @onclick="BackToStationsPage">
         Avbryt
     </button>
-    <button id="lastBtn" onclick="showLast()" class="custom-btn">Forrige</button>
-    <button id="nextBtn" onclick="showNext()" class="custom-btn">Neste</button>
-    <button id="editBtn" class="custom-btn" style="display: none;" @onclick="HandleEdit">Rediger</button>
+    <button id="lastBtn" onclick="showLast()" class="btn custom-btn">Forrige</button>
+    <button id="nextBtn" onclick="showNext()" class="btn custom-btn">Neste</button>
+    <button id="editBtn" class="btn custom-btn" style="display: none;" @onclick="HandleEdit">Rediger</button>
 </div>
 
 

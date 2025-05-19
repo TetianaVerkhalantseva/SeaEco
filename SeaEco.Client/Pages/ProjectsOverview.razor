@@ -141,17 +141,20 @@
             </div>
 
             <div class="card-container d-block d-xxl-none">
-                <div class="row" style="justify-content: center;">
+                <div class="row justify-content-center" >
                     @foreach (var project in SortedProjects)
                     {
                         <div class="col mb-3 card-col">
                             <div class="card cursor" @onclick="() => OnRowClick(project.Id)">
                                 <div class="card-body text-center @GetStatus(project.Prosjektstatus.GetDescription())">
                                     <h5 class="card-title">@project.ProsjektIdSe</h5>
-                                    <span class="corner-text">@project.Prosjektstatus.GetDescription()</span>
+                                    <span class="corner-text fw-bold">@project.Prosjektstatus.GetDescription()</span>
                                 </div>
                                 <ul class="list-group list-group-flush">
-                                    <li class="list-group-item">@Resources.TableHeaderLocality: @project.Lokalitetsnavn</li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span>@Resources.TableHeaderLocality:</span>
+                                        <span>@project.Lokalitetsnavn</span>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -183,38 +186,38 @@
         Resources.TableHeaderStatus,
         Resources.TableHeaderProjectStatus
     ];
-
+    
     private int? SelectedYear { get; set; }
     private int? SelectedMnd { get; set; }
     private string? SelectedCustomer { get; set; }
     private string? SelectedLocation { get; set; }
     private List<string> SelectedStatuses { get; set; } = ["Nytt", "Påbegynt", "Pågår", "Ferdig"];
-
+    
     private string? _currentSortColumn;
     private bool _sortAscending = true;
 
 
     protected override async Task OnInitializedAsync()
     {
-
+        
         try
         {
             _projects = await Http.GetFromJsonAsync<List<ProjectDto>>("/api/Project");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($@"{Resources.ErrorMessageLoadingUsers} {ex.Message}");
+            Console.WriteLine($@"{Resources.ErrorMessageLoadingProject} {ex.Message}");
         }
         finally
         {
             _isLoading = false;
         }
-
+        
         _allLocations = _projects?
             .Select(p => p.Lokalitetsnavn)
             .Distinct()
             .ToList();
-
+        
         _allCustomers = _projects?
             .Select(p => p.Oppdragsgiver)
             .Distinct()
@@ -226,7 +229,7 @@
     {
         Navigation.NavigateTo($"project/{projectId:D}");
     }
-
+    
     private static string GetStatus(string? status)
     {
         return status switch
@@ -239,7 +242,7 @@
             _ => throw new ArgumentOutOfRangeException(nameof(status), status, null)
         };
     }
-
+    
     private IEnumerable<ProjectDto>? FilterProjects
     {
         get
@@ -255,18 +258,17 @@
             return _projects;
         }
     }
-
+    
     private IEnumerable<ProjectDto>? SortedProjects
     {
         get
         {
             if (FilterProjects == null)
                 return null;
-
+            
             //Default sorting by status and date
             if (string.IsNullOrEmpty(_currentSortColumn))
                 return FilterProjects?.OrderBy(projects => projects.Prosjektstatus).ThenByDescending(projects => projects.StationDatesString).ToList();
-
 
             var sorted = _currentSortColumn switch
             {
@@ -284,7 +286,7 @@
                     : FilterProjects.OrderByDescending(p => p.Tilstand),
                 var col when col == Resources.TableHeaderProjectStatus => _sortAscending
                     ? FilterProjects.OrderBy(p => p.Prosjektstatus.GetDescription())
-                    : FilterProjects.OrderByDescending(p => p.Produksjonsstatus.GetDescription()),
+                    : FilterProjects.OrderByDescending(p => p.Prosjektstatus.GetDescription()),
                 var col when col == Resources.TableHeaderProductionStatus => _sortAscending
                     ? FilterProjects.OrderBy(p => p.Produksjonsstatus.GetDescription())
                     : FilterProjects.OrderByDescending(p => p.Produksjonsstatus.GetDescription()),
@@ -298,13 +300,13 @@
                     ? FilterProjects.OrderBy(p => p.LokalitetsId)
                     : FilterProjects.OrderByDescending(p => p.LokalitetsId),
                 _ => FilterProjects
-
+                    
             };
 
             return sorted;
         }
     }
-
+    
     private void SortBy(string columnName)
     {
         if (_currentSortColumn == columnName)

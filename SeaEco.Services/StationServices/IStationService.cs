@@ -14,4 +14,5 @@ public interface IStationService
     Task<StationResult> AddStationToProjectAsync(Guid projectId, NewStationDto dto);
     Task<StationResult> UpdateStationAsync(Guid stationId, UpdateStationDto dto);
     Task<StationResult> DeleteStationAsync(Guid stationId);
+    Task<StationResult> DeleteStationFromProjectAsync(Guid projectId, Guid stationId);
 }
