@@ -551,7 +551,7 @@
         <value>Prosjektet må ha status ferdig for å kunne (re)generere rapporter</value>
     </data>
     <data name="ReportPageNoProjectPlanGenerated" xml:space="preserve">
-        <value>Ingen prosjektplan generert</value>
+        <value>Ingen prøvetakingsplan generert</value>
     </data>
     <data name="ErrorMessageLoadingInitiaData" xml:space="preserve">
         <value>Feil ved lasting av initialdata:</value>

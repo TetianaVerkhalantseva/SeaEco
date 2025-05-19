@@ -10,6 +10,13 @@ main {
 
 .sidebar {
     background-image: linear-gradient(180deg, rgb(0,91,150) 0%, rgb(100,151,177) 70%);
+    z-index: 5000;
+}
+
+
+footer {
+    background-color: #eef2f4;
+    bottom: 0;
 }
 
 .top-row {
@@ -34,6 +41,7 @@ main {
         overflow: hidden;
         text-overflow: ellipsis;
     }
+    
 
 @media (max-width: 640.98px) {
     .top-row {
