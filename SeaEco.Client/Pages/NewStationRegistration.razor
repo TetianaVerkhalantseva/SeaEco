@@ -13,10 +13,10 @@
 @inject IJSRuntime Js
 @inject NavigationManager Navigation
 @attribute [Authorize]
-@attribute [Authorize(Roles = "admin")]
 
-
-<h4>Stasjonsregistrering</h4>
+<div class="d-flex justify-content-center mb-5 mt-4">
+<h2>Stasjonsregistrering</h2>
+</div>
 
 
 <div id="div1" class="content-div active">
@@ -88,7 +88,7 @@
 
         <div class="checkbox-3-container">
             <label class="custom-checkbox" for="equip-2">
-                <span class="custom-label">Gokjent grabbhastighet</span>
+                <span class="custom-label">Godkjent grabbhastighet</span>
                 <input id="equip-2" type="checkbox" checked="@_surveyDto.GrabbhastighetGodkjent">
                 <span class="custom-checkmark"></span>
             </label>
@@ -102,10 +102,10 @@
         <h5>Bunntype: </h5>
 
         <div class="cntr">
-            <input type="radio"
+            <input class="hidden-xs-up"
+                   type="radio"
                    name="bunntype"
                    id="cbx1"
-                   class="hidden-xs-up"
                    @onchange="@(() => _selectBunnType = "blot")"
                    checked="@(_selectBunnType == "blot")" />
             <label for="cbx1" class="cbx"></label>
@@ -116,7 +116,7 @@
             <input type="radio"
                    name="bunntype"
                    id="cbx2"
-                   class="hidden-xs-up"
+                   class="form-check-input hidden-xs-up"
                    @onchange="@(() => _selectBunnType = "hard")"
                    checked="@(_selectBunnType == "hard")" />
             <label for="cbx2" class="cbx"></label>
@@ -297,7 +297,7 @@
     <div class="checkbox-1-container">
         <label class="custom-checkbox" for="beggiatoa">
             <span class="custom-label">Beggiatoa</span>
-            <input type="checkbox" id="beggiatoa" @bind="_surveyDto.Beggiatoa"/>
+            <input type="checkbox" class="form-check-input" id="beggiatoa" @bind="_surveyDto.Beggiatoa"/>
             <span class="custom-checkmark"></span>
         </label>
 
@@ -443,12 +443,12 @@
 }
 
 <div class="button-container">
-    <button id="cancelBtn" class="custom-btn" style="display: none;" @onclick="ConfirmCancel">
+    <button id="cancelBtn" class="btn custom-outline-secondary-btn" style="display: none;" @onclick="ConfirmCancel">
         Avbryt
     </button>
-    <button id="lastBtn" onclick="showLast()" class="custom-btn">Forrige</button>
-    <button id="nextBtn" onclick="showNext()" class="custom-btn">Neste</button>
-    <button id="submitBtn" class="custom-btn" style="display: none;" @onclick="ConfirmSubmit">
+    <button id="lastBtn" onclick="showLast()" class="btn custom-btn">Forrige</button>
+    <button id="nextBtn" onclick="showNext()" class="btn custom-btn">Neste</button>
+    <button id="submitBtn" class="btn custom-btn" style="display: none;" @onclick="ConfirmSubmit">
         Registrer
     </button>
 </div>

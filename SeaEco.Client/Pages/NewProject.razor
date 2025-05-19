@@ -24,7 +24,7 @@ else
     <div class="d-flex flex-column align-items-center gap-3 mb-3">
         <div class="mb-3">
             <h2>@Resources.PageNewProjectNewProject</h2>
-            <h6 class="text-secondary">- @_customer.Oppdragsgiver</h6>
+            <h6 class="custom-gray-text">- @_customer.Oppdragsgiver</h6>
         </div>
         <div class="d-flex justify-content-lg-start flex-column gap-3">
                 <div class="d-flex gap-3 flex-column p-4 box-border">
@@ -172,10 +172,17 @@ else
                     KundeId =  CustomerId,
                 };
             }
+            
+            var usersList = await Http.GetFromJsonAsync<List<UserDto>>("api/users?isActive=true");
+            _users = usersList?.OrderBy(user => user.FullName).ToList();
+        
+            _location = await Http.GetFromJsonAsync<List<LokalitetDto>>("api/Lokalitet");  
+            
+            
         }
         catch (Exception ex)
         {
-            Console.WriteLine($@"{Resources.ErrorMessageLoadingCustomer} {ex.Message}");
+            Console.WriteLine($@"{Resources.ErrorMessageLoadingInitiaData} {ex.Message}");
         }
         finally
         {
@@ -183,11 +190,6 @@ else
         }
         
         _newProject.ProsjektansvarligId = null;
-        
-        var usersList = await Http.GetFromJsonAsync<List<UserDto>>("api/users?isActive=true");
-        _users = usersList?.OrderBy(user => user.FullName).ToList();
-        
-        _location = await Http.GetFromJsonAsync<List<LokalitetDto>>("api/Lokalitet");
         
         _editContext = new EditContext(_newProject);
     }

@@ -1,3 +1,57 @@
+body {
+    background-color: #f4f7f6;
+}
+
+a {
+    text-decoration: none;
+}
+
+.customer-card {
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    position: relative;
+    margin-top: -20px;
+}
+
+.customer-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: rgb(0,91,150);
+    margin-top: 10px;
+}
+
+.customer-info {
+    font-size: 16px;
+    color: #555;
+    font-weight: 500;
+    padding: 5px 0;
+}
+
+.hover-effect:hover {
+    background-color: #e9ecef;
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.project-info {
+    font-weight: 600;
+    color: #333;
+}
+
+p {
+    font-weight: 400;
+    color: #333;
+}
+
+@media (max-width: 768px) {
+    .col-md-5 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+
+
 
 /*  table  */
 .fixed-width-table {
@@ -24,21 +78,21 @@
 }
 
 
-/*  card  */ 
+/*  card  */
 .card-status-new {
     background: linear-gradient(to bottom, #8CBFD9, #6497B1);
     color: white;
-    border-top-left-radius: .3rem; 
+    border-top-left-radius: .3rem;
     border-top-right-radius: .3rem;
-    border-bottom: none;           
+    border-bottom: none;
 }
 
 .card-status-started {
     background: linear-gradient(to bottom, #9528a8, #A564B1);
     color: white;
-    border-top-left-radius: .3rem; 
-    border-top-right-radius: .3rem; 
-    border-bottom: none;           
+    border-top-left-radius: .3rem;
+    border-top-right-radius: .3rem;
+    border-bottom: none;
 }
 
 
@@ -84,8 +138,8 @@
     border-bottom-left-radius: .3rem;
     border-bottom-right-radius: .3rem;
     border-top: none;
-  
-   }
+
+}
 
 .corner-text {
     position: absolute;
@@ -115,7 +169,7 @@
 
 /*  filter  */
 .filter-panel {
-    overflow: visible; 
+    overflow: visible;
     border-radius: .5rem;
     background-color: transparent;
     align-self: flex-start;
@@ -126,7 +180,8 @@
     padding: 10px 35px 10px 15px;
     position: relative;
     border: 1px solid #ccc;
-    background: linear-gradient(to bottom, #557e93 0%, #7798A9 100%);
+    background: linear-gradient(to bottom, #557e93 0%, 
+    #7798A9 100%);
     color: white;
     border-radius: .5rem;
     list-style: none;

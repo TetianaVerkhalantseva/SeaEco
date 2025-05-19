@@ -4,7 +4,6 @@
 .card-status-new {
     background: linear-gradient(to bottom, #8CBFD9, #6497B1);
     color: white;
-    border: 1px solid #ccc;
     border-top-left-radius: .3rem;
     border-top-right-radius: .3rem;
     border-bottom: none;
@@ -13,7 +12,6 @@
 .card-status-done {
     background: linear-gradient(to bottom, #BFD98C, #97B164);
     color: white;
-    border: 1px solid #ccc;
     border-top-left-radius: .3rem;
     border-top-right-radius: .3rem;
     border-bottom: none;
@@ -31,7 +29,6 @@
 .card-bottom{
     padding: .3rem;
     background-color: white;
-    border: 1px solid #ccc;
     border-bottom-left-radius: .3rem;
     border-bottom-right-radius: .3rem;
     border-top: none;
@@ -65,15 +62,12 @@
 }
 
 
+@media (min-width: 1400px) {
+    .min-width-preInfo{
+        min-width:610px;
+    }}
 
-.line {
-    border-top: solid 1px lightgray !important;
-}
-
-
-
-
-
+ 
 
 
 
