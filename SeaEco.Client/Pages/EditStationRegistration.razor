@@ -583,6 +583,7 @@
                 }
                 
                 <InputText class="form-control" id="arter" placeholder="Arter" @bind-Value="_surveyDto.BAnimal.Arter"/>
+                <label for="arter">Arter</label>
             }
         </div>
 
@@ -597,14 +598,17 @@
                     </button>
                 }
 
-                <InputText class="form-control" id="merknader" placeholder="Merknader" @bind-Value="_surveyDto.Merknader"/>  
+                <InputText class="form-control" id="merknader" placeholder="Merknader" @bind-Value="_surveyDto.Merknader"/>
+                <label for="merknader">Merknader</label>
             }
         </div>
         
         <div class="form-floating mb-3 user-input">
-            @* <InputText class="form-control" id="comment" placeholder="Korrigering" @bind-Value="" /> *@
-            <input type="text" class="form-control" id="comment" value="">
-            <label for="comment">Korrigering</label>
+            @if (_surveyDto.Korrigeringer is not "")
+            {
+                <InputText class="form-control" id="korrigeringer" placeholder="Korrigeringer" @bind-Value="_surveyDto.Korrigeringer"/>
+                <label for="korrigeringer">Korrigeringer</label>
+            }
         </div>
 
         <div class="row justify-content-center" style="display: flex; margin: 1rem auto;">
