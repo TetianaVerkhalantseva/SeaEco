@@ -250,8 +250,6 @@ public partial class AppDbContext : DbContext
 
             entity.ToTable("b_rapporter");
 
-            entity.HasIndex(e => e.GodkjentAv, "fki_fk_brapporter_bruker_id");
-
             entity.HasIndex(e => e.ProsjektId, "fki_fk_brapporter_prosjekt_id");
 
             entity.HasIndex(e => new { e.ProsjektId, e.ArkNavn }, "uq_brapporter_prosjektid_arknavn").IsUnique();
@@ -263,16 +261,7 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Datogenerert)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("datogenerert");
-            entity.Property(e => e.ErGodkjent)
-                .HasDefaultValue(false)
-                .HasColumnName("er_godkjent");
-            entity.Property(e => e.GodkjentAv).HasColumnName("godkjent_av");
             entity.Property(e => e.ProsjektId).HasColumnName("prosjekt_id");
-
-            entity.HasOne(d => d.GodkjentAvNavigation).WithMany(p => p.BRapporters)
-                .HasForeignKey(d => d.GodkjentAv)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("fk_brapporter_bruker_id");
 
             entity.HasOne(d => d.Prosjekt).WithMany(p => p.BRapporters)
                 .HasForeignKey(d => d.ProsjektId)
@@ -413,6 +402,7 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.GrabbhastighetGodkjent).HasColumnName("grabbhastighet_godkjent");
             entity.Property(e => e.HardbunnId).HasColumnName("hardbunn_id");
             entity.Property(e => e.IndeksGr2Gr3).HasColumnName("indeks_gr2_gr3");
+            entity.Property(e => e.Korrigeringer).HasColumnName("korrigeringer");
             entity.Property(e => e.Merknader).HasColumnName("merknader");
             entity.Property(e => e.PreinfoId).HasColumnName("preinfo_id");
             entity.Property(e => e.ProsjektId).HasColumnName("prosjekt_id");

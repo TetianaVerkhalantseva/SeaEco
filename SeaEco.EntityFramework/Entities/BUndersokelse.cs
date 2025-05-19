@@ -43,6 +43,8 @@ public partial class BUndersokelse
 
     public int? TilstandGr2Gr3 { get; set; }
 
+    public string? Korrigeringer { get; set; }
+
     public virtual ICollection<BBilder> BBilders { get; set; } = new List<BBilder>();
 
     public virtual BStasjon? BStasjon { get; set; }
