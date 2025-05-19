@@ -128,7 +128,7 @@
                                               {
                                                   _surveyDto.BSoftBase = new BSoftBaseDto
                                                   {
-                                                      Id = Guid.NewGuid(),
+                                                      Id = _surveyDto.BlotbunnId.Value,
                                                       Leire = 0f,
                                                       Grus = 0f,
                                                       Sand = 0f,
@@ -187,7 +187,7 @@
                                           {
                                               _surveyDto.BHardBase = new BHardBaseDto
                                               {
-                                                  Id = Guid.NewGuid(),
+                                                  Id = _surveyDto.HardbunnId.Value,
                                                   Fjellbunn = 0f,
                                                   Steinbunn = 0f
                                               };
@@ -1057,16 +1057,7 @@
             }
         }
         
-        if (_selectSensorisk == "ja")
-        {
-            bool defaultValues = IsAllZeroOrNull(_surveyDto.BSensorisk);
-            if (defaultValues)
-            {
-                _validationMessage = "Feltene for sensorisk må fylles ut";
-                return;
-            }
-        }
-        else if (_selectSensorisk == "nei")
+        if (_selectSensorisk == "nei")
         {
             _surveyDto.BSediment = null;
             _surveyDto.SensoriskId = null;
