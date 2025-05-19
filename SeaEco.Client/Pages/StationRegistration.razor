@@ -11,6 +11,10 @@
 @inject IJSRuntime Js
 
 
+<div class="d-flex justify-content-center mb-5 mt-4">
+    <h2>Stasjonsoversikt</h2>
+</div>
+
 <div id="div1" class="content-div">
     @if (_survey?.BStation != null)
     {
@@ -45,7 +49,7 @@
 
         <div class="checkbox-3-container">
             <label class="custom-checkbox" for="equip-2">
-                <span class="custom-label">Gokjent grabbhastighet</span>
+                <span class="custom-label">Godkjent grabbhastighet</span>
                 <input id="equip-2" type="checkbox" checked="@_survey?.GrabbhastighetGodkjent" />
                 <span class="custom-checkmark"></span>
             </label>
@@ -73,26 +77,29 @@
     </div>
 
     <div id="sensoryRadio" class="sensoryRadio-container">
-        <h5>Er sensorisk utført?</h5>
+        @if (_selectedBunnType != "blot")
+        {
+            <h5>Er sensorisk utført?</h5>
 
-        <div class="cntr">
-            <input type="radio" name="sensorisk" id="cbx3" class="hidden-xs-up"
-                   value="ja" checked="@("ja" == _selectedSensorisk)" />
-            <label for="cbx3" class="cbx"></label>
-            <label for="cbx3" class="lbl">Ja</label>
-        </div>
+            <div class="cntr">
+                <input type="radio" name="sensorisk" id="cbx3" class="hidden-xs-up"
+                       value="ja" checked="@("ja" == _selectedSensorisk)"/>
+                <label for="cbx3" class="cbx"></label>
+                <label for="cbx3" class="lbl">Ja</label>
+            </div>
 
-        <div class="cntr">
-            <input type="radio" name="sensorisk" id="cbx4" class="hidden-xs-up"
-                   value="nei" checked="@("nei" == _selectedSensorisk)" />
-            <label for="cbx4" class="cbx"></label>
-            <label for="cbx4" class="lbl">Nei</label>
-        </div>
+            <div class="cntr">
+                <input type="radio" name="sensorisk" id="cbx4" class="hidden-xs-up"
+                       value="nei" checked="@("nei" == _selectedSensorisk)"/>
+                <label for="cbx4" class="cbx"></label>
+                <label for="cbx4" class="lbl">Nei</label>
+            </div>
+        }
     </div>
 
     <div id="sensoryInfo" class="sensoryInfo-container">
         <div class="sensoryData">
-            @if (_survey?.BSediment != null)
+            @if (_survey?.BSediment != null && _selectedBunnType == "blot")
             {
                 <div class="form-floating mb-3" id="sensoryDataSoft_1">
                     <input id="ProvePh" class="form-control" value="@_survey.BSediment.Ph" />
@@ -113,24 +120,6 @@
             @if (_survey?.BSensorisk != null)
             {
                 <div class="form-floating mb-3">
-                    <input class="form-control" id="Farge"
-                           value="@(_survey.BSensorisk.Farge.ToEnumDescription<Farge>())" />
-                    <label for="Farge">Farge</label>
-                </div>
-
-                <div class="form-floating mb-3">
-                    <input class="form-control" id="Lukt"
-                           value="@(_survey.BSensorisk.Lukt.ToEnumDescription<Lukt>())" />
-                    <label for="Lukt">Lukt</label>
-                </div>
-
-                <div class="form-floating mb-3">
-                    <input class="form-control" id="Konsistens"
-                           value="@(_survey.BSensorisk.Konsistens.ToEnumDescription<Konsistens>())" />
-                    <label for="Konsistens">Konsistens</label>
-                </div>
-
-                <div class="form-floating mb-3">
                     <input class="form-control" id="GrabbVolum"
                            value="@(_survey.BSensorisk.Grabbvolum.ToEnumDescription<Grabbvolum>())" />
                     <label for="GrabbVolum">GrabbVolum</label>
@@ -147,6 +136,24 @@
                            value="@(_survey.BSensorisk.Gassbobler.ToEnumDescription<Gassbobler>())" />
                     <label for="Gassbobler">Gassbobler</label>
                 </div>
+                
+                <div class="form-floating mb-3">
+                    <input class="form-control" id="Farge"
+                           value="@(_survey.BSensorisk.Farge.ToEnumDescription<Farge>())" />
+                    <label for="Farge">Farge</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input class="form-control" id="Lukt"
+                           value="@(_survey.BSensorisk.Lukt.ToEnumDescription<Lukt>())" />
+                    <label for="Lukt">Lukt</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input class="form-control" id="Konsistens"
+                           value="@(_survey.BSensorisk.Konsistens.ToEnumDescription<Konsistens>())" />
+                    <label for="Konsistens">Konsistens</label>
+                </div>
             }
         </div>
     </div>
@@ -158,14 +165,13 @@
                 <h5>Bunntype:</h5>
 
                 <div class="checkbox-container">
-                    <label>
-                        <input type="checkbox" checked="@(_survey.BHardBase.Steinbunn != 0)" />
+                    <button class="toggle-btn" data-level="@(_survey.BHardBase?.Steinbunn.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")">
                         Steinbunn
-                    </label>
-                    <label>
-                        <input type="checkbox" checked="@(_survey.BHardBase.Fjellbunn != 0)" />
+                    </button>
+
+                    <button class="toggle-btn" data-level="@(_survey.BHardBase?.Fjellbunn.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")">
                         Fjellbunn
-                    </label>
+                    </button>
                 </div>
             </div>
         }
@@ -176,55 +182,63 @@
                 <h5>Sedimenttype:</h5>
 
                 <div class="checkbox-container">
-                    <label>
-                        <input type="checkbox" checked="@(_survey.BSoftBase.Sand != 0)" /> Sand
-                    </label>
-                    <label>
-                        <input type="checkbox" checked="@(_survey.BSoftBase.Leire != 0)" /> Leire
-                    </label>
-                    <label>
-                        <input type="checkbox" checked="@(_survey.BSoftBase.Silt != 0)" /> Silt
-                    </label>
-                    <label>
-                        <input type="checkbox" checked="@(_survey.BSoftBase.Grus != 0)" /> Grus
-                    </label>
-                    <label>
-                        <input type="checkbox" checked="@(_survey.BSoftBase.Skjellsand != 0)" /> Skjellsand
-                    </label>
+                    <button class="toggle-btn" data-level="@(_survey.BSoftBase?.Sand.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")">
+                        Sand
+                    </button>
+
+                    <button class="toggle-btn" data-level="@(_survey.BSoftBase?.Leire.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")">
+                        Leire
+                    </button>
+
+                    <button class="toggle-btn" data-level="@(_survey.BSoftBase?.Silt.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")">
+                        Silt
+                    </button>
+
+                    <button class="toggle-btn" data-level="@(_survey.BSoftBase?.Grus.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")">
+                        Grus
+                    </button>
+
+                    <button class="toggle-btn" data-level="@(_survey.BSoftBase?.Skjellsand.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? "0")">
+                        Skjellsand
+                    </button>
                 </div>
             </div>
         }
     </div>
     <div class="picture-container">
-        <h5>Usilt: </h5>
-        @if (usiltPreviewUrl != null)
-        {
-            <img src="@usiltPreviewUrl"
-                 alt="Usilt image"
-                 style="max-width:200px; max-height:200px;"/>
-        }
-        else
-        {
-            <span>Ingen Usilt-bilder lastet opp.</span>
-        }
+        <div class="picture-card">
+            <h5>Usilt: </h5>
+            
+            @if (usiltPreviewUrl != null)
+            {
+                <img src="@usiltPreviewUrl"
+                     alt="Usilt image"
+                     style="max-width:200px; max-height:200px;"/>
+            }
+            else
+            {
+                <span>Ingen Usilt-bilder lastet opp.</span>
+            }
+        </div>
+        
+        <div class="picture-card">
+            <h5>Silt: </h5>
+            
+            @if (siltPreviewUrl != null)
+            {
+                <img src="@siltPreviewUrl"
+                     alt="Silt image"
+                     style="max-width:200px; max-height:200px;"/>
+            }
+            else
+            {
+                <span>Ingen Silt-bilder lastet opp.</span>
+            }
+        </div>
     </div>
 </div>
 
 <div id="div3" class="content-div">
-    <div class="picture-container mt-4">
-        <h5>Silt: </h5>
-        @if (siltPreviewUrl != null)
-        {
-            <img src="@siltPreviewUrl"
-                 alt="Silt image"
-                 style="max-width:200px; max-height:200px;"/>
-        }
-        else
-        {
-            <span>Ingen Silt-bilder lastet opp.</span>
-        }
-    </div>
-
     <div class="checkbox-1-container">
         <label class="custom-checkbox" for="beggiatoa">
             <span class="custom-label">Beggiatoa</span>
@@ -321,12 +335,12 @@
 
 
 <div class="button-container">
-    <button id="cancelBtn" class="custom-btn" style="display: none;" @onclick="BackToStationsPage">
+    <button id="cancelBtn" class="btn custom-outline-secondary-btn" style="display: none;" @onclick="BackToStationsPage">
         Avbryt
     </button>
-    <button id="lastBtn" onclick="showLast()" class="custom-btn">Forrige</button>
-    <button id="nextBtn" onclick="showNext()" class="custom-btn">Neste</button>
-    <button id="editBtn" class="custom-btn" style="display: none;" @onclick="HandleEdit">Rediger</button>
+    <button id="lastBtn" onclick="showLast()" class="btn custom-btn">Forrige</button>
+    <button id="nextBtn" onclick="showNext()" class="btn custom-btn">Neste</button>
+    <button id="editBtn" class="btn custom-btn" style="display: none;" @onclick="HandleEdit">Rediger</button>
 </div>
 
 
@@ -403,12 +417,12 @@
 
     private void BackToStationsPage()
     {
-        Navigation.NavigateTo($"/project/{ProjectId:D}?tab=b_stations");
+        Navigation.NavigateTo($"/project/{ProjectId:D}?tab=b_stations", forceLoad: true);
     }
     
     private void HandleEdit()
     {
-        Navigation.NavigateTo($"/project/{ProjectId}/station/{StationId}/edit-survey/{SurveyId}");
+        Navigation.NavigateTo($"/project/{ProjectId}/station/{StationId}/edit-survey/{SurveyId}", forceLoad: true);
     }
 }
 

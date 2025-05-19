@@ -467,10 +467,10 @@
         <value>+ Generer rapport</value>
     </data>
     <data name="PageReportNoReport" xml:space="preserve">
-        <value>Ingen rapporter generert</value>
+        <value>Ingen rapportfiler generert</value>
     </data>
     <data name="PageReportDocumentsReport" xml:space="preserve">
-        <value>Rapporter</value>
+        <value>Rapportfiler</value>
     </data>
     <data name="PageReportPicturesReport" xml:space="preserve">
         <value>Bilderapporter</value>
@@ -552,5 +552,8 @@
     </data>
     <data name="ReportPageNoProjectPlanGenerated" xml:space="preserve">
         <value>Ingen prosjektplan generert</value>
+    </data>
+    <data name="ErrorMessageLoadingInitiaData" xml:space="preserve">
+        <value>Feil ved lasting av initialdata:</value>
     </data>
 </root>

@@ -21,15 +21,17 @@ else
        
         @if (_isExistingPreInfo)
         {
-            <div class="row row-cols-2 g-2 justify-content-center">
+            <div class="d-flex flex-column gap-2 justify-content-center">
+                
                 @foreach (var preInfo in _preInfoData)
                 {
-                    <div class="col">
-                        <button class="btn custom-btn w-100" type="button" @onclick="() => ViewPreInfo(preInfo.Id)">
+                    <div class="d-flex">
+                        <button class="btn custom-btn" type="button" @onclick="() => ViewPreInfo(preInfo.Id)">
                             @DateOnly.FromDateTime(preInfo.Feltdato)
                         </button>
                     </div>
                 }
+                
             </div>
         }
         else
@@ -65,7 +67,7 @@ else
                           @if (_isExistingStations)
                           {
                               <div class="card-container">
-                                  <div class="row" style="justify-content: center;">
+                                  <div class="row justify-content-center" >
                                       @foreach (var station in _stationData)
                                       {
                                           <div class="col mb-3 card-col">
@@ -173,37 +175,45 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        _newStation = new NewStationDto
+        try
         {
-            ProsjektId = Project.Id,
-        };
-
-        //PreInfo
-        var responsePreInfo = await Http.GetAsync($"/api/PreInfo/project/{Project.Id:D}");
-        if (responsePreInfo.IsSuccessStatusCode)
-        {
-            _preInfoData = await responsePreInfo.Content.ReadFromJsonAsync<List<PreInfoDto>>();
-            _preInfoData?.Sort((a, b) => a.Feltdato.CompareTo(b.Feltdato));
-            _isExistingPreInfo = true;
-            foreach (var preInfo in _preInfoData.Where(preInfo => DateOnly.FromDateTime(preInfo.Feltdato) == DateOnly.FromDateTime(DateTime.Today)))
+            _newStation = new NewStationDto
             {
-                _isPreInfoDateToday = true;
-                _todaysServeyId = preInfo.Id;
+                ProsjektId = Project.Id,
+            };
+
+            //PreInfo
+            var responsePreInfo = await Http.GetAsync($"/api/PreInfo/project/{Project.Id:D}");
+            if (responsePreInfo.IsSuccessStatusCode)
+            {
+                _preInfoData = await responsePreInfo.Content.ReadFromJsonAsync<List<PreInfoDto>>();
+                _preInfoData?.Sort((a, b) => a.Feltdato.CompareTo(b.Feltdato));
+                _isExistingPreInfo = true;
+                foreach (var preInfo in _preInfoData.Where(preInfo => DateOnly.FromDateTime(preInfo.Feltdato) == DateOnly.FromDateTime(DateTime.Today)))
+                {
+                    _isPreInfoDateToday = true;
+                    _todaysServeyId = preInfo.Id;
+                }
+            }
+
+            //Station
+            var responseStations = await Http.GetAsync($"/api/Project/{Project.Id:D}/stations");
+            if (responseStations.IsSuccessStatusCode)
+            {
+                _stationData = await responseStations.Content.ReadFromJsonAsync<List<StationDto>>();
+                _stationData?.Sort((a, b) => a.Nummer.CompareTo(b.Nummer));
+                _isExistingStations = true;
+            }
+
+            if (Project.Prosjektstatus == Prosjektstatus.Ferdig)
+            {
+                _isProjectComplete = true;
             }
         }
-
-        //Station
-        var responseStations = await Http.GetAsync($"/api/Project/{Project.Id:D}/stations");
-        if (responseStations.IsSuccessStatusCode)
+        catch (Exception e)
         {
-            _stationData = await responseStations.Content.ReadFromJsonAsync<List<StationDto>>();
-            _stationData?.Sort((a, b) => a.Nummer.CompareTo(b.Nummer));
-            _isExistingStations = true;
-        }
-
-        if (Project.Prosjektstatus == Prosjektstatus.Ferdig)
-        {
-            _isProjectComplete = true;
+            Console.WriteLine(e);
+            throw;
         }
 
         _isLoading = false;
@@ -239,6 +249,8 @@ else
             _stationData ??= [];
             _stationData.Add(newStation);
             _isExistingStations = true;
+            Project.AntallStasjoner = _stationData?.Count() ?? 0;
+            await EditStationChanged.InvokeAsync(Project);
         }
     }
 
@@ -255,7 +267,7 @@ else
         if (!_isProjectComplete && anyPlannedStationsNotRegistered)
         {
             _modalCompleat = true;
-            await Js.InvokeVoidAsync("showModal", "#Modal");
+            await Js.InvokeVoidAsync("showModal", "#ModalFiled");
             return;
         }
 
@@ -277,7 +289,20 @@ else
             var anyPlannedStationsNotRegistered = _stationData.Any(station => station.UndersokelseId == null && station.ProvetakingsplanId == null);
             if (anyPlannedStationsNotRegistered)
             {
-                //endepunkt som sletter alle stasjoner som skal slettes
+                foreach (var station in _stationData.Where(station => station.UndersokelseId == null && station.ProvetakingsplanId == null))
+                {
+                    await Http.DeleteAsync($"/api/Project/{Project.Id:D}/station/{station.Id:D}");
+                }
+                
+                var responseStations = await Http.GetAsync($"/api/Project/{Project.Id:D}/stations");
+                if (responseStations.IsSuccessStatusCode)
+                {
+                    _stationData = await responseStations.Content.ReadFromJsonAsync<List<StationDto>>();
+                    _stationData?.Sort((a, b) => a.Nummer.CompareTo(b.Nummer));
+                    _isExistingStations = true;
+                    Project.AntallStasjoner = _stationData?.Count() ?? 0;
+                    await EditStationChanged.InvokeAsync(Project);
+                }
             }
 
             Project.Prosjektstatus = Prosjektstatus.Ferdig;

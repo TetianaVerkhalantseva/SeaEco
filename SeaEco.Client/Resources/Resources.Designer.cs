@@ -1034,5 +1034,11 @@ namespace SeaEco.Client.Resources {
                 return ResourceManager.GetString("ReportPageNoProjectPlanGenerated", resourceCulture);
             }
         }
+        
+        internal static string ErrorMessageLoadingInitiaData {
+            get {
+                return ResourceManager.GetString("ErrorMessageLoadingInitiaData", resourceCulture);
+            }
+        }
     }
 }

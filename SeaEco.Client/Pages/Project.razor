@@ -22,7 +22,7 @@ else
     <div class="d-flex flex-column align-items-center gap-3 p-1">
         <div class="mb-3">
             <h2>@_projectCopy.Lokalitetsnavn</h2>
-            <p class="text-secondary mb-0">- @Resources.TableHeaderProjectStatus: @_project.Prosjektstatus.GetDescription()</p>
+            <p class="custom-gray-text mb-0">- @Resources.TableHeaderProjectStatus: @_project.Prosjektstatus.GetDescription()</p>
             @if (_project.Tilstand != null)
             {
                 <p class=" mt-0" style="@($"color:{_project.Tilstand.GetDisplay()}")">- @Resources.TableHeaderStatus: @((int)_project.Tilstand.Value)</p> 
@@ -55,7 +55,7 @@ else
                                         <label for="prosjektIdSe">@Resources.InputTextProjectIdSe</label>
                                     </div>
                                     <div class="d-flex form-floating">
-                                        <InputText class="form-control" id="poid" @bind-Value="_project.PoId" disabled/>
+                                        <InputText class="form-control" id="poid" @bind-Value="_project.PoId" @key="_numberInputKey" @oninput="() => _errorMessage = null" disabled="@(!_editProjectInfo)"/>
                                         <label for="poid">@Resources.InputTextPoId</label>
                                     </div>
                                     <div class="d-flex form-floating flex-fill">
@@ -438,19 +438,22 @@ else
     {
         _selectedLocationId = id;
 
-        var selected = _location.FirstOrDefault(l => l.LokalitetKode == id);
-
-        if (_project != null)
+        if (_location != null)
         {
-            if (selected != null)
+            var selected = _location.FirstOrDefault(l => l.LokalitetKode == id);
+
+            if (_project != null)
             {
-                _project.Lokalitetsnavn = selected.Navn;
-                _project.LokalitetsId = selected.LokalitetKode;
-            }
-            else
-            {
-                _project.Lokalitetsnavn = string.Empty;
-                _project.LokalitetsId = string.Empty;
+                if (selected != null)
+                {
+                    _project.Lokalitetsnavn = selected.Navn;
+                    _project.LokalitetsId = selected.LokalitetKode;
+                }
+                else
+                {
+                    _project.Lokalitetsnavn = string.Empty;
+                    _project.LokalitetsId = string.Empty;
+                }
             }
         }
 
@@ -514,20 +517,28 @@ else
 
     private void OnEditStationChanged(ProjectDto project)
     {
-        _project.Prosjektstatus = project.Prosjektstatus;
-        _project.Merknad= project.Merknad;
-        _projectCopy = BackUp(_project);
+        if (_project != null)
+        {
+            _project.Prosjektstatus = project.Prosjektstatus;
+            _project.Merknad = project.Merknad;
+            _project.AntallStasjoner = project.AntallStasjoner;
+            _projectCopy = BackUp(_project);
+        }
+
         StateHasChanged();
     }
 
     private async Task Deactivate()
     {
-        _project.Prosjektstatus = Prosjektstatus.Deaktivert;
-        _projectCopy.Prosjektstatus = Prosjektstatus.Deaktivert;
-        _project.Merknad = string.IsNullOrEmpty(_project.Merknad) ? _comment.Merknad : $"{_project.Merknad}{Environment.NewLine}{_comment.Merknad}";
-        _updateStatus.Merknad = _comment.Merknad;
-        _updateStatus.Status = Prosjektstatus.Deaktivert;
-        await Http.PutAsJsonAsync($"/api/Project/{_project.Id:D}/status", _updateStatus);
+        if (_project != null)
+        {
+            _project.Prosjektstatus = Prosjektstatus.Deaktivert;
+            _projectCopy.Prosjektstatus = Prosjektstatus.Deaktivert;
+            _project.Merknad = string.IsNullOrEmpty(_project.Merknad) ? _comment.Merknad : $"{_project.Merknad}{Environment.NewLine}{_comment.Merknad}";
+            _updateStatus.Merknad = _comment.Merknad;
+            _updateStatus.Status = Prosjektstatus.Deaktivert;
+            await Http.PutAsJsonAsync($"/api/Project/{_project.Id:D}/status", _updateStatus);
+        }
     }
     
     private async Task ModalDeactivate()

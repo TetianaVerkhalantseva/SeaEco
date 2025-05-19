@@ -12,7 +12,7 @@
     <DataAnnotationsValidator />
     <div class="container mt-4">
         <div class="card shadow-lg p-4">
-            <h2 class="text-center page-title">@Resources.PageEditCustomerEditCustomer</h2>
+            <h2 class="text-center mb-5">@Resources.PageEditCustomerEditCustomer</h2>
 
             <div class="form-floating mb-3">
                 <InputText id="Oppdragsgiver" class="form-control form-control-lg" @bind-Value="_customerEdit.Oppdragsgiver" placeholder="Oppdragsgiver" />
@@ -41,7 +41,7 @@
 
                 @if (_result.HasValue)
                 {
-                    @if (_result.Value)
+                    if (_result.Value)
                     {
                         <div class="alert alert-success">@Resources.PageEditCustomerSuccess</div>
                     }
@@ -91,7 +91,7 @@
         {
             _result = true;
             StateHasChanged();
-            await Task.Delay(2000);
+            await Task.Delay(1000);
             Navigation.NavigateTo($"CustomerInfo/{CustomerId}");
         }
         else

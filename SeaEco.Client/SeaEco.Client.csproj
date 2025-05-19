@@ -42,5 +42,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Components\Tab\" />
+  </ItemGroup>
   
 </Project>

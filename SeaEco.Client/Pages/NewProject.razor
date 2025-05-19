@@ -21,10 +21,10 @@ else
     <EditForm EditContext="_editContext" OnValidSubmit="AddNewProject">
     <DataAnnotationsValidator />
 
-    <div class="d-flex flex-column align-items-center gap-3 mb-3">
+    <div class="d-flex flex-column align-items-center gap-3 mb-5">
         <div class="mb-3">
             <h2>@Resources.PageNewProjectNewProject</h2>
-            <h6 class="text-secondary">- @_customer.Oppdragsgiver</h6>
+            <h6 class="custom-gray-text">- @_customer.Oppdragsgiver</h6>
         </div>
         <div class="d-flex justify-content-lg-start flex-column gap-3">
                 <div class="d-flex gap-3 flex-column p-4 box-border">
@@ -132,8 +132,7 @@ else
                 @Resources.ButtonSave
             </button>
         </div>
-    </div>
-        <div class=" text-center">
+        <div class=" text-center mt-3">
             <div class="custom-validation-summary">
                 <ValidationSummary/>
             </div>
@@ -142,6 +141,8 @@ else
                 <p class="text-danger">@_errorMessage</p>
             }
         </div>
+    </div>
+        
     </EditForm>
 }
 
@@ -172,10 +173,17 @@ else
                     KundeId =  CustomerId,
                 };
             }
+            
+            var usersList = await Http.GetFromJsonAsync<List<UserDto>>("api/users?isActive=true");
+            _users = usersList?.OrderBy(user => user.FullName).ToList();
+        
+            _location = await Http.GetFromJsonAsync<List<LokalitetDto>>("api/Lokalitet");  
+            
+            
         }
         catch (Exception ex)
         {
-            Console.WriteLine($@"{Resources.ErrorMessageLoadingCustomer} {ex.Message}");
+            Console.WriteLine($@"{Resources.ErrorMessageLoadingInitiaData} {ex.Message}");
         }
         finally
         {
@@ -183,11 +191,6 @@ else
         }
         
         _newProject.ProsjektansvarligId = null;
-        
-        var usersList = await Http.GetFromJsonAsync<List<UserDto>>("api/users?isActive=true");
-        _users = usersList?.OrderBy(user => user.FullName).ToList();
-        
-        _location = await Http.GetFromJsonAsync<List<LokalitetDto>>("api/Lokalitet");
         
         _editContext = new EditContext(_newProject);
     }
@@ -232,7 +235,7 @@ else
             _newProject.Lokalitetsnavn = string.Empty;
             _newProject.LokalitetsId = string.Empty;
         }
-        _editContext.Validate();  
+
     }
 
     private void ToggleLocalityButton()
@@ -249,8 +252,7 @@ else
             _selectedLocationId = string.Empty;
             LocationChanged(_selectedLocationId);
         }
-        
-        _editContext.Validate();  
+
     }
     
     public class ResponseId

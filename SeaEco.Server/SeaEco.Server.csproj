@@ -29,7 +29,6 @@
 
     <ItemGroup>
       <Folder Include="wwwroot\images\" />
-      <Folder Include="wwwroot\reports\generated\" />
     </ItemGroup>
 
     <ItemGroup>
