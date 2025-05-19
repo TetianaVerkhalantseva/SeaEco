@@ -162,6 +162,11 @@ public sealed class DbSeeder
         //Seed Bprosjekt 
         Guid prosjektId1 = Guid.Parse("b53dedcd-481c-4f00-b537-7304d6093d7d"); 
         Guid prosjektId2 = Guid.Parse("6f44505b-b08e-4418-ae2d-8d75a6f35131");
+
+        Guid prosjektId3 = Guid.Parse("f382b818-bf41-4432-9906-dff6391518a5");
+        Guid prosjektId4 = Guid.Parse("27926a13-ebbe-458c-bfc3-7935525ed270");
+        Guid prosjektId5 = Guid.Parse("64a1e81d-9281-48a5-a791-95f08a9d0525");
+
         
         IEnumerable<BProsjekt> prosjekts =
         [
@@ -197,6 +202,57 @@ public sealed class DbSeeder
                 Produksjonsstatus = 2,
                 Merknad = "Kommentar",
                 Prosjektstatus = 1,
+                Datoregistrert = DateTime.Now
+            },
+            new BProsjekt()
+            {
+                Id = prosjektId3,
+                ProsjektIdSe = "SE-25-BU-3",
+                PoId = "408",
+                KundeId = kundeId2,
+                Kundekontaktperson = "Ole Kristiansen",
+                Kundetlf = "11111111",
+                Kundeepost = "test@test.no",
+                LokalitetId = lokalitetId2,
+                Mtbtillatelse = 210,
+                ProsjektansvarligId = Guid.Parse("8fffdaa4-7dfe-4d78-a28b-b80558d542b6"),
+                Produksjonsstatus = 1,
+                Merknad = "Kommentar",
+                Prosjektstatus = 1,
+                Datoregistrert = DateTime.Now
+            },
+            new BProsjekt()
+            {
+                Id = prosjektId4,
+                ProsjektIdSe = "SE-25-BU-4",
+                PoId = "409",
+                KundeId = kundeId1,
+                Kundekontaktperson = "Lars Johansen",
+                Kundetlf = "11111111",
+                Kundeepost = "test@seaeco.no",
+                LokalitetId = lokalitetId1,
+                Mtbtillatelse = 150,
+                ProsjektansvarligId = Guid.Parse("8fffdaa4-7dfe-4d78-a28b-b80558d542b6"),
+                Produksjonsstatus = 2,
+                Merknad = "Kommentar",
+                Prosjektstatus = 4,
+                Datoregistrert = DateTime.Now
+            },
+            new BProsjekt()
+            {
+                Id = prosjektId5,
+                ProsjektIdSe = "SE-25-BU-5",
+                PoId = "410",
+                KundeId = kundeId1,
+                Kundekontaktperson = "Lars Johansen",
+                Kundetlf = "11111111",
+                Kundeepost = "test@seaeco.no",
+                LokalitetId = lokalitetId1,
+                Mtbtillatelse = 180,
+                ProsjektansvarligId = Guid.Parse("8fffdaa4-7dfe-4d78-a28b-b80558d542b6"),
+                Produksjonsstatus = 4,
+                Merknad = "Kommentar",
+                Prosjektstatus = 5,
                 Datoregistrert = DateTime.Now
             }
         ];
