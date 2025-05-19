@@ -409,7 +409,7 @@
                 <button class="btn btn-danger"
                         @onclick="RemoveUsiltImage"
                         disabled="@(usiltPreviewUrl is null)">
-                    Remove
+                    Fjern
                 </button>
                 
                 @if (usiltPreviewUrl != null)
@@ -432,7 +432,7 @@
                 <button class="btn btn-danger"
                         @onclick="RemoveSiltImage"
                         disabled="@(siltPreviewUrl is null)">
-                    Remove
+                    Fjern
                 </button>
 
                 @if (siltPreviewUrl != null)
@@ -1088,7 +1088,7 @@
         {
             _result = true;
             _resultMessage = await response.Content.ReadAsStringAsync();
-            
+            await Task.Delay(1000);
             NavigationLockService.Unlock();
             Navigation.NavigateTo($"/project/{ProjectId:D}?tab=b_stations", forceLoad: true);
         }

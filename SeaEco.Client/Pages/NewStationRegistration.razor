@@ -839,7 +839,7 @@
         {
             _result = true;
             _resultMessage = await response.Content.ReadAsStringAsync();
-
+            await Task.Delay(1000);
             NavigationLockService.Unlock();
             Navigation.NavigateTo($"/project/{ProjectId}/station/{StationId}/survey/{_surveyDto.Id}/upload-images", forceLoad: true);
         }
