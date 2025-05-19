@@ -77,26 +77,29 @@
     </div>
 
     <div id="sensoryRadio" class="sensoryRadio-container">
-        <h5>Er sensorisk utført?</h5>
+        @if (_selectedBunnType != "blot")
+        {
+            <h5>Er sensorisk utført?</h5>
 
-        <div class="cntr">
-            <input type="radio" name="sensorisk" id="cbx3" class="hidden-xs-up"
-                   value="ja" checked="@("ja" == _selectedSensorisk)" />
-            <label for="cbx3" class="cbx"></label>
-            <label for="cbx3" class="lbl">Ja</label>
-        </div>
+            <div class="cntr">
+                <input type="radio" name="sensorisk" id="cbx3" class="hidden-xs-up"
+                       value="ja" checked="@("ja" == _selectedSensorisk)"/>
+                <label for="cbx3" class="cbx"></label>
+                <label for="cbx3" class="lbl">Ja</label>
+            </div>
 
-        <div class="cntr">
-            <input type="radio" name="sensorisk" id="cbx4" class="hidden-xs-up"
-                   value="nei" checked="@("nei" == _selectedSensorisk)" />
-            <label for="cbx4" class="cbx"></label>
-            <label for="cbx4" class="lbl">Nei</label>
-        </div>
+            <div class="cntr">
+                <input type="radio" name="sensorisk" id="cbx4" class="hidden-xs-up"
+                       value="nei" checked="@("nei" == _selectedSensorisk)"/>
+                <label for="cbx4" class="cbx"></label>
+                <label for="cbx4" class="lbl">Nei</label>
+            </div>
+        }
     </div>
 
     <div id="sensoryInfo" class="sensoryInfo-container">
         <div class="sensoryData">
-            @if (_survey?.BSediment != null)
+            @if (_survey?.BSediment != null && _selectedBunnType == "blot")
             {
                 <div class="form-floating mb-3" id="sensoryDataSoft_1">
                     <input id="ProvePh" class="form-control" value="@_survey.BSediment.Ph" />
