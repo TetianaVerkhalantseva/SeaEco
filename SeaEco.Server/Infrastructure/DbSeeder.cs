@@ -196,12 +196,12 @@ public sealed class DbSeeder
                 Kundekontaktperson = "Ole Kristiansen",
                 Kundetlf = "11111111",
                 Kundeepost = "test@test.no",
-                LokalitetId = lokalitetId2,
+                LokalitetId = lokalitetId1,
                 Mtbtillatelse = 200,
                 ProsjektansvarligId = Guid.Parse("8fffdaa4-7dfe-4d78-a28b-b80558d542b6"),
                 Produksjonsstatus = 2,
                 Merknad = "Kommentar",
-                Prosjektstatus = 1,
+                Prosjektstatus = 2,
                 Datoregistrert = DateTime.Now
             },
             new BProsjekt()
@@ -261,7 +261,11 @@ public sealed class DbSeeder
         await context.SaveChangesAsync();
         
         //Seed BProvetakingsplan
-        Guid provetakingsplanId1 = Guid.Parse("82ca018f-f197-42ae-832a-01fdc895f562"); 
+        Guid provetakingsplanId1 = Guid.Parse("82ca018f-f197-42ae-832a-01fdc895f562");
+        Guid provetakingsplanId2 = Guid.Parse("4b418d62-958f-4e66-ba13-fa24311c43b0"); 
+        Guid provetakingsplanId3 = Guid.Parse("48a58452-1428-4dc9-9697-f4374cf8d226"); 
+        Guid provetakingsplanId4 = Guid.Parse("1576ef68-8428-4d12-99d1-eb8bd2c35153"); 
+
         
         List<BProvetakningsplan> provetakningsplans =
         [
@@ -271,7 +275,28 @@ public sealed class DbSeeder
                 ProsjektId = prosjektId1,
                 Planlagtfeltdato = new DateOnly(2025, 3, 30),
                 PlanleggerId = adminId1 
-            }
+            },
+            new BProvetakningsplan
+            {
+                Id = provetakingsplanId2,
+                ProsjektId = prosjektId2,
+                Planlagtfeltdato = new DateOnly(2025, 4, 5),
+                PlanleggerId = adminId1 
+            },
+            new BProvetakningsplan
+            {
+                Id = provetakingsplanId3,
+                ProsjektId = prosjektId3,
+                Planlagtfeltdato = new DateOnly(2025, 4, 1),
+                PlanleggerId = adminId1 
+            },
+            new BProvetakningsplan
+            {
+                Id = provetakingsplanId4,
+                ProsjektId = prosjektId4,
+                Planlagtfeltdato = new DateOnly(2025, 4, 10),
+                PlanleggerId = adminId1 
+            },
         ];
         
         await context.BProvetakningsplans.AddRangeAsync(provetakningsplans);
