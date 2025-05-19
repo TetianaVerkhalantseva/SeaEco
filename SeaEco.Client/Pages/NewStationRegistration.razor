@@ -739,7 +739,7 @@
     private void BackToProjectPage()
     {
         NavigationLockService.Unlock();
-        Navigation.NavigateTo($"/project/{ProjectId:D}?tab=b_stations");
+        Navigation.NavigateTo($"/project/{ProjectId:D}?tab=b_stations", forceLoad: true);
     }
 
     private async Task SubmitSurvey()
@@ -841,7 +841,7 @@
             _resultMessage = await response.Content.ReadAsStringAsync();
 
             NavigationLockService.Unlock();
-            Navigation.NavigateTo($"/project/{ProjectId}/station/{StationId}/survey/{_surveyDto.Id}/upload-images");
+            Navigation.NavigateTo($"/project/{ProjectId}/station/{StationId}/survey/{_surveyDto.Id}/upload-images", forceLoad: true);
         }
         else
         {

@@ -417,12 +417,12 @@
 
     private void BackToStationsPage()
     {
-        Navigation.NavigateTo($"/project/{ProjectId:D}?tab=b_stations");
+        Navigation.NavigateTo($"/project/{ProjectId:D}?tab=b_stations", forceLoad: true);
     }
     
     private void HandleEdit()
     {
-        Navigation.NavigateTo($"/project/{ProjectId}/station/{StationId}/edit-survey/{SurveyId}");
+        Navigation.NavigateTo($"/project/{ProjectId}/station/{StationId}/edit-survey/{SurveyId}", forceLoad: true);
     }
 }
 
