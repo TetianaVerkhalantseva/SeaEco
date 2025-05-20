@@ -32,7 +32,7 @@ git clone https://github.com/TetianaVerkhalantseva/SeaEco.git
 --- 
 ## VPN og databaseoppsett
 
-Denne versjonen av applikasjon henter data fra ligger på UiT sin VPN. Databasen tillater kun noen få IPadresser. Derfor må applikasjonen kjøres på skolens nettverk via kabel.
+Denne versjonen av applikasjon henter data fra ligger på UiT sin VPN. Databasen tillater kun noen få IPadresser. Derfor må applikasjonen kjøres enten på skolens nettverk via kabel eller via VPN.
 
 vpn.uit.no/student
 Logge på VM: for å logge på VM må man kjøre disse i terminalen:
