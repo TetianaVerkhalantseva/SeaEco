@@ -4,6 +4,7 @@ using SeaEco.Services.LokalitetServices;
 
 namespace SeaEco.Server.Controllers;
 
+
 [Authorize]
 [ApiController]
 [Route("api/[controller]")]

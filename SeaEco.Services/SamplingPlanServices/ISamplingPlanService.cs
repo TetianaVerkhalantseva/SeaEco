@@ -1,5 +1,4 @@
 ﻿using SeaEco.Abstractions.Models.SamplingPlan;
-using SeaEco.EntityFramework.Entities;
 
 namespace SeaEco.Services.SamplingPlanServices;
 

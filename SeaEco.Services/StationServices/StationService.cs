@@ -7,6 +7,7 @@ using SeaEco.EntityFramework.Entities;
 
 namespace SeaEco.Services.StationServices;
 
+
 public class StationService : IStationService
 {
     private readonly AppDbContext _db;
@@ -266,7 +267,6 @@ public class StationService : IStationService
                 Message = "Stasjon tilhører ikke dette prosjektet."
             };
 
-        // Sjekk at hverken undersøkelse eller prøvetakingsplan er opprettet på stasjon
         if (station.UndersokelseId != null || station.ProvetakingsplanId != null)
             return new StationResult
             {

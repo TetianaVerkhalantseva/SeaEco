@@ -14,7 +14,6 @@ public class CustomerService: ICustomerService
         _db = db;
     }
 
-    // Get all the customer ids and names
     public async Task<List<CustomerNamesDto>> GetCustomerNames()
     {
         var customers = await _db.Kundes.ToListAsync();
@@ -26,7 +25,6 @@ public class CustomerService: ICustomerService
         }).ToList();
     }
     
-    // Get information except projects for a customer
     public async Task<CustomerDto?> GetCustomerInfoById(Guid Id)
     {
         var customer = await _db.Kundes
@@ -44,7 +42,6 @@ public class CustomerService: ICustomerService
         };
     }
 
-    // Get all the project ids, statuses and dates for a customer
     public async Task<Kunde?> GetAllProjectDetailsById(Guid Id)
     {
         var customer = await _db.Kundes
@@ -156,4 +153,3 @@ public class CustomerService: ICustomerService
         };
     }
 }
-

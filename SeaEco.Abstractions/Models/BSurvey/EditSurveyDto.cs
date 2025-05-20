@@ -41,6 +41,8 @@ public class EditSurveyDto
     public float? IndeksGr2Gr3 { get; set; }
 
     public int? TilstandGr2Gr3 { get; set; }
+
+    public string? Korrigeringer { get; set; }
     
     // dto
     

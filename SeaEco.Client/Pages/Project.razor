@@ -37,7 +37,6 @@ else
                 </span>
         </div>
         
-        
         <details class=" filter-panel shadow-lg w-100">
             <summary class="fs-6">@Resources.ButtonProjectInfoView</summary>
             <div class="filter-options">
@@ -70,7 +69,6 @@ else
                                     </div>
                                 </div>
                             </div>
-
 
                             <div class="d-flex form-floating gap-4 flex-xxl-row flex-column">
                                 <div class="d-flex form-floating gap-3 flex-column p-4 box-border">
@@ -217,7 +215,6 @@ else
             </div>
         </details>
         
-        
         @if (_editProjectInfo)
         {
             <div class="background-overlay"></div>
@@ -252,7 +249,6 @@ else
                 <Report Project="_projectCopy"></Report>
                 break;
         }
-
 
         <div class="modal fade" id="Modal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-dialog-centered">
@@ -308,8 +304,6 @@ else
             </div>
         </div>
     </div>
-
-
 }
 
 
@@ -335,7 +329,6 @@ else
     private UpdateStatusDto _updateStatus = new();
     private bool _isLoading = true;
     private bool _modalDeactivate = false;
-    
     
     protected override async Task OnInitializedAsync()
     {
@@ -482,8 +475,6 @@ else
         _editContext.Validate();
     }
 
-
-
     private async Task SelectedTabWithModal(string tab)
     {
         if (_editProjectPlan || _editProjectStationPlan || _newProjectStationPlan)
@@ -558,5 +549,4 @@ else
         var json = JsonSerializer.Serialize(source);
         return JsonSerializer.Deserialize<T>(json)!;
     }
-
 }

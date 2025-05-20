@@ -6,6 +6,7 @@ using SeaEco.EntityFramework.GenericRepository;
 
 namespace SeaEco.Services.UserServices;
 
+
 public sealed class UserService(IGenericRepository<Bruker> userRepository) : IUserService
 {
     private const string UserNotFoundError  = "User not found";

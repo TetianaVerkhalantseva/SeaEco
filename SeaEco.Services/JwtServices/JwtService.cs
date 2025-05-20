@@ -8,6 +8,7 @@ using SeaEco.Abstractions.ResponseService;
 
 namespace SeaEco.Services.JwtServices;
 
+
 public sealed class JwtService : IJwtService
 {
     private const string CanWriteTokenError = "Can't write token.";

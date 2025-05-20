@@ -6,6 +6,7 @@ using SeaEco.EntityFramework.GenericRepository;
 
 namespace SeaEco.Services.ProgramVersionServices;
 
+
 public class ProgramVersionService(IGenericRepository<Programversjon> repository) : IProgramVersionService
 {
     public async Task<Response<ProgramVersionDto>> CurrentVersion()

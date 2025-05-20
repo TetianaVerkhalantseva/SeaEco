@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SeaEco.Abstractions.Models.Report;
@@ -11,6 +12,8 @@ using SeaEco.Services.TilstandServices.Models;
 
 namespace SeaEco.Server.Controllers;
 
+
+[Authorize]
 [Route("api/report")]
 public class ReportController(IReportService reportService, TilstandService tilstandService, AppDbContext context) : ApiControllerBase
 {

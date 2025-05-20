@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SeaEco.Abstractions.Models.Image;
 using SeaEco.Abstractions.ResponseService;
@@ -6,6 +7,8 @@ using SeaEco.Services.ImageServices.Models;
 
 namespace SeaEco.Server.Controllers;
 
+
+[Authorize]
 [Route("/api/images")]
 public class ImageController(IImageService imageService) : ApiControllerBase
 {

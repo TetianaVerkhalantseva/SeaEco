@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SeaEco.Abstractions.Models.ProgramVersion;
 using SeaEco.Abstractions.ResponseService;
@@ -5,6 +6,8 @@ using SeaEco.Services.ProgramVersionServices;
 
 namespace SeaEco.Server.Controllers;
 
+
+[Authorize]
 [Route("/api/version")]
 public class ProgramVersionController(IProgramVersionService versionService) : ApiControllerBase
 {

@@ -3,6 +3,7 @@ using SeaEco.Abstractions.Models.Stations;
 
 namespace SeaEco.Services.StationServices;
 
+
 public interface IStationService
 {
     Task<StationResult> GetStationsByProvetakningsplanIdAsync(Guid samplingPlanId);

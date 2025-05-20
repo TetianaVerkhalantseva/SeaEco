@@ -5,9 +5,10 @@ using SeaEco.Services.PreInfo;
 
 namespace SeaEco.Server.Controllers;
 
+
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
 public class PreInfoController : ControllerBase
 {
     private readonly IPreInfoService _service;

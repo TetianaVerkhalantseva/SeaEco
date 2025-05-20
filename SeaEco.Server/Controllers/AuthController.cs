@@ -7,7 +7,6 @@ using SeaEco.Server.Infrastructure;
 using SeaEco.Services.AuthServices;
 using SeaEco.Services.TokenServices;
 using System.Security.Claims;
-using SeaEco.Services.TokenServices;
 
 namespace SeaEco.Server.Controllers;
 
@@ -105,7 +104,6 @@ public class AuthController(IAuthService authService, ITokenService tokenService
             : AsOk();
     }
     
-    // The endpoint to test and demonstrate saving the JWT token in cookies.
     [HttpGet("test")]
     [RoleAccessor(true)]
     public async Task<IActionResult> Test()

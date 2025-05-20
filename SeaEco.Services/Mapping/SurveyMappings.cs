@@ -29,6 +29,7 @@ public static class SurveyMappings
             DatoEndret = entity.DatoEndret,
             IndeksGr2Gr3 = entity.IndeksGr2Gr3,
             TilstandGr2Gr3 = entity.TilstandGr2Gr3,
+            Korrigeringer = entity.Korrigeringer,
 
             BSoftBase = entity.Blotbunn != null ? new BSoftBaseDto
             {
@@ -119,6 +120,7 @@ public static class SurveyMappings
             DatoEndret = dto.DatoEndret,
             IndeksGr2Gr3 = dto.IndeksGr2Gr3,
             TilstandGr2Gr3 = dto.TilstandGr2Gr3,
+            Korrigeringer = dto.Korrigeringer ?? "",
             
             Blotbunn = dto.BSoftBase != null
                 ? new BBlotbunn
@@ -198,6 +200,7 @@ public static class SurveyMappings
         entity.DatoEndret = dto.DatoEndret;
         entity.IndeksGr2Gr3 = dto.IndeksGr2Gr3;
         entity.TilstandGr2Gr3 = dto.TilstandGr2Gr3;
+        entity.Korrigeringer = dto.Korrigeringer ?? "";
 
         if (entity.BStasjon != null && dto.BStation != null)
         {

@@ -1,5 +1,4 @@
 using SeaEco.Abstractions.Models.BSurvey;
-using SeaEco.Abstractions.Models.Bundersokelse;
 
 namespace SeaEco.Services.BSurveyService;
 

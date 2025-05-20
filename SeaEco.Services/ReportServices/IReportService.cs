@@ -4,6 +4,7 @@ using SeaEco.Reporter.Models;
 
 namespace SeaEco.Services.ReportServices;
 
+
 public interface IReportService
 {
     Task<Response<string>> GenerateInfoReport(Guid projectId);
