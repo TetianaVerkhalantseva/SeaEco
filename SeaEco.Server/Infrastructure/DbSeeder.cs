@@ -532,9 +532,9 @@ public sealed class DbSeeder
         Guid sedimentId3 = Guid.Parse("474b0557-6ee4-41e5-83bc-9c5a00c9a65c");
         Guid sedimentId5 = Guid.Parse("27fca494-95e9-48be-aaa3-3578ecbd1a39");
         
-        Guid sedimentId7 = Guid.Parse("27fca494-95e9-48be-aaa3-3578ecbd1a39");
-        Guid sedimentId9 = Guid.Parse("27fca494-95e9-48be-aaa3-3578ecbd1a39");
-        Guid sedimentId11 = Guid.Parse("27fca494-95e9-48be-aaa3-3578ecbd1a39");
+        Guid sedimentId7 = Guid.Parse("fd146f09-8721-4b2d-ac65-e1486fa6a92c");
+        Guid sedimentId9 = Guid.Parse("82e4aa94-26a0-4b4f-af6b-ab868e1cea1c");
+        Guid sedimentId11 = Guid.Parse("c66f82d7-9a80-4594-bfe1-b0f89503eb93");
 
         
         List<BSediment> sediments =
@@ -857,13 +857,13 @@ public sealed class DbSeeder
             new BUndersokelse()
             {
                 Id = undersokelseId6,
-                ProsjektId = prosjektId2,
-                PreinfoId = preinfoId3,
+                ProsjektId = prosjektId1,
+                PreinfoId = preinfoId2,
                 Feltdato = DateOnly.FromDateTime(DateTime.Now),
                 AntallGrabbhugg = 2,
                 GrabbhastighetGodkjent = true,
                 BlotbunnId = null,
-                HardbunnId = null,
+                HardbunnId = hardbunnId2,
                 SedimentId = null, 
                 SensoriskId = null,
                 Beggiatoa = true,
@@ -877,8 +877,8 @@ public sealed class DbSeeder
             new BUndersokelse()
             {
                 Id = undersokelseId7,
-                ProsjektId = prosjektId2,
-                PreinfoId = preinfoId1,
+                ProsjektId = prosjektId1,
+                PreinfoId = preinfoId2,
                 Feltdato = DateOnly.FromDateTime(DateTime.Now),
                 AntallGrabbhugg = 3,
                 GrabbhastighetGodkjent = false,
@@ -898,7 +898,7 @@ public sealed class DbSeeder
             new BUndersokelse()
             {
                 Id = undersokelseId8,
-                ProsjektId = prosjektId2,
+                ProsjektId = prosjektId1,
                 PreinfoId = preinfoId2,
                 Feltdato = DateOnly.FromDateTime(DateTime.Now),
                 AntallGrabbhugg = 2,
@@ -919,8 +919,8 @@ public sealed class DbSeeder
             new BUndersokelse()
             {
                 Id = undersokelseId9,
-                ProsjektId = prosjektId2,
-                PreinfoId = preinfoId3,
+                ProsjektId = prosjektId1,
+                PreinfoId = preinfoId2,
                 Feltdato = DateOnly.FromDateTime(DateTime.Now),
                 AntallGrabbhugg = 2,
                 GrabbhastighetGodkjent = false,
@@ -940,13 +940,13 @@ public sealed class DbSeeder
             new BUndersokelse()
             {
                 Id = undersokelseId10,
-                ProsjektId = prosjektId2,
-                PreinfoId = preinfoId1,
+                ProsjektId = prosjektId1,
+                PreinfoId = preinfoId3,
                 Feltdato = DateOnly.FromDateTime(DateTime.Now),
                 AntallGrabbhugg = 1,
                 GrabbhastighetGodkjent = true,
                 BlotbunnId = null,
-                HardbunnId = hardbunnId4,
+                HardbunnId = hardbunnId3,
                 SedimentId = null,
                 SensoriskId = null,
                 Beggiatoa = false,
@@ -960,8 +960,8 @@ public sealed class DbSeeder
             new BUndersokelse()
             {
                 Id = undersokelseId11,
-                ProsjektId = prosjektId2,
-                PreinfoId = preinfoId2,
+                ProsjektId = prosjektId1,
+                PreinfoId = preinfoId3,
                 Feltdato = DateOnly.FromDateTime(DateTime.Now),
                 AntallGrabbhugg = 3,
                 GrabbhastighetGodkjent = false,
@@ -979,7 +979,7 @@ public sealed class DbSeeder
             new BUndersokelse()
             {
                 Id = undersokelseId12,
-                ProsjektId = prosjektId2,
+                ProsjektId = prosjektId1,
                 PreinfoId = preinfoId3,
                 Feltdato = DateOnly.FromDateTime(DateTime.Now),
                 AntallGrabbhugg = 1,
@@ -1015,7 +1015,7 @@ public sealed class DbSeeder
         Guid stasjonId9 = Guid.Parse("37add753-974c-46ce-a6a3-29ed915adf68");
         Guid stasjonId10 = Guid.Parse("8927784e-e12a-42ec-8544-3ea0a2b53365");
         Guid stasjonId11 = Guid.Parse("2433d779-7410-40e2-8677-d908036677e1");
-
+        Guid stasjonId12 = Guid.Parse("bccb52d2-68ab-4230-a850-9642cca40b8c");
 
         List<BStasjon> stasjons =
         [
@@ -1096,8 +1096,8 @@ public sealed class DbSeeder
                 Id = stasjonId7,
                 ProsjektId = prosjektId2,
                 Nummer = 2,
-                KoordinatNord = "66°06.400",
-                KoordinatOst = "38°12.900",
+                KoordinatNord = "24°08.400",
+                KoordinatOst = "34°15.900",
                 Dybde = 21,
                 Analyser = "Parameter I",
                 ProvetakingsplanId = provetakingsplanId1,
@@ -1120,8 +1120,8 @@ public sealed class DbSeeder
                 Id = stasjonId9,
                 ProsjektId = prosjektId2,
                 Nummer = 4,
-                KoordinatNord = "66°06.400",
-                KoordinatOst = "38°12.900",
+                KoordinatNord = "68°28.400",
+                KoordinatOst = "18°32.900",
                 Dybde = 26,
                 Analyser = "Parameter II og III",
                 ProvetakingsplanId = provetakingsplanId1,
@@ -1129,11 +1129,11 @@ public sealed class DbSeeder
             },
             new BStasjon
             {
-                Id = stasjonId9,
+                Id = stasjonId10,
                 ProsjektId = prosjektId2,
                 Nummer = 5,
-                KoordinatNord = "66°06.400",
-                KoordinatOst = "38°12.900",
+                KoordinatNord = "50°20.400",
+                KoordinatOst = "18°42.900",
                 Dybde = 46,
                 Analyser = "Parameter III",
                 ProvetakingsplanId = provetakingsplanId1,
@@ -1141,7 +1141,7 @@ public sealed class DbSeeder
             },
             new BStasjon
             {
-                Id = stasjonId10,
+                Id = stasjonId11,
                 ProsjektId = prosjektId2,
                 Nummer = 6,
                 KoordinatNord = "38°12.900",
@@ -1153,7 +1153,7 @@ public sealed class DbSeeder
             },
             new BStasjon
             {
-                Id = stasjonId11,
+                Id = stasjonId12,
                 ProsjektId = prosjektId2,
                 Nummer = 7,
                 KoordinatNord = "34°20.900",
