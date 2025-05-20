@@ -9,7 +9,10 @@
 @inject HttpClient Http
 @attribute [Authorize]
 
-<h4>Bilder registrering</h4>
+<div class="d-flex justify-content-center mb-5 mt-4">
+    <h2>Bilder registrering</h2>
+</div>
+
 
 <div class="picture-container">
     <div class="picture-card">
@@ -58,11 +61,11 @@
 </div>
 
 <div class="button-container mb-5">
-    <button id="cancelBtn" class="custom-btn" @onclick="ConfirmCancel">
+    <button id="cancelBtn" class="btn custom-btn" @onclick="ConfirmCancel">
         Avbryt
     </button>
     
-    <button id="submitBtn" class="custom-btn" @onclick="ConfirmSubmit">
+    <button id="submitBtn" class="btn custom-btn" @onclick="ConfirmSubmit">
         Ferdig
     </button>
 </div>
