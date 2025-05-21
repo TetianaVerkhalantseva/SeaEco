@@ -98,7 +98,7 @@
 
     <div id="sensoryInfo" class="sensoryInfo-container">
         <div class="sensoryData">
-            @if (_survey?.BSediment != null && _selectedBunnType == "blot")
+            @if (_selectedBunnType == "blot")
             {
                 <div class="form-floating mb-3" id="sensoryDataSoft_1">
                     <input id="ProvePh" class="form-control" value="@_survey.BSediment.Ph" />
@@ -116,7 +116,7 @@
                 </div>
             }
             
-            @if (_survey?.BSensorisk != null)
+            @if (_selectedBunnType == "blot" || _selectedSensorisk == "ja")
             {
                 <div class="form-floating mb-3">
                     <input class="form-control" id="GrabbVolum"

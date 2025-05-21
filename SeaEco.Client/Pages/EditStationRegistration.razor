@@ -123,6 +123,7 @@
                                           {
                                               _surveyDto.BlotbunnId = Guid.NewGuid();
                                               _surveyDto.HardbunnId = null;
+                                              _surveyDto.BHardBase = null;
                                               
                                               if (_surveyDto.BSoftBase == null)
                                               {
@@ -135,29 +136,30 @@
                                                       Silt = 0f,
                                                       Skjellsand = 0f
                                                   };
-                                                  _surveyDto.BHardBase = null;
                                               }    
                                           }
                                           if (_surveyDto.BSediment == null && _surveyDto.BSensorisk == null)
                                           {
+                                              _surveyDto.SedimentId = Guid.NewGuid();
                                               _surveyDto.BSediment = new BSedimentDto
                                               {
-                                                  Id = Guid.NewGuid(),
+                                                  Id = _surveyDto.SedimentId.Value,
                                                   Ph = 0,
                                                   Eh = 0,
                                                   Temperatur = 0
                                               };
-                                              _surveyDto.BSensorisk = new BSensoriskDto();
-                                          }
-                                          else if (_surveyDto.BSediment != null && _surveyDto.BSensorisk == null)
-                                          {
-                                              _surveyDto.BSensorisk = new BSensoriskDto();
+                                              _surveyDto.SensoriskId = Guid.NewGuid();
+                                              _surveyDto.BSensorisk = new BSensoriskDto
+                                              {
+                                                  Id = _surveyDto.SensoriskId.Value
+                                              };
                                           }
                                           else if (_surveyDto.BSediment == null && _surveyDto.BSensorisk != null)
                                           {
+                                              _surveyDto.SedimentId = Guid.NewGuid();
                                               _surveyDto.BSediment = new BSedimentDto
                                               {
-                                                  Id = Guid.NewGuid(),
+                                                  Id = _surveyDto.SedimentId.Value,
                                                   Ph = 0,
                                                   Eh = 0,
                                                   Temperatur = 0
@@ -182,6 +184,7 @@
                                           {
                                               _surveyDto.HardbunnId = Guid.NewGuid();
                                               _surveyDto.BlotbunnId = null;
+                                              _surveyDto.BSoftBase = null;
                                           }
                                           if (_surveyDto.BHardBase == null)
                                           {
@@ -191,7 +194,6 @@
                                                   Fjellbunn = 0f,
                                                   Steinbunn = 0f
                                               };
-                                              _surveyDto.BSoftBase = null;
                                           }
                                       })"
                            checked="@(_selectBunnType == "hard")" />
@@ -214,10 +216,15 @@
                            @onchange="@(() =>
                                       {
                                           _selectSensorisk = "ja";
-                                          if (_surveyDto.BSensorisk == null)
+                                          if (_surveyDto.BSensorisk == null && _surveyDto.SensoriskId == null)
                                           {
+                                              _surveyDto.SedimentId = null;
                                               _surveyDto.BSediment = null;
-                                              _surveyDto.BSensorisk = new BSensoriskDto();
+                                              _surveyDto.SensoriskId = Guid.NewGuid();
+                                              _surveyDto.BSensorisk = new BSensoriskDto
+                                              {
+                                                  Id = _surveyDto.SensoriskId.Value
+                                              };
                                           }
                                       })"
                            checked="@(_selectSensorisk == "ja")"/>
@@ -233,9 +240,11 @@
                            @onchange="@(() =>
                                       {
                                           _selectSensorisk = "nei";
-                                          if (_surveyDto.BSensorisk != null)
+                                          if (_surveyDto.BSensorisk != null && _surveyDto.SensoriskId != null)
                                           {
+                                              _surveyDto.SedimentId = null;
                                               _surveyDto.BSediment = null;
+                                              _surveyDto.SensoriskId = null;
                                               _surveyDto.BSensorisk = null;
                                           }
                                       })"
@@ -1025,14 +1034,6 @@
                 _validationMessage = "Feltene for sedimenttype må velges";
                 return;
             }
-
-            bool valueDefault = IsAllZeroOrNull(_surveyDto.BSensorisk);
-            bool onlyDefault = IsAllZeroOrNull(_surveyDto.BSediment);
-            if (valueDefault && onlyDefault)
-            {
-                _validationMessage = "Feltene for sensorisk må fylles ut";
-                return;
-            }
         
             _surveyDto.SedimentId = Guid.NewGuid();
             _surveyDto.BSediment.Id = _surveyDto.SedimentId.Value;
@@ -1041,6 +1042,7 @@
         {
             _surveyDto.BlotbunnId = null;
             _surveyDto.BSoftBase = null;
+            _surveyDto.SedimentId = null;
             _surveyDto.BSediment = null;
 
             if (_selectSensorisk != "ja" && _selectSensorisk != "nei")
@@ -1053,17 +1055,11 @@
             {
                 _surveyDto.BlotbunnId = null;
                 _surveyDto.BSoftBase = null;
+                _surveyDto.SedimentId = null;
                 _surveyDto.BSediment = null;
                 _surveyDto.SensoriskId = null;
                 _surveyDto.BSensorisk = null;
             }
-        }
-        
-        if (_selectSensorisk == "nei")
-        {
-            _surveyDto.BSediment = null;
-            _surveyDto.SensoriskId = null;
-            _surveyDto.BSensorisk = null;
         }
         
         if (_selectDyr == "ja")

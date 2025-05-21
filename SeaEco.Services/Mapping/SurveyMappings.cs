@@ -218,8 +218,11 @@ public static class SurveyMappings
             entity.Blotbunn.Grus = dto.BSoftBase.Grus;
             entity.Blotbunn.Skjellsand = dto.BSoftBase.Skjellsand;
         }
-        else if (dto.BSoftBase != null)
+        else if (entity.Blotbunn == null && dto.BSoftBase != null)
         {
+            entity.HardbunnId = null;
+            entity.Hardbunn = null;
+            
             entity.Blotbunn = new BBlotbunn
             {
                 Leire = dto.BSoftBase.Leire,
@@ -229,8 +232,9 @@ public static class SurveyMappings
                 Skjellsand = dto.BSoftBase.Skjellsand
             };
         }
-        else if (entity.Blotbunn != null)
+        else if (entity.Blotbunn != null && dto.BSoftBase == null)
         {
+            entity.BlotbunnId = null;
             entity.Blotbunn = null;
         }
 
@@ -239,16 +243,20 @@ public static class SurveyMappings
             entity.Hardbunn.Steinbunn = dto.BHardBase.Steinbunn;
             entity.Hardbunn.Fjellbunn = dto.BHardBase.Fjellbunn;
         }
-        else if (dto.BHardBase != null)
+        else if (entity.Hardbunn == null && dto.BHardBase != null)
         {
+            entity.BlotbunnId = null;
+            entity.Blotbunn = null;
+            
             entity.Hardbunn = new BHardbunn
             {
                 Steinbunn = dto.BHardBase.Steinbunn,
                 Fjellbunn = dto.BHardBase.Fjellbunn
             };
         }
-        else if (entity.Hardbunn != null)
+        else if (entity.Hardbunn != null && dto.BHardBase == null)
         {
+            entity.HardbunnId = null;
             entity.Hardbunn = null;
         }
 
@@ -260,7 +268,7 @@ public static class SurveyMappings
             entity.Sediment.KlasseGr2 = dto.BSediment.KlasseGr2;
             entity.Sediment.TilstandGr2 = dto.BSediment.TilstandGr2;
         }
-        else if (dto.BSediment != null)
+        else if (entity.Sediment == null && dto.BSediment != null)
         {
             entity.Sediment = new BSediment
             {
@@ -271,8 +279,9 @@ public static class SurveyMappings
                 TilstandGr2 = dto.BSediment.TilstandGr2
             };
         }
-        else if (entity.Sediment != null)
+        else if (entity.Sediment != null && dto.BSediment == null)
         {
+            entity.SedimentId = null;
             entity.Sediment = null;
         }
 
@@ -287,7 +296,7 @@ public static class SurveyMappings
             entity.Sensorisk.IndeksGr3 = dto.BSensorisk.IndeksGr3;
             entity.Sensorisk.TilstandGr3 = dto.BSensorisk.TilstandGr3;
         }
-        else if (dto.BSensorisk != null)
+        else if (entity.Sensorisk == null && dto.BSensorisk != null)
         {
             entity.Sensorisk = new BSensorisk
             {
@@ -301,8 +310,9 @@ public static class SurveyMappings
                 TilstandGr3 = dto.BSensorisk.TilstandGr3
             };
         }
-        else if (entity.Sensorisk != null)
+        else if (entity.Sensorisk != null && dto.BSensorisk == null)
         {
+            entity.SensoriskId = null;
             entity.Sensorisk = null;
         }
 
@@ -314,7 +324,7 @@ public static class SurveyMappings
             entity.Dyr.Borstemark = dto.BAnimal.Borstemark;
             entity.Dyr.Arter = dto.BAnimal.Arter;
         }
-        else if (dto.BAnimal != null)
+        else if (entity.Dyr == null && dto.BAnimal != null)
         {
             entity.Dyr = new BDyr
             {
@@ -325,8 +335,9 @@ public static class SurveyMappings
                 Arter = dto.BAnimal.Arter
             };
         }
-        else if (entity.Dyr != null)
+        else if (entity.Dyr != null && dto.BAnimal == null)
         {
+            entity.DyrId = null;
             entity.Dyr = null;
         }
     }

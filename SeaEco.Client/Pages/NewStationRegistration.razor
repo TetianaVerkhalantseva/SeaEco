@@ -154,86 +154,158 @@
 
     <div id="sensoryInfo" class="sensoryInfo-container">
         <div class="sensoryData">
-            <div class="form-floating mb-3" id="sensoryDataSoft_1">
-                <InputNumber id="ProvePh" class="form-control" @bind-Value="_surveyDto.BSediment.Ph" placeholder="pH" />
-                <label for="ProvePh">pH</label>
-            </div>
+            @if (_selectBunnType == "blot")
+            { 
+                <div class="form-floating mb-3" id="sensoryDataSoft_1">
+                    <InputNumber id="ProvePh" class="form-control" @bind-Value="_surveyDto.BSediment.Ph" placeholder="pH"/>
+                    <label for="ProvePh">pH</label>
+                </div>
 
-            <div class="form-floating mb-3" id="sensoryDataSoft_2">
-                <InputNumber id="ProveEh" class="form-control" @bind-Value="_surveyDto.BSediment.Eh" placeholder="Eh" />
-                <label for="ProveEh">EH</label>
-            </div>
+                <div class="form-floating mb-3" id="sensoryDataSoft_2">
+                    <InputNumber id="ProveEh" class="form-control" @bind-Value="_surveyDto.BSediment.Eh" placeholder="Eh"/>
+                    <label for="ProveEh">EH</label>
+                </div>
 
-            <div class="form-floating mb-3" id="sensoryDataSoft_3">
-                <InputNumber id="ProveTemp" class="form-control" @bind-Value="_surveyDto.BSediment.Temperatur" placeholder="Temp" />
-                <label for="ProveTemp">Temp</label>
-            </div>
+                <div class="form-floating mb-3" id="sensoryDataSoft_3">
+                    <InputNumber id="ProveTemp" class="form-control" @bind-Value="_surveyDto.BSediment.Temperatur" placeholder="Temp"/>
+                    <label for="ProveTemp">Temp</label>
+                </div>
 
-            <div class="form-floating mb-3">
-                <InputSelect id="GrabbVolum" class="form-select" @bind-Value="_surveyDto.BSensorisk.Grabbvolum">
-                    <option value="" disabled>Velg grabbvolum</option>
-                    @foreach (Grabbvolum g in Enum.GetValues(typeof(Grabbvolum)))
-                    {
-                        <option value="@( (int)g )">@g.GetDescription()</option>
-                    }
-                </InputSelect>
-                <label for="GrabbVolum">GrabbVolum</label>
-            </div>
+                <div class="form-floating mb-3">
+                    <InputSelect id="GrabbVolum" class="form-select" @bind-Value="_surveyDto.BSensorisk.Grabbvolum">
+                        <option value="" disabled>Velg grabbvolum</option>
+                        @foreach (Grabbvolum g in Enum.GetValues(typeof(Grabbvolum)))
+                        {
+                            <option value="@((int)g)">@g.GetDescription()</option>
+                        }
+                    </InputSelect>
+                    <label for="GrabbVolum">GrabbVolum</label>
+                </div>
 
-            <div class="form-floating mb-3">
-                <InputSelect id="Tykkelse" class="form-select" @bind-Value="_surveyDto.BSensorisk.Tykkelseslamlag">
-                    <option value="" disabled>Velg tykkelseslamlag</option>
-                    @foreach (Tykkelseslamlag t in Enum.GetValues(typeof(Tykkelseslamlag)))
-                    {
-                        <option value="@( (int)t )">@t.GetDescription()</option>
-                    }
-                </InputSelect>
-                <label for="Tykkelse">Tykkelseslamlag</label>
-            </div>
+                <div class="form-floating mb-3">
+                    <InputSelect id="Tykkelse" class="form-select" @bind-Value="_surveyDto.BSensorisk.Tykkelseslamlag">
+                        <option value="" disabled>Velg tykkelseslamlag</option>
+                        @foreach (Tykkelseslamlag t in Enum.GetValues(typeof(Tykkelseslamlag)))
+                        {
+                            <option value="@((int)t)">@t.GetDescription()</option>
+                        }
+                    </InputSelect>
+                    <label for="Tykkelse">Tykkelseslamlag</label>
+                </div>
 
-            <div class="form-floating mb-3">
-                <InputSelect id="Gassbobler" class="form-select" @bind-Value="_surveyDto.BSensorisk.Gassbobler">
-                    <option value="" disabled>Velg gassbobler</option>
-                    @foreach (Gassbobler gass in Enum.GetValues(typeof(Gassbobler)))
-                    {
-                        <option value="@( (int)gass )">@gass.GetDescription()</option>
-                    }
-                </InputSelect>
-                <label for="Gassbobler">Gassbobler</label>
-            </div>
+                <div class="form-floating mb-3">
+                    <InputSelect id="Gassbobler" class="form-select" @bind-Value="_surveyDto.BSensorisk.Gassbobler">
+                        <option value="" disabled>Velg gassbobler</option>
+                        @foreach (Gassbobler gass in Enum.GetValues(typeof(Gassbobler)))
+                        {
+                            <option value="@((int)gass)">@gass.GetDescription()</option>
+                        }
+                    </InputSelect>
+                    <label for="Gassbobler">Gassbobler</label>
+                </div>
 
-            <div class="form-floating mb-3">
-                <InputSelect id="Farge" class="form-select" @bind-Value="_surveyDto.BSensorisk.Farge">
-                    <option value="" disabled>Velg farge</option>
-                    @foreach (Farge f in Enum.GetValues(typeof(Farge)))
-                    {
-                        <option value="@( (int)f )">@f.GetDescription()</option>
-                    }
-                </InputSelect>
-                <label for="Farge">Farge</label>
-            </div>
+                <div class="form-floating mb-3">
+                    <InputSelect id="Farge" class="form-select" @bind-Value="_surveyDto.BSensorisk.Farge">
+                        <option value="" disabled>Velg farge</option>
+                        @foreach (Farge f in Enum.GetValues(typeof(Farge)))
+                        {
+                            <option value="@((int)f)">@f.GetDescription()</option>
+                        }
+                    </InputSelect>
+                    <label for="Farge">Farge</label>
+                </div>
 
-            <div class="form-floating mb-3">
-                <InputSelect id="Lukt" class="form-select" @bind-Value="_surveyDto.BSensorisk.Lukt">
-                    <option value="" disabled>Velg lukt</option>
-                    @foreach (Lukt l in Enum.GetValues(typeof(Lukt)))
-                    {
-                        <option value="@( (int)l )">@l.GetDescription()</option>
-                    }
-                </InputSelect>
-                <label for="Lukt">Lukt</label>
-            </div>
+                <div class="form-floating mb-3">
+                    <InputSelect id="Lukt" class="form-select" @bind-Value="_surveyDto.BSensorisk.Lukt">
+                        <option value="" disabled>Velg lukt</option>
+                        @foreach (Lukt l in Enum.GetValues(typeof(Lukt)))
+                        {
+                            <option value="@((int)l)">@l.GetDescription()</option>
+                        }
+                    </InputSelect>
+                    <label for="Lukt">Lukt</label>
+                </div>
 
-            <div class="form-floating mb-3">
-                <InputSelect id="Konsistens" class="form-select" @bind-Value="_surveyDto.BSensorisk.Konsistens">
-                    <option value="" disabled>Velg konsistens</option>
-                    @foreach (Konsistens k in Enum.GetValues(typeof(Konsistens)))
-                    {
-                        <option value="@( (int)k )">@k.GetDescription()</option>
-                    }
-                </InputSelect>
-                <label for="Konsistens">Konsistens</label>
-            </div>
+                <div class="form-floating mb-3">
+                    <InputSelect id="Konsistens" class="form-select" @bind-Value="_surveyDto.BSensorisk.Konsistens">
+                        <option value="" disabled>Velg konsistens</option>
+                        @foreach (Konsistens k in Enum.GetValues(typeof(Konsistens)))
+                        {
+                            <option value="@((int)k)">@k.GetDescription()</option>
+                        }
+                    </InputSelect>
+                    <label for="Konsistens">Konsistens</label>
+                </div>
+            }
+            
+            @if (_selectBunnType == "hard" && _selectSensorisk == "ja")
+            {
+                <div class="form-floating mb-3">
+                    <InputSelect id="GrabbVolum" class="form-select" @bind-Value="_surveyDto.BSensorisk.Grabbvolum">
+                        <option value="" disabled>Velg grabbvolum</option>
+                        @foreach (Grabbvolum g in Enum.GetValues(typeof(Grabbvolum)))
+                        {
+                            <option value="@((int)g)">@g.GetDescription()</option>
+                        }
+                    </InputSelect>
+                    <label for="GrabbVolum">GrabbVolum</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputSelect id="Tykkelse" class="form-select" @bind-Value="_surveyDto.BSensorisk.Tykkelseslamlag">
+                        <option value="" disabled>Velg tykkelseslamlag</option>
+                        @foreach (Tykkelseslamlag t in Enum.GetValues(typeof(Tykkelseslamlag)))
+                        {
+                            <option value="@((int)t)">@t.GetDescription()</option>
+                        }
+                    </InputSelect>
+                    <label for="Tykkelse">Tykkelseslamlag</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputSelect id="Gassbobler" class="form-select" @bind-Value="_surveyDto.BSensorisk.Gassbobler">
+                        <option value="" disabled>Velg gassbobler</option>
+                        @foreach (Gassbobler gass in Enum.GetValues(typeof(Gassbobler)))
+                        {
+                            <option value="@((int)gass)">@gass.GetDescription()</option>
+                        }
+                    </InputSelect>
+                    <label for="Gassbobler">Gassbobler</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputSelect id="Farge" class="form-select" @bind-Value="_surveyDto.BSensorisk.Farge">
+                        <option value="" disabled>Velg farge</option>
+                        @foreach (Farge f in Enum.GetValues(typeof(Farge)))
+                        {
+                            <option value="@((int)f)">@f.GetDescription()</option>
+                        }
+                    </InputSelect>
+                    <label for="Farge">Farge</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputSelect id="Lukt" class="form-select" @bind-Value="_surveyDto.BSensorisk.Lukt">
+                        <option value="" disabled>Velg lukt</option>
+                        @foreach (Lukt l in Enum.GetValues(typeof(Lukt)))
+                        {
+                            <option value="@((int)l)">@l.GetDescription()</option>
+                        }
+                    </InputSelect>
+                    <label for="Lukt">Lukt</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <InputSelect id="Konsistens" class="form-select" @bind-Value="_surveyDto.BSensorisk.Konsistens">
+                        <option value="" disabled>Velg konsistens</option>
+                        @foreach (Konsistens k in Enum.GetValues(typeof(Konsistens)))
+                        {
+                            <option value="@((int)k)">@k.GetDescription()</option>
+                        }
+                    </InputSelect>
+                    <label for="Konsistens">Konsistens</label>
+                </div>
+            }
         </div>
     </div>
 
