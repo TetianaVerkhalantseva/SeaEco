@@ -278,11 +278,18 @@ public static class SurveyMappings
                 KlasseGr2 = dto.BSediment.KlasseGr2,
                 TilstandGr2 = dto.BSediment.TilstandGr2
             };
+            entity.HardbunnId = null;
+            entity.Hardbunn = null;
+            entity.BlotbunnId = dto.BlotbunnId;
         }
         else if (entity.Sediment != null && dto.BSediment == null)
         {
             entity.SedimentId = null;
             entity.Sediment = null;
+
+            entity.BlotbunnId = null;
+            entity.Blotbunn = null;
+            entity.HardbunnId = dto.HardbunnId;
         }
 
         if (entity.Sensorisk != null && dto.BSensorisk != null)
@@ -312,8 +319,13 @@ public static class SurveyMappings
         }
         else if (entity.Sensorisk != null && dto.BSensorisk == null)
         {
+            entity.SedimentId = null;
+            entity.Sediment = null;
             entity.SensoriskId = null;
             entity.Sensorisk = null;
+            entity.BlotbunnId = null;
+            entity.Blotbunn = null;
+            entity.HardbunnId = dto.HardbunnId;
         }
 
         if (entity.Dyr != null && dto.BAnimal != null)
