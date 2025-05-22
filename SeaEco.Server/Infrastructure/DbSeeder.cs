@@ -1580,5 +1580,23 @@ public sealed class DbSeeder
         
         await context.BTilstands.AddRangeAsync(tilstands);
         await context.SaveChangesAsync();
+        
+        
+        //Seed BRapporter
+        Guid rapportId1 = Guid.Parse("e642ac32-2ba9-47a9-980f-0c2feb76bb49");
+        
+        List<BRapporter> rapporters =
+        [
+            new BRapporter()
+            {
+                Id = rapportId1,
+                ProsjektId = prosjektId1,
+                ArkNavn = 2,
+                Datogenerert = new DateTime(2025, 2, 22, 9, 48, 18)
+            }
+        ];
+        
+        await context.BRapporters.AddRangeAsync(rapporters);
+        await context.SaveChangesAsync();
     }
 }
