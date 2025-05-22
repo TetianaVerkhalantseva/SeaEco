@@ -1584,6 +1584,7 @@ public sealed class DbSeeder
         
         //Seed BRapporter
         Guid rapportId1 = Guid.Parse("e642ac32-2ba9-47a9-980f-0c2feb76bb49");
+        Guid rapportId2 = Guid.Parse("1a1041dc-81ea-4dd4-a18a-6f465f88ede0");
         
         List<BRapporter> rapporters =
         [
@@ -1593,6 +1594,13 @@ public sealed class DbSeeder
                 ProsjektId = prosjektId1,
                 ArkNavn = 2,
                 Datogenerert = new DateTime(2025, 2, 22, 9, 48, 18)
+            },
+            new BRapporter()
+            {
+                Id = rapportId2,
+                ProsjektId = prosjektId2,
+                ArkNavn = 2,
+                Datogenerert = new DateTime(2025, 2, 22, 10, 19, 04)
             }
         ];
         
