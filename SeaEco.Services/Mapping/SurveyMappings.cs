@@ -225,6 +225,7 @@ public static class SurveyMappings
             
             entity.Blotbunn = new BBlotbunn
             {
+                Id = dto.BlotbunnId ?? dto.BSoftBase.Id,
                 Leire = dto.BSoftBase.Leire,
                 Silt = dto.BSoftBase.Silt,
                 Sand = dto.BSoftBase.Sand,
@@ -250,6 +251,7 @@ public static class SurveyMappings
             
             entity.Hardbunn = new BHardbunn
             {
+                Id = dto.HardbunnId ?? dto.BHardBase.Id,
                 Steinbunn = dto.BHardBase.Steinbunn,
                 Fjellbunn = dto.BHardBase.Fjellbunn
             };
@@ -272,6 +274,7 @@ public static class SurveyMappings
         {
             entity.Sediment = new BSediment
             {
+                Id = dto.SedimentId ?? dto.BSediment.Id,
                 Ph = dto.BSediment.Ph,
                 Eh = dto.BSediment.Eh,
                 Temperatur = dto.BSediment.Temperatur,
@@ -307,6 +310,7 @@ public static class SurveyMappings
         {
             entity.Sensorisk = new BSensorisk
             {
+                Id = dto.SensoriskId ?? dto.BSensorisk.Id,
                 Gassbobler = dto.BSensorisk.Gassbobler,
                 Farge = dto.BSensorisk.Farge,
                 Lukt = dto.BSensorisk.Lukt,
@@ -340,6 +344,7 @@ public static class SurveyMappings
         {
             entity.Dyr = new BDyr
             {
+                Id = dto.DyrId ?? dto.BAnimal.Id,
                 Pigghunder = dto.BAnimal.Pigghunder,
                 Krepsdyr = dto.BAnimal.Krepsdyr,
                 Skjell = dto.BAnimal.Skjell,
