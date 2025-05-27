@@ -62,7 +62,6 @@ public sealed class DbSeeder
         Guid adminId1 = Guid.Parse("8fffdaa4-7dfe-4d78-a28b-b80558d542b6");
         Guid adminId2 = Guid.Parse("88439bb4-440d-4b5c-9d2b-bd6c0b3b68ff");
         Guid adminId3 = Guid.Parse("73510705-b951-4753-9cfc-93d903517df0");
-        Guid brukerId1 = Guid.Parse("9ec86e55-78d5-4463-8fdd-782006b74dd0");
         Guid brukerId2 = Guid.Parse("e7c66db8-d146-4802-90c2-a4e18b14c577");
         Guid brukerId3 = Guid.Parse("e44fe6d6-92f0-4d9e-a599-daa3eff47f70");
         Guid brukerId4 = Guid.Parse("b427f17b-f150-4b7a-b53f-bf2529ad713e");
@@ -70,7 +69,6 @@ public sealed class DbSeeder
         var password1 = Hasher.Hash("11111111");
         var password2 = Hasher.Hash("11111111");
         var password3 = Hasher.Hash("11111111");
-        var password4 = Hasher.Hash("11111111");
         var password5 = Hasher.Hash("11111111");
         var password6 = Hasher.Hash("11111111");
         var password7 = Hasher.Hash("11111111");
@@ -108,17 +106,6 @@ public sealed class DbSeeder
                 PassordHash = password3.hashed,
                 Salt = password3.salt,
                 IsAdmin = true,
-                Aktiv = true
-            },
-            new Bruker()
-            {   
-                Id = brukerId1,
-                Fornavn = "Ann",
-                Etternavn = "Brue",
-                Epost = "annbrueab@gmail.com",
-                PassordHash = password4.hashed,
-                Salt = password4.salt,
-                IsAdmin = false,
                 Aktiv = true
             },
             new Bruker()
@@ -555,7 +542,7 @@ public sealed class DbSeeder
                 Id = provetakingsplanId4,
                 ProsjektId = prosjektId4,
                 Planlagtfeltdato = new DateOnly(2025, 4, 10),
-                PlanleggerId = brukerId1
+                PlanleggerId = brukerId2
             },
         ];
         

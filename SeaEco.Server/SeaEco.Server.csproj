@@ -25,18 +25,12 @@
       <_ContentIncludedByDefault Remove="wwwroot\images\499615b2-a5d8-4701-a7ab-e1ffd288959e.png" />
       <_ContentIncludedByDefault Remove="wwwroot\images\69b54be8-9382-4bee-88f8-fdc5962e8e9f.png" />
       <_ContentIncludedByDefault Remove="wwwroot\images\SE-25-BU-1\c83f0521-9ae6-49c6-adcb-9fff02a13313.png" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="wwwroot\images\" />
+      <_ContentIncludedByDefault Remove="wwwroot\images\SE-25-BU-2\7228dc8a-2f4a-47b5-bfaa-c3e7b8fd6166.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\images\SE-25-BU-2\7f789de9-ac5a-4356-b6f6-21837100b450.jpg" />
     </ItemGroup>
 
     <ItemGroup>
       <Content Remove="wwwroot\reports\generated\SE-25-BU-1-Bilder.xlsx" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="wwwroot\images\" />
     </ItemGroup>
 
 </Project>
