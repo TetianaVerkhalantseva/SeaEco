@@ -4,6 +4,7 @@ using SeaEco.Abstractions.Models.PreInfo;
 using SeaEco.EntityFramework.Contexts;
 using SeaEco.EntityFramework.Entities;
 using SeaEco.Services.ProjectServices;
+using SeaEco.Services.ReportServices;
 
 namespace SeaEco.Services.PreInfo;
 
@@ -12,13 +13,16 @@ public class PreInfoService : IPreInfoService
 {
     private readonly AppDbContext _db;
     private readonly IProjectService _projectService;
+    private readonly IReportService _reportService;
 
     public PreInfoService(
         AppDbContext db, 
-        IProjectService projectService)
+        IProjectService projectService,
+        IReportService reportService)
     {
         _db = db;
         _projectService = projectService;
+        _reportService = reportService;
     }
     
     public async Task<PreInfoDto?> GetByIdAsync(Guid preInfoId)
@@ -97,6 +101,8 @@ public class PreInfoService : IPreInfoService
         await _projectService.GenerateAndSetProsjektIdSeAsync(dto.ProsjektId, dto.Feltdato);
         
         var tidligereStatus = (Prosjektstatus)prosjekt.Prosjektstatus;
+        bool statusChanged = false; 
+        
         if (tidligereStatus == Prosjektstatus.Nytt 
             || tidligereStatus == Prosjektstatus.Pabegynt)
         {
@@ -105,6 +111,7 @@ public class PreInfoService : IPreInfoService
                 Prosjektstatus.Pagar,
                 merknad: null
             );
+            statusChanged = true;
         }
 
         var entity = new BPreinfo
@@ -136,6 +143,15 @@ public class PreInfoService : IPreInfoService
 
         _db.BPreinfos.Add(entity);
         await _db.SaveChangesAsync();
+        
+        if (statusChanged)
+        {
+            var reportResponse = await _reportService.GeneratePtpReport(dto.ProsjektId);
+            if (reportResponse.IsError)
+            {
+                throw new InvalidOperationException($"Rapport kunne ikke genereres: {reportResponse.ErrorMessage}");
+            }
+        }
 
         return entity.Id;
     }
