@@ -55,10 +55,10 @@ Run SeaEco.Client: https i IDE
 --- 
 ## Login
 ## Admin brukere
-Brukernavn: gruppe202520@gmail.com
+Brukernavn: akvatisk@sea-eco.no
 Passord: 11111111
 
-Brukernavn: admin2@test.no
+Brukernavn: rikke@sea-eco.no
 Passord: 11111111
 
 Brukernavn: admin3@test.no

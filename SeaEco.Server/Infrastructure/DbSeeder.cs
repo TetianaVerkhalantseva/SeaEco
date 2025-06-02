@@ -80,7 +80,7 @@ public sealed class DbSeeder
                 Id = adminId1,
                 Fornavn = "Admin",
                 Etternavn = "Main",
-                Epost = "gruppe202520@gmail.com",
+                Epost = "akvatisk@sea-eco.no",
                 PassordHash = password1.hashed,
                 Salt = password1.salt,
                 IsAdmin = true,
@@ -89,9 +89,9 @@ public sealed class DbSeeder
             new Bruker()
             {   
                 Id = adminId2,
-                Fornavn = "Adel",
-                Etternavn = "Pedersen",
-                Epost = "admin2@test.no",
+                Fornavn = "Rikke",
+                Etternavn = "Gunnufsen",
+                Epost = "rikke@sea-eco.no",
                 PassordHash = password2.hashed,
                 Salt = password2.salt,
                 IsAdmin = true,
