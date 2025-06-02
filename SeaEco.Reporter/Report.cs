@@ -541,7 +541,7 @@ public sealed class Report
             }
             else
             {
-                worksheet.Cells[index, 3].Value = "For lite sediment – prøve ikke silt";
+                worksheet.Cells[index, 3].Value = "Prøve ikke silt";
             }
 
             Border border = worksheet.Cells[index, 1, index, 3].Style.Border;
